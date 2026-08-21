@@ -1,0 +1,55 @@
+# Builds the relay Docker image and pushes it to the account's ECR.
+#
+# Fork-specific workflow: upstream docker.yml publishes multi-arch to GHCR;
+# this one builds linux/amd64 only (matching the rho-cluster nodes) and
+# pushes to 361645878435.dkr.ecr.ap-northeast-2.amazonaws.com/griddle.
+#
+# Trigger manually via `gh workflow run ecr-build.yml -f tag=vX.Y.Z`.
+name: ecr-build
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Image tag (e.g. v0.1.0)"
+        required: true
+        default: "v0.1.0"
+
+env:
+  ECR_REGISTRY: 361645878435.dkr.ecr.ap-northeast-2.amazonaws.com
+  ECR_REPOSITORY: griddle
+  AWS_REGION: ap-northeast-2
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ inputs.tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

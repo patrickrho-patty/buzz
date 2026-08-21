@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Buzz",
+  "productName": "Griddle",
   "version": "0.5.18",
   "identifier": "xyz.block.buzz.app",
   "build": {
