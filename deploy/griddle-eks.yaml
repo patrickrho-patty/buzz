@@ -1,0 +1,52 @@
+# Griddle on rho-cluster (EKS ap-northeast-2).
+#
+# Profile: bundled Postgres/Redis/MinIO in-cluster (quickstart services) so the
+# stack runs standalone today. Swapping to RDS/ElastiCache/S3 later is a
+# values-only change: disable these three and fill secrets.existingSecret's
+# DATABASE_URL / REDIS_URL + s3.* instead.
+#
+# Image: built by .github/workflows/ecr-build.yml from branch `patty`.
+
+image:
+  repository: 361645878435.dkr.ecr.ap-northeast-2.amazonaws.com/griddle
+  tag: v0.1.0
+
+# Canonical relay identity. TLS is not wired yet (no ACM cert covers
+# *.patty.io) — once a cert exists, add HTTPS to the ingress annotations and
+# switch this to wss://.
+relayUrl: ws://griddle.patty.io
+
+# Nostr identity of the workspace owner.
+ownerPubkey: "ebf0b5847e34a95716bca3cd83c1cd91efd8f6b610cc62b4531ec5e7d9825026"
+
+# Secrets: quickstart profile requires chart-side autogen (bundled
+# Postgres/Redis/MinIO credentials are generated at install time).
+# When migrating to external RDS/ElastiCache/S3, create a Secret with
+# DATABASE_URL / REDIS_URL / S3 keys and set:
+#   secrets:
+#     existingSecret: griddle-secrets
+
+# ── Bundled backing services (in-cluster) ───────────────────────────────────
+# rho-cluster's gp2 StorageClass is marked default, so bundled services bind
+# their PVCs without any storageClassName plumbing.
+persistence:
+  git:
+    enabled: true
+postgresql:
+  enabled: true
+redis:
+  enabled: true
+minio:
+  enabled: true
+
+# ── Ingress: shared rho ALB group, HTTP-only until a cert covers patty.io ───
+ingress:
+  enabled: true
+  className: alb
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    alb.ingress.kubernetes.io/group.name: rho-alb-group
+    alb.ingress.kubernetes.io/healthcheck-path: /_liveness
+    alb.ingress.kubernetes.io/success-codes: "200"
