@@ -176,10 +176,13 @@ pub async fn complete(
     }
 
     // 5. Hand the plaintext private key to the client (one-time, over TLS).
+    //    `relay_url` tells the client which workspace to join — SSO users skip
+    //    the generic community picker entirely.
     Ok(Json(serde_json::json!({
         "pubkey": keys.pubkey_hex,
         "private_key": keys.privkey_hex,
         "email": email,
         "name": claims.name,
+        "relay_url": state.config.relay_url,
     })))
 }

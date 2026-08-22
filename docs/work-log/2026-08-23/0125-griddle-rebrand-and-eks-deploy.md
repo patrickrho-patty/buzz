@@ -183,3 +183,8 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 3. **Keychain prompt on every reinstall**: root cause = ad-hoc re-signing gives each install a NEW code signature, orphaning the keychain ACL entry. Fix: install-griddle.sh now re-signs with the stable Developer ID (Patty Co.,LTD S37644C7R8). macOS will still prompt ONCE per keychain item (by design — can't be bypassed without weakening security), but "Always Allow" now persists across reinstalls.
 - Relay v0.2.1 deployed (kid-matching fix live, verified start/complete endpoints + sync loop).
 - Desktop rebuilt, installed with Developer ID signing (verified TeamIdentifier=S37644C7R8).
+
+## 05:55 KST — Bug: previous JWT fix never landed; re-fixed and verified in v0.2.2
+- User still hit InvalidAlgorithm after "fix" deploy. Investigation: the Python string-replace used to patch oidc.rs silently no-op'd (formatting mismatch) — the committed "fix" contained ZERO code change to validate_id_token. v0.2.1 shipped the original broken picker.
+- Lesson (process): ALWAYS grep the source after scripted edits; verify with a test that exercises the changed code path.
+- Real fix landed via edit tool this time: decode_header → pick_jwk_by_kid (kid match, enc-key rejection, unknown-kid error, no-kid fallback) + Validation::new(header.alg). Verified in-tree + 9th unit test (kid-match/enc-reject/unknown-kid). v0.2.2 deployed, endpoint smoke-tested.

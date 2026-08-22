@@ -761,6 +761,16 @@ function MachineBootstrap({ sharedIdentity }: { sharedIdentity: boolean }) {
         identityLost={machine.identityLost}
         initialPage={machineInitialPage}
         navigateAfterComplete={navigateAfterOnboarding}
+        onSsoWorkspace={(result) => {
+          // Workforce SSO: the relay already admitted this pubkey — join the
+          // company workspace directly (same path as buzz://connect) and
+          // finish machine onboarding without the harness/provider pages.
+          communityOnboarding.start({
+            source: "deep-link-connect",
+            relayUrl: result.relayUrl,
+          });
+          completeMachineOnboarding(result.pubkey);
+        }}
         queryClient={machine.queryClient}
       />
       {shouldAcknowledgeDeepLink ? <PendingInviteGate /> : null}

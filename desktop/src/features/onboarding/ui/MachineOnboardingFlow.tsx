@@ -69,6 +69,7 @@ export function MachineOnboardingFlow({
   initialPage,
   queryClient,
   navigateAfterComplete,
+  onSsoWorkspace,
 }: {
   complete: (pubkey?: string) => void;
   continueWithIdentity: (pubkey: string) => void;
@@ -76,6 +77,13 @@ export function MachineOnboardingFlow({
   identityLost: boolean;
   initialPage?: MachineOnboardingPage;
   queryClient: QueryClient;
+  /**
+   * Workforce SSO handoff: called with the workspace relay URL after a
+   * successful Keycloak login. The default post-identity pages (harness
+   * setup, provider config, community picker) are skipped — the user goes
+   * straight into their company workspace.
+   */
+  onSsoWorkspace?: (result: { pubkey: string; relayUrl: string }) => void;
   /**
    * Called when the user finishes onboarding and requests navigation to a
    * specific route (e.g. Settings → Agents). The parent owns the RouterProvider,
@@ -227,14 +235,24 @@ export function MachineOnboardingFlow({
       queryClient.setQueryData(["identity"], identity);
       setIdentityWasImported(true);
       setSelectedPubkey(identity.pubkey);
-      setTransitionDirection("forward");
-      setPage("setup");
+      if (onSsoWorkspace) {
+        // Workforce path: skip harness/provider/community-picker pages and
+        // hand the caller the workspace URL (it completes onboarding and
+        // starts community connection for the company relay).
+        onSsoWorkspace({
+          pubkey: identity.pubkey,
+          relayUrl: keys.relay_url,
+        });
+      } else {
+        setTransitionDirection("forward");
+        setPage("setup");
+      }
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "SSO sign-in failed");
     } finally {
       setIsPending(false);
     }
-  }, [continueWithIdentity, queryClient]);
+  }, [continueWithIdentity, onSsoWorkspace, queryClient]);
 
   const backFromKeyImport = React.useCallback(() => {
     if (keyImportStage === "backup-password") {

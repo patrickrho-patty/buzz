@@ -30,11 +30,13 @@ type OidcStartResponse = {
   code_verifier: string;
 };
 
-type OidcCompleteResponse = {
+export type OidcCompleteResponse = {
   pubkey: string;
   private_key: string;
   email: string;
   name: string | null;
+  /** Workspace ws(s):// URL the client should join after sign-in. */
+  relay_url: string;
 };
 
 export type OidcCallback = { code: string; state: string };
