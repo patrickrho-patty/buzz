@@ -188,3 +188,17 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 - User still hit InvalidAlgorithm after "fix" deploy. Investigation: the Python string-replace used to patch oidc.rs silently no-op'd (formatting mismatch) — the committed "fix" contained ZERO code change to validate_id_token. v0.2.1 shipped the original broken picker.
 - Lesson (process): ALWAYS grep the source after scripted edits; verify with a test that exercises the changed code path.
 - Real fix landed via edit tool this time: decode_header → pick_jwk_by_kid (kid match, enc-key rejection, unknown-kid error, no-kid fallback) + Validation::new(header.alg). Verified in-tree + 9th unit test (kid-match/enc-reject/unknown-kid). v0.2.2 deployed, endpoint smoke-tested.
+
+## 06:15 KST — SSO login works; post-login onboarding streamlined
+- Login now succeeds end-to-end (kid-matching fix confirmed by user).
+- User hit generic post-identity onboarding: harness type → model provider → community picker ("join/create community"). That's Buzz's agent-machine setup — irrelevant for workforce chat onboarding.
+- Fix (v0.2.3): /auth/oidc/complete returns relay_url; desktop onSsoWorkspace handoff → communityOnboarding.start(deep-link-connect, relay) + completeMachineOnboarding → employee lands in the company workspace directly. Harness/provider pages skipped entirely for SSO (manual-key path still sees them).
+
+## 06:30 KST — Fix: Keycloak "Update Account Information" screen on login
+- Cause: `VERIFY_PROFILE` required action enabled + patrick's Google-brokered account had email/firstName/lastName all None (other employees had complete profiles — only Patrick hit it).
+- Fixed in Keycloak (no rebuild): disabled VERIFY_PROFILE for the `internal` realm; populated Patrick's user record (patrick@patty.io, Patrick Rho, emailVerified=true).
+- Result: no employee will ever see the profile-completion screen; existing members were already complete.
+- Note: Nostr keypair mapping is by Keycloak `sub`, so Patrick's already-minted keypair is unaffected by the profile fix.
+
+## 06:40 KST — Removed "What is an identity key" link from identity screen
+- IdentityKeyHelpDialog import + render removed from MachineOnboardingFlow (workforce users never touch key material; dialog content is Nostr-custody education for standalone users). File kept — manual-key path may re-add later if ever needed.

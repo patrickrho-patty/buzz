@@ -679,13 +679,6 @@ function MachineBootstrap({ sharedIdentity }: { sharedIdentity: boolean }) {
     [machine.complete],
   );
 
-  const navigateAfterOnboarding = useCallback(
-    (nav: PostOnboardingNavigation) => {
-      setPostOnboardingNav(nav);
-    },
-    [],
-  );
-
   // Execute the pending navigation once the RouterProvider is mounted (i.e.
   // machine.stage transitions to "ready").  We wait for the ready stage rather
   // than using setTimeout(0) so the router is guaranteed to exist before we call
@@ -760,7 +753,6 @@ function MachineBootstrap({ sharedIdentity }: { sharedIdentity: boolean }) {
         continueWithRecoveredIdentity={machine.continueWithRecoveredIdentity}
         identityLost={machine.identityLost}
         initialPage={machineInitialPage}
-        navigateAfterComplete={navigateAfterOnboarding}
         onSsoWorkspace={(result) => {
           // Workforce SSO: the relay already admitted this pubkey — join the
           // company workspace directly (same path as buzz://connect) and

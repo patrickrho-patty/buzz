@@ -18,14 +18,11 @@ import {
 } from "@/shared/ui/dialog";
 import { StartupWindowDragRegion } from "@/shared/ui/StartupWindowDragRegion";
 import { BackupStep } from "./BackupStep";
-import { DefaultConfigStep } from "./DefaultConfigStep";
 import { DownloadKeyStep } from "./DownloadKeyStep";
 import {
-  backupSessionToPasswordEntry,
   resetEncryptedBackupSession,
   useEncryptedBackupSession,
 } from "./EncryptedBackupCreator";
-import { IdentityKeyHelpDialog } from "./IdentityKeyHelpDialog";
 import { IdentityRecoveryPairing } from "./IdentityRecoveryPairing";
 import { LandingBees } from "./LandingBees";
 import {
@@ -43,8 +40,6 @@ import {
   type OnboardingTransitionDirection,
   OnboardingSlideTransition,
 } from "./OnboardingSlideTransition";
-import { SetupStep } from "./SetupStep";
-import type { DefaultConfigDraft } from "./types";
 
 export type MachineOnboardingPage =
   | "identity"
@@ -68,7 +63,6 @@ export function MachineOnboardingFlow({
   identityLost,
   initialPage,
   queryClient,
-  navigateAfterComplete,
   onSsoWorkspace,
 }: {
   complete: (pubkey?: string) => void;
@@ -84,13 +78,6 @@ export function MachineOnboardingFlow({
    * straight into their company workspace.
    */
   onSsoWorkspace?: (result: { pubkey: string; relayUrl: string }) => void;
-  /**
-   * Called when the user finishes onboarding and requests navigation to a
-   * specific route (e.g. Settings → Agents). The parent owns the RouterProvider,
-   * so navigation must be deferred to it — calling router.navigate() here races
-   * with RouterProvider mounting.
-   */
-  navigateAfterComplete?: (nav: PostOnboardingNavigation) => void;
 }) {
   const [page, setPage] = React.useState<MachineOnboardingPage>(
     identityLost ? "key-import" : (initialPage ?? "identity"),
@@ -100,7 +87,6 @@ export function MachineOnboardingFlow({
   const [error, setError] = React.useState<string | null>(null);
   const [showManualKeyOptions, setShowManualKeyOptions] = React.useState(false);
   const [isPending, setIsPending] = React.useState(false);
-  const [identityWasImported, setIdentityWasImported] = React.useState(false);
   const [keyImportStage, setKeyImportStage] =
     React.useState<NostrKeyImportStage>("key-entry");
   const [isKeyImporting, setIsKeyImporting] = React.useState(false);
@@ -115,11 +101,6 @@ export function MachineOnboardingFlow({
   const [identityStorage, setIdentityStorage] = React.useState<
     IdentityStorage | undefined
   >();
-  const [readyRuntimeIds, setReadyRuntimeIds] = React.useState<string[]>([]);
-  const [defaultConfigDraft, setDefaultConfigDraft] =
-    React.useState<DefaultConfigDraft | null>(null);
-  const [isDefaultConfigSaving, setIsDefaultConfigSaving] =
-    React.useState(false);
   const [backupSubview, setBackupSubview] =
     React.useState<BackupSubview>("created");
   const [backupDirection, setBackupDirection] = React.useState<
@@ -132,13 +113,6 @@ export function MachineOnboardingFlow({
   const backupSession = useEncryptedBackupSession();
   const reduceMotion = useReducedMotion() ?? false;
   const isSecuritySubview = page === "backup" && backupSubview !== "created";
-  const handleReadyRuntimeIdsChange = React.useCallback(
-    (runtimeIds: readonly string[]) => {
-      setReadyRuntimeIds(Array.from(new Set(runtimeIds)));
-    },
-    [],
-  );
-
   const loadFreshIdentity = React.useCallback(async () => {
     setIsPending(true);
     setError(null);
@@ -168,11 +142,11 @@ export function MachineOnboardingFlow({
       const identity = await getIdentity();
       continueWithRecoveredIdentity(identity.pubkey);
       queryClient.setQueryData(["identity"], identity);
-      setIdentityWasImported(true);
       setSelectedPubkey(identity.pubkey);
       setIdentityStorage(identity.storage);
-      setTransitionDirection("forward");
-      setPage("setup");
+      // Workforce build: harness/provider setup is done later in Settings →
+      // Agents; onboarding completes as soon as the identity is recovered.
+      complete(identity.pubkey);
     } catch (cause) {
       setError(
         cause instanceof Error ? cause.message : "Failed to load identity",
@@ -214,12 +188,12 @@ export function MachineOnboardingFlow({
       const identity = await importIdentity(nsec, password);
       continueWithIdentity(identity.pubkey);
       queryClient.setQueryData(["identity"], identity);
-      setIdentityWasImported(true);
       setSelectedPubkey(identity.pubkey);
-      setTransitionDirection("forward");
-      setPage("setup");
+      // Workforce build: harness/provider setup is done later in Settings →
+      // Agents; onboarding completes as soon as the key is imported.
+      complete(identity.pubkey);
     },
-    [continueWithIdentity, queryClient],
+    [complete, continueWithIdentity, queryClient],
   );
 
   // Workforce SSO: open the system browser at Keycloak; when the OIDC
@@ -233,7 +207,6 @@ export function MachineOnboardingFlow({
       const identity = await importIdentity(keys.private_key);
       continueWithIdentity(identity.pubkey);
       queryClient.setQueryData(["identity"], identity);
-      setIdentityWasImported(true);
       setSelectedPubkey(identity.pubkey);
       if (onSsoWorkspace) {
         // Workforce path: skip harness/provider/community-picker pages and
@@ -244,8 +217,7 @@ export function MachineOnboardingFlow({
           relayUrl: keys.relay_url,
         });
       } else {
-        setTransitionDirection("forward");
-        setPage("setup");
+        complete(identity.pubkey);
       }
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "SSO sign-in failed");
@@ -277,23 +249,6 @@ export function MachineOnboardingFlow({
     setBackupSubview("options");
   }, [backupSession]);
 
-  const backFromSetup = React.useCallback(() => {
-    if (identityWasImported) {
-      setKeyImportFormKey((current) => current + 1);
-      setKeyImportStage("key-entry");
-      setTransitionDirection("backward");
-      setPage("key-import");
-      return;
-    }
-    if (backupSubview === "password") {
-      backupSessionToPasswordEntry(backupSession);
-    }
-    setBackupDirection("backward");
-    setTransitionDirection("backward");
-    setReturningFromSecurity(false);
-    setPage("backup");
-  }, [backupSession, backupSubview, identityWasImported]);
-
   const chromeBackAction =
     page === "key-import" &&
     (!identityLost || keyImportStage === "backup-password")
@@ -311,17 +266,7 @@ export function MachineOnboardingFlow({
                 setPage("identity");
               },
             }
-          : page === "setup"
-            ? { onClick: backFromSetup }
-            : page === "config"
-              ? {
-                  disabled: isDefaultConfigSaving,
-                  onClick: () => {
-                    setTransitionDirection("backward");
-                    setPage("setup");
-                  },
-                }
-              : undefined;
+          : undefined;
 
   return (
     <div
@@ -419,7 +364,6 @@ export function MachineOnboardingFlow({
                   </button>
                 )}
               </div>
-              <IdentityKeyHelpDialog />
             </OnboardingSlideTransition>
           ) : page === "key-import" ? (
             <OnboardingSlideTransition
@@ -576,8 +520,9 @@ export function MachineOnboardingFlow({
                 direction={backupDirection}
                 identityStorage={identityStorage}
                 onNext={() => {
-                  setTransitionDirection("forward");
-                  setPage("setup");
+                  // Workforce build: after key backup, finish onboarding
+                  // (harness/provider setup lives in Settings → Agents).
+                  complete(selectedPubkey ?? undefined);
                 }}
                 onOpenPasswordBackup={() => {
                   resetEncryptedBackupSession(backupSession);
@@ -594,58 +539,22 @@ export function MachineOnboardingFlow({
                 returningFromSecurity={returningFromSecurity}
               />
             )
-          ) : page === "setup" ? (
-            <SetupStep
-              actions={{
-                // Fresh-key users return to whichever identity backup subview
-                // they used to reach setup; imported keys skip backup entirely.
-                back: () => {
-                  backFromSetup();
-                },
-                next: (runtimeIds) => {
-                  const ids = Array.from(runtimeIds);
-                  setReadyRuntimeIds(ids);
-                  // Harness install can fail (Windows/PATH/network). Don't soft-lock
-                  // onboarding — users can finish setup later in Settings → Agents.
-                  if (ids.length === 0) {
-                    complete(selectedPubkey ?? undefined);
-                    return;
-                  }
-                  setTransitionDirection("forward");
-                  setPage("config");
-                },
-                navigateToAgentSettings: () => {
-                  // Complete onboarding first, then delegate the Settings → Agents
-                  // navigation to the parent.  The parent owns RouterProvider, so
-                  // navigation from within the onboarding flow races with the
-                  // router mounting — calling router.navigate() here is unsafe.
-                  complete(selectedPubkey ?? undefined);
-                  navigateAfterComplete?.({
-                    to: "/settings",
-                    search: { section: "agents" },
-                  });
-                },
-              }}
-              direction={transitionDirection}
-              onReadyRuntimeIdsChange={handleReadyRuntimeIdsChange}
-            />
-          ) : (
-            <DefaultConfigStep
-              actions={{
-                back: () => {
-                  setTransitionDirection("backward");
-                  setPage("setup");
-                },
-                complete: () => complete(selectedPubkey ?? undefined),
-                discardDraft: () => setDefaultConfigDraft(null),
-                updateDraft: setDefaultConfigDraft,
-              }}
-              direction={transitionDirection}
-              draft={defaultConfigDraft}
-              onSavingChange={setIsDefaultConfigSaving}
-              readyRuntimeIds={readyRuntimeIds}
-            />
-          )}
+          ) : page === "setup" || page === "config" ? (
+            // Workforce build: the agent-harness (setup) and model-provider
+            // (config) pages are disabled — agent configuration lives in
+            // Settings → Agents. Kept as a defensive branch: if any stale
+            // state lands here, complete onboarding instead of showing the
+            // wizard pages.
+            <div className="flex min-h-[40vh] items-center justify-center">
+              <Button
+                className={ONBOARDING_LANDING_CTA_CLASS}
+                onClick={() => complete(selectedPubkey ?? undefined)}
+                type="button"
+              >
+                Continue
+              </Button>
+            </div>
+          ) : null}
         </div>
       </OnboardingFooterProvider>
     </div>
