@@ -3,6 +3,7 @@
 use std::net::SocketAddr;
 use std::time::Duration;
 
+use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 use tracing::warn;
@@ -49,6 +50,37 @@ pub struct JoinPolicyConfig {
 /// Maximum configured jitter, leaving ten seconds of the hard-drain budget for
 /// WebSocket close-frame delivery after the final delayed cancellation.
 pub const MAX_DRAIN_JITTER_MS: u64 = 20_000;
+
+/// Keycloak workforce SSO configuration (Griddle fork).
+///
+/// Enabled only when `BUZZ_OIDC_ISSUER` is set. The desktop client opens the
+/// system browser for a PKCE Authorization Code flow; the relay exchanges the
+/// code, validates the `id_token`, mints/recovers the employee's Nostr
+/// keypair, and auto-admits them to the deployment community.
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct OidcConfig {
+    /// Whether workforce SSO is enabled at all.
+    pub enabled: bool,
+    /// Full realm issuer, e.g. `https://login.patty.io/realms/internal`.
+    pub issuer: String,
+    /// Keycloak base URL (scheme + host), e.g. `https://login.patty.io`.
+    pub keycloak_base_url: String,
+    /// Realm name, e.g. `internal`.
+    pub realm: String,
+    /// Public client id used by the desktop app for the browser flow.
+    pub desktop_client_id: String,
+    /// Redirect URI registered for the desktop client. The desktop app
+    /// receives this back from `/auth/oidc/start` so it can register the
+    /// deep-link handler consistently.
+    pub redirect_uri: String,
+    /// Confidential client (service account) for admin API access.
+    pub bridge_client_id: String,
+    /// Secret for `bridge_client_id`.
+    pub bridge_client_secret: String,
+    /// Master key used to AES-256-GCM-wrap Nostr private keys at rest in
+    /// Keycloak user attributes.
+    pub key_wrap_secret: String,
+}
 
 /// Relay runtime configuration, loaded from environment variables.
 #[derive(Debug, Clone)]
@@ -268,6 +300,10 @@ pub struct Config {
     /// HMAC secret for git pre-receive hook callbacks.
     /// Used to authenticate internal policy endpoint requests.
     pub git_hook_hmac_secret: String,
+
+    /// Keycloak workforce SSO configuration (Griddle fork).
+    /// Disabled (None) unless BUZZ_OIDC_ISSUER and friends are set.
+    pub oidc: OidcConfig,
 
     /// Descriptor key identifier accepted in kind:30350 `exec` tags.
     pub push_executor_key_id: String,
@@ -861,6 +897,63 @@ impl Config {
             });
         let push_executor_key_id =
             std::env::var("BUZZ_PUSH_EXECUTOR_KEY_ID").unwrap_or_else(|_| "relay-v1".to_string());
+
+        // ── Keycloak workforce SSO (Griddle fork) ────────────────────────────
+        let oidc = {
+            let issuer = std::env::var("BUZZ_OIDC_ISSUER")
+                .unwrap_or_default()
+                .trim()
+                .to_string();
+            if issuer.is_empty() {
+                OidcConfig::default()
+            } else {
+                let keycloak_base_url = std::env::var("BUZZ_OIDC_BASE_URL").unwrap_or_else(|_| {
+                    // derive from issuer: strip /realms/<realm>
+                    issuer
+                        .split("/realms/")
+                        .next()
+                        .unwrap_or(&issuer)
+                        .to_string()
+                });
+                let realm = issuer
+                    .rsplit("/realms/")
+                    .next()
+                    .unwrap_or("internal")
+                    .trim_end_matches('/')
+                    .to_string();
+                let desktop_client_id =
+                    std::env::var("BUZZ_OIDC_DESKTOP_CLIENT_ID").unwrap_or_default();
+                let redirect_uri = std::env::var("BUZZ_OIDC_REDIRECT_URI").unwrap_or_default();
+                let bridge_client_id =
+                    std::env::var("BUZZ_OIDC_BRIDGE_CLIENT_ID").unwrap_or_default();
+                let bridge_client_secret =
+                    std::env::var("BUZZ_OIDC_BRIDGE_CLIENT_SECRET").unwrap_or_default();
+                let key_wrap_secret =
+                    std::env::var("BUZZ_OIDC_KEY_WRAP_SECRET").unwrap_or_default();
+                if desktop_client_id.is_empty()
+                    || redirect_uri.is_empty()
+                    || bridge_client_id.is_empty()
+                    || bridge_client_secret.is_empty()
+                    || key_wrap_secret.is_empty()
+                {
+                    return Err(ConfigError::InvalidValue(
+                        "BUZZ_OIDC_ISSUER is set but one of BUZZ_OIDC_DESKTOP_CLIENT_ID / BUZZ_OIDC_REDIRECT_URI / BUZZ_OIDC_BRIDGE_CLIENT_ID / BUZZ_OIDC_BRIDGE_CLIENT_SECRET / BUZZ_OIDC_KEY_WRAP_SECRET is missing; workforce SSO is all-or-nothing"
+                            .to_string(),
+                    ));
+                }
+                OidcConfig {
+                    enabled: true,
+                    issuer,
+                    keycloak_base_url,
+                    realm,
+                    desktop_client_id,
+                    redirect_uri,
+                    bridge_client_id,
+                    bridge_client_secret,
+                    key_wrap_secret,
+                }
+            }
+        };
         if push_executor_key_id.is_empty() || push_executor_key_id.len() > 64 {
             return Err(ConfigError::InvalidValue(
                 "BUZZ_PUSH_EXECUTOR_KEY_ID must contain 1..=64 bytes".to_string(),
@@ -993,6 +1086,7 @@ impl Config {
             replica_read_max_age_ms,
             drain_jitter_ms,
             redis_url,
+            oidc,
             redis_pool_size,
             db_pool_size,
             db_read_pool_size,

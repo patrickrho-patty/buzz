@@ -103,6 +103,9 @@ pub fn build_router(state: Arc<AppState>) -> Router {
         // Relay invites: mint (owner/admin) + claim (membership-gate exempt)
         .route("/api/invites", post(api::invites::mint_invite))
         .route("/api/join-policy", get(api::invites::join_policy))
+        // Workforce SSO (Keycloak OIDC, Griddle fork)
+        .route("/auth/oidc/start", get(api::oidc::start))
+        .route("/auth/oidc/complete", post(api::oidc::complete))
         // Policy documents as standalone pages — desktop opens these in the
         // system browser instead of rendering the Markdown in-app.
         .route(

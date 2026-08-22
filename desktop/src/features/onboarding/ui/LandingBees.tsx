@@ -12,7 +12,7 @@ type Bee = {
 };
 
 const WHITE = "#FFFFFF";
-const YELLOW = "#E9E94F";
+const YELLOW = "#d8c9a8";
 
 // Fixed scatter so the field doesn't shimmer between renders.
 const BEES: Bee[] = [

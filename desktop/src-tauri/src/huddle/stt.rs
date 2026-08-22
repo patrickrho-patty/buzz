@@ -404,7 +404,7 @@ fn stt_worker(
     let mut resampler = match Fft::<f32>::new(48_000, 16_000, 1024, 2, 1, FixedSync::Input) {
         Ok(r) => r,
         Err(e) => {
-            eprintln!("buzz-desktop: STT resampler init failed: {e}");
+            eprintln!("griddle-desktop: STT resampler init failed: {e}");
             return;
         }
     };
@@ -427,7 +427,7 @@ fn stt_worker(
     let model_path = model_dir.join("model.int8.onnx");
     if !tokens_path.exists() || !model_path.exists() {
         eprintln!(
-            "buzz-desktop: STT model not found at {} — STT disabled",
+            "griddle-desktop: STT model not found at {} — STT disabled",
             model_dir.display()
         );
         drain_until_shutdown(audio_rx, &shutdown);
@@ -445,7 +445,7 @@ fn stt_worker(
     let recognizer = match OfflineRecognizer::create(&cfg) {
         Some(r) => r,
         None => {
-            eprintln!("buzz-desktop: OfflineRecognizer::create returned None — STT disabled");
+            eprintln!("griddle-desktop: OfflineRecognizer::create returned None — STT disabled");
             drain_until_shutdown(audio_rx, &shutdown);
             return;
         }
@@ -550,7 +550,7 @@ fn resample_chunk(resampler: &mut rubato::Fft<f32>, chunk_48k: &[f32]) -> Vec<f3
     let input = match InterleavedSlice::new(chunk_48k, 1, chunk_48k.len()) {
         Ok(a) => a,
         Err(e) => {
-            eprintln!("buzz-desktop: STT resample input error: {e}");
+            eprintln!("griddle-desktop: STT resample input error: {e}");
             return Vec::new();
         }
     };
@@ -558,7 +558,7 @@ fn resample_chunk(resampler: &mut rubato::Fft<f32>, chunk_48k: &[f32]) -> Vec<f3
     match resampler.process(&input, 0, None) {
         Ok(out) => out.take_data(),
         Err(e) => {
-            eprintln!("buzz-desktop: STT resample error: {e}");
+            eprintln!("griddle-desktop: STT resample error: {e}");
             Vec::new()
         }
     }
@@ -699,7 +699,7 @@ fn flush_to_stt(
     }
     if !has_enough_voiced_audio(voiced_frames) {
         eprintln!(
-            "buzz-desktop: STT dropped short VAD segment ({voiced_frames}/{MIN_VOICED_FRAMES} voiced frames)"
+            "griddle-desktop: STT dropped short VAD segment ({voiced_frames}/{MIN_VOICED_FRAMES} voiced frames)"
         );
         return;
     }
@@ -721,7 +721,7 @@ fn decode_speech(recognizer: &sherpa_onnx::OfflineRecognizer, speech_buf: &[f32]
 fn send_transcript(text: String, text_tx: &tokio_mpsc::Sender<String>) {
     if !text.is_empty() {
         if let Err(e) = text_tx.blocking_send(text) {
-            eprintln!("buzz-desktop: STT text channel closed: {e}");
+            eprintln!("griddle-desktop: STT text channel closed: {e}");
         }
     }
 }

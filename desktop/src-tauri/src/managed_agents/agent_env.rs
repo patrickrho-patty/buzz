@@ -85,7 +85,7 @@ fn build_env_map(
     // otherwise win over the gate Desktop just set.
     map.retain(|key, _| {
         if super::env_vars::is_reserved_env_key(key) {
-            eprintln!("buzz-desktop: ignoring reserved env var `{key}` from the baked build env");
+            eprintln!("griddle-desktop: ignoring reserved env var `{key}` from the baked build env");
             return false;
         }
         true

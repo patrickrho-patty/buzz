@@ -125,7 +125,7 @@ pub(crate) fn process_belongs_to_us(_pid: u32) -> bool {
 
 /// The value stamped into the `BUZZ_MANAGED_AGENT` env var of every agent we
 /// spawn, identifying *which* desktop instance owns it. We use the app's bundle
-/// identifier (`xyz.block.buzz.app` for release, `xyz.block.buzz.app.dev`
+/// identifier (`xyz.patty.griddle.app` for release, `xyz.patty.griddle.app.dev`
 /// for `just dev`) because it is stable across restarts — a relaunched dev
 /// instance still recognizes its own previously-spawned agents as reclaimable,
 /// while never matching another instance's (e.g. a dev build never reaps a DMG
@@ -338,7 +338,7 @@ pub(super) fn resolve_pgids_and_kill(candidate_pids: &[i32]) {
     });
     if pgids.is_empty() && candidate_groups > 0 {
         eprintln!(
-            "buzz-desktop: orphan sweep: skipped all {candidate_groups} candidate group(s) (live foreign group leader or candidate already exited); nothing signalled"
+            "griddle-desktop: orphan sweep: skipped all {candidate_groups} candidate group(s) (live foreign group leader or candidate already exited); nothing signalled"
         );
     }
     let unique: Vec<i32> = pgids.into_iter().collect();
@@ -372,7 +372,7 @@ pub(super) fn resolve_pgids_and_kill(candidate_pids: &[i32]) {
     });
     if pgids.is_empty() && candidate_groups > 0 {
         eprintln!(
-            "buzz-desktop: orphan sweep: skipped all {candidate_groups} candidate group(s) (live foreign group leader or candidate already exited); nothing signalled"
+            "griddle-desktop: orphan sweep: skipped all {candidate_groups} candidate group(s) (live foreign group leader or candidate already exited); nothing signalled"
         );
     }
     let unique: Vec<i32> = pgids.into_iter().collect();

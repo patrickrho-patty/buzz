@@ -11,10 +11,8 @@ image:
   repository: 361645878435.dkr.ecr.ap-northeast-2.amazonaws.com/griddle
   tag: v0.1.0
 
-# Canonical relay identity. TLS is not wired yet (no ACM cert covers
-# *.patty.io) — once a cert exists, add HTTPS to the ingress annotations and
-# switch this to wss://.
-relayUrl: ws://griddle.patty.io
+# Canonical relay identity.
+relayUrl: wss://griddle.patty.io
 
 # Nostr identity of the workspace owner.
 ownerPubkey: "ebf0b5847e34a95716bca3cd83c1cd91efd8f6b610cc62b4531ec5e7d9825026"
@@ -25,6 +23,23 @@ ownerPubkey: "ebf0b5847e34a95716bca3cd83c1cd91efd8f6b610cc62b4531ec5e7d9825026"
 # DATABASE_URL / REDIS_URL / S3 keys and set:
 #   secrets:
 #     existingSecret: griddle-secrets
+
+# ── Workforce SSO (Keycloak) ────────────────────────────────────────────────
+# Secret values (bridge client secret, key-wrap master key) live in the
+# `griddle-oidc` Secret; non-secret routing values are inline below.
+relay:
+  extraEnv:
+    - name: BUZZ_OIDC_ISSUER
+      value: https://login.patty.io/realms/internal
+    - name: BUZZ_OIDC_DESKTOP_CLIENT_ID
+      value: griddle-desktop
+    - name: BUZZ_OIDC_REDIRECT_URI
+      value: griddle://auth/callback
+    - name: BUZZ_OIDC_BRIDGE_CLIENT_ID
+      value: griddle-bridge
+  extraEnvFrom:
+    - secretRef:
+        name: griddle-oidc
 
 # ── Bundled backing services (in-cluster) ───────────────────────────────────
 # rho-cluster's gp2 StorageClass is marked default, so bundled services bind
@@ -46,7 +61,9 @@ ingress:
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:361645878435:certificate/5cca1da8-9d23-468c-b623-c4aa774d9789
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
     alb.ingress.kubernetes.io/group.name: rho-alb-group
     alb.ingress.kubernetes.io/healthcheck-path: /_liveness
     alb.ingress.kubernetes.io/success-codes: "200"

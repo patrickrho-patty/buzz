@@ -29,13 +29,14 @@ pub mod mesh_boot;
 pub mod metrics;
 /// NIP-11 relay information document.
 pub mod nip11;
+/// Shared application state.
+pub mod oidc;
 /// NIP-01 client/relay message parsing.
 pub mod protocol;
 /// Durable NIP-PL matcher and delivery worker.
 pub mod push_runtime;
 /// Axum router construction.
 pub mod router;
-/// Shared application state.
 pub mod state;
 pub mod storage_sweep;
 /// Subscription registry with (channel, kind) fan-out index.

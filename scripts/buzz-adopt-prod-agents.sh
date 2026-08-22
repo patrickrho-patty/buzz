@@ -62,8 +62,8 @@ set -euo pipefail
 # real invocation ever uses. Keychain service/account stay overridable because
 # they are read-only against prod (used to fixture-test the identity read).
 SUPPORT="$HOME/Library/Application Support"
-PROD_DIR="$SUPPORT/xyz.block.buzz.app"
-DEV_DIR="$SUPPORT/xyz.block.buzz.app.dev"
+PROD_DIR="$SUPPORT/xyz.patty.griddle.app"
+DEV_DIR="$SUPPORT/xyz.patty.griddle.app.dev"
 KEYCHAIN_SVC="${BUZZ_KEYCHAIN_SVC:-buzz-desktop}"
 KEYCHAIN_ACCT="${BUZZ_KEYCHAIN_ACCT:-secrets}"
 

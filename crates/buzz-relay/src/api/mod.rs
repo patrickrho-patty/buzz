@@ -8,6 +8,7 @@ pub mod invites;
 pub mod media;
 pub mod mesh_demo;
 pub mod nip05;
+pub mod oidc;
 pub mod operator;
 pub mod workflows;
 

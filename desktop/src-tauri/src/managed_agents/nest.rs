@@ -64,7 +64,7 @@ const CANONICAL_SKILL_DIR: &str = ".agents/skills/buzz-cli";
 const NEST_DIR_PROD: &str = ".buzz";
 
 /// Nest directory name for dev builds. Dev builds (those whose Tauri app-data
-/// directory name starts with `"xyz.block.buzz.app.dev"`) use a separate nest
+/// directory name starts with `"xyz.patty.griddle.app.dev"`) use a separate nest
 /// so that the DMG and dev-build instances don't clobber each other's
 /// `.repos-dir` dotfile and `REPOS` symlink.
 const NEST_DIR_DEV: &str = ".buzz-dev";
@@ -85,7 +85,7 @@ static NEST_DIR: std::sync::OnceLock<Option<PathBuf>> = std::sync::OnceLock::new
 /// `OnceLock` is set exactly once.
 ///
 /// `is_dev` should be `true` when the running binary is a dev build — i.e.
-/// when the Tauri app-data directory name starts with `"xyz.block.buzz.app.dev"`.
+/// when the Tauri app-data directory name starts with `"xyz.patty.griddle.app.dev"`.
 /// Pass `false` for production (signed DMG) builds.
 pub fn init_nest_dir(is_dev: bool) {
     let suffix = if is_dev { NEST_DIR_DEV } else { NEST_DIR_PROD };
@@ -830,7 +830,7 @@ pub fn try_regenerate_nest(app: &AppHandle) {
     let app = app.clone();
     tauri::async_runtime::spawn(async move {
         if let Err(error) = regenerate_nest_context(&app, generation).await {
-            eprintln!("buzz-desktop: nest context regeneration failed: {error}");
+            eprintln!("griddle-desktop: nest context regeneration failed: {error}");
         }
     });
 }

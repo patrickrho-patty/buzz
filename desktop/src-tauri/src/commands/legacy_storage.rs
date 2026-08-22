@@ -3,9 +3,9 @@ use std::path::{Path, PathBuf};
 use rusqlite::{Connection, OpenFlags};
 use serde::Serialize;
 
-const BUZZ_RELEASE_IDENTIFIER_PREFIX: &str = "xyz.block.buzz.app";
+const BUZZ_RELEASE_IDENTIFIER_PREFIX: &str = "xyz.patty.griddle.app";
 const SPROUT_RELEASE_IDENTIFIER: &str = "xyz.block.sprout.app";
-const BUZZ_DEV_IDENTIFIER_PREFIX: &str = "xyz.block.buzz.app.dev";
+const BUZZ_DEV_IDENTIFIER_PREFIX: &str = "xyz.patty.griddle.app.dev";
 const SPROUT_DEV_IDENTIFIER_PREFIX: &str = "xyz.block.sprout.app.dev";
 
 const SPROUT_WORKSPACES_KEY: &str = "sprout-workspaces";
@@ -194,7 +194,7 @@ pub async fn get_legacy_workspace_storage(
             match read_legacy_workspace_storage_db(&database) {
                 Ok(storage) => merge_legacy_workspace_storage(&mut result, storage),
                 Err(error) => eprintln!(
-                    "buzz-desktop: legacy-local-storage-migration: {}: {error}",
+                    "griddle-desktop: legacy-local-storage-migration: {}: {error}",
                     database.display()
                 ),
             }
@@ -213,7 +213,7 @@ mod tests {
     #[test]
     fn legacy_identifier_maps_release_identifier() {
         assert_eq!(
-            legacy_identifier("xyz.block.buzz.app"),
+            legacy_identifier("xyz.patty.griddle.app"),
             Some("xyz.block.sprout.app".to_string())
         );
     }
@@ -221,7 +221,7 @@ mod tests {
     #[test]
     fn legacy_identifier_maps_dev_worktree_identifier() {
         assert_eq!(
-            legacy_identifier("xyz.block.buzz.app.dev.my-branch"),
+            legacy_identifier("xyz.patty.griddle.app.dev.my-branch"),
             Some("xyz.block.sprout.app.dev.my-branch".to_string())
         );
     }

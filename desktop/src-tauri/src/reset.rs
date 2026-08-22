@@ -21,7 +21,7 @@ use std::path::{Path, PathBuf};
 
 /// Sentinel path: `<app_data_dir.parent>/.<bundle_id>.reset-pending`
 /// where `bundle_id` is the file-name component of `app_data_dir`
-/// (e.g. `xyz.block.buzz.app` or `xyz.block.buzz.app.dev`).
+/// (e.g. `xyz.patty.griddle.app` or `xyz.patty.griddle.app.dev`).
 pub(crate) fn sentinel_path(app_data_dir: &Path) -> PathBuf {
     let bundle_id = app_data_dir
         .file_name()
@@ -173,7 +173,7 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
 
     if app_data_dir.exists() {
         if let Err(e) = rename_to_trash(app_data_dir) {
-            eprintln!("buzz-desktop reset: {e}");
+            eprintln!("griddle-desktop reset: {e}");
             return ResetOutcome {
                 completed: false,
                 failed: true,
@@ -186,7 +186,7 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
     if let Some(ref legacy) = ctx.legacy_app_data_dir {
         if legacy.exists() {
             if let Err(e) = rename_to_trash(legacy) {
-                eprintln!("buzz-desktop reset: {e}");
+                eprintln!("griddle-desktop reset: {e}");
                 // Non-fatal for legacy dir — continue
             }
         }
@@ -202,7 +202,7 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
         let tw = trash_path(&webkit_dir);
         if webkit_dir.exists() {
             if let Err(e) = rename_to_trash(&webkit_dir) {
-                eprintln!("buzz-desktop reset: {e}");
+                eprintln!("griddle-desktop reset: {e}");
                 // Non-fatal — continue
             }
         }
@@ -224,7 +224,7 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
 
     // ── Step 4: keychain — LAST so we can read keys before deleting ──────────
     if let Err(e) = ctx.keychain.delete_all_with_legacy() {
-        eprintln!("buzz-desktop reset: keychain delete: {e}");
+        eprintln!("griddle-desktop reset: keychain delete: {e}");
         // Keychain failure is fatal: keep sentinel, signal failure.
         // Restore all three dirs so the app returns to a coherent pre-reset state.
         if trash_app.exists() {
@@ -286,7 +286,7 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
         || !trash_webkit_gone
     {
         eprintln!(
-            "buzz-desktop reset: verification failed (keychain_wiped={keychain_ok}, \
+            "griddle-desktop reset: verification failed (keychain_wiped={keychain_ok}, \
              app_data_gone={app_data_gone}, legacy_gone={legacy_gone}, nest_gone={nest_gone}, \
              trash_app_gone={trash_app_gone}, trash_legacy_gone={trash_legacy_gone}, \
              trash_webkit_gone={trash_webkit_gone})"
@@ -299,7 +299,7 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
 
     // ── Step 7: delete sentinel → success ────────────────────────────────────
     if let Err(e) = delete_sentinel(app_data_dir) {
-        eprintln!("buzz-desktop reset: delete sentinel: {e}");
+        eprintln!("griddle-desktop reset: delete sentinel: {e}");
         // Sentinel not deleted — keep failed=false so the app boots into
         // onboarding, but on next boot the reset will retry (idempotent).
     }
@@ -391,7 +391,7 @@ mod tests {
         let dir = tmp
             .path()
             .join("Application Support")
-            .join("xyz.block.buzz.app");
+            .join("xyz.patty.griddle.app");
         std::fs::create_dir_all(&dir).unwrap();
         dir
     }
@@ -572,7 +572,7 @@ mod tests {
         let app_data = tmp
             .path()
             .join("Application Support")
-            .join("xyz.block.buzz.app.dev");
+            .join("xyz.patty.griddle.app.dev");
         std::fs::create_dir_all(&app_data).unwrap();
         write_sentinel(&app_data).unwrap();
 
@@ -608,7 +608,7 @@ mod tests {
         let app_data = tmp
             .path()
             .join("Application Support")
-            .join("xyz.block.buzz.app");
+            .join("xyz.patty.griddle.app");
         std::fs::create_dir_all(&app_data).unwrap();
         write_sentinel(&app_data).unwrap();
 
@@ -715,7 +715,7 @@ mod tests {
         let app_data = tmp
             .path()
             .join("Application Support")
-            .join("xyz.block.buzz.app.dev");
+            .join("xyz.patty.griddle.app.dev");
         std::fs::create_dir_all(&app_data).unwrap();
         write_sentinel(&app_data).unwrap();
 
@@ -777,13 +777,13 @@ mod tests {
     fn test_crash_retry_cleans_prior_deterministic_trash() {
         let tmp = TempDir::new().unwrap();
         let app_support = tmp.path().join("Application Support");
-        let app_data = app_support.join("xyz.block.buzz.app");
+        let app_data = app_support.join("xyz.patty.griddle.app");
         std::fs::create_dir_all(&app_data).unwrap();
         write_sentinel(&app_data).unwrap();
 
         // Simulate a prior crashed boot: originals absent, deterministic trash
         // present from the crash (as if the process renamed then died).
-        let trash_app_dir = app_support.join("xyz.block.buzz.app.reset-trash");
+        let trash_app_dir = app_support.join("xyz.patty.griddle.app.reset-trash");
         std::fs::create_dir_all(&trash_app_dir).unwrap();
         std::fs::write(trash_app_dir.join("identity.key"), b"old-key").unwrap();
 
@@ -811,7 +811,7 @@ mod tests {
     fn test_keychain_fail_restores_all_then_retry_cleans() {
         let tmp = TempDir::new().unwrap();
         let app_support = tmp.path().join("Application Support");
-        let app_data = app_support.join("xyz.block.buzz.app");
+        let app_data = app_support.join("xyz.patty.griddle.app");
         std::fs::create_dir_all(&app_data).unwrap();
         std::fs::write(app_data.join("config.json"), b"{}").unwrap();
 
@@ -859,7 +859,7 @@ mod tests {
         assert!(!app_data.exists(), "app-data must be gone");
         assert!(!legacy.exists(), "legacy must be gone");
         // No trash directories should remain.
-        let trash_app = app_support.join("xyz.block.buzz.app.reset-trash");
+        let trash_app = app_support.join("xyz.patty.griddle.app.reset-trash");
         let trash_legacy = app_support.join("xyz.block.sprout.app.reset-trash");
         assert!(!trash_app.exists(), "app trash must be cleaned");
         assert!(!trash_legacy.exists(), "legacy trash must be cleaned");

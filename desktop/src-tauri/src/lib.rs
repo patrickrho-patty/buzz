@@ -129,7 +129,7 @@ pub fn run() {
             }
             // Forward any deep link URLs from the duplicate launch.
             for arg in &argv {
-                if arg.starts_with("buzz://") {
+                if arg.starts_with("buzz://") || arg.starts_with("griddle://") {
                     handle_deep_link_url(app, arg);
                 }
             }
@@ -182,7 +182,7 @@ pub fn run() {
                             .is_err()
                             {
                                 eprintln!(
-                                    "buzz-desktop: initial render did not commit before reveal timeout"
+                                    "griddle-desktop: initial render did not commit before reveal timeout"
                                 );
                             }
 
@@ -284,7 +284,7 @@ pub fn run() {
             // memberships, DMs, and relay identity.
             let state = app_handle.state::<AppState>();
             if let Err(e) = resolve_persisted_identity(&app_handle, &state) {
-                eprintln!("buzz-desktop: fatal: identity resolution failed: {e}");
+                eprintln!("griddle-desktop: fatal: identity resolution failed: {e}");
                 std::process::exit(1);
             }
 
@@ -307,7 +307,7 @@ pub fn run() {
             // snapshot. Synchronous and best-effort — a failure here must not
             // block launch, but a missing persona is logged loudly inside.
             if let Err(e) = backfill_persona_snapshots(&app_handle) {
-                eprintln!("buzz-desktop: persona-snapshot backfill failed: {e}");
+                eprintln!("griddle-desktop: persona-snapshot backfill failed: {e}");
             }
 
             // Warm the loaded-harness registry BEFORE restore so cold-launch
@@ -372,7 +372,7 @@ pub fn run() {
             // nest directory. Non-fatal: agents fall back to $HOME if nest
             // creation fails.
             if let Err(error) = ensure_nest() {
-                eprintln!("buzz-desktop: failed to create nest: {error}");
+                eprintln!("griddle-desktop: failed to create nest: {error}");
             }
             archive::spawn_warm_init(app_handle.clone());
 
@@ -420,7 +420,7 @@ pub fn run() {
             if let Ok(exe) = std::env::current_exe() {
                 if let Some(parent) = exe.parent() {
                     if let Err(error) = managed_agents::ensure_cli_symlink(parent, is_dev_nest) {
-                        eprintln!("buzz-desktop: failed to create CLI symlink: {error}");
+                        eprintln!("griddle-desktop: failed to create CLI symlink: {error}");
                     }
                 }
             }
@@ -509,7 +509,7 @@ pub fn run() {
                         )
                         .await
                         {
-                            eprintln!("buzz-desktop: event-flush: {e}");
+                            eprintln!("griddle-desktop: event-flush: {e}");
                         }
                         tokio::time::sleep(Duration::from_secs(30)).await;
                     }
@@ -877,7 +877,7 @@ pub fn run() {
             api.prevent_close();
             if let Some(window) = app_handle.get_webview_window("main") {
                 if let Err(error) = window.hide() {
-                    eprintln!("buzz-desktop: failed to hide main window: {error}");
+                    eprintln!("griddle-desktop: failed to hide main window: {error}");
                 }
             }
         }
@@ -900,7 +900,7 @@ pub fn run() {
                     });
             if is_active_huddle_window {
                 if let Err(error) = app_handle.emit("huddle-companion-returned", ()) {
-                    eprintln!("buzz-desktop: failed to restore huddle drawer: {error}");
+                    eprintln!("griddle-desktop: failed to restore huddle drawer: {error}");
                 }
             }
         }

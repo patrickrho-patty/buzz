@@ -505,7 +505,7 @@ pub(crate) fn sweep_untracked_bundle_harnesses(skip_pids: &[u32]) {
         return;
     }
     eprintln!(
-        "buzz-desktop: sweep_untracked_bundle_harnesses: reaping {} stale harness process(es) {:?} (exe: {})",
+        "griddle-desktop: sweep_untracked_bundle_harnesses: reaping {} stale harness process(es) {:?} (exe: {})",
         to_kill.len(),
         to_kill,
         harness_exe.display(),

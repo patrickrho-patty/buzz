@@ -657,6 +657,21 @@ async fn main() -> anyhow::Result<()> {
     let wf_cron = Arc::clone(&workflow_engine);
     tokio::spawn(async move { wf_cron.run().await });
 
+    // ── Workforce SSO (Keycloak) membership sync ────────────────────────────
+    // Every 30s, poll Keycloak for disabled/deleted users and drop their
+    // relay membership (only rows added via OIDC). Live connections are
+    // closed by the next auth/membership check.
+    if state.config.oidc.enabled {
+        let sync_state = Arc::clone(&state);
+        tokio::spawn(async move {
+            info!(
+                interval_secs = buzz_relay::oidc::SYNC_INTERVAL.as_secs(),
+                "OIDC membership sync loop started"
+            );
+            buzz_relay::oidc::run_sync_loop(sync_state).await;
+        });
+    }
+
     // Ephemeral channel reaper — archives channels whose TTL deadline has passed.
     // Runs every 60s, matching the workflow cron loop pattern. The SQL UPDATE
     // uses `archived_at IS NULL` as a guard, so concurrent runs from multiple

@@ -1,0 +1,105 @@
+{
+  "legacy_root": {
+    "bootstrap_url": "https://get.patty.io/windows-cert-bootstrap.ps1",
+    "bootstrap_sha256": "3f266707bfa188062fd6a8a288a9f2653c81fb65d65e25ac350b140c6e905cf5",
+    "certificate_url": "https://get.patty.io/PattyPublisher.cer",
+    "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+  },
+  "releases": [
+    {
+      "version": "1.5.2",
+      "bootstrap_sha256": "3f133946a5d19a8743f5b96efa91f1d56e5ad95172e8bdaa38c3890c54ae8d7a",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.5.3",
+      "bootstrap_sha256": "fa79a6a982974dee17610d734cfc2acc4758c3b20e781ed9b2505aa46eedadc7",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.5.4",
+      "bootstrap_sha256": "36aa48844b6a15211f3fa9a18d94a3fe0507497b81e22ae3ffd73c3d4b014443",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.5.5",
+      "bootstrap_sha256": "fc610d2cf6435321e7cef07211a2892e4b3119b9fc060dbcb20b36ba9917d423",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.5.6",
+      "bootstrap_sha256": "78daabe136d7fe28864688156a6c0838f8c16878ceb29d3c923b5ec83fd0c3a9",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.5.7",
+      "bootstrap_sha256": "f3b62ffaaacefe25e36efa77b897fd16f4f0516ba9c4d80fdbd2cea0676fdbf3",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.5.8",
+      "bootstrap_sha256": "6ec3afdba39fd207d3aa358b61a4c72e491b71822662cb662d6e55c437e76b0f",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.5.10",
+      "bootstrap_sha256": "5d46ec5c5390df08a699c1ba46c697009948e9c462b1e25f0b4e8f38d7bc83e7",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.5.11",
+      "bootstrap_sha256": "aa10dcdf2ce927c4c3997b309bc8ff6530ce7dc7b25e4752f28057c03139f1a2",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.5.12",
+      "bootstrap_sha256": "739074ebb362aaf5eace373a78c1cb899576cd61c45d1add8d36c93bb73123f0",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.5.13",
+      "bootstrap_sha256": "f9e4e4ca38cc16909e8d09e82e5486c9096756f4b6b286c5c760da859b0e18e3",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.5.14",
+      "bootstrap_sha256": "970364da69a4603496a2e364b005d128823b5f13e809f9f2fe90336e3b75acf6",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.5.15",
+      "bootstrap_sha256": "71ee7efed9bffa1cb2fd7018caf9087a0577b19c85516a4767f161dd6931d07b",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.5.16",
+      "bootstrap_sha256": "dd53abe716b8ede81e43781fb846554d562f53fc72b5a2b892dcca9b363bfd84",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.6.0",
+      "bootstrap_sha256": "1d334f308df9cfe67ce057341ef820ccf5fa09817eaea2b8c65cc04291e0c181",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.7.0",
+      "bootstrap_sha256": "69b33b2ca7476e567b3e05e28c1ec0cfc593e0549a76e129b246ef0d7bfc347f",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.7.1",
+      "bootstrap_sha256": "daf19ced7e33662d3d529ee7aca661ca03357048688b2045b5f8a51e9dd89b57",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.7.2",
+      "bootstrap_sha256": "06fc960ac57919df1db020f64d8dc956a666802acfca8acf15022277e0037346",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    },
+    {
+      "version": "1.7.3",
+      "bootstrap_sha256": "de5ba3bb13a2822b754310567fc74e0feaee3e18f02e57b0196accd612adcef8",
+      "certificate_sha256": "725ed14a0be2bd905f98592af18e737f9bbd52b9a435ed55f44df3e6feeffd27"
+    }
+  ]
+}

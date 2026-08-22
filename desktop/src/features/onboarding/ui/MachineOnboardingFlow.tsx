@@ -9,6 +9,7 @@ import {
 } from "@/shared/api/tauriIdentity";
 import type { IdentityStorage } from "@/shared/api/types";
 import { Button } from "@/shared/ui/button";
+import { startOidcLogin } from "@/shared/auth/oidcClient";
 import {
   Dialog,
   DialogContent,
@@ -212,6 +213,28 @@ export function MachineOnboardingFlow({
     [continueWithIdentity, queryClient],
   );
 
+  // Workforce SSO: open the system browser at Keycloak; when the OIDC
+  // round-trip completes, the relay hands back the employee's Nostr keypair,
+  // which flows through the exact same import path as a manual paste.
+  const signInWithPatty = React.useCallback(async () => {
+    setIsPending(true);
+    setError(null);
+    try {
+      const keys = await startOidcLogin();
+      const identity = await importIdentity(keys.private_key);
+      continueWithIdentity(identity.pubkey);
+      queryClient.setQueryData(["identity"], identity);
+      setIdentityWasImported(true);
+      setSelectedPubkey(identity.pubkey);
+      setTransitionDirection("forward");
+      setPage("setup");
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "SSO sign-in failed");
+    } finally {
+      setIsPending(false);
+    }
+  }, [continueWithIdentity, queryClient]);
+
   const backFromKeyImport = React.useCallback(() => {
     if (keyImportStage === "backup-password") {
       setKeyImportFormKey((current) => current + 1);
@@ -312,9 +335,9 @@ export function MachineOnboardingFlow({
               transitionKey={`machine-identity-${transitionDirection}`}
             >
               <img
-                alt="Buzz"
+                alt="Griddle"
                 className="w-full max-w-[600px]"
-                src="/landing/buzz-wordmark.png"
+                src="/landing/griddle-wordmark.png"
               />
               <p className="mt-2 max-w-[560px] text-center text-2xl font-normal leading-none text-foreground">
                 Your people, your agents, your projects —<br />
@@ -327,14 +350,22 @@ export function MachineOnboardingFlow({
                 <Button
                   className={ONBOARDING_LANDING_CTA_CLASS}
                   disabled={isPending}
-                  onClick={() => void loadFreshIdentity()}
+                  onClick={() => void signInWithPatty()}
                   type="button"
                 >
                   {isPending
-                    ? "Loading identity…"
-                    : selectedPubkey
-                      ? "Continue setup"
-                      : "Create a new identity key"}
+                    ? "Waiting for browser sign-in…"
+                    : "Sign in with Patty"}
+                </Button>
+                <Button
+                  className={`${ONBOARDING_SECONDARY_CTA_CLASS} px-5`}
+                  disabled={isPending}
+                  onClick={() => void loadFreshIdentity()}
+                  type="button"
+                >
+                  {selectedPubkey
+                    ? "Continue setup"
+                    : "Create a new identity key"}
                 </Button>
                 <Button
                   className={`${ONBOARDING_SECONDARY_CTA_CLASS} px-5`}

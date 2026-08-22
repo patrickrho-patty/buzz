@@ -1,0 +1,17 @@
+/* Canonical Pie/Patty visual primitives.
+   Embedded application pages alias local semantic names to these variables.
+   test/design-tokens.test.js prevents any surface from silently drifting. */
+:root {
+  --patty-bg: #151312;
+  --patty-surface: #1c1917;
+  --patty-surface-raised: #211d1a;
+  --patty-line: #39312d;
+  --patty-text: #f5eee9;
+  --patty-muted: #aa9d94;
+  --patty-accent: #ef6b4a;
+  --patty-success: #7cb990;
+  --patty-warning: #e2af54;
+  --patty-danger: #e06b66;
+  --patty-sans: Geist, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --patty-mono: "SFMono-Regular", Consolas, monospace;
+}

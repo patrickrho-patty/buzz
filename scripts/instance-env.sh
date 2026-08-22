@@ -25,7 +25,7 @@ if [[ "${BUZZ_RESET_WEBVIEW_STATE:-0}" == "1" ]]; then
     DEV_URL="${DEV_URL}?resetDevState=1"
 fi
 
-BUZZ_TAURI_CONFIG="{\"build\":{\"devUrl\":\"${DEV_URL}\",\"beforeDevCommand\":\"exec ./node_modules/.bin/vite --port ${BUZZ_VITE_PORT} --strictPort\"},\"identifier\":\"xyz.block.buzz.app.dev\",\"productName\":\"Buzz Dev\"}"
+BUZZ_TAURI_CONFIG="{\"build\":{\"devUrl\":\"${DEV_URL}\",\"beforeDevCommand\":\"exec ./node_modules/.bin/vite --port ${BUZZ_VITE_PORT} --strictPort\"},\"identifier\":\"xyz.patty.griddle.app.dev\",\"productName\":\"Buzz Dev\"}"
 unset VITE_DEV_BRANCH
 
 # In worktrees, extract a label from the branch name and derive a unique app
@@ -47,7 +47,7 @@ if git rev-parse --is-inside-work-tree &>/dev/null; then
         # identifier is kept so concurrent instances don't collide on
         # tauri-plugin-single-instance or the app data directory.
         if [[ "${BUZZ_SHARE_IDENTITY:-0}" == "1" ]]; then
-            KEYRING_SERVICE="buzz-desktop-dev"
+            KEYRING_SERVICE="griddle-desktop-dev"
             KEYRING_BLOB=""
             case "$(uname -s)" in
                 Darwin)
@@ -63,7 +63,7 @@ if git rev-parse --is-inside-work-tree &>/dev/null; then
             esac
 
             KEYRING_IDENTITY="$(printf '%s' "$KEYRING_BLOB" | python3 -c 'import json, sys; value = json.load(sys.stdin).get("identity", ""); print(value if isinstance(value, str) else "")' 2>/dev/null || true)"
-            CANONICAL_KEY="$HOME/Library/Application Support/xyz.block.buzz.app.dev/identity.key"
+            CANONICAL_KEY="$HOME/Library/Application Support/xyz.patty.griddle.app.dev/identity.key"
             LEGACY_CANONICAL_KEY="$HOME/Library/Application Support/xyz.block.sprout.app.dev/identity.key"
 
             SHARED_IDENTITY="$KEYRING_IDENTITY"
@@ -89,7 +89,7 @@ if git rev-parse --is-inside-work-tree &>/dev/null; then
         if swift "$GENERATE_DEV_ICON" "$BASE_ICON" "$DEV_ICON" "$BUZZ_WORKTREE_LABEL"; then
             echo "🌳 Worktree: ${BUZZ_WORKTREE_LABEL}"
             export VITE_DEV_BRANCH="$BUZZ_WORKTREE_LABEL"
-            BUZZ_TAURI_CONFIG="{\"build\":{\"devUrl\":\"${DEV_URL}\",\"beforeDevCommand\":\"exec ./node_modules/.bin/vite --port ${BUZZ_VITE_PORT} --strictPort\"},\"identifier\":\"xyz.block.buzz.app.dev.${BUZZ_INSTANCE_SLUG}\",\"productName\":\"Buzz Dev (${BUZZ_WORKTREE_LABEL})\",\"bundle\":{\"icon\":[\"$DEV_ICON\"]}}"
+            BUZZ_TAURI_CONFIG="{\"build\":{\"devUrl\":\"${DEV_URL}\",\"beforeDevCommand\":\"exec ./node_modules/.bin/vite --port ${BUZZ_VITE_PORT} --strictPort\"},\"identifier\":\"xyz.patty.griddle.app.dev.${BUZZ_INSTANCE_SLUG}\",\"productName\":\"Buzz Dev (${BUZZ_WORKTREE_LABEL})\",\"bundle\":{\"icon\":[\"$DEV_ICON\"]}}"
         fi
     fi
 fi
