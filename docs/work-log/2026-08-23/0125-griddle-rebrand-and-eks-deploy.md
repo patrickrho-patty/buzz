@@ -165,3 +165,14 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 - `cargo check` + `cargo fmt` clean; 0 warnings in oidc modules.
 - Test run: 884 passed, 9 failed — **verified the same 9 fail on a clean stash (pre-existing failures: api::media rate/concurrency-scoped tests + api::admin report/feedback tests), NOT caused by OIDC changes.**
 - Remaining: unit tests for oidc module, desktop client flow, helm env wiring, ECR rebuild, deploy, e2e.
+
+## 05:05 KST — Milestone: workforce SSO live end-to-end (relay + desktop)
+- Keycloak: `griddle-desktop` public client created (PKCE S256, redirect `griddle://auth/callback` + localhost dev fallback).
+- Unit tests: 8/8 pass (PKCE RFC 7636 known-answer, AES-GCM roundtrip + tamper detection, KcUser parsing).
+- Desktop: `oidcClient.ts` (browser flow w/ state validation, 3-min timeout, cancel), "Sign in with Patty" primary CTA, `griddle://auth/callback` deep-link scheme registered (tauri.conf + deep_link.rs + lib.rs argv forward). tsc + biome clean.
+- Deploy: image v0.2.0 (GH Actions, ~25 min), helm upgrade w/ BUZZ_OIDC_* env (relay.extraEnv + griddle-oidc secret), RWO deadlock broken via scale 0→1.
+- Verified live: sync loop started (30s); GET /auth/oidc/start returns proper Keycloak URL (PKCE S256, griddle-desktop client); POST /auth/oidc/complete correctly 401s bad codes via Keycloak.
+- Desktop rebuilt + installed to /Applications (ad-hoc signed; CFBundleURLSchemes = [buzz, griddle]).
+- kubectl context gotcha: context had drifted to `orbstack` — must use `kubectl config use-context arn:aws:eks:ap-northeast-2:361645878435:cluster/rho-cluster`.
+- CORS: relay permissive when BUZZ_CORS_ORIGINS unset — desktop fetch to relay works.
+- E2E pending user test: launch /Applications/Griddle.app → "Sign in with Patty" → browser Google SSO → auto-return.

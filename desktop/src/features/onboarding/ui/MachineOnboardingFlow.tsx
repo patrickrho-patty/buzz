@@ -90,6 +90,7 @@ export function MachineOnboardingFlow({
   const [transitionDirection, setTransitionDirection] =
     React.useState<OnboardingTransitionDirection>("forward");
   const [error, setError] = React.useState<string | null>(null);
+  const [showManualKeyOptions, setShowManualKeyOptions] = React.useState(false);
   const [isPending, setIsPending] = React.useState(false);
   const [identityWasImported, setIdentityWasImported] = React.useState(false);
   const [keyImportStage, setKeyImportStage] =
@@ -357,32 +358,48 @@ export function MachineOnboardingFlow({
                     ? "Waiting for browser sign-in…"
                     : "Sign in with Patty"}
                 </Button>
-                <Button
-                  className={`${ONBOARDING_SECONDARY_CTA_CLASS} px-5`}
-                  disabled={isPending}
-                  onClick={() => void loadFreshIdentity()}
-                  type="button"
-                >
-                  {selectedPubkey
-                    ? "Continue setup"
-                    : "Create a new identity key"}
-                </Button>
-                <Button
-                  className={`${ONBOARDING_SECONDARY_CTA_CLASS} px-5`}
-                  disabled={isPending}
-                  onClick={() => {
-                    setKeyImportDialog(null);
-                    setKeyImportStage("key-entry");
-                    setTransitionDirection("forward");
-                    setPage("key-import");
-                  }}
-                  type="button"
-                  variant="ghost"
-                >
-                  {selectedPubkey
-                    ? "Use a different key instead"
-                    : "Use an existing key"}
-                </Button>
+                {/* Manual key options: collapse behind a quiet footnote toggle —
+                    workforce SSO is the primary path; manual import stays
+                    reachable for the relay owner and edge cases. */}
+                {showManualKeyOptions ? (
+                  <>
+                    <Button
+                      className={`${ONBOARDING_SECONDARY_CTA_CLASS} px-5`}
+                      disabled={isPending}
+                      onClick={() => void loadFreshIdentity()}
+                      type="button"
+                    >
+                      {selectedPubkey
+                        ? "Continue setup"
+                        : "Create a new identity key"}
+                    </Button>
+                    <Button
+                      className={`${ONBOARDING_SECONDARY_CTA_CLASS} px-5`}
+                      disabled={isPending}
+                      onClick={() => {
+                        setKeyImportDialog(null);
+                        setKeyImportStage("key-entry");
+                        setTransitionDirection("forward");
+                        setPage("key-import");
+                      }}
+                      type="button"
+                      variant="ghost"
+                    >
+                      {selectedPubkey
+                        ? "Use a different key instead"
+                        : "Use an existing key"}
+                    </Button>
+                  </>
+                ) : (
+                  <button
+                    className="text-xs text-foreground/50 underline-offset-4 hover:underline"
+                    data-testid="show-manual-key-options"
+                    onClick={() => setShowManualKeyOptions(true)}
+                    type="button"
+                  >
+                    Advanced: use a key manually
+                  </button>
+                )}
               </div>
               <IdentityKeyHelpDialog />
             </OnboardingSlideTransition>
