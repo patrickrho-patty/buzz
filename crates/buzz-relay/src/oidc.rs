@@ -127,8 +127,13 @@ struct JwksCache {
 static JWKS_CACHE: once_cell::sync::Lazy<tokio::sync::Mutex<HashMap<String, JwksCache>>> =
     once_cell::sync::Lazy::new(|| tokio::sync::Mutex::new(HashMap::new()));
 
-/// Validate an `id_token` (RS256/ES256) against the issuer's JWKS.
-/// Checks: signature, `iss`, `aud` (desktop client id), `exp`, `iat`.
+/// Validate an `id_token` against the issuer's JWKS.
+/// Checks: signature (key selected by `kid` from the token header,
+/// algorithm taken from the header itself), `iss`, `aud` (desktop client
+/// id), `exp`, `iat`.
+///
+/// Keycloak realms may sign with RS256 (default), PS256, or ES256 — the
+/// token header is authoritative for both the algorithm and the key.
 pub async fn validate_id_token(state: &AppState, token: &str) -> Result<IdClaims, String> {
     let cfg = &state.config.oidc;
     let issuer = &cfg.issuer;
@@ -136,17 +141,16 @@ pub async fn validate_id_token(state: &AppState, token: &str) -> Result<IdClaims
 
     let jwks = fetch_jwks_cached(issuer).await?;
 
-    let mut validation = jsonwebtoken::Validation::new(jsonwebtoken::Algorithm::RS256);
+    let header = jsonwebtoken::decode_header(token)
+        .map_err(|e| format!("jwt header parse: {e}"))?;
+    let jwk = pick_jwk_by_kid(&jwks, header.kid.as_deref())?;
+
+    let mut validation = jsonwebtoken::Validation::new(header.alg);
     validation.set_issuer(&[issuer.as_str()]);
     validation.set_audience(&[expected_aud.as_str()]);
     validation.leeway = 30;
-    // Keycloak `id_token`s are RS256 by default; ES256 also accepted.
-    validation.algorithms = vec![
-        jsonwebtoken::Algorithm::RS256,
-        jsonwebtoken::Algorithm::ES256,
-    ];
 
-    let key = jsonwebtoken::DecodingKey::from_jwk(&pick_jwk(&jwks)?)
+    let key = jsonwebtoken::DecodingKey::from_jwk(&jwk)
         .map_err(|e| format!("decoding key from jwk: {e}"))?;
     let token_data = jsonwebtoken::decode::<IdClaims>(token, &key, &validation)
         .map_err(|e| format!("jwt validation: {e}"))?;
@@ -154,24 +158,34 @@ pub async fn validate_id_token(state: &AppState, token: &str) -> Result<IdClaims
     Ok(token_data.claims)
 }
 
-/// Pick the first RSA/EC signing key from the JWKS.
-fn pick_jwk(jwks: &jsonwebtoken::jwk::JwkSet) -> Result<jsonwebtoken::jwk::Jwk, String> {
-    jwks.keys
+/// Pick a signing (not encryption) JWK — by `kid` when the token header
+/// carries one, else the first RSA signing key.
+fn pick_jwk_by_kid(
+    jwks: &jsonwebtoken::jwk::JwkSet,
+    kid: Option<&str>,
+) -> Result<jsonwebtoken::jwk::Jwk, String> {
+    let is_signing = |k: &jsonwebtoken::jwk::Jwk| {
+        matches!(
+            k.common.key_algorithm,
+            Some(jsonwebtoken::jwk::KeyAlgorithm::RS256)
+                | Some(jsonwebtoken::jwk::KeyAlgorithm::PS256)
+                | Some(jsonwebtoken::jwk::KeyAlgorithm::ES256)
+        )
+    };
+    if let Some(kid) = kid {
+        if let Some(k) = jwks
+            .keys
+            .iter()
+            .find(|k| k.common.key_id.as_deref() == Some(kid) && is_signing(k))
+        {
+            return Ok(k.clone());
+        }
+        return Err(format!("JWKS has no signing key for kid {kid}"));
+    }
+    jwks
+        .keys
         .iter()
-        .find(|k| {
-            matches!(
-                k.common.key_algorithm,
-                Some(jsonwebtoken::jwk::KeyAlgorithm::RS256)
-            )
-        })
-        .or_else(|| {
-            jwks.keys.iter().find(|k| {
-                matches!(
-                    k.common.key_algorithm,
-                    Some(jsonwebtoken::jwk::KeyAlgorithm::ES256)
-                )
-            })
-        })
+        .find(|k| is_signing(k))
         .cloned()
         .ok_or_else(|| "no usable signing key in JWKS".to_string())
 }
@@ -692,6 +706,38 @@ mod tests {
             u.nostr_pubkey(),
             Some("ebf0b5847e34a95716bca3cd83c1cd91efd8f6b610cc62b4531ec5e7d9825026")
         );
+    }
+
+    #[test]
+    fn jwks_selection_matches_by_kid_and_header_alg() {
+        // Real-world shape: two RSA keys (one sig RS256, one enc RSA-OAEP).
+        // pick_jwk_by_kid must return the sig key by kid and reject enc keys.
+        let sig = serde_json::json!({
+            "kty": "RSA", "kid": "sig-key-1", "use": "sig", "alg": "RS256",
+            "n": "sXchSkCPvVBEEiTa1pYl2-LMGMHg-1tWfy_LZ1U4Pt8bdOZdDkT6G7-8EJDQXZHRN2dZArPVIzFg",
+            "e": "AQAB"
+        });
+        let enc = serde_json::json!({
+            "kty": "RSA", "kid": "enc-key-1", "use": "enc", "alg": "RSA-OAEP",
+            "n": "sXchSkCPvVBEEiTa1pYl2-LMGMHg-1tWfy_LZ1U4Pt8bdOZdDkT6G7-8EJDQXZHRN2dZArPVIzFg",
+            "e": "AQAB"
+        });
+        let jwks: jsonwebtoken::jwk::JwkSet =
+            serde_json::from_value(serde_json::json!({ "keys": [sig, enc] })).unwrap();
+
+        // kid match selects the sig key
+        let picked = pick_jwk_by_kid(&jwks, Some("sig-key-1")).unwrap();
+        assert_eq!(picked.common.key_id.as_deref(), Some("sig-key-1"));
+
+        // enc key kid is rejected
+        assert!(pick_jwk_by_kid(&jwks, Some("enc-key-1")).is_err());
+
+        // unknown kid errors (no silent fallback)
+        assert!(pick_jwk_by_kid(&jwks, Some("missing")).is_err());
+
+        // no kid → first signing key
+        let fallback = pick_jwk_by_kid(&jwks, None).unwrap();
+        assert_eq!(fallback.common.key_id.as_deref(), Some("sig-key-1"));
     }
 
     #[test]

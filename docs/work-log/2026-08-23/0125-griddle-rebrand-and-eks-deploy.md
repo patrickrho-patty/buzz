@@ -176,3 +176,10 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 - kubectl context gotcha: context had drifted to `orbstack` — must use `kubectl config use-context arn:aws:eks:ap-northeast-2:361645878435:cluster/rho-cluster`.
 - CORS: relay permissive when BUZZ_CORS_ORIGINS unset — desktop fetch to relay works.
 - E2E pending user test: launch /Applications/Griddle.app → "Sign in with Patty" → browser Google SSO → auto-return.
+
+## 05:35 KST — Fixes: InvalidAlgorithm, manual buttons, keychain prompts
+1. **id_token InvalidAlgorithm**: validation now picks the JWKS key by the token header's `kid` and derives the algorithm from the header itself (was hardcoded first-RS256-key + fixed alg list). Realm signs RS256 but header-driven matching is future-proof (PS256/ES256).
+2. **Manual key buttons still visible**: they were kept as secondary options by design in v0.2.0 — user wants them out. Now collapsed behind a quiet "Advanced: use a key manually" footnote; "Sign in with Patty" is the sole primary CTA.
+3. **Keychain prompt on every reinstall**: root cause = ad-hoc re-signing gives each install a NEW code signature, orphaning the keychain ACL entry. Fix: install-griddle.sh now re-signs with the stable Developer ID (Patty Co.,LTD S37644C7R8). macOS will still prompt ONCE per keychain item (by design — can't be bypassed without weakening security), but "Always Allow" now persists across reinstalls.
+- Relay v0.2.1 deployed (kid-matching fix live, verified start/complete endpoints + sync loop).
+- Desktop rebuilt, installed with Developer ID signing (verified TeamIdentifier=S37644C7R8).
