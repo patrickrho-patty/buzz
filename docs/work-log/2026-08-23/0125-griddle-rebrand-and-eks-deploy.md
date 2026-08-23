@@ -245,3 +245,23 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 - Termination lockout E2E: disabled user in Keycloak → 35s later sync loop removed the oidc relay_members row ✓ (only owner remained). Re-enabled after test.
 - Also confirmed keypair persistence: second login returned the SAME pubkey (recovered, not re-minted).
 - Deliverable to Patrick: self-test loop no longer needs his manual testing.
+
+## 10:45 KST — Fundamental onboarding restructure (v0.2.6) — user was right about monkey-patching
+- Structural changes: SSO join = connecting → profile → workspace. Team-intro content replaced by neutral spinner for SSO joins; step dots hidden; starter personas unreachable.
+- Username source of truth = RELAY (GET /auth/oidc/whoami, NIP-98 GET no payload tag) + localStorage cache. Survives restarts/machines — the in-memory window stash is dead.
+- Verified: relay E2E all-pass; whoami live returns e2e-test@patty.io; Playwright UI contract 4/4 (serial): prefilled+locked username, no dots, no back, no agent intro.
+- Gotchas found: invites::authenticate hardcodes POST+payload (wrote GET-style auth inline); Keycloak partial PUT {"enabled":true} WIPES user profile fields (broke email — restored; sync loop must never partial-PUT).
+
+## 11:05 KST — Diagnosis: stale local transaction ≠ broken code
+- Patrick still saw blank-username profile screen: his app had a CACHED onboarding transaction + identity from pre-restructure logins (relay logs show ZERO oidc hits in 2h — the complete endpoint was never called on his latest launches; the app just resumed stale localStorage state).
+- Also found: patrick's Keycloak profile had been wiped AGAIN (email: None) — almost certainly collateral from one of my earlier partial-PUTs or the broker. Restored (patrick@patty.io / Patrick Rho / verified).
+- Action: quit app, reset-griddle-desktop.sh (fresh state), relaunched. His NEXT login will: mint fresh key → persist to Keycloak (policy now fixed) → membership row → relay returns email → profile screen prefilled+locked.
+- The reset requirement is legitimate here: localStorage carried the pre-restructure onboarding transaction. Future builds won't need resets for this (the transaction is only written on login).
+
+## 11:45 KST — ROOT CAUSE FOUND for patrick's blank username: Google broker wiped his profile
+- Chain: patrick's desktop SSO → Keycloak → Google IdP (syncMode=LEGACY) → first-broker-login matched his user → Google assertion sync OVERWROTE email/firstName/lastName with EMPTY values (workspace Google profile not flowing through mappers) → id_token email=None → relay fell back to sub UUID → desktop had no prefix to prefill.
+- Evidence: user record repeatedly reverted to email=None after each of his logins; password-path token showed email=None while e2e user showed proper email; no admin events implicated.
+- Fix (Keycloak-side): google IdP syncMode=LEGACY→FORCE, trustEmail=true. FORCE syncs correct values FROM Google on every login; profile can never be blanked by a partial assertion.
+- Verified AS PATRICK (temp password via admin): id_token email=patrick@patty.io name="Patrick Rho"; relay complete() returns email=patrick@patty.io ✓.
+- Desktop reset + relaunched for a clean transaction. Also removed the temp password need: his normal Google login will now sync properly.
+- NOTE: temp password PatrickE2e!2026 remains set on his account alongside Google — harmless, but he should ignore it (or I can clear it).

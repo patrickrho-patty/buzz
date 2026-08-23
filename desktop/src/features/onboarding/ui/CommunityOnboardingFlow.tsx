@@ -189,7 +189,18 @@ export function CommunityOnboardingFlow({
     if (ssoEmail) return; // cached value good enough
     let cancelled = false;
     void resolveWorkspaceEmail().then((email) => {
-      if (!cancelled && email) setSsoEmail(email);
+      if (cancelled || !email) return;
+      setSsoEmail(email);
+      // Seed the input the moment the email resolves — the profile-stage
+      // seeding effect has already run by then and won't re-fire, so this
+      // callback is the only reliable prefill point for a cold cache.
+      const prefix = email
+        .split("@")[0]!
+        .toLowerCase()
+        .replace(/[^a-z0-9._-]/g, "");
+      if (prefix) {
+        setDisplayName((prev) => (prev === "" ? prefix : prev));
+      }
     });
     return () => {
       cancelled = true;

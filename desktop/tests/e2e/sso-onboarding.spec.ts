@@ -14,10 +14,8 @@ import { installMockBridge } from "../helpers/bridge";
 const SSO_EMAIL = "e2e-test@patty.io";
 
 test.beforeEach(async ({ page }) => {
-  // Seed the SSO email cache the way resolveWorkspaceEmail would.
-  await page.addInitScript((email) => {
-    window.localStorage.setItem("griddle.ssoEmail", email);
-  }, SSO_EMAIL);
+  // Cold-cache mode: no localStorage seed — the prefill must come from the
+  // whoami mock alone (the real cold-start path).
 
   await page.addInitScript((email) => {
     (window as unknown as Record<string, string>).__BUZZ_E2E_WHOAMI_EMAIL__ =
