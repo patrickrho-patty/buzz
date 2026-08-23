@@ -788,3 +788,41 @@ mod nostr_identity_binding_tests {
 #[cfg(test)]
 #[path = "identity_key_backup_tests.rs"]
 mod identity_key_backup_tests;
+
+/// Resolve the workspace email bound to the current identity's pubkey via the
+/// relay's OIDC mapping (`GET /auth/oidc/whoami`, NIP-98 authed).
+///
+/// Workforce SSO: the desktop uses this to derive+lock the username on any
+/// machine / after restarts — no session-scoped stash involved.
+#[tauri::command]
+pub async fn oidc_whoami(app_handle: tauri::AppHandle) -> Result<String, String> {
+    let state = app_handle.state::<AppState>();
+    let base = crate::relay::relay_api_base_url();
+    let url = format!("{base}/auth/oidc/whoami");
+
+    let auth = crate::relay::build_nip98_auth_header(
+        &reqwest::Method::GET,
+        &url,
+        &[],
+        &state,
+    )?;
+
+    let client = reqwest::Client::new();
+    let resp = client
+        .get(&url)
+        .header("Authorization", auth)
+        .send()
+        .await
+        .map_err(|e| format!("whoami request failed: {e}"))?;
+    if !resp.status().is_success() {
+        return Err(format!("whoami returned {}", resp.status()));
+    }
+    let body: serde_json::Value =
+        resp.json().await.map_err(|e| format!("whoami parse: {e}"))?;
+    let email = body
+        .get("email")
+        .and_then(|v| v.as_str())
+        .unwrap_or("")
+        .to_string();
+    Ok(email)
+}

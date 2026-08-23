@@ -1,5 +1,6 @@
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { invokeTauri } from "@/shared/api/tauri";
 
 /**
  * Workforce SSO (Keycloak OIDC) client for the Griddle desktop app.
@@ -174,4 +175,33 @@ function cleanupPending(): void {
   clearTimeout(pending.timeout);
   pending.unlisten();
   pending = null;
+}
+
+/**
+ * Resolve the workspace email for the signed-in identity via the relay
+ * (`oidc_whoami` Tauri command → GET /auth/oidc/whoami, NIP-98 authed).
+ * Falls back to the locally cached SSO email. Returns "" when unknown.
+ *
+ * The result is cached in localStorage so the username survives restarts
+ * without a network round-trip on the profile screen.
+ */
+export async function resolveWorkspaceEmail(): Promise<string> {
+  try {
+    const email = await invokeTauri<string>("oidc_whoami");
+    if (email && email.includes("@")) {
+      try {
+        localStorage.setItem("griddle.ssoEmail", email);
+      } catch {
+        /* cache write best-effort */
+      }
+      return email;
+    }
+  } catch {
+    // Relay unreachable or OIDC disabled — fall through to cache.
+  }
+  try {
+    return localStorage.getItem("griddle.ssoEmail") ?? "";
+  } catch {
+    return "";
+  }
 }

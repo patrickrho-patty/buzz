@@ -31,6 +31,7 @@ import { useSystemColorScheme } from "@/shared/theme/useSystemColorScheme";
 import { Button } from "@/shared/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/shared/ui/dialog";
 import { Input } from "@/shared/ui/input";
+import { resolveWorkspaceEmail } from "@/shared/auth/oidcClient";
 import { MembershipDenied } from "./MembershipDenied";
 import { StartupWindowDragRegion } from "@/shared/ui/StartupWindowDragRegion";
 import {
@@ -168,22 +169,32 @@ export function CommunityOnboardingFlow({
   // prefix and locked. The relay derives identity from Keycloak, so the
   // username must track the workspace email (renames flow through SSO sync,
   // not user input). Unset for the manual (advanced) path.
-  const ssoEmail = (() => {
+  // Workforce username: resolved from the relay (whoami) with a localStorage
+  // cache — survives restarts and works on any machine, unlike a session stash.
+  const [ssoEmail, setSsoEmail] = React.useState<string | null>(() => {
     try {
-      const v = (window as unknown as Record<string, string | undefined>)[
-        "__GRIDDLE_SSO_EMAIL"
-      ];
-      return typeof v === "string" && v.includes("@") ? v : undefined;
+      const cached = localStorage.getItem("griddle.ssoEmail");
+      return cached && cached.includes("@") ? cached : null;
     } catch {
-      return undefined;
+      return null;
     }
-  })();
+  });
   const lockedSsoUsername = ssoEmail
     ? ssoEmail
         .split("@")[0]!
         .toLowerCase()
         .replace(/[^a-z0-9._-]/g, "")
     : undefined;
+  React.useEffect(() => {
+    if (ssoEmail) return; // cached value good enough
+    let cancelled = false;
+    void resolveWorkspaceEmail().then((email) => {
+      if (!cancelled && email) setSsoEmail(email);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [ssoEmail]);
   const [avatarUrl, setAvatarUrl] = React.useState("");
   const [localAvatarPreviewUrl, setLocalAvatarPreviewUrl] = React.useState<
     string | null
@@ -342,7 +353,12 @@ export function CommunityOnboardingFlow({
       .then((profile) => {
         if (profile.hasProfileEvent) {
           setTransitionDirection("forward");
-          update({ stage: "team-intro", error: undefined }, transaction.id);
+          if (isFirstCommunityJoin) {
+            // Workforce SSO: an existing profile means nothing left to show.
+            void finalize();
+          } else {
+            update({ stage: "team-intro", error: undefined }, transaction.id);
+          }
         }
       })
       .catch(() => {
@@ -481,7 +497,13 @@ export function CommunityOnboardingFlow({
         throw error;
       }
       setTransitionDirection("forward");
-      update({ stage: "team-intro", error: undefined });
+      // Workforce SSO joins skip the agent starter-team intro — go straight
+      // to finalization. Non-SSO joins keep the full intro flow.
+      if (isFirstCommunityJoin) {
+        await finalize();
+      } else {
+        update({ stage: "team-intro", error: undefined });
+      }
     } catch (error) {
       if (isRelayMembershipDeniedError(error)) {
         try {
@@ -518,7 +540,9 @@ export function CommunityOnboardingFlow({
       }
     >
       <StartupWindowDragRegion />
-      {isProfileStage || isTeamStage ? (
+      {/* Workforce SSO joins are a two-step flow (profile → workspace); the
+          7-step dot track is meaningless there — hide it entirely. */}
+      {!isFirstCommunityJoin && (isProfileStage || isTeamStage) ? (
         <OnboardingChrome current={isTeamStage ? 7 : 6} />
       ) : null}
       <OnboardingFooterProvider

@@ -106,6 +106,7 @@ pub fn build_router(state: Arc<AppState>) -> Router {
         // Workforce SSO (Keycloak OIDC, Griddle fork)
         .route("/auth/oidc/start", get(api::oidc::start))
         .route("/auth/oidc/complete", post(api::oidc::complete))
+        .route("/auth/oidc/whoami", get(api::oidc::whoami))
         // Policy documents as standalone pages — desktop opens these in the
         // system browser instead of rendering the Markdown in-app.
         .route(

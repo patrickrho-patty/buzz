@@ -194,3 +194,43 @@ pub async fn complete(
         "relay_url": state.config.relay_url,
     })))
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GET /auth/oidc/whoami — NIP-98 authed email lookup for the caller's pubkey
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Returns the workspace email bound to the caller's Nostr pubkey (via the
+/// Keycloak `nostr_pubkey` user attribute). Lets the desktop resolve its SSO
+/// username on any machine / after restarts without a session stash.
+pub async fn whoami(
+    State(state): State<Arc<AppState>>,
+    headers: axum::http::HeaderMap,
+) -> Result<Json<Value>, (StatusCode, Json<Value>)> {
+    let cfg = state.config.oidc.clone();
+    if !cfg.enabled {
+        return Err(api_error(StatusCode::NOT_FOUND, "OIDC is not configured"));
+    }
+
+    // NIP-98 auth on this exact URL.
+    let url = format!("{}/auth/oidc/whoami", state.config.relay_url.trim_end_matches('/'));
+    let body: &[u8] = &[];
+    let (_tenant, pubkey) = super::invites::authenticate(&state, &headers, &url, body)
+        .await
+        .map_err(|e| e)?;
+    let pubkey_hex = pubkey.to_hex();
+
+    // Reverse lookup across Keycloak users: find the one whose nostr_pubkey matches.
+    let kc = crate::oidc::KeycloakAdmin::from_state(&state);
+    let users = kc
+        .list_users()
+        .await
+        .map_err(|e| internal_error(&format!("keycloak lookup: {e}")))?;
+
+    let email = users
+        .iter()
+        .find(|u| u.enabled && u.nostr_pubkey() == Some(pubkey_hex.as_str()))
+        .and_then(|u| u.email.clone())
+        .unwrap_or_default();
+
+    Ok(Json(serde_json::json!({ "email": email })))
+}

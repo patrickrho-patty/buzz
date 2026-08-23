@@ -230,3 +230,18 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 - Encapsulates the fresh-onboarding reset: quit app → keychain identity → app-data (localStorage/onboarding/SSO stash) → legacy buzz WebKit data. `--launch` relaunches after.
 - Keeps relay membership + Keycloak attrs (SSO re-admits/recovers).
 - Companion to scripts/install-griddle.sh; use after any onboarding change before testing.
+
+## 08:35 KST — ROOT CAUSE of missing username: Keycloak dropped attribute writes
+- Keycloak user-profile `unmanagedAttributePolicy` was unset (=DROP): set_nostr_attrs got HTTP 200 but attributes never persisted → keypair re-minted every login, no oidc membership, no email to client.
+- Fixed realm-side: policy → ADMIN_EDIT (bridge write verified persisting). Relay-side hardening: userinfo email fallback when id_token lacks email claim.
+- v0.2.4 deployed. Desktop unchanged (username-derivation code was correct; it just never received the email).
+- Also found+fixed stale kubectl context issue (drifted to orbstack again mid-session).
+
+## 09:20 KST — Milestone: autonomous E2E verification — SSO + chat + lockout ALL PASS
+- Built scripts/e2e-sso-test.py: headless Chromium drives the REAL Keycloak login form → full PKCE code flow → relay complete → asserts email, Keycloak attr persistence, relay_members oidc row. ALL PASS.
+- Enabler: realm browser flow was a bare "Identity Provider Redirector → Google" (no form ever). Switched to standard `browser` flow: employees see the form with Google button (one-click via SSO cookies); password users can log in directly.
+- Created dedicated e2e-test@patty.io user (password login) — no real employees touched.
+- Chat E2E as the SSO identity: channels create #general ✓, messages send ✓, messages get round-trips ✓.
+- Termination lockout E2E: disabled user in Keycloak → 35s later sync loop removed the oidc relay_members row ✓ (only owner remained). Re-enabled after test.
+- Also confirmed keypair persistence: second login returned the SAME pubkey (recovered, not re-minted).
+- Deliverable to Patrick: self-test loop no longer needs his manual testing.
