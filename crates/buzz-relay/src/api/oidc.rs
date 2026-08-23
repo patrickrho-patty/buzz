@@ -211,12 +211,24 @@ pub async fn whoami(
         return Err(api_error(StatusCode::NOT_FOUND, "OIDC is not configured"));
     }
 
-    // NIP-98 auth on this exact URL.
-    let url = format!("{}/auth/oidc/whoami", state.config.relay_url.trim_end_matches('/'));
-    let body: &[u8] = &[];
-    let (_tenant, pubkey) = super::invites::authenticate(&state, &headers, &url, body)
+    // NIP-98 auth on this exact URL — GET semantics (no payload tag).
+    let raw_host = headers
+        .get(axum::http::header::HOST)
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("");
+    let tenant = crate::tenant::bind_community(&state.db, raw_host)
         .await
-        .map_err(|e| e)?;
+        .map_err(|_| api_error(StatusCode::NOT_FOUND, "relay: no community is configured for this host"))?;
+    let url = super::bridge::nip98_expected_url(&state.config.relay_url, &tenant, "/auth/oidc/whoami");
+    let (pubkey, event_id_bytes) = super::bridge::verify_bridge_auth_with_options(
+        &headers,
+        "GET",
+        &url,
+        None,
+        true,  // NIP-98 always required
+        false, // GET: no payload tag
+    )?;
+    super::bridge::check_nip98_replay(&state, &tenant, event_id_bytes).await?;
     let pubkey_hex = pubkey.to_hex();
 
     // Reverse lookup across Keycloak users: find the one whose nostr_pubkey matches.
