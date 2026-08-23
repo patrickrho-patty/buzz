@@ -9,7 +9,7 @@
 
 image:
   repository: 361645878435.dkr.ecr.ap-northeast-2.amazonaws.com/griddle
-  tag: v0.2.5
+  tag: v0.2.6
 
 # Canonical relay identity.
 relayUrl: wss://griddle.patty.io

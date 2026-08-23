@@ -817,6 +817,15 @@ export function CommunityOnboardingFlow({
                   </DialogContent>
                 </Dialog>
               </>
+            ) : isFirstCommunityJoin ? (
+              // Workforce SSO: no agent starter-team content — a neutral
+              // spinner while the workspace finalizes.
+              <div
+                className="flex min-h-[40vh] flex-col items-center justify-center gap-4"
+                data-testid="community-sso-finalizing"
+              >
+                <LoadingDots label="Preparing your workspace" />
+              </div>
             ) : (
               <>
                 <h1 className="text-title font-normal">

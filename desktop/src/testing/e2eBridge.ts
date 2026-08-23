@@ -1151,6 +1151,7 @@ function updateMockRelayMembershipFromAdminEvent(event: RelayEvent): boolean {
 declare global {
   interface Window {
     __BUZZ_E2E__?: E2eConfig;
+    __BUZZ_E2E_WHOAMI_EMAIL__?: string;
     __BUZZ_E2E_COMMANDS__?: string[];
     __BUZZ_E2E_COMMAND_PAYLOADS__?: Array<{
       command: string;
@@ -11927,6 +11928,8 @@ export function maybeInstallE2eTauriMocks() {
         return [];
       case "get_profile":
         return handleGetProfile(activeConfig);
+      case "oidc_whoami":
+        return window.__BUZZ_E2E_WHOAMI_EMAIL__ ?? "";
       case "update_profile":
         return handleUpdateProfile(
           payload as Parameters<typeof handleUpdateProfile>[0],
