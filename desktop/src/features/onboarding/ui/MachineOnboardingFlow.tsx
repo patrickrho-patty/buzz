@@ -77,7 +77,11 @@ export function MachineOnboardingFlow({
    * setup, provider config, community picker) are skipped — the user goes
    * straight into their company workspace.
    */
-  onSsoWorkspace?: (result: { pubkey: string; relayUrl: string }) => void;
+  onSsoWorkspace?: (result: {
+    pubkey: string;
+    relayUrl: string;
+    email: string;
+  }) => void;
 }) {
   const [page, setPage] = React.useState<MachineOnboardingPage>(
     identityLost ? "key-import" : (initialPage ?? "identity"),
@@ -215,6 +219,7 @@ export function MachineOnboardingFlow({
         onSsoWorkspace({
           pubkey: identity.pubkey,
           relayUrl: keys.relay_url,
+          email: keys.email,
         });
       } else {
         complete(identity.pubkey);

@@ -164,6 +164,26 @@ export function CommunityOnboardingFlow({
   const queryClient = useQueryClient();
   const systemColorScheme = useSystemColorScheme();
   const [displayName, setDisplayName] = React.useState("");
+  // Workforce SSO: the username is derived from the Google Workspace email
+  // prefix and locked. The relay derives identity from Keycloak, so the
+  // username must track the workspace email (renames flow through SSO sync,
+  // not user input). Unset for the manual (advanced) path.
+  const ssoEmail = (() => {
+    try {
+      const v = (window as unknown as Record<string, string | undefined>)[
+        "__GRIDDLE_SSO_EMAIL"
+      ];
+      return typeof v === "string" && v.includes("@") ? v : undefined;
+    } catch {
+      return undefined;
+    }
+  })();
+  const lockedSsoUsername = ssoEmail
+    ? ssoEmail
+        .split("@")[0]!
+        .toLowerCase()
+        .replace(/[^a-z0-9._-]/g, "")
+    : undefined;
   const [avatarUrl, setAvatarUrl] = React.useState("");
   const [localAvatarPreviewUrl, setLocalAvatarPreviewUrl] = React.useState<
     string | null
@@ -341,6 +361,9 @@ export function CommunityOnboardingFlow({
   // any user edits are preserved.
   React.useEffect(() => {
     if (!isProfileStage) return;
+    if (lockedSsoUsername && displayName === "") {
+      setDisplayName(lockedSsoUsername);
+    }
     void getProfile()
       .then((profile) => {
         if (profile.displayName) {
@@ -593,20 +616,37 @@ export function CommunityOnboardingFlow({
                       </span>
                       <Input
                         aria-label="Community username"
+                        aria-readonly={Boolean(lockedSsoUsername)}
                         autoCapitalize="none"
                         autoComplete="username"
                         autoCorrect="off"
                         className="h-14 rounded-2xl border-[color:rgb(var(--buzz-onboarding-avatar-control-fg)_/_0.28)] bg-[rgb(var(--buzz-onboarding-avatar-dialog-bg)/0.95)] px-5 text-sm shadow-none placeholder:text-muted-foreground/60 focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-[color:rgb(var(--buzz-onboarding-avatar-control-fg)_/_0.5)] md:text-sm"
                         data-testid="community-profile-name-key"
-                        disabled={isPending || isUploadingAvatar}
+                        disabled={
+                          isPending ||
+                          isUploadingAvatar ||
+                          Boolean(lockedSsoUsername)
+                        }
                         id="community-display-name"
-                        onChange={(event) => setDisplayName(event.target.value)}
+                        onChange={(event) => {
+                          // SSO usernames are managed by the workspace —
+                          // ignore edits; renames flow through the IdP sync.
+                          if (lockedSsoUsername) return;
+                          setDisplayName(event.target.value);
+                        }}
                         placeholder="Enter your username here"
+                        readOnly={Boolean(lockedSsoUsername)}
                         ref={nameInputRef}
                         spellCheck={false}
                         type="text"
                         value={displayName}
                       />
+                      {lockedSsoUsername ? (
+                        <span className="mt-2 block pl-4 text-xs text-foreground/60">
+                          Managed by Patty — your username follows your
+                          workspace email.
+                        </span>
+                      ) : null}
                     </label>
                   </div>
                   {transaction.error ? (

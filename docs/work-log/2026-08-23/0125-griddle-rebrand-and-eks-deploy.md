@@ -208,3 +208,9 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 - All identity paths now complete() directly: SSO, manual import, recovered identity, post-backup. Wizard pages render a defensive "Continue" button only. Dead state/imports/back-handlers removed (tsc + biome clean).
 - Agents remain configurable in Settings → Agents for power users.
 - Desktop rebuilt + installed. No relay change needed.
+
+## 07:10 KST — Holistic pass: no Back buttons on the SSO path
+- User (rightly) called out whack-a-mole fixing. Traced the COMPLETE post-SSO path: machine onboarding (identity) → community onboarding (connecting → profile → team-intro → entering) → workspace.
+- Found remaining Back buttons in CommunityOnboardingFlow (profile + team-intro stages) — their handlers CANCEL the join (first-community cancel even deletes the workspace). Meaningless/stranding for first join.
+- Fix: Back hidden when transaction.source ∈ {first-community, deep-link-connect, deep-link-join} (the SSO path); only add-community keeps Back ("don't add this one" is legit there).
+- Full SSO path now: identity screen (1 button) → browser → connecting spinner → profile (no back) → team-intro (no back) → entering curtain → workspace.

@@ -757,6 +757,14 @@ function MachineBootstrap({ sharedIdentity }: { sharedIdentity: boolean }) {
           // Workforce SSO: the relay already admitted this pubkey — join the
           // company workspace directly (same path as buzz://connect) and
           // finish machine onboarding without the harness/provider pages.
+          // Stash the SSO email so the profile step can prefill + lock the
+          // username to the Google Workspace email prefix (workforce policy).
+          try {
+            (window as unknown as Record<string, string>).__GRIDDLE_SSO_EMAIL =
+              result.email;
+          } catch {
+            /* best-effort stash */
+          }
           communityOnboarding.start({
             source: "deep-link-connect",
             relayUrl: result.relayUrl,
