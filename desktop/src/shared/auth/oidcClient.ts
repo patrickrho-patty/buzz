@@ -186,21 +186,29 @@ function cleanupPending(): void {
  * without a network round-trip on the profile screen.
  */
 export async function resolveWorkspaceEmail(): Promise<string> {
+  const debug = (msg: string, data?: unknown) =>
+    console.info(`[griddle-sso] ${msg}`, data ?? "");
+  debug("resolveWorkspaceEmail: start");
   try {
     const email = await invokeTauri<string>("oidc_whoami");
+    debug("whoami returned", email);
     if (email && email.includes("@")) {
       try {
         localStorage.setItem("griddle.ssoEmail", email);
       } catch {
         /* cache write best-effort */
       }
+      debug("cached email");
       return email;
     }
-  } catch {
-    // Relay unreachable or OIDC disabled — fall through to cache.
+    debug("whoami returned non-email value; falling back to cache");
+  } catch (e) {
+    debug("whoami invoke FAILED", String(e));
   }
   try {
-    return localStorage.getItem("griddle.ssoEmail") ?? "";
+    const cached = localStorage.getItem("griddle.ssoEmail") ?? "";
+    debug("cache fallback", cached);
+    return cached;
   } catch {
     return "";
   }

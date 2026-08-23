@@ -270,3 +270,8 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 - Root cause of the final blank username: prefill effect deps [isProfileStage] fired ONCE while whoami was still in flight → ssoEmail null at seed time → input stayed empty forever (effect never re-ran).
 - Fix: seed displayName inside the whoami resolve callback itself. Spec now runs cold-cache (no localStorage) — 4/4 green.
 - Timeline note: relay+Keycloak were already healthy (verified patrick: email set, nostr key bound, oidc membership present). This was purely a desktop race.
+
+## 12:50 KST — THE REAL BUG: oidc_whoami never registered
+- invokeTauri("oidc_whoami") → command-not-found error → silently caught → no email → blank username. The registration edit to lib.rs had silently failed (my earlier python patch no-op'd AGAIN — same failure mode as the JWT fix).
+- Mock-bridge E2E answered the command directly → tests passed while the real app failed. LESSON: UI tests via mock bridge cannot validate IPC registration. Must grep-verify every registration edit.
+- Fixed via edit tool, verified in-tree (line 521) + in binary (whoami×5). Installed, reset, launched. Relay log watch armed for the whoami hit on Patrick's next login.

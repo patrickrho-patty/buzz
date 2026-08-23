@@ -186,9 +186,21 @@ export function CommunityOnboardingFlow({
         .replace(/[^a-z0-9._-]/g, "")
     : undefined;
   React.useEffect(() => {
-    if (ssoEmail) return; // cached value good enough
+    console.info("[griddle-sso] CommunityOnboardingFlow mounted", {
+      cachedSsoEmail: ssoEmail,
+      stage: transaction?.stage,
+      source: transaction?.source,
+    });
+    if (ssoEmail) {
+      console.info("[griddle-sso] have cached email, skipping whoami");
+      return;
+    }
     let cancelled = false;
     void resolveWorkspaceEmail().then((email) => {
+      console.info("[griddle-sso] resolveWorkspaceEmail resolved", {
+        cancelled,
+        email,
+      });
       if (cancelled || !email) return;
       setSsoEmail(email);
       // Seed the input the moment the email resolves — the profile-stage
@@ -198,14 +210,21 @@ export function CommunityOnboardingFlow({
         .split("@")[0]!
         .toLowerCase()
         .replace(/[^a-z0-9._-]/g, "");
+      console.info("[griddle-sso] computed prefix", { prefix });
       if (prefix) {
-        setDisplayName((prev) => (prev === "" ? prefix : prev));
+        setDisplayName((prev) => {
+          console.info("[griddle-sso] prefill attempt", {
+            currentDisplayName: prev,
+            prefix,
+          });
+          return prev === "" ? prefix : prev;
+        });
       }
     });
     return () => {
       cancelled = true;
     };
-  }, [ssoEmail]);
+  }, [ssoEmail, transaction?.source, transaction?.stage]);
   const [avatarUrl, setAvatarUrl] = React.useState("");
   const [localAvatarPreviewUrl, setLocalAvatarPreviewUrl] = React.useState<
     string | null
@@ -551,6 +570,17 @@ export function CommunityOnboardingFlow({
       }
     >
       <StartupWindowDragRegion />
+      {/* Temporary SSO debug badge — remove after verification */}
+      <div
+        className="fixed bottom-3 right-3 z-50 max-w-md rounded-lg bg-black/85 px-3 py-2 font-mono text-[10px] leading-4 text-lime-300 shadow-lg"
+        data-testid="sso-debug-badge"
+      >
+        <div>ssoEmail: {ssoEmail ?? "null"}</div>
+        <div>username: {lockedSsoUsername ?? "—"}</div>
+        <div>displayName: {displayName || "(empty)"}</div>
+        <div>source: {transaction?.source}</div>
+        <div>stage: {transaction?.stage}</div>
+      </div>
       {/* Workforce SSO joins are a two-step flow (profile → workspace); the
           7-step dot track is meaningless there — hide it entirely. */}
       {!isFirstCommunityJoin && (isProfileStage || isTeamStage) ? (

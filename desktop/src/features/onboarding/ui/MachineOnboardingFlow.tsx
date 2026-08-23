@@ -208,6 +208,11 @@ export function MachineOnboardingFlow({
     setError(null);
     try {
       const keys = await startOidcLogin();
+      console.info("[griddle-sso] SSO login result", {
+        pubkey: keys.pubkey?.slice(0, 12),
+        email: keys.email,
+        relayUrl: keys.relay_url,
+      });
       const identity = await importIdentity(keys.private_key);
       continueWithIdentity(identity.pubkey);
       queryClient.setQueryData(["identity"], identity);
