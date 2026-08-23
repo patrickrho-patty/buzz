@@ -52,7 +52,7 @@ rm -rf "$HOME/Library/Application Support/xyz.block.buzz.app" 2>/dev/null || tru
 echo "==> Reset complete."
 if [[ "$LAUNCH" -eq 1 ]]; then
   if [[ -d "$APP_PATH" ]]; then
-    echo "==> Launching $APP_PATH…"
+    echo "==> Launching $APP_PATH..."
     open "$APP_PATH"
   else
     echo "    (app not found at $APP_PATH — skipping launch)" >&2

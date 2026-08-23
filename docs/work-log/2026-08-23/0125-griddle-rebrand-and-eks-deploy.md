@@ -265,3 +265,8 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 - Verified AS PATRICK (temp password via admin): id_token email=patrick@patty.io name="Patrick Rho"; relay complete() returns email=patrick@patty.io ✓.
 - Desktop reset + relaunched for a clean transaction. Also removed the temp password need: his normal Google login will now sync properly.
 - NOTE: temp password PatrickE2e!2026 remains set on his account alongside Google — harmless, but he should ignore it (or I can clear it).
+
+## 12:10 KST — THE username race, found and fixed
+- Root cause of the final blank username: prefill effect deps [isProfileStage] fired ONCE while whoami was still in flight → ssoEmail null at seed time → input stayed empty forever (effect never re-ran).
+- Fix: seed displayName inside the whoami resolve callback itself. Spec now runs cold-cache (no localStorage) — 4/4 green.
+- Timeline note: relay+Keycloak were already healthy (verified patrick: email set, nostr key bound, oidc membership present). This was purely a desktop race.
