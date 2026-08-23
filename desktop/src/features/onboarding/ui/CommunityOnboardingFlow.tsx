@@ -153,6 +153,14 @@ export function CommunityOnboardingFlow({
   onConnect: () => void;
 }) {
   const { transaction, update, clear } = useCommunityOnboarding();
+  // Workforce build: during a user's FIRST community join (the SSO path),
+  // "Back" is meaningless — there is no prior workspace to return to, and
+  // cancel would strand them signed-out. Only offer Back when adding an
+  // ADDITIONAL community on top of existing ones.
+  const isFirstCommunityJoin =
+    transaction?.source === "first-community" ||
+    transaction?.source === "deep-link-connect" ||
+    transaction?.source === "deep-link-join";
   const queryClient = useQueryClient();
   const systemColorScheme = useSystemColorScheme();
   const [displayName, setDisplayName] = React.useState("");
@@ -492,13 +500,13 @@ export function CommunityOnboardingFlow({
       ) : null}
       <OnboardingFooterProvider
         backAction={
-          isProfileStage
+          !isFirstCommunityJoin && isProfileStage
             ? {
                 disabled: isPending || isUploadingAvatar,
                 onClick: onCancel,
                 testId: "community-profile-back",
               }
-            : isTeamStage
+            : !isFirstCommunityJoin && isTeamStage
               ? {
                   disabled: isPending || transaction.stage === "entering",
                   onClick: backToProfile,

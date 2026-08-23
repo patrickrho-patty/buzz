@@ -202,3 +202,9 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 
 ## 06:40 KST — Removed "What is an identity key" link from identity screen
 - IdentityKeyHelpDialog import + render removed from MachineOnboardingFlow (workforce users never touch key material; dialog content is Nostr-custody education for standalone users). File kept — manual-key path may re-add later if ever needed.
+
+## 06:55 KST — Disabled harness/provider onboarding wizard completely
+- User could back-navigate into SetupStep (agent harness picker) + DefaultConfigStep (model provider) — Buzz's agent-first onboarding, irrelevant for workforce chat.
+- All identity paths now complete() directly: SSO, manual import, recovered identity, post-backup. Wizard pages render a defensive "Continue" button only. Dead state/imports/back-handlers removed (tsc + biome clean).
+- Agents remain configurable in Settings → Agents for power users.
+- Desktop rebuilt + installed. No relay change needed.
