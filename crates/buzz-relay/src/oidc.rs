@@ -213,6 +213,27 @@ async fn fetch_jwks_cached(issuer: &str) -> Result<jsonwebtoken::jwk::JwkSet, St
     Ok(keys)
 }
 
+/// Fetch the userinfo endpoint with the access token and extract the email.
+/// Used as a fallback when the id_token carries no `email` claim.
+pub async fn fetch_userinfo_email(
+    state: &AppState,
+    access_token: Option<&str>,
+) -> Option<String> {
+    let token = access_token?;
+    let url = format!("{}/protocol/openid-connect/userinfo", state.config.oidc.issuer);
+    let resp = reqwest::Client::new()
+        .get(&url)
+        .bearer_auth(token)
+        .send()
+        .await
+        .ok()?;
+    let body: serde_json::Value = resp.json().await.ok()?;
+    body.get("email")
+        .and_then(|v| v.as_str())
+        .filter(|e| e.contains('@'))
+        .map(String::from)
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Nostr keypair minting + persistence
 // ─────────────────────────────────────────────────────────────────────────────

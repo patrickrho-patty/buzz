@@ -214,3 +214,19 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 - Found remaining Back buttons in CommunityOnboardingFlow (profile + team-intro stages) — their handlers CANCEL the join (first-community cancel even deletes the workspace). Meaningless/stranding for first join.
 - Fix: Back hidden when transaction.source ∈ {first-community, deep-link-connect, deep-link-join} (the SSO path); only add-community keeps Back ("don't add this one" is legit there).
 - Full SSO path now: identity screen (1 button) → browser → connecting spinner → profile (no back) → team-intro (no back) → entering curtain → workspace.
+
+## 07:25 KST — SSO username: derived from email prefix, locked
+- Profile step now: username prefilled = email prefix lowercased/sanitized (patrick@patty.io → "patrick"), input disabled+readOnly, helper note "Managed by Patty — your username follows your workspace email."
+- Email carried: relay → oidcClient (OidcCompleteResponse.email) → MachineOnboardingFlow handoff → App stashes window.__GRIDGE_SSO_EMAIL → CommunityOnboardingFlow consumes.
+- Advanced/manual path unchanged (editable field).
+- Future work noted by user: Keycloak→Griddle profile sync so Google Workspace email RENAMES propagate to Griddle usernames (and display names). Not built yet — design: extend the 30s sync loop to diff email/prefix vs stored profile and push kind:0 updates.
+
+## 07:40 KST — Reset Patrick's local onboarding state for fresh-start testing
+- Process: quit app → delete keychain `griddle-desktop` → wipe ~/Library/Application Support/xyz.patty.griddle.app (localStorage: onboarding transactions, SSO stash) → wipe old buzz WebKit data (xyz.block.buzz.app).
+- DB check: relay_members has ONLY the owner row — Patrick's earlier SSO login never persisted an oidc membership (Keycloak attrs empty too). So the "worked" login earlier was client-side only; complete() likely raced before relay-side admission? NOTE: verify on next login — if no oidc row appears in relay_members after fresh SSO, the complete endpoint's add_relay_member isn't committing (investigate tenant binding).
+- Lesson (user-requested): after UI changes, reset the tester's onboarding state automatically instead of leaving stale screens.
+
+## 07:50 KST — scripts/reset-griddle-desktop.sh (reusable, committed)
+- Encapsulates the fresh-onboarding reset: quit app → keychain identity → app-data (localStorage/onboarding/SSO stash) → legacy buzz WebKit data. `--launch` relaunches after.
+- Keeps relay membership + Keycloak attrs (SSO re-admits/recovers).
+- Companion to scripts/install-griddle.sh; use after any onboarding change before testing.

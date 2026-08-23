@@ -145,7 +145,15 @@ pub async fn complete(
         .map_err(|e| api_error(StatusCode::UNAUTHORIZED, &format!("id_token rejected: {e}")))?;
 
     let sub = claims.sub.clone();
-    let email = claims.email.clone().unwrap_or_else(|| sub.clone());
+    // Email resolution: prefer the id_token claim, then the userinfo endpoint
+    // (Keycloak omits email from id_tokens when the client lacks the email
+    // scope mapping — userinfo always carries it), then sub as a last resort.
+    let email = match claims.email.clone() {
+        Some(e) if e.contains('@') => e,
+        _ => crate::oidc::fetch_userinfo_email(&state, tokens.get("access_token").and_then(|v| v.as_str()))
+            .await
+            .unwrap_or_else(|| sub.clone()),
+    };
     let enabled = claims.enabled.unwrap_or(true);
     if !enabled {
         return Err(api_error(StatusCode::FORBIDDEN, "account is disabled"));
