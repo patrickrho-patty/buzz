@@ -70,8 +70,10 @@ pub async fn start(
     let challenge = crate::oidc::code_challenge_s256(&verifier);
 
     let state_param = crate::oidc::generate_state();
+    // kc_idp_hint=google sends employees straight to the Google broker —
+    // the realm's Keycloak login form stays reachable for service accounts.
     let url = format!(
-        "{}?client_id={}&response_type=code&scope=openid%20email%20profile&redirect_uri={}&state={}&code_challenge={}&code_challenge_method=S256",
+        "{}?client_id={}&response_type=code&scope=openid%20email%20profile&redirect_uri={}&state={}&code_challenge={}&code_challenge_method=S256&kc_idp_hint=google",
         auth_url(&state),
         urlencoding::encode(&cfg.desktop_client_id),
         urlencoding::encode(&cfg.redirect_uri),

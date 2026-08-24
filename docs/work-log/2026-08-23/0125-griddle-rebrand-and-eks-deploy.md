@@ -275,3 +275,9 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 - invokeTauri("oidc_whoami") → command-not-found error → silently caught → no email → blank username. The registration edit to lib.rs had silently failed (my earlier python patch no-op'd AGAIN — same failure mode as the JWT fix).
 - Mock-bridge E2E answered the command directly → tests passed while the real app failed. LESSON: UI tests via mock bridge cannot validate IPC registration. Must grep-verify every registration edit.
 - Fixed via edit tool, verified in-tree (line 521) + in binary (whoami×5). Installed, reset, launched. Relay log watch armed for the whoami hit on Patrick's next login.
+
+## 13:15 KST — Diagnostics instrumented (user-requested)
+- Console logs ([griddle-sso] prefix) at: SSO login result, whoami invoke + return + failures, prefix computation, prefill attempt/settle, flow mount with cached state.
+- On-screen debug badge bottom-right during onboarding: ssoEmail, derived username, displayName, transaction source/stage — user can read state without devtools.
+- Console capture armed via `log stream` on buzz-desktop; relay whoami watch still live.
+- Awaiting Patrick's next login: badge + logs will pinpoint exactly where the chain breaks (if it still does).
