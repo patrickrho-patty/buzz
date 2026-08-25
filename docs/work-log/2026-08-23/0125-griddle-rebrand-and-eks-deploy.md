@@ -281,3 +281,9 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 - On-screen debug badge bottom-right during onboarding: ssoEmail, derived username, displayName, transaction source/stage — user can read state without devtools.
 - Console capture armed via `log stream` on buzz-desktop; relay whoami watch still live.
 - Awaiting Patrick's next login: badge + logs will pinpoint exactly where the chain breaks (if it still does).
+
+## 14:40 KST — Fix: desktop SSO goes straight to Google (no Keycloak form)
+- User hit the Keycloak login form (admin prefilled) after Sign in with Patty — regression from my e2e-enabling switch of the realm browserFlow (patty-internal-google → browser).
+- Root fix (v0.2.7, deployed): relay /auth/oidc/start now appends kc_idp_hint=google — desktop flow lands directly on accounts.google.com. Realm keeps standard browser flow (password users/service accounts still work). Attempted Keycloak custom-flow (identity-provider-redirector config) — the execution config API 404'd repeatedly; kc_idp_hint is the simpler per-client solution. Half-built flow cleaned up.
+- Browser-verified: authorization URL → accounts.google.com (is Google: True).
+- Note: desktop app itself needed NO rebuild (URL comes from the relay).

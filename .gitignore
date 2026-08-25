@@ -23,6 +23,7 @@ __pycache__/
 *.swo
 *~
 .*.sw?
+.opencode/
 
 # OS artifacts
 .DS_Store
