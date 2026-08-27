@@ -151,7 +151,7 @@ impl Default for RateLimitConfig {
 /// ## Tenant scoping
 ///
 /// Pubkey-keyed limits ([`check_and_increment`]) take `&TenantContext` and the Redis
-/// key is community-prefixed (`buzz:{community}:ratelimit:{pubkey}:{suffix}`). The
+/// key is community-prefixed (`crew:{community}:ratelimit:{pubkey}:{suffix}`). The
 /// same pubkey active in two communities consumes two independent quotas — that is
 /// the correct behavior under multi-tenant isolation (S1 cross-community fence).
 ///
@@ -194,7 +194,7 @@ pub trait RateLimiter: Send + Sync {
 }
 
 /// Redis key for pubkey-based rate limit:
-/// `buzz:{community}:ratelimit:{pubkey_hex}:{suffix}`.
+/// `crew:{community}:ratelimit:{pubkey_hex}:{suffix}`.
 ///
 /// Community-prefixed: the same pubkey in two communities maps to two distinct
 /// keys, so quotas don't bleed across the tenancy fence.
@@ -207,7 +207,7 @@ pub fn rate_limit_key(ctx: &TenantContext, pubkey: &PublicKey, limit_type: &Limi
     )
 }
 
-/// Redis key for IP-based rate limit: `buzz:ratelimit:ip:{ip}:conn`.
+/// Redis key for IP-based rate limit: `crew:ratelimit:ip:{ip}:conn`.
 ///
 /// Operator-global by design — see [`RateLimiter`] docs.
 pub fn ip_rate_limit_key(ip: &IpAddr) -> String {

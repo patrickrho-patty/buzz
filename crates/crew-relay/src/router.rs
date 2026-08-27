@@ -103,7 +103,7 @@ pub fn build_router(state: Arc<AppState>) -> Router {
         // Relay invites: mint (owner/admin) + claim (membership-gate exempt)
         .route("/api/invites", post(api::invites::mint_invite))
         .route("/api/join-policy", get(api::invites::join_policy))
-        // Workforce SSO (Keycloak OIDC, Griddle fork)
+        // Workforce SSO (Keycloak OIDC, Crew fork)
         .route("/auth/oidc/start", get(api::oidc::start))
         .route("/auth/oidc/complete", post(api::oidc::complete))
         .route("/auth/oidc/whoami", get(api::oidc::whoami))

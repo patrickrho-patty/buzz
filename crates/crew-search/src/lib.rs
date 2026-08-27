@@ -1,6 +1,6 @@
 #![deny(unsafe_code)]
 #![warn(missing_docs)]
-//! Buzz search — community-scoped Postgres full-text search over Buzz events.
+//! Crew search — community-scoped Postgres full-text search over Crew events.
 //!
 //! The index lives in the `events` table: `search_tsv TSVECTOR GENERATED
 //! ALWAYS AS (to_tsvector('simple', content)) STORED`, with `GIN

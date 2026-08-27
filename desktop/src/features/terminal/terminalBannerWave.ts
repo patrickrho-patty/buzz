@@ -8,9 +8,9 @@
  *
  * Tyler, amendment (msg 25bf80a2) — AUTHORITATIVE: the field wave
  * "originates bottom right and travels top left", not plain right-to-left.
- * This SUPERSEDES the original directive: "slow waves of the buzz theme colors
+ * This SUPERSEDES the original directive: "slow waves of the crew theme colors
  * moving across the honeycomb lattice right to left, with a separate slow
- * color wave on the `buzz term` going left to right". The wordmark half is
+ * color wave on the `crew term` going left to right". The wordmark half is
  * unchanged by the amendment; only the field's axis moved.
  *
  * Two independent waves, different axes, different periods:
@@ -107,7 +107,7 @@ export type BannerWaveConfig = {
  * direction vector points up-and-left. The wordmark keeps its own
  * left-to-right sweep, anchored to the letters rather than the viewport.
  *
- * Tyler, amendment (msg 4e7abbc8): "double the animation speed on the buzz
+ * Tyler, amendment (msg 4e7abbc8): "double the animation speed on the crew
  * term splash screen". Both periods halved from the original 26s/19s; the
  * "slow" gate's floor moved from 10s to 5s to match.
  */

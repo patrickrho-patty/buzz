@@ -12,7 +12,7 @@ fn main() {
     // `std::env::set_var` sound.
     #[cfg(target_os = "linux")]
     if let Err(diagnostic) = crew_lib::webkit_rendering::apply() {
-        eprintln!("griddle-desktop: {diagnostic}");
+        eprintln!("crew-desktop: {diagnostic}");
         std::process::exit(1);
     }
 

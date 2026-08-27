@@ -1,6 +1,6 @@
 //! Keycloak OIDC authentication for workforce SSO.
 //!
-//! Grants Griddle (Buzz relay) login via the company Keycloak `internal`
+//! Grants Crew (Crew relay) login via the company Keycloak `internal`
 //! realm. Employees sign in through the system browser (PKCE Authorization
 //! Code flow); on success the relay:
 //!

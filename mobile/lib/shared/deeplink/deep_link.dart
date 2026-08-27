@@ -291,13 +291,13 @@ InviteDeepLink? parseInviteDeepLink(Uri uri) {
   return null;
 }
 
-/// Parse any supported Buzz deep link.
+/// Parse any supported Crew deep link.
 CrewDeepLink? parseCrewDeepLink(Uri uri) =>
     parseInviteDeepLink(uri) ??
     parseChannelDeepLink(uri) ??
     parseMessageDeepLink(uri);
 
-/// A validated Buzz repository, pull request, or issue permalink.
+/// A validated Crew repository, pull request, or issue permalink.
 class EntityDeepLink extends CrewDeepLink {
   final String type;
   final String owner;

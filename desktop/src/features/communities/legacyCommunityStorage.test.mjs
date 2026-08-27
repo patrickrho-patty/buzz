@@ -72,7 +72,7 @@ test("applyLegacyCommunityStorage seeds missing communities and active community
 
 test("applyLegacyCommunityStorage preserves existing non-local Crew communities", () => {
   const storage = createMemoryStorage({
-    "buzz-communities": currentCommunities,
+    "crew-communities": currentCommunities,
     "buzz-active-community-id": "current-community",
   });
 
@@ -85,7 +85,7 @@ test("applyLegacyCommunityStorage preserves existing non-local Crew communities"
     storage,
   );
 
-  assert.equal(storage.getItem("buzz-communities"), currentCommunities);
+  assert.equal(storage.getItem("crew-communities"), currentCommunities);
   assert.equal(
     storage.getItem("buzz-active-community-id"),
     "current-community",
@@ -94,7 +94,7 @@ test("applyLegacyCommunityStorage preserves existing non-local Crew communities"
 
 test("applyLegacyCommunityStorage replaces broken localhost first-run community", () => {
   const storage = createMemoryStorage({
-    "buzz-communities": localhostCommunities,
+    "crew-communities": localhostCommunities,
     "buzz-active-community-id": "local-community",
   });
 
@@ -113,7 +113,7 @@ test("applyLegacyCommunityStorage replaces broken localhost first-run community"
 
 test("applyLegacyCommunityStorage treats trailing-slash localhost as broken", () => {
   const storage = createMemoryStorage({
-    "buzz-communities": JSON.stringify([
+    "crew-communities": JSON.stringify([
       {
         id: "local-community",
         name: "Local Dev",

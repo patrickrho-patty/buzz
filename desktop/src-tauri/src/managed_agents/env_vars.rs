@@ -5,7 +5,7 @@
 //! Precedence: desktop parent env < persona env < agent env (last wins on
 //! key collision). See `runtime::spawn_agent_child`.
 //!
-//! A small set of *reserved* keys includes Buzz's identity, secrets, security
+//! A small set of *reserved* keys includes Crew's identity, secrets, security
 //! gates, and control-plane values. Save-time validation rejects those keys.
 //! Runtime filtering strips old persisted overrides. Behavior knobs
 //! (GOOSE_MODE, CREW_ACP_MODEL, CREW_ACP_SYSTEM_PROMPT, …) remain freely
@@ -143,7 +143,7 @@ pub fn validate_user_env_keys(env_vars: &BTreeMap<String, String>) -> Result<(),
     reserved.dedup();
     if !reserved.is_empty() {
         return Err(format!(
-            "the following env vars are reserved by Buzz and cannot be overridden: {}",
+            "the following env vars are reserved by Crew and cannot be overridden: {}",
             reserved.join(", ")
         ));
     }
@@ -227,7 +227,7 @@ pub(crate) fn merged_user_env(
     merged.retain(|k, v| {
         if is_reserved_env_key(k) {
             eprintln!(
-                "griddle-desktop: ignoring reserved env var `{k}` from persona/agent overrides"
+                "crew-desktop: ignoring reserved env var `{k}` from persona/agent overrides"
             );
             return false;
         }
@@ -237,7 +237,7 @@ pub(crate) fn merged_user_env(
             // smuggle a reserved key past us via `=`-in-key tricks. See
             // `is_well_formed_env_key` for the exploit.
             eprintln!(
-                "griddle-desktop: ignoring malformed env var key `{}` from persona/agent overrides",
+                "crew-desktop: ignoring malformed env var key `{}` from persona/agent overrides",
                 display_invalid_key(k)
             );
             return false;
@@ -247,13 +247,13 @@ pub(crate) fn merged_user_env(
             // have escaped the value validator; drop them here rather
             // than crash the spawn. We deliberately do NOT log the value.
             eprintln!(
-                "griddle-desktop: ignoring env var `{k}` with NUL byte in value"
+                "crew-desktop: ignoring env var `{k}` with NUL byte in value"
             );
             return false;
         }
         if v.len() > MAX_ENV_VALUE_BYTES {
             eprintln!(
-                "griddle-desktop: ignoring env var `{k}` with oversize value ({} bytes > {MAX_ENV_VALUE_BYTES})",
+                "crew-desktop: ignoring env var `{k}` with oversize value ({} bytes > {MAX_ENV_VALUE_BYTES})",
                 v.len()
             );
             return false;

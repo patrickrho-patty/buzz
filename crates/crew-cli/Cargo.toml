@@ -5,7 +5,7 @@ edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
-description = "Agent-first CLI for Buzz relay"
+description = "Agent-first CLI for Crew relay"
 
 [lib]
 name = "crew_cli"
@@ -32,7 +32,7 @@ serde_json = { workspace = true }
 # Structured error types with exit code mapping
 thiserror = { workspace = true }
 
-# Nostr event signing — used in `buzz auth`, auto-mint, and signed event writes
+# Nostr event signing — used in `crew auth`, auto-mint, and signed event writes
 nostr = { workspace = true }
 
 # UUID parsing for validate_uuid + event building
@@ -77,7 +77,7 @@ dirs = "6"
 crew-ws-client = { path = "../crew-ws-client" }
 
 # Explicit rustls dep with ring provider — required to install the process-level
-# CryptoProvider at startup. Without this the standalone `buzz` binary panics when
+# CryptoProvider at startup. Without this the standalone `crew` binary panics when
 # a multi-package release build (crew-acp + crew-dev-mcp + crew-cli in one cargo
 # invocation) unifies both ring and aws-lc-rs features, leaving rustls unable to
 # auto-select a provider. See crates/crew-acp/Cargo.toml for the same dependency.

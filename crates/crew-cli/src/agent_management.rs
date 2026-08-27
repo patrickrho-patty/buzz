@@ -1,4 +1,4 @@
-//! Owner-reviewed agent draft requests published through Buzz observer frames.
+//! Owner-reviewed agent draft requests published through Crew observer frames.
 
 use crew_core::observer::{encrypt_observer_payload, OBSERVER_FRAME_TELEMETRY};
 use nostr::{Event, Keys, PublicKey};

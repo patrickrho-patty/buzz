@@ -173,7 +173,7 @@ export function CommunityOnboardingFlow({
   // cache — survives restarts and works on any machine, unlike a session stash.
   const [ssoEmail, setSsoEmail] = React.useState<string | null>(() => {
     try {
-      const cached = localStorage.getItem("griddle.ssoEmail");
+      const cached = localStorage.getItem("crew.ssoEmail");
       return cached && cached.includes("@") ? cached : null;
     } catch {
       return null;
@@ -186,18 +186,18 @@ export function CommunityOnboardingFlow({
         .replace(/[^a-z0-9._-]/g, "")
     : undefined;
   React.useEffect(() => {
-    console.info("[griddle-sso] CommunityOnboardingFlow mounted", {
+    console.info("[crew-sso] CommunityOnboardingFlow mounted", {
       cachedSsoEmail: ssoEmail,
       stage: transaction?.stage,
       source: transaction?.source,
     });
     if (ssoEmail) {
-      console.info("[griddle-sso] have cached email, skipping whoami");
+      console.info("[crew-sso] have cached email, skipping whoami");
       return;
     }
     let cancelled = false;
     void resolveWorkspaceEmail(transaction?.relayUrl).then((email) => {
-      console.info("[griddle-sso] resolveWorkspaceEmail resolved", {
+      console.info("[crew-sso] resolveWorkspaceEmail resolved", {
         cancelled,
         email,
       });
@@ -210,10 +210,10 @@ export function CommunityOnboardingFlow({
         .split("@")[0]!
         .toLowerCase()
         .replace(/[^a-z0-9._-]/g, "");
-      console.info("[griddle-sso] computed prefix", { prefix });
+      console.info("[crew-sso] computed prefix", { prefix });
       if (prefix) {
         setDisplayName((prev) => {
-          console.info("[griddle-sso] prefill attempt", {
+          console.info("[crew-sso] prefill attempt", {
             currentDisplayName: prev,
             prefix,
           });
@@ -873,8 +873,8 @@ export function CommunityOnboardingFlow({
                   Meet your starter team
                 </h1>
                 <p className="mx-auto mt-3 max-w-[400px] text-sm leading-6 text-foreground/80">
-                  Buzz lets you bring multiple agents into the same workspace.
-                  Your team will help you get started using Buzz.
+                  Crew lets you bring multiple agents into the same workspace.
+                  Your team will help you get started using Crew.
                 </p>
                 <div className="flex w-full flex-1 items-center justify-center py-10">
                   {starterPersonas.length > 0 ? (
@@ -926,7 +926,7 @@ export function CommunityOnboardingFlow({
                     {isPending || transaction.stage === "entering" ? (
                       <LoadingDots label="Preparing Welcome" />
                     ) : (
-                      "Take me to Buzz"
+                      "Take me to Crew"
                     )}
                   </Button>
                   {starterChannelFailureCount >= 2 ? (

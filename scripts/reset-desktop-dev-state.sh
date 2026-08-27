@@ -44,7 +44,7 @@ case "$(uname -s)" in
     # SecretStore keeps all dev identity and agent keys in this dev-only item.
     # Delete every matching item in case an older build used multiple accounts.
     if command -v security >/dev/null 2>&1; then
-      while security delete-generic-password -s griddle-desktop-dev >/dev/null 2>&1; do :; done
+      while security delete-generic-password -s crew-desktop-dev >/dev/null 2>&1; do :; done
       while security delete-generic-password -s sprout-desktop-dev >/dev/null 2>&1; do :; done
     fi
     ;;
@@ -58,12 +58,12 @@ case "$(uname -s)" in
     ;;
 esac
 
-remove_path "$HOME/.buzz-dev"
+remove_path "$HOME/.crew-dev"
 remove_path "$HOME/.sprout-dev"
 
-# A fresh dev nest must not re-import the installed app's ~/.buzz contents on
+# A fresh dev nest must not re-import the installed app's ~/.crew contents on
 # its next boot. The sentinel is the same one used by migrate_dev_nest().
-mkdir -p "$HOME/.buzz-dev"
-: > "$HOME/.buzz-dev/.dev-nest-migrated"
+mkdir -p "$HOME/.crew-dev"
+: > "$HOME/.crew-dev/.dev-nest-migrated"
 
-log "Development desktop state removed; production Buzz state was not touched"
+log "Development desktop state removed; production Crew state was not touched"

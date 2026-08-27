@@ -47,7 +47,7 @@ if git rev-parse --is-inside-work-tree &>/dev/null; then
         # identifier is kept so concurrent instances don't collide on
         # tauri-plugin-single-instance or the app data directory.
         if [[ "${CREW_SHARE_IDENTITY:-0}" == "1" ]]; then
-            KEYRING_SERVICE="griddle-desktop-dev"
+            KEYRING_SERVICE="crew-desktop-dev"
             KEYRING_BLOB=""
             case "$(uname -s)" in
                 Darwin)
@@ -76,7 +76,7 @@ if git rev-parse --is-inside-work-tree &>/dev/null; then
             if [[ -n "$SHARED_IDENTITY" ]]; then
                 export CREW_PRIVATE_KEY="$SHARED_IDENTITY"
             else
-                echo "⚠ CREW_SHARE_IDENTITY=1 but no identity found in keyring service $KEYRING_SERVICE, at $CANONICAL_KEY, or at $LEGACY_CANONICAL_KEY — run Buzz from repo root first" >&2
+                echo "⚠ CREW_SHARE_IDENTITY=1 but no identity found in keyring service $KEYRING_SERVICE, at $CANONICAL_KEY, or at $LEGACY_CANONICAL_KEY — run Crew from repo root first" >&2
             fi
         fi
 
@@ -89,7 +89,7 @@ if git rev-parse --is-inside-work-tree &>/dev/null; then
         if swift "$GENERATE_DEV_ICON" "$BASE_ICON" "$DEV_ICON" "$CREW_WORKTREE_LABEL"; then
             echo "🌳 Worktree: ${CREW_WORKTREE_LABEL}"
             export VITE_DEV_BRANCH="$CREW_WORKTREE_LABEL"
-            CREW_TAURI_CONFIG="{\"build\":{\"devUrl\":\"${DEV_URL}\",\"beforeDevCommand\":\"exec ./node_modules/.bin/vite --port ${CREW_VITE_PORT} --strictPort\"},\"identifier\":\"xyz.patty.griddle.app.dev.${CREW_INSTANCE_SLUG}\",\"productName\":\"Buzz Dev (${CREW_WORKTREE_LABEL})\",\"bundle\":{\"icon\":[\"$DEV_ICON\"]}}"
+            CREW_TAURI_CONFIG="{\"build\":{\"devUrl\":\"${DEV_URL}\",\"beforeDevCommand\":\"exec ./node_modules/.bin/vite --port ${CREW_VITE_PORT} --strictPort\"},\"identifier\":\"xyz.patty.griddle.app.dev.${CREW_INSTANCE_SLUG}\",\"productName\":\"Crew Dev (${CREW_WORKTREE_LABEL})\",\"bundle\":{\"icon\":[\"$DEV_ICON\"]}}"
         fi
     fi
 fi

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic verifier for the Buzz reply-to-thread task."""
+"""Deterministic verifier for the Crew reply-to-thread task."""
 
 from __future__ import annotations
 

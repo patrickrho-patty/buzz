@@ -1,4 +1,4 @@
-"""Typed boundary between the Harbor adapter and Buzz trial provisioning."""
+"""Typed boundary between the Harbor adapter and Crew trial provisioning."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from .manifest import ExperimentManifest
 
 @dataclass(frozen=True, slots=True)
 class AgentCredential:
-    """One trial-scoped Buzz identity and attributed LLM credential."""
+    """One trial-scoped Crew identity and attributed LLM credential."""
 
     agent_id: str
     role: str
@@ -23,7 +23,7 @@ class AgentCredential:
 
 @dataclass(frozen=True, slots=True)
 class DirectoryIdentity:
-    """One public, benchmark-seeded identity discoverable through Buzz."""
+    """One public, benchmark-seeded identity discoverable through Crew."""
 
     name: str
     role: str
@@ -42,7 +42,7 @@ class FixtureActor:
 
 @dataclass(frozen=True, slots=True)
 class TrialHandle:
-    """Provisioned Buzz resources owned by one Harbor trial."""
+    """Provisioned Crew resources owned by one Harbor trial."""
 
     run_id: str
     trial_id: str
@@ -58,7 +58,7 @@ class TrialHandle:
     # identity and the harness run. ``relay_ws_url`` is the view from the
     # agents' runtime (the task container). Empty means both views coincide.
     user_relay_url: str = ""
-    # Additive Buzz-native task context. Directory entries contain no secrets.
+    # Additive Crew-native task context. Directory entries contain no secrets.
     task_name: str = ""
     directory: tuple[DirectoryIdentity, ...] = ()
     fixture_actors: tuple[FixtureActor, ...] = ()
@@ -66,7 +66,7 @@ class TrialHandle:
 
 @runtime_checkable
 class TrialProvisioner(Protocol):
-    """Creates and tears down trial-isolated Buzz resources synchronously."""
+    """Creates and tears down trial-isolated Crew resources synchronously."""
 
     def create_trial(
         self,

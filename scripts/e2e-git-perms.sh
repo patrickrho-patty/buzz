@@ -2,7 +2,7 @@
 # =============================================================================
 # e2e-git-perms.sh — End-to-end test for git transport, permissions, and signing
 # =============================================================================
-# Two bots collaborate on a simple web page via the Buzz relay's git server.
+# Two bots collaborate on a simple web page via the Crew relay's git server.
 #
 # Prerequisites:
 #   - Docker services running (postgres, redis, minio)
@@ -403,7 +403,7 @@ log "  Add bot2: $ADD_BOT2"
 
 log "Creating repo: $REPO_NAME..."
 CREATE_REPO=$(send_event "$OWNER_PRIVKEY" "$KIND_CREATE_REPO" "" \
-    "[\"d\", \"$REPO_NAME\"], [\"buzz-channel\", \"$CHANNEL_ID\"]")
+    "[\"d\", \"$REPO_NAME\"], [\"crew-channel\", \"$CHANNEL_ID\"]")
 log "  Create repo: $CREATE_REPO"
 
 # Wait for repo creation side effect (bare repo on disk)
@@ -448,7 +448,7 @@ cat > "$BOT1_DIR/index.html" << 'HTML'
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Buzz E2E Test Page</title>
+    <title>Crew E2E Test Page</title>
     <style>
         body { font-family: system-ui; max-width: 800px; margin: 0 auto; padding: 2rem; }
         h1 { color: #2d5016; }
@@ -456,8 +456,8 @@ cat > "$BOT1_DIR/index.html" << 'HTML'
     </style>
 </head>
 <body>
-    <h1>🐝 Buzz Collaborative Page</h1>
-    <p>This page was created by two bots collaborating via Buzz's git server.</p>
+    <h1>🐝 Crew Collaborative Page</h1>
+    <p>This page was created by two bots collaborating via Crew's git server.</p>
     <div class="contributor">
         <strong>Bot 1</strong> — Created the initial page structure
     </div>
@@ -466,7 +466,7 @@ cat > "$BOT1_DIR/index.html" << 'HTML'
 HTML
 
 git -C "$BOT1_DIR" add -A
-git -C "$BOT1_DIR" -c user.name="Bot1" -c user.email="bot1@buzz.test" \
+git -C "$BOT1_DIR" -c user.name="Bot1" -c user.email="bot1@crew.test" \
     -c init.defaultBranch=main commit -m "Initial page structure"
 
 log "Bot1: pushing..."
@@ -491,12 +491,12 @@ sed -i.bak '/<\/body>/i\
         <strong>Bot 2</strong> — Added this section (pushing as bot role → promoted to member)\
     </div>\
     <footer>\
-        <p><em>Built with Buzz sovereign git hosting</em></p>\
+        <p><em>Built with Crew sovereign git hosting</em></p>\
     </footer>' "$BOT2_DIR/index.html"
 rm -f "$BOT2_DIR/index.html.bak"
 
 git -C "$BOT2_DIR" add -A
-git -C "$BOT2_DIR" -c user.name="Bot2" -c user.email="bot2@buzz.test" \
+git -C "$BOT2_DIR" -c user.name="Bot2" -c user.email="bot2@crew.test" \
     commit -m "Add bot2 section and footer"
 
 log "Bot2: pushing..."
@@ -592,7 +592,7 @@ git_clone "$BOT1_PRIVKEY" "${RELAY_HTTP}/git/${OWNER_PUBKEY}/${REPO_NAME}" "$UNS
 
 echo "<!-- unsigned change -->" >> "$UNSIGNED_DIR/index.html"
 git -C "$UNSIGNED_DIR" add -A
-git -C "$UNSIGNED_DIR" -c user.name="Bot1" -c user.email="bot1@buzz.test" \
+git -C "$UNSIGNED_DIR" -c user.name="Bot1" -c user.email="bot1@crew.test" \
     commit -m "Unsigned commit (no gpgsign)"
 
 if git_push "$BOT1_PRIVKEY" "$UNSIGNED_DIR"; then
@@ -615,7 +615,7 @@ git -C "$SIGNED_DIR" add -A
 NOSTR_PRIVATE_KEY="$BOT1_PRIVKEY" \
 git -C "$SIGNED_DIR" \
     -c user.name="Bot1" \
-    -c user.email="bot1@buzz.test" \
+    -c user.email="bot1@crew.test" \
     -c gpg.format=x509 \
     -c "gpg.x509.program=$SIGNER" \
     -c commit.gpgsign=true \
@@ -718,7 +718,7 @@ PYEOF
 NOSTR_PRIVATE_KEY="$BOT1_PRIVKEY" CREW_AUTH_TAG="$OA_TAG" \
 git -C "$OA_DIR" \
     -c user.name="Bot1" \
-    -c user.email="bot1@buzz.test" \
+    -c user.email="bot1@crew.test" \
     -c gpg.format=x509 \
     -c "gpg.x509.program=$SIGNER" \
     -c commit.gpgsign=true \
@@ -845,7 +845,7 @@ log "Hook integrity: testing symlink hook rejection..."
 
     echo "<!-- symlink test -->" >> "$SYMLINK_DIR/index.html"
     git -C "$SYMLINK_DIR" add -A
-    git -C "$SYMLINK_DIR" -c user.name="Bot1" -c user.email="bot1@buzz.test" \
+    git -C "$SYMLINK_DIR" -c user.name="Bot1" -c user.email="bot1@crew.test" \
         commit -m "Symlink hook test"
 
     if git_push "$BOT1_PRIVKEY" "$SYMLINK_DIR" 2>&1; then
@@ -878,7 +878,7 @@ log "Hook integrity: testing missing hook rejection..."
 
     echo "<!-- missing hook test -->" >> "$MISSING_DIR/index.html"
     git -C "$MISSING_DIR" add -A
-    git -C "$MISSING_DIR" -c user.name="Bot1" -c user.email="bot1@buzz.test" \
+    git -C "$MISSING_DIR" -c user.name="Bot1" -c user.email="bot1@crew.test" \
         commit -m "Missing hook test"
 
     if git_push "$BOT1_PRIVKEY" "$MISSING_DIR" 2>&1; then

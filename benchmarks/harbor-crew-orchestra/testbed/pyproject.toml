@@ -1,7 +1,7 @@
 [project]
 name = "harbor-crew-testbed"
 version = "0.1.0"
-description = "Trial provisioning and local Buzz stack tooling for harbor-crew-orchestra"
+description = "Trial provisioning and local Crew stack tooling for harbor-crew-orchestra"
 requires-python = ">=3.12"
 dependencies = [
     "harbor-crew-orchestra",

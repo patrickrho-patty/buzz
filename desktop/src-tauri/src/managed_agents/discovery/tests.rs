@@ -98,7 +98,7 @@ fn normalizes_buzz_agent_args_to_empty() {
 fn explicit_path_resolution_ignores_non_executable_files() {
     use std::os::unix::fs::PermissionsExt;
 
-    let dir = std::env::temp_dir().join(format!("buzz-discovery-path-{}", uuid::Uuid::new_v4()));
+    let dir = std::env::temp_dir().join(format!("crew-discovery-path-{}", uuid::Uuid::new_v4()));
     std::fs::create_dir_all(&dir).expect("create temp dir");
     let bin = dir.join("crew-acp");
     std::fs::write(&bin, "").expect("write placeholder");
@@ -657,7 +657,7 @@ fn probe_codex_acp_version_parses_full_semver_output() {
     use std::os::unix::fs::PermissionsExt;
 
     // Simulate a current `@agentclientprotocol/codex-acp` output.
-    let dir = std::env::temp_dir().join(format!("buzz-probe-1x-{}", uuid::Uuid::new_v4()));
+    let dir = std::env::temp_dir().join(format!("crew-probe-1x-{}", uuid::Uuid::new_v4()));
     std::fs::create_dir_all(&dir).expect("create temp dir");
     let bin = dir.join("codex-acp");
     std::fs::write(
@@ -685,7 +685,7 @@ fn probe_codex_acp_version_returns_none_for_nonzero_exit() {
     use std::os::unix::fs::PermissionsExt;
 
     // Simulate old 0.16.x adapter: `--version` is unrecognised, exits non-zero
-    let dir = std::env::temp_dir().join(format!("buzz-probe-0x-{}", uuid::Uuid::new_v4()));
+    let dir = std::env::temp_dir().join(format!("crew-probe-0x-{}", uuid::Uuid::new_v4()));
     std::fs::create_dir_all(&dir).expect("create temp dir");
     let bin = dir.join("codex-acp");
     std::fs::write(&bin, "#!/bin/sh\nexit 1\n").expect("write script");
@@ -718,7 +718,7 @@ fn probe_codex_acp_version_returns_none_for_missing_binary() {
 fn codex_adapter_availability_available_for_minimum_supported_binary() {
     use std::os::unix::fs::PermissionsExt;
 
-    let dir = std::env::temp_dir().join(format!("buzz-avail-1x-{}", uuid::Uuid::new_v4()));
+    let dir = std::env::temp_dir().join(format!("crew-avail-1x-{}", uuid::Uuid::new_v4()));
     std::fs::create_dir_all(&dir).expect("create temp dir");
     let bin = dir.join("codex-acp");
     std::fs::write(
@@ -744,7 +744,7 @@ fn codex_adapter_availability_outdated_for_0x_binary() {
     use std::os::unix::fs::PermissionsExt;
 
     // Simulate old 0.16.x: `--version` exits non-zero (unrecognised flag)
-    let dir = std::env::temp_dir().join(format!("buzz-avail-0x-{}", uuid::Uuid::new_v4()));
+    let dir = std::env::temp_dir().join(format!("crew-avail-0x-{}", uuid::Uuid::new_v4()));
     std::fs::create_dir_all(&dir).expect("create temp dir");
     let bin = dir.join("codex-acp");
     std::fs::write(&bin, "#!/bin/sh\nexit 1\n").expect("write script");
@@ -781,7 +781,7 @@ fn codex_adapter_availability_outdated_for_older_1x_binary() {
     );
 }
 
-/// The strict three-component parse fails closed: a version Buzz cannot compare
+/// The strict three-component parse fails closed: a version Crew cannot compare
 /// against the floor is treated as outdated rather than assumed current.
 #[cfg(unix)]
 #[test]
@@ -832,7 +832,7 @@ fn probe_codex_acp_version_returns_none_for_hung_direct_child() {
     // Simulate a process that writes version to stdout then blocks forever.
     // The probe reads stdout only after the child exits, so it will time out.
     // `exec sleep 300` replaces the shell so killing the child reaps `sleep` too.
-    let dir = std::env::temp_dir().join(format!("buzz-probe-hung-{}", uuid::Uuid::new_v4()));
+    let dir = std::env::temp_dir().join(format!("crew-probe-hung-{}", uuid::Uuid::new_v4()));
     std::fs::create_dir_all(&dir).expect("create temp dir");
     let bin = dir.join("codex-acp");
     std::fs::write(
@@ -874,7 +874,7 @@ fn probe_codex_acp_version_returns_version_when_descendant_holds_pipe_open() {
     //
     // `sleep 60 &` starts a descendant that inherits the parent's stdout fd
     // without making the direct child wait for a nested subshell to exit.
-    let dir = std::env::temp_dir().join(format!("buzz-probe-descendant-{}", uuid::Uuid::new_v4()));
+    let dir = std::env::temp_dir().join(format!("crew-probe-descendant-{}", uuid::Uuid::new_v4()));
     std::fs::create_dir_all(&dir).expect("create temp dir");
     let bin = dir.join("codex-acp");
     std::fs::write(

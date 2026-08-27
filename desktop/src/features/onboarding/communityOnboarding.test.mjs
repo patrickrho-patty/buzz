@@ -132,7 +132,7 @@ test("acknowledgment persists but resets when the same-relay link reopens", () =
 
 test("malformed persisted state is ignored and can be cleared", () => {
   const storage = createMemoryStorage({
-    "buzz-community-onboarding-transaction.v1": '{"stage":"profile"}',
+    "crew-community-onboarding-transaction.v1": '{"stage":"profile"}',
   });
   assert.equal(loadCommunityOnboardingTransaction(storage), null);
   clearCommunityOnboardingTransaction(storage);

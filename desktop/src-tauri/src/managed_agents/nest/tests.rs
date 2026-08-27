@@ -3,12 +3,12 @@ use super::*;
 #[test]
 fn nest_dir_is_under_home() {
     if let Some(dir) = nest_dir() {
-        // Accepts both .buzz (prod) and .buzz-dev (dev) depending on
+        // Accepts both .crew (prod) and .crew-dev (dev) depending on
         // whether init_nest_dir was called before this test ran.
         let name = dir.file_name().and_then(|n| n.to_str()).unwrap_or("");
         assert!(
             name == NEST_DIR_PROD || name == NEST_DIR_DEV,
-            "nest_dir must end with .buzz or .buzz-dev, got {dir:?}"
+            "nest_dir must end with .crew or .crew-dev, got {dir:?}"
         );
     }
 }
@@ -24,7 +24,7 @@ fn init_nest_dir_prod_sets_buzz() {
         let name = d.file_name().and_then(|n| n.to_str()).unwrap_or("");
         assert!(
             name == NEST_DIR_PROD || name == NEST_DIR_DEV,
-            "nest_dir suffix must be .buzz or .buzz-dev, got {d:?}"
+            "nest_dir suffix must be .crew or .crew-dev, got {d:?}"
         );
     }
 }
@@ -44,7 +44,7 @@ fn nest_skill_contains_safe_mention_workflow() {
 #[test]
 fn ensure_nest_creates_all_dirs_and_agents_md() {
     let tmp = tempfile::tempdir().unwrap();
-    let root = tmp.path().join(".buzz");
+    let root = tmp.path().join(".crew");
 
     ensure_nest_at(&root).unwrap();
 
@@ -82,7 +82,7 @@ fn ensure_nest_creates_all_dirs_and_agents_md() {
 #[test]
 fn ensure_nest_is_idempotent_and_preserves_custom_content() {
     let tmp = tempfile::tempdir().unwrap();
-    let root = tmp.path().join(".buzz");
+    let root = tmp.path().join(".crew");
 
     // First call creates everything.
     ensure_nest_at(&root).unwrap();
@@ -111,7 +111,7 @@ fn ensure_nest_rejects_symlink_root() {
     let tmp = tempfile::tempdir().unwrap();
     let target = tmp.path().join("real_dir");
     fs::create_dir(&target).unwrap();
-    let link = tmp.path().join(".buzz");
+    let link = tmp.path().join(".crew");
     std::os::unix::fs::symlink(&target, &link).unwrap();
 
     let result = ensure_nest_at(&link);
@@ -122,7 +122,7 @@ fn ensure_nest_rejects_symlink_root() {
 #[test]
 fn ensure_nest_creates_skill_file() {
     let tmp = tempfile::tempdir().unwrap();
-    let root = tmp.path().join(".buzz");
+    let root = tmp.path().join(".crew");
     ensure_nest_at(&root).unwrap();
 
     // Canonical location under .agents.
@@ -151,7 +151,7 @@ fn ensure_nest_creates_skill_file() {
 #[test]
 fn ensure_nest_does_not_overwrite_skill_file() {
     let tmp = tempfile::tempdir().unwrap();
-    let root = tmp.path().join(".buzz");
+    let root = tmp.path().join(".crew");
     ensure_nest_at(&root).unwrap();
 
     let skill = root.join(".agents/skills/crew-cli/SKILL.md");
@@ -166,7 +166,7 @@ fn ensure_nest_does_not_overwrite_skill_file() {
 fn ensure_nest_skill_dir_has_700_permissions() {
     use std::os::unix::fs::PermissionsExt;
     let tmp = tempfile::tempdir().unwrap();
-    let root = tmp.path().join(".buzz");
+    let root = tmp.path().join(".crew");
     ensure_nest_at(&root).unwrap();
     // Canonical path and all provider parent dirs should be locked down.
     // Symlinks (e.g. .goose/skills/crew-cli) are skipped by the chmod loop.
@@ -193,7 +193,7 @@ fn ensure_nest_skips_permissions_on_symlinked_child() {
     use std::os::unix::fs::PermissionsExt;
 
     let tmp = tempfile::tempdir().unwrap();
-    let root = tmp.path().join(".buzz");
+    let root = tmp.path().join(".crew");
 
     // First call creates the real nest.
     ensure_nest_at(&root).unwrap();
@@ -220,7 +220,7 @@ fn ensure_nest_skips_permissions_on_symlinked_child() {
 #[test]
 fn ensure_nest_migrates_old_skill_dir() {
     let tmp = tempfile::tempdir().unwrap();
-    let root = tmp.path().join(".buzz");
+    let root = tmp.path().join(".crew");
 
     // Simulate a pre-migration install: real directory at old path.
     // Create the nest first to get all dirs, then simulate old layout.
@@ -260,7 +260,7 @@ fn ensure_nest_migrates_old_skill_dir() {
 #[test]
 fn ensure_skill_symlinks_are_idempotent() {
     let tmp = tempfile::tempdir().unwrap();
-    let root = tmp.path().join(".buzz");
+    let root = tmp.path().join(".crew");
     ensure_nest_at(&root).unwrap();
     // Second call should succeed without errors.
     ensure_nest_at(&root).unwrap();
@@ -290,7 +290,7 @@ fn ensure_skill_symlinks_skips_existing_path_during_initial_pass() {
     // symlinks. This test verifies the end-to-end behavior: a pre-existing real
     // dir at the claude path is migrated to a symlink.
     let tmp = tempfile::tempdir().unwrap();
-    let root = tmp.path().join(".buzz");
+    let root = tmp.path().join(".crew");
     // Pre-create a real directory where a symlink would go.
     let real_dir = root.join(".claude/skills/crew-cli");
     fs::create_dir_all(&real_dir).unwrap();
@@ -320,7 +320,7 @@ fn ensure_skill_symlinks_skips_existing_path_during_initial_pass() {
 #[test]
 fn ensure_skill_symlinks_skip_dangling_symlink() {
     let tmp = tempfile::tempdir().unwrap();
-    let root = tmp.path().join(".buzz");
+    let root = tmp.path().join(".crew");
     // Pre-create a dangling symlink where the .codex link would go.
     let codex_skills = root.join(".codex/skills");
     fs::create_dir_all(&codex_skills).unwrap();
@@ -412,20 +412,20 @@ fn ensure_cli_symlink_does_not_clobber_regular_file_dev() {
     let local_bin = tmp.path().join("local_bin");
     fs::create_dir_all(&local_bin).unwrap();
     let link = local_bin.join(cli_link_name(true));
-    fs::write(&link, "user-installed buzz-dev binary").unwrap();
+    fs::write(&link, "user-installed crew-dev binary").unwrap();
 
     // Regular files at the dev path are also preserved.
     assert!(link.symlink_metadata().unwrap().file_type().is_file());
     assert_eq!(
         fs::read_to_string(&link).unwrap(),
-        "user-installed buzz-dev binary"
+        "user-installed crew-dev binary"
     );
 }
 
 #[test]
 fn refresh_agents_md_writes_version_file() {
     let tmp = tempfile::tempdir().unwrap();
-    let root = tmp.path().join(".buzz");
+    let root = tmp.path().join(".crew");
     ensure_nest_at(&root).unwrap();
     let version = fs::read_to_string(root.join(".nest-agents-version")).unwrap();
     assert_eq!(version.trim(), NEST_AGENTS_VERSION.to_string());
@@ -434,7 +434,7 @@ fn refresh_agents_md_writes_version_file() {
 #[test]
 fn refresh_skill_md_writes_version_file() {
     let tmp = tempfile::tempdir().unwrap();
-    let root = tmp.path().join(".buzz");
+    let root = tmp.path().join(".crew");
     ensure_nest_at(&root).unwrap();
     let version = fs::read_to_string(root.join(".agents/skills/crew-cli/.skill-version")).unwrap();
     assert_eq!(version.trim(), NEST_SKILL_VERSION.to_string());
@@ -443,7 +443,7 @@ fn refresh_skill_md_writes_version_file() {
 #[test]
 fn refresh_agents_md_preserves_managed_section() {
     let tmp = tempfile::tempdir().unwrap();
-    let root = tmp.path().join(".buzz");
+    let root = tmp.path().join(".crew");
     ensure_nest_at(&root).unwrap();
 
     // Simulate a managed section update.
@@ -463,7 +463,7 @@ fn refresh_agents_md_preserves_managed_section() {
     let content = fs::read_to_string(&agents_md).unwrap();
     // Static content should be refreshed (from template).
     assert!(
-        content.starts_with("# Buzz Nest"),
+        content.starts_with("# Crew Nest"),
         "template header must be present"
     );
     // Managed section should be preserved.
@@ -478,7 +478,7 @@ fn refresh_agents_md_preserves_managed_section() {
 #[test]
 fn refresh_skips_when_version_current() {
     let tmp = tempfile::tempdir().unwrap();
-    let root = tmp.path().join(".buzz");
+    let root = tmp.path().join(".crew");
     ensure_nest_at(&root).unwrap();
 
     // Manually change AGENTS.md content after version file is written.
@@ -498,7 +498,7 @@ fn refresh_skips_when_version_current() {
 #[test]
 fn refresh_skill_overwrites_on_version_bump() {
     let tmp = tempfile::tempdir().unwrap();
-    let root = tmp.path().join(".buzz");
+    let root = tmp.path().join(".crew");
     ensure_nest_at(&root).unwrap();
 
     let skill_md = root.join(".agents/skills/crew-cli/SKILL.md");

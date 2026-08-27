@@ -271,7 +271,7 @@
     min-height: 0;
   }
 
-  .crew-onboarding-neutral-theme.buzz-startup-shell {
+  .crew-onboarding-neutral-theme.crew-startup-shell {
     /* Dot grid over the chartreuse→light-blue gradient (dots layer first so
        they sit on top). The welcome page overrides this with dots over a flat
        chartreuse fill below. */
@@ -287,7 +287,7 @@
       auto;
   }
 
-  .crew-onboarding-neutral-theme.buzz-startup-shell.buzz-onboarding-welcome {
+  .crew-onboarding-neutral-theme.crew-startup-shell.crew-onboarding-welcome {
     background-color: var(--crew-welcome-chartreuse);
     /* Landing is a flat chartreuse field, so the docked-footer scrim must match
        it (not the gradient's light-blue bottom) to stay invisible. */
@@ -368,7 +368,7 @@
     --ring: 0 0% 84%;
   }
 
-  .crew-onboarding-neutral-theme.buzz-startup-shell.buzz-onboarding-security-theme {
+  .crew-onboarding-neutral-theme.crew-startup-shell.crew-onboarding-security-theme {
     background-color: #010103;
     background-image:
       radial-gradient(circle, rgb(143 211 255 / 0.11) 1px, transparent 1px),

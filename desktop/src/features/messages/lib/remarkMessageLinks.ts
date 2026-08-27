@@ -20,7 +20,7 @@
 // --experimental-strip-types`. `tsconfig.json` enables `allowImportingTsExtensions`.
 import { createRemarkPrefixPlugin } from "../../../shared/lib/createRemarkPrefixPlugin.ts";
 
-const MESSAGE_URL_PATTERN = /(?:crew|buzz):\/\/message\?[^\s<>"')\]]+/g;
+const MESSAGE_URL_PATTERN = /(?:crew|crew):\/\/message\?[^\s<>"')\]]+/g;
 const TRAILING_PUNCTUATION_PATTERN = /[.,;:!?]+$/;
 
 function trimMessageLinkMatch(matchText: string) {

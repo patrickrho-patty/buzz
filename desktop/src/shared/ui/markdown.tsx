@@ -1307,7 +1307,7 @@ export function createMarkdownComponents(
       );
     }
 
-    // Keep Buzz channel/message navigation in-app.
+    // Keep Crew channel/message navigation in-app.
     if (href) {
       if (parseChannelLink(href).ok) {
         return (

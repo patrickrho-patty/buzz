@@ -117,7 +117,7 @@ class MediaVideoViewerPage extends HookConsumerWidget {
           }
           final file = File(
             '${directory.path}${Platform.pathSeparator}'
-            'buzz-video-${DateTime.now().microsecondsSinceEpoch}'
+            'crew-video-${DateTime.now().microsecondsSinceEpoch}'
             '${_videoFileExtension(uri)}',
           );
           videoFile.value = file;

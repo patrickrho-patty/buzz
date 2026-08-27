@@ -104,7 +104,7 @@ pub struct AppState {
     pub session_config_cache: Mutex<HashMap<ManagedAgentRuntimeKey, SessionConfigCache>>,
     /// IOKit power assertion state — prevents idle sleep while agents run.
     pub prevent_sleep: Arc<Mutex<crate::prevent_sleep::PreventSleepState>>,
-    /// In-process mesh-llm node started by Buzz Desktop.
+    /// In-process mesh-llm node started by Crew Desktop.
     #[cfg(feature = "mesh-llm")]
     pub mesh_llm_runtime: AsyncMutex<Option<crate::mesh_llm::DesktopMeshRuntime>>,
     #[cfg(feature = "mesh-llm")]
@@ -142,12 +142,12 @@ fn identity_from_env() -> Option<Keys> {
         Ok(nsec) => match Keys::parse(nsec.trim()) {
             Ok(keys) => Some(keys),
             Err(error) => {
-                eprintln!("griddle-desktop: invalid CREW_PRIVATE_KEY: {error}");
+                eprintln!("crew-desktop: invalid CREW_PRIVATE_KEY: {error}");
                 None
             }
         },
         Err(std::env::VarError::NotUnicode(_)) => {
-            eprintln!("griddle-desktop: CREW_PRIVATE_KEY contains invalid UTF-8");
+            eprintln!("crew-desktop: CREW_PRIVATE_KEY contains invalid UTF-8");
             None
         }
         Err(std::env::VarError::NotPresent) => None,
@@ -181,7 +181,7 @@ pub fn build_app_state() -> AppState {
     let (keys, identity_storage) = match identity_from_env() {
         Some(keys) => {
             eprintln!(
-                "griddle-desktop: configured identity pubkey {}",
+                "crew-desktop: configured identity pubkey {}",
                 keys.public_key().to_hex()
             );
             (keys, IdentityStorage::Environment)
@@ -284,7 +284,7 @@ impl AppState {
                 .load(std::sync::atomic::Ordering::Acquire)
         {
             return Err("identity is in recovery mode; event signing is disabled \
-                 until the identity is restored and Buzz is relaunched"
+                 until the identity is restored and Crew is relaunched"
                 .to_string());
         }
         self.keys
@@ -452,7 +452,7 @@ fn resolve_identity_with_store(
                 match Keys::parse(nsec.trim()) {
                     Ok(keyring_keys) => {
                         eprintln!(
-                            "griddle-desktop: persisted identity pubkey {}",
+                            "crew-desktop: persisted identity pubkey {}",
                             keyring_keys.public_key().to_hex()
                         );
                         // Check for a leftover identity.key. If it holds a
@@ -467,7 +467,7 @@ fn resolve_identity_with_store(
                                     if file_keys.public_key() != keyring_keys.public_key() =>
                                 {
                                     eprintln!(
-                                        "griddle-desktop: identity.key differs from keyring; \
+                                        "crew-desktop: identity.key differs from keyring; \
                                          adopting imported key {}",
                                         file_keys.public_key().to_hex()
                                     );
@@ -485,7 +485,7 @@ fn resolve_identity_with_store(
                                         data_dir,
                                     ) {
                                         eprintln!(
-                                            "griddle-desktop: keyring adoption of identity.key \
+                                            "crew-desktop: keyring adoption of identity.key \
                                              failed ({e}); using file key, will retry next boot"
                                         );
                                         IdentityStorage::LocalFile
@@ -502,7 +502,7 @@ fn resolve_identity_with_store(
                                 // cleanup so there is a diagnostic for the lost data.
                                 Err(e) => {
                                     eprintln!(
-                                        "griddle-desktop: leftover identity.key is corrupt ({e}); \
+                                        "crew-desktop: leftover identity.key is corrupt ({e}); \
                                          keyring is authoritative, removing"
                                     );
                                     ensure_marker_then_cleanup(data_dir, legacy_path);
@@ -527,7 +527,7 @@ fn resolve_identity_with_store(
                             if let Err(e) = write_migration_marker(&migration_marker_path(data_dir))
                             {
                                 eprintln!(
-                                    "griddle-desktop: keyring present but marker missing; \
+                                    "crew-desktop: keyring present but marker missing; \
                                      self-heal marker write failed ({e}), continuing"
                                 );
                             }
@@ -578,7 +578,7 @@ fn resolve_identity_with_store(
                 // than silently starting a fresh identity.
                 let ephemeral = Keys::generate();
                 eprintln!(
-                    "griddle-desktop: identity lost — keyring was empty despite migration marker; \
+                    "crew-desktop: identity lost — keyring was empty despite migration marker; \
                      using ephemeral key {}, awaiting user re-import",
                     ephemeral.public_key().to_hex()
                 );
@@ -606,7 +606,7 @@ fn resolve_identity_with_store(
             if !legacy_path.exists() && migration_marker_path(data_dir).exists() {
                 let ephemeral = Keys::generate();
                 eprintln!(
-                    "griddle-desktop: keyring unreachable but migration marker present; \
+                    "crew-desktop: keyring unreachable but migration marker present; \
                      booting keyring-locked recovery with ephemeral key {} — \
                      unlock the keyring and relaunch",
                     ephemeral.public_key().to_hex()
@@ -648,10 +648,10 @@ fn recover_from_keyring(
     error: &str,
 ) -> Result<ResolvedIdentity, String> {
     eprintln!(
-        "griddle-desktop: corrupt nsec in keyring ({error}), clearing and recovering from file"
+        "crew-desktop: corrupt nsec in keyring ({error}), clearing and recovering from file"
     );
     if let Err(e) = store.delete(IDENTITY_KEY_NAME) {
-        eprintln!("griddle-desktop: failed to clear corrupt keyring value: {e}");
+        eprintln!("crew-desktop: failed to clear corrupt keyring value: {e}");
     }
     if legacy_path.exists() {
         if let Some(keys) = migrate_identity_file(store, legacy_path, data_dir)? {
@@ -668,7 +668,7 @@ fn recover_from_keyring(
     if migration_marker_path(data_dir).exists() {
         let ephemeral = Keys::generate();
         eprintln!(
-            "griddle-desktop: identity lost — keyring had corrupt data and no valid identity.key \
+            "crew-desktop: identity lost — keyring had corrupt data and no valid identity.key \
              backup; prior identity (migration marker present) is unrecoverable; \
              using ephemeral key {}, awaiting user re-import",
             ephemeral.public_key().to_hex()
@@ -698,7 +698,7 @@ fn load_file_or_generate(
         match load_key_file(legacy_path) {
             Ok(keys) => {
                 eprintln!(
-                    "griddle-desktop: persisted identity pubkey {}",
+                    "crew-desktop: persisted identity pubkey {}",
                     keys.public_key().to_hex()
                 );
                 return Ok(keys);
@@ -709,7 +709,7 @@ fn load_file_or_generate(
     let keys = Keys::generate();
     save_key_file(legacy_path, &keys)?;
     eprintln!(
-        "griddle-desktop: generated and saved identity pubkey {}",
+        "crew-desktop: generated and saved identity pubkey {}",
         keys.public_key().to_hex()
     );
     Ok(keys)
@@ -726,7 +726,7 @@ fn migrate_identity_file(
     let keys = match load_key_file(legacy_path) {
         Ok(keys) => keys,
         Err(error) => {
-            eprintln!("griddle-desktop: corrupt identity.key during migration ({error}), skipping");
+            eprintln!("crew-desktop: corrupt identity.key during migration ({error}), skipping");
             return Ok(None);
         }
     };
@@ -755,15 +755,15 @@ fn migrate_identity_file(
     let marker_path = migration_marker_path(data_dir);
     if let Err(e) = write_migration_marker(&marker_path) {
         eprintln!(
-            "griddle-desktop: keyring import ok but failed to write migration marker ({e}); \
+            "crew-desktop: keyring import ok but failed to write migration marker ({e}); \
              keeping identity.key so the key is not stranded"
         );
         return Ok(Some(keys));
     }
     if let Err(e) = std::fs::remove_file(legacy_path) {
-        eprintln!("griddle-desktop: keyring import ok but failed to delete identity.key: {e}");
+        eprintln!("crew-desktop: keyring import ok but failed to delete identity.key: {e}");
     } else {
-        eprintln!("griddle-desktop: migrated identity key into OS keyring");
+        eprintln!("crew-desktop: migrated identity key into OS keyring");
     }
     Ok(Some(keys))
 }
@@ -810,7 +810,7 @@ fn persist_identity_to_keyring(
         if !legacy_path.exists() {
             if let Err(write_err) = save_key_file(legacy_path, keys) {
                 eprintln!(
-                    "griddle-desktop: keyring ok but marker write failed ({e}) and \
+                    "crew-desktop: keyring ok but marker write failed ({e}) and \
                      identity.key write also failed ({write_err}); key may be unrecoverable"
                 );
                 return Err(format!(
@@ -820,13 +820,13 @@ fn persist_identity_to_keyring(
                 ));
             } else {
                 eprintln!(
-                    "griddle-desktop: keyring ok but marker write failed ({e}); \
+                    "crew-desktop: keyring ok but marker write failed ({e}); \
                      wrote identity.key as fallback so the key is not stranded"
                 );
             }
         } else {
             eprintln!(
-                "griddle-desktop: keyring ok but marker write failed ({e}); \
+                "crew-desktop: keyring ok but marker write failed ({e}); \
                  keeping existing identity.key so the key is not stranded"
             );
         }
@@ -835,7 +835,7 @@ fn persist_identity_to_keyring(
 
     if legacy_path.exists() {
         if let Err(e) = std::fs::remove_file(legacy_path) {
-            eprintln!("griddle-desktop: keyring write ok but failed to delete identity.key: {e}");
+            eprintln!("crew-desktop: keyring write ok but failed to delete identity.key: {e}");
         }
     }
 
@@ -856,7 +856,7 @@ fn persist_imported_identity_impl(
         Ok(()) => Ok(IdentityStorage::SystemKeyring),
         Err(e) => {
             eprintln!(
-                "griddle-desktop: keyring write failed during import ({e}), \
+                "crew-desktop: keyring write failed during import ({e}), \
                  falling back to identity.key"
             );
             save_key_file(legacy_path, keys)?;
@@ -918,14 +918,14 @@ fn generate_and_persist(
         let marker_path = migration_marker_path(data_dir);
         if let Err(e) = write_migration_marker(&marker_path) {
             eprintln!(
-                "griddle-desktop: stored identity in keyring but failed to write migration marker \
+                "crew-desktop: stored identity in keyring but failed to write migration marker \
                  ({e}); saving identity.key fallback so the key is not stranded"
             );
             save_key_file(legacy_path, &keys)?;
         }
     }
     eprintln!(
-        "griddle-desktop: generated and saved identity pubkey {}",
+        "crew-desktop: generated and saved identity pubkey {}",
         keys.public_key().to_hex()
     );
     Ok((keys, storage))
@@ -948,7 +948,7 @@ fn store_key_preferring_keyring(
     match store.store(IDENTITY_KEY_NAME, &nsec) {
         Ok(()) => Ok(IdentityStorage::SystemKeyring),
         Err(keyring_err) => {
-            eprintln!("griddle-desktop: keyring write failed ({keyring_err}), using file fallback");
+            eprintln!("crew-desktop: keyring write failed ({keyring_err}), using file fallback");
             save_key_file(legacy_path, keys)?;
             Ok(IdentityStorage::LocalFile)
         }
@@ -967,7 +967,7 @@ fn ensure_marker_then_cleanup(data_dir: &std::path::Path, legacy_path: &std::pat
         || write_migration_marker(&marker_path)
             .map_err(|e| {
                 eprintln!(
-                    "griddle-desktop: keyring present but marker missing; \
+                    "crew-desktop: keyring present but marker missing; \
                      failed to write marker ({e}), keeping identity.key"
                 );
             })
@@ -985,8 +985,8 @@ fn cleanup_leftover_identity_file(legacy_path: &std::path::Path) {
         return;
     }
     match std::fs::remove_file(legacy_path) {
-        Ok(()) => eprintln!("griddle-desktop: removed leftover identity.key (key is in keyring)"),
-        Err(e) => eprintln!("griddle-desktop: failed to remove leftover identity.key: {e}"),
+        Ok(()) => eprintln!("crew-desktop: removed leftover identity.key (key is in keyring)"),
+        Err(e) => eprintln!("crew-desktop: failed to remove leftover identity.key: {e}"),
     }
 }
 
@@ -1001,7 +1001,7 @@ fn quarantine_corrupt_key(key_path: &std::path::Path, data_dir: &std::path::Path
         .map(|d| d.as_secs())
         .unwrap_or(0);
     let bad_name = format!("identity.key.bad.{ts}");
-    eprintln!("griddle-desktop: corrupt identity.key ({error}), quarantining to {bad_name}");
+    eprintln!("crew-desktop: corrupt identity.key ({error}), quarantining to {bad_name}");
     let bad_path = data_dir.join(bad_name);
     if std::fs::rename(key_path, &bad_path).is_err() {
         let _ = std::fs::remove_file(key_path);

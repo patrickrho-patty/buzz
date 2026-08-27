@@ -118,15 +118,15 @@ mod tests {
     #[test]
     fn registry_port_is_not_mistaken_for_a_tag() {
         let d = "c".repeat(64);
-        let r = parse(&format!("localhost:5000/buzz-sprig@sha256:{d}")).unwrap();
-        assert_eq!(r.as_str(), format!("localhost:5000/buzz-sprig@sha256:{d}"));
+        let r = parse(&format!("localhost:5000/crew-sprig@sha256:{d}")).unwrap();
+        assert_eq!(r.as_str(), format!("localhost:5000/crew-sprig@sha256:{d}"));
     }
 
     #[test]
     fn port_and_tag_together_drops_only_the_tag() {
         let d = "d".repeat(64);
-        let r = parse(&format!("localhost:5000/buzz-sprig:dev@sha256:{d}")).unwrap();
-        assert_eq!(r.as_str(), format!("localhost:5000/buzz-sprig@sha256:{d}"));
+        let r = parse(&format!("localhost:5000/crew-sprig:dev@sha256:{d}")).unwrap();
+        assert_eq!(r.as_str(), format!("localhost:5000/crew-sprig@sha256:{d}"));
     }
 
     /// Wren's amendment: *every* tag-only reference is rejected, not just

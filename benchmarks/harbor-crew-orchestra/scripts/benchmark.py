@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""One-command benchmark: bring up the Buzz stack in Docker and run it.
+"""One-command benchmark: bring up the Crew stack in Docker and run it.
 
 ``just benchmark`` wraps this script. Defaults are leaderboard-eligible out
 of the box (Terminal-Bench 2.1, 5 attempts per problem, the Sonnet+Haiku
@@ -14,7 +14,7 @@ script owns everything around the run:
 - One pinned *user* identity for the whole benchmark environment: it owns
   every trial channel and posts every task, like one human running many
   teams. Channels are kept (not archived) after each trial.
-- ``--gui`` adds that user to the relay membership list and opens the Buzz
+- ``--gui`` adds that user to the relay membership list and opens the Crew
   desktop app logged in as them, so a human can watch the teams work live.
 
 Run inside the testbed environment (the just recipe does this):
@@ -142,7 +142,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--gui",
         action="store_true",
-        help="Open the Buzz desktop app as the benchmark user to watch the run live",
+        help="Open the Crew desktop app as the benchmark user to watch the run live",
     )
     parser.add_argument(
         "--fresh",
@@ -455,7 +455,7 @@ def ensure_agent_binaries() -> Path:
 
 
 def launch_gui(state: dict[str, str]) -> subprocess.Popen:
-    """Open the Buzz desktop app logged in as the benchmark user.
+    """Open the Crew desktop app logged in as the benchmark user.
 
     The relay runs closed (membership required), so the user pubkey is first
     added to the relay membership list via crew-admin inside the container —
@@ -507,7 +507,7 @@ def launch_gui(state: dict[str, str]) -> subprocess.Popen:
     real_cli.chmod(0o755)
 
     print(
-        f"Opening Buzz GUI as the benchmark user ({state['user_pubkey'][:16]}…).\n"
+        f"Opening Crew GUI as the benchmark user ({state['user_pubkey'][:16]}…).\n"
         "Watch, don't type — a message from you mid-trial would taint the run."
     )
     # Distinct bundle identifier: the desktop app persists workspaces (incl.
@@ -517,7 +517,7 @@ def launch_gui(state: dict[str, str]) -> subprocess.Popen:
     # workspace silently shadows the benchmark relay. An identifier of our own
     # keeps that state isolated both ways.
     tauri_config = json.dumps(
-        {"identifier": GUI_BUNDLE_IDENTIFIER, "productName": "Buzz Benchmark"}
+        {"identifier": GUI_BUNDLE_IDENTIFIER, "productName": "Crew Benchmark"}
     )
     return subprocess.Popen(
         ["pnpm", "exec", "tauri", "dev", "--config", tauri_config],

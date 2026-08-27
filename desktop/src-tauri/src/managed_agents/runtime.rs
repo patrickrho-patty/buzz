@@ -487,7 +487,7 @@ pub fn spawn_agent_child(
             Some(path) => Some(path),
             None => {
                 eprintln!(
-                    "griddle-desktop: mcp_command {effective_mcp_command:?} not found, skipping"
+                    "crew-desktop: mcp_command {effective_mcp_command:?} not found, skipping"
                 );
                 None
             }
@@ -505,7 +505,7 @@ pub fn spawn_agent_child(
     // Augment PATH for DMG launches so child processes can find:
     //   - bundled CLI via ~/.local/bin symlink
     //   - nvm-managed node/npm (nvm initializes only in interactive shells)
-    //   - bundled sidecars (buzz, crew-acp, etc.) via exe parent (Contents/MacOS/)
+    //   - bundled sidecars (crew, crew-acp, etc.) via exe parent (Contents/MacOS/)
     //   - runtimes (node, python, etc.) via login shell PATH
     let nvm_bin = dirs::home_dir()
         .as_deref()
@@ -634,7 +634,7 @@ pub fn spawn_agent_child(
                     Ok(json) => Some(json),
                     Err(e) => {
                         eprintln!(
-                            "griddle-desktop: failed to serialize setup payload for {}: {e}",
+                            "crew-desktop: failed to serialize setup payload for {}: {e}",
                             record.name
                         );
                         None
@@ -662,7 +662,7 @@ pub fn spawn_agent_child(
         if let Some(json) = setup_payload_json {
             command.env("CREW_ACP_SETUP_PAYLOAD", json);
             eprintln!(
-                "griddle-desktop: agent {} not ready — spawning in setup-listener mode",
+                "crew-desktop: agent {} not ready — spawning in setup-listener mode",
                 record.name
             );
         }
@@ -778,7 +778,7 @@ pub fn spawn_agent_child(
 
     command.env("CREW_ACP_RELAY_OBSERVER", "true");
 
-    // Git credential helper: NIP-98 auth for Buzz relay git via git-credential-nostr.
+    // Git credential helper: NIP-98 auth for Crew relay git via git-credential-nostr.
     // Ephemeral GIT_CONFIG_COUNT env vars scoped to relay HTTP URL; NOSTR_PRIVATE_KEY mirrors CREW_PRIVATE_KEY.
     if let Some(cred_helper) = resolve_command("git-credential-nostr") {
         let relay_http_url = crate::relay::relay_http_base_url(&effective_relay_url);
@@ -799,13 +799,13 @@ pub fn spawn_agent_child(
         command.env("GIT_CONFIG_VALUE_1", "true");
     } else {
         eprintln!(
-            "griddle-desktop: git-credential-nostr not found — agent {} will not have automatic Buzz git auth",
+            "crew-desktop: git-credential-nostr not found — agent {} will not have automatic Crew git auth",
             record.name,
         );
     }
 
     // User env (descriptor.env): fully-layered floor→runtime→definition→global→persona→agent,
-    // reserved-key filtered. Written last so user-explicit values win over Buzz-set env.
+    // reserved-key filtered. Written last so user-explicit values win over Crew-set env.
     for (key, value) in &descriptor.env {
         command.env(key, value);
     }
@@ -827,7 +827,7 @@ pub fn spawn_agent_child(
     }
     configure_runtime_cli(&mut command, runtime_meta);
 
-    // Buzz shared compute is stored as a native provider; derive the OpenAI-compatible
+    // Crew shared compute is stored as a native provider; derive the OpenAI-compatible
     // transport at spawn time and scrub any unrelated ambient OpenAI key.
     // Gate on `mesh_model_id` (derived from `effective_cfg.relay_mesh_model_id()`
     // above) — not on `effective_provider` directly — so the mesh gate here

@@ -52,10 +52,10 @@ pub fn strip_baked_team_instructions(app: &tauri::AppHandle) {
     match strip_baked_team_instructions_in_dir(&base_dir) {
         Ok(0) => {}
         Ok(stripped) => eprintln!(
-            "griddle-desktop: team-suffix-strip: removed the baked team-instructions suffix from \
+            "crew-desktop: team-suffix-strip: removed the baked team-instructions suffix from \
              {stripped} record(s)"
         ),
-        Err(e) => eprintln!("griddle-desktop: team-suffix-strip: {e}"),
+        Err(e) => eprintln!("crew-desktop: team-suffix-strip: {e}"),
     }
 }
 

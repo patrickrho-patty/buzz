@@ -25,17 +25,17 @@ spec:
     path: .
     targetRevision: 0.1.7
     helm:
-      releaseName: buzz
+      releaseName: crew
       values: |
-        relayUrl: wss://buzz.example.com
+        relayUrl: wss://crew.example.com
         ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"  # replace
         replicaCount: 3
 
         secrets:
-          existingSecret: buzz-secrets
+          existingSecret: crew-secrets
 
         externalPostgresql:
-          # DATABASE_URL also lives in buzz-secrets; this is here only if you
+          # DATABASE_URL also lives in crew-secrets; this is here only if you
           # prefer the URL stored in values vs. the Secret. Pick one.
           url: ""
 
@@ -48,7 +48,7 @@ spec:
           bucket: "crew-media"
           region: "us-east-1"
           addressingStyle: virtual
-          # accessKey / secretKey live in buzz-secrets
+          # accessKey / secretKey live in crew-secrets
 
         persistence:
           git:
@@ -66,11 +66,11 @@ spec:
             nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
             nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
           tls:
-            - hosts: [buzz.example.com]
-              secretName: buzz-tls
+            - hosts: [crew.example.com]
+              secretName: crew-tls
   destination:
     server: https://kubernetes.default.svc
-    namespace: buzz
+    namespace: crew
   syncPolicy:
     automated:
       prune: true

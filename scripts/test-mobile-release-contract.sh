@@ -9,7 +9,7 @@ remote="$tmp/remote.git"
 work="$tmp/work"
 operator="$tmp/operator"
 bin="$tmp/bin"
-canonical_origin="git@github.com:block/buzz.git"
+canonical_origin="git@github.com:block/crew.git"
 mkdir -p "$bin"
 
 cat > "$bin/gh" <<'GH'
@@ -72,7 +72,7 @@ case "${1:-}:${2:-}" in
         "mobile-v${version}-rc.${expected}" "$sha"
     else
       git -C "$GH_WORKTREE" -c tag.gpgSign=false tag -a \
-        -m "Buzz Mobile $version release candidate $expected" \
+        -m "Crew Mobile $version release candidate $expected" \
         "mobile-v${version}-rc.${expected}" "$sha"
     fi
     git -C "$GH_WORKTREE" -c core.hooksPath=/dev/null push -q \

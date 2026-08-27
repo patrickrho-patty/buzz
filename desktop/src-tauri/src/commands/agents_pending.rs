@@ -38,7 +38,7 @@ pub(crate) fn retain_managed_agent_pending(
         retain_agent_record(&conn, &scope.owner_keys, record).map(|_| ())
     })();
     if let Err(e) = result {
-        eprintln!("griddle-desktop: agent-retain: {e}");
+        eprintln!("crew-desktop: agent-retain: {e}");
     }
 }
 
@@ -94,7 +94,7 @@ pub(crate) fn tombstone_managed_agent_pending(
         )
     })();
     if let Err(e) = result {
-        eprintln!("griddle-desktop: agent-tombstone: {e}");
+        eprintln!("crew-desktop: agent-tombstone: {e}");
     }
 }
 
@@ -172,6 +172,6 @@ pub(crate) fn archive_managed_agent_pending(
         )
     })();
     if let Err(e) = result {
-        eprintln!("griddle-desktop: agent-archive: {e}");
+        eprintln!("crew-desktop: agent-archive: {e}");
     }
 }

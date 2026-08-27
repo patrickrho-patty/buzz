@@ -1,6 +1,6 @@
 #![deny(unsafe_code)]
 #![warn(missing_docs)]
-//! crew-db — Postgres event store for Buzz.
+//! crew-db — Postgres event store for Crew.
 //!
 //! ## Design invariants
 //! - AUTH events (kind 22242) are never stored — they carry bearer tokens.
@@ -35,7 +35,7 @@ pub mod migration;
 pub mod moderation;
 /// Monthly table partition management.
 pub mod partition;
-/// Buzz product-feedback sidecar persistence.
+/// Crew product-feedback sidecar persistence.
 pub mod product_feedback;
 /// Community-scoped push lease and durable wake-outbox persistence.
 pub mod push;
@@ -5174,7 +5174,7 @@ impl Db {
     /// The entire check → retire old payload → insert runs in a single transaction
     /// with an advisory lock to prevent concurrent-insert races. NIP-RS read-state
     /// coordinates hard-delete the superseded payload and preserve a compact
-    /// ordering watermark. Buzz mesh status coordinates also hard-delete their
+    /// ordering watermark. Crew mesh status coordinates also hard-delete their
     /// superseded heartbeat payload because only the live head has product
     /// value; other NIP-33 kinds retain soft-deleted history.
     ///
@@ -5244,7 +5244,7 @@ impl Db {
             })
             && read_state_t_tag_count == 1;
         // Mesh status rows may carry either the current `crew-mesh-*` tag
-        // spelling or the legacy `buzz-mesh-*` one written by pre-rename
+        // spelling or the legacy `crew-mesh-*` one written by pre-rename
         // binaries; both must hard-delete-supersede identically.
         let is_buzz_mesh_status = kind_i32 == crew_core::kind::KIND_BOOKMARK_SET as i32
             && (d_tag.starts_with("crew-mesh-member-status:")

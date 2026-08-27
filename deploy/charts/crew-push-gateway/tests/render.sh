@@ -10,7 +10,7 @@ helm template push deploy/charts/crew-push-gateway >"$out"
 production_args=(
   -f deploy/charts/crew-push-gateway/values-production.yaml
   --set 'image.digest=sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-  --set 'appAttestAppId=REALTEAM.xyz.buzz'
+  --set 'appAttestAppId=REALTEAM.xyz.crew'
   --set 'httpRoute.parentRefs[0].name=production-gateway'
   --set 'httpRoute.parentRefs[0].namespace=gateway-system'
   --set 'networkPolicy.postgresEgressCidrs[0]=10.42.0.0/16'

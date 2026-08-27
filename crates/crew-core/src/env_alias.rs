@@ -1,6 +1,6 @@
 //! Legacy-name alias window for externally documented env contracts.
 //!
-//! During the Buzz → Crew rename, deployment scripts and agent harnesses may
+//! During the Crew → Crew rename, deployment scripts and agent harnesses may
 //! still export the old `BUZZ_*` names. Reads of the affected variables go
 //! through [`env_lookup`], which prefers the new name and falls back to the
 //! documented legacy one. Remove this module once the window closes.

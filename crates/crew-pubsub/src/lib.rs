@@ -10,7 +10,7 @@
 //!   ├── deadpool-redis pool → PUBLISH, SET, ZADD, etc.
 //!   │
 //!   └── dedicated redis::aio::PubSub connection (NOT from pool)
-//!         └── dynamic SUBSCRIBE buzz:{community}:channel:{id} / buzz:{community}:global
+//!         └── dynamic SUBSCRIBE crew:{community}:channel:{id} / crew:{community}:global
 //!               └── run_subscriber() → broadcast::channel(4096) → N WS receivers
 //! ```
 //!
@@ -96,7 +96,7 @@ impl PubSubConfig {
     }
 }
 
-/// Central pub/sub manager for a Buzz relay instance.
+/// Central pub/sub manager for a Crew relay instance.
 pub struct PubSubManager {
     pool: deadpool_redis::Pool,
     /// Redis URL used by the reconnect loop to re-establish pub/sub connections.
@@ -307,7 +307,7 @@ impl PubSubManager {
     /// Publish an event to the Redis channel. Returns subscriber count.
     ///
     /// Routing note (NIP-ER author-private reminders): events are keyed by
-    /// `buzz:{community}:channel:{id}` / `buzz:{community}:global`, and
+    /// `crew:{community}:channel:{id}` / `crew:{community}:global`, and
     /// relay nodes dynamically subscribe only to topics with local interest —
     /// so the topic key is a routing label, not an isolation boundary.
     /// Author-private reminders (kind:30300, stored under the nil channel

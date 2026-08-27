@@ -1,4 +1,4 @@
-"""Positive and adversarial fixtures for the expanded Buzz-native tasks."""
+"""Positive and adversarial fixtures for the expanded Crew-native tasks."""
 
 from __future__ import annotations
 

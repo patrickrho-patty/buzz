@@ -291,7 +291,7 @@ fn install_acp_runtime_blocking(
     // Phase 1: Install CLI if missing and commands are available.
     // Today every entry in `cli_install_commands` is a curl-pipe; npm-backed
     // adapter installs live in Phase 2 below where they are rewritten to a
-    // Buzz-private prefix before execution.
+    // Crew-private prefix before execution.
     if let Some(cli) = runtime.underlying_cli {
         if crate::managed_agents::resolve_command(cli).is_none() {
             for cmd in runtime.cli_install_commands_for_os() {
@@ -599,12 +599,12 @@ async fn restart_single_agent_after_install(
     let runtime_keys = match stop_result {
         Ok(Ok(runtime_keys)) => runtime_keys,
         Ok(Err(e)) => {
-            eprintln!("griddle-desktop: install_acp_runtime: skipping restart of {pubkey}: {e}");
+            eprintln!("crew-desktop: install_acp_runtime: skipping restart of {pubkey}: {e}");
             return InstallRestartOutcome::Skipped;
         }
         Err(e) => {
             eprintln!(
-                "griddle-desktop: install_acp_runtime: spawn_blocking failed for stop of {pubkey}: {e}"
+                "crew-desktop: install_acp_runtime: spawn_blocking failed for stop of {pubkey}: {e}"
             );
             return InstallRestartOutcome::Skipped;
         }
@@ -617,17 +617,17 @@ async fn restart_single_agent_after_install(
     {
         Ok(_) => {
             eprintln!(
-                "griddle-desktop: install_acp_runtime: restarted setup-mode agent {pubkey} after install"
+                "crew-desktop: install_acp_runtime: restarted setup-mode agent {pubkey} after install"
             );
             InstallRestartOutcome::Restarted
         }
         Err(e) => {
             eprintln!(
-                "griddle-desktop: install_acp_runtime: failed to start {pubkey} after install: {e}"
+                "crew-desktop: install_acp_runtime: failed to start {pubkey} after install: {e}"
             );
             if let Err(save_err) = persist_last_error_on_install(app, pubkey, &e) {
                 eprintln!(
-                    "griddle-desktop: install_acp_runtime: failed to persist last_error for {pubkey}: {save_err}"
+                    "crew-desktop: install_acp_runtime: failed to persist last_error for {pubkey}: {save_err}"
                 );
             }
             InstallRestartOutcome::FailedAfterStop
@@ -675,7 +675,7 @@ fn persist_last_error_on_install(
 /// the process environment is installed: a profile assigning PATH overwrites
 /// `cmd.env("PATH", …)` before the vendor command runs. `export PATH=` empties
 /// it outright; macOS `/etc/zprofile` runs `path_helper`, which reorders it and
-/// costs Buzz's managed Node/npm dirs their precedence. A positional rather than
+/// costs Crew's managed Node/npm dirs their precedence. A positional rather than
 /// an interpolated body keeps entries containing spaces or quotes intact.
 ///
 /// The prelude is omitted where it would do harm:
@@ -716,7 +716,7 @@ fn install_shell_args(
 }
 
 /// Build a login-shell `Command` for `command` with hermit env vars stripped,
-/// Buzz-managed npm locations set, and the user's PATH set. This is the
+/// Crew-managed npm locations set, and the user's PATH set. This is the
 /// single source of truth for
 /// the shell selection and environment cleanup shared by `run_install_command`
 /// and managed npm install path — keeping them in sync so the hermit-strip list
@@ -737,7 +737,7 @@ fn install_shell_command(command: &str) -> Result<std::process::Command, String>
     // runtime/probe path so the two can never drift.  managed entries first
     // (Node/npm bins keep precedence); login-shell entries next; inherited
     // process PATH appended last when no login-shell PATH exists — the case
-    // where the composed PATH would otherwise be Buzz's managed Node dirs
+    // where the composed PATH would otherwise be Crew's managed Node dirs
     // alone, with no `curl`/`sh`/`tar` for the vendor install pipes
     // (cmd.env("PATH", …) replaces rather than extends). On Windows that case
     // is the steady state: login_shell_path() always returns None there
@@ -850,7 +850,7 @@ fn is_powershell_command(command: &str) -> bool {
 }
 
 /// Apply the shared npm env cleanup and managed-prefix setup to an install child.
-/// Strips hermit-managed vars and establishes the Buzz-managed npm prefix so adapters
+/// Strips hermit-managed vars and establishes the Crew-managed npm prefix so adapters
 /// installed via either path (shell or native PowerShell) land in the same location.
 fn apply_npm_env(cmd: &mut std::process::Command) {
     cmd.env_remove("NPM_CONFIG_PREFIX");
@@ -940,7 +940,7 @@ fn install_powershell_command(command: &str) -> std::process::Command {
 
     apply_npm_env(&mut cmd);
 
-    // Compose PATH: managed Buzz dirs first, then inherited process PATH.
+    // Compose PATH: managed Crew dirs first, then inherited process PATH.
     // No login-shell path: login_shell_path() always returns None on Windows,
     // and we deliberately skip it here to avoid POSIX-shaped entries.
     let managed: Vec<std::path::PathBuf> = [
@@ -1416,7 +1416,7 @@ mod tests {
     #[test]
     fn test_install_shell_args_shape_per_platform() {
         let composed = std::ffi::OsString::from("/buzz/node/bin:/usr/bin");
-        let windows_composed = std::ffi::OsString::from(r"C:\buzz\node;C:\Windows\system32");
+        let windows_composed = std::ffi::OsString::from(r"C:\crew\node;C:\Windows\system32");
         let bare = ["-l", "-c", "set -o pipefail; echo hi"].map(std::ffi::OsString::from);
 
         assert_eq!(
@@ -1581,7 +1581,7 @@ mod tests {
             path_value.contains(sentinel),
             "install_shell_command PATH must include the inherited process PATH; got: {path_value}"
         );
-        // The sentinel must appear LAST — managed Buzz dirs must have precedence.
+        // The sentinel must appear LAST — managed Crew dirs must have precedence.
         assert!(
             path_value.ends_with(sentinel),
             "inherited process PATH must be appended LAST so managed dirs keep precedence; got: {path_value}"
@@ -1605,9 +1605,9 @@ mod tests {
     /// crew-agent has no install commands on any platform.
     #[test]
     fn test_buzz_agent_has_no_install_commands() {
-        let buzz = crate::managed_agents::known_acp_runtime_exact("crew-agent").unwrap();
+        let crew = crate::managed_agents::known_acp_runtime_exact("crew-agent").unwrap();
         assert!(
-            buzz.cli_install_commands_for_os().is_empty(),
+            crew.cli_install_commands_for_os().is_empty(),
             "crew-agent ships with the app — must never have install commands"
         );
     }

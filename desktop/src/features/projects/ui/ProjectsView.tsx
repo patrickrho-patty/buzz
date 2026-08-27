@@ -161,7 +161,7 @@ export function ProjectsView() {
     () => readStoredIssueScope(),
   );
   const projectsWorkItemsQuery = useProjectsWorkItemsQuery(projects);
-  // One blobless clone per primary Buzz repository, only while the overview
+  // One blobless clone per primary Crew repository, only while the overview
   // header is visible.
   const snapshotProjects = React.useMemo(
     () =>

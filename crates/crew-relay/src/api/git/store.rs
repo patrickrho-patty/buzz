@@ -969,12 +969,12 @@ mod tests {
         for (style, expected_url, path_style) in [
             (
                 crew_media::config::S3AddressingStyle::Path,
-                "https://storage.example/buzz-git",
+                "https://storage.example/crew-git",
                 true,
             ),
             (
                 crew_media::config::S3AddressingStyle::Virtual,
-                "https://buzz-git.storage.example",
+                "https://crew-git.storage.example",
                 false,
             ),
         ] {

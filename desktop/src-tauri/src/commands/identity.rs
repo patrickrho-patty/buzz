@@ -373,7 +373,7 @@ pub async fn import_identity(
         let pubkey_hex = pubkey.to_hex();
         let display_name = truncated_display_name(&pubkey)?;
 
-        eprintln!("griddle-desktop: imported identity pubkey {}", pubkey_hex);
+        eprintln!("crew-desktop: imported identity pubkey {}", pubkey_hex);
 
         Ok(IdentityInfo {
             pubkey: pubkey_hex,
@@ -442,7 +442,7 @@ pub(crate) fn commit_imported_identity(
     // per the ordering contract above.
     if let Err(e) = crate::key_backup::cleanup_stale_backup(&previous_pubkey, &pubkey, data_dir) {
         eprintln!(
-            "griddle-desktop: import committed, but stale key backup cleanup failed: {e}; \
+            "crew-desktop: import committed, but stale key backup cleanup failed: {e}; \
              the leftover identity.ncryptsec encrypts the PREVIOUS key and will be \
              replaced by the next backup creation"
         );
@@ -544,7 +544,7 @@ pub async fn sign_out(app: tauri::AppHandle) -> Result<(), String> {
 
     // Stop all managed agents before restart so they don't race the wipe.
     if let Err(e) = crate::shutdown::shutdown_managed_agents(&app) {
-        eprintln!("griddle-desktop sign-out: agent shutdown: {e}");
+        eprintln!("crew-desktop sign-out: agent shutdown: {e}");
     }
 
     // Write the reset sentinel — destruction happens on next boot.
@@ -797,15 +797,15 @@ mod oidc_whoami_base_url_tests {
     #[test]
     fn explicit_transaction_relay_url_wins_and_converts_to_https() {
         let state = build_app_state();
-        let base = oidc_relay_api_base(Some("wss://griddle.patty.io"), &state);
-        assert_eq!(base, "https://griddle.patty.io");
+        let base = oidc_relay_api_base(Some("wss://crew.patty.io"), &state);
+        assert_eq!(base, "https://crew.patty.io");
     }
 
     #[test]
     fn explicit_relay_url_is_trimmed() {
         let state = build_app_state();
-        let base = oidc_relay_api_base(Some("  wss://griddle.patty.io  "), &state);
-        assert_eq!(base, "https://griddle.patty.io");
+        let base = oidc_relay_api_base(Some("  wss://crew.patty.io  "), &state);
+        assert_eq!(base, "https://crew.patty.io");
     }
 
     #[test]

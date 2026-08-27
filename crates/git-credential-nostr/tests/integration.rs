@@ -52,7 +52,7 @@ fn valid_input() -> String {
      protocol=https\n\
      host=relay.example.com\n\
      path=git/owner/repo.git/info/refs\n\
-     wwwauth[]=Nostr realm=\"buzz\", method=\"GET\"\n\
+     wwwauth[]=Nostr realm=\"crew\", method=\"GET\"\n\
      \n"
     .to_string()
 }
@@ -120,7 +120,7 @@ fn happy_path() {
     assert!(event["tags"].is_array(), "event missing 'tags'");
 }
 
-/// A Buzz-managed agent must carry its NIP-OA owner attestation inside the
+/// A Crew-managed agent must carry its NIP-OA owner attestation inside the
 /// signed NIP-98 event so the relay can admit it through the owner's membership.
 #[test]
 fn includes_nip_oa_auth_tag_in_signed_event() {
@@ -243,7 +243,7 @@ fn missing_method_hint() {
                  protocol=https\n\
                  host=relay.example.com\n\
                  path=git/owner/repo.git/info/refs\n\
-                 wwwauth[]=Nostr realm=\"buzz\"\n\
+                 wwwauth[]=Nostr realm=\"crew\"\n\
                  \n";
 
     let nsec = fresh_nsec();
@@ -271,7 +271,7 @@ fn missing_path() {
                  capability[]=state\n\
                  protocol=https\n\
                  host=relay.example.com\n\
-                 wwwauth[]=Nostr realm=\"buzz\", method=\"GET\"\n\
+                 wwwauth[]=Nostr realm=\"crew\", method=\"GET\"\n\
                  \n";
 
     let nsec = fresh_nsec();

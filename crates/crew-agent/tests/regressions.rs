@@ -1856,7 +1856,7 @@ async fn cancel_sends_notifications_cancelled_to_any_mcp_server() {
 // Reply guard (`CREW_AGENT_REQUIRE_REPLY`)
 //
 // The guard reminds the model to publish when a turn is about to end without
-// any recognized attempt to post to Buzz. It rides the existing `_Stop` gate
+// any recognized attempt to post to Crew. It rides the existing `_Stop` gate
 // and shares its rejection budget, so most of these tests count LLM calls:
 // each reminder costs exactly one extra round.
 // ---------------------------------------------------------------------------
@@ -1887,7 +1887,7 @@ fn openai_shell_send(id: &str) -> Value {
     openai_tool_call(
         id,
         "fake__shell",
-        json!({ "command": "buzz messages send --channel c --content hi" }),
+        json!({ "command": "crew messages send --channel c --content hi" }),
     )
 }
 
@@ -2005,7 +2005,7 @@ async fn reply_guard_nags_twice_then_lets_the_turn_end() {
         .expect("reminder body");
     let text = nag["text"].as_str().unwrap_or("");
     assert!(
-        text.contains("buzz messages send"),
+        text.contains("crew messages send"),
         "reminder should name the command: {text}"
     );
     assert!(
@@ -2111,7 +2111,7 @@ async fn reply_guard_ignores_calls_lost_to_the_turn_cap() {
         "type": "function",
         "function": {
             "name": "fake__shell",
-            "arguments": json!({ "command": "buzz messages send --channel c --content hi" })
+            "arguments": json!({ "command": "crew messages send --channel c --content hi" })
                 .to_string(),
         },
     }));

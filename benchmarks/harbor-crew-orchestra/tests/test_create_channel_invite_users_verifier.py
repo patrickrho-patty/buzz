@@ -4,7 +4,7 @@ from pathlib import Path
 
 from harbor_crew_orchestra.task_fixtures import TARGET_BOTS, TARGET_USERS, fixture_for
 
-# The Buzz-native tasks are a sibling dataset of this harness package.
+# The Crew-native tasks are a sibling dataset of this harness package.
 DATASET_ROOT = Path(__file__).resolve().parents[2] / "crew-dataset"
 VERIFIER = DATASET_ROOT / "create-channel-invite-users" / "tests" / "verify.py"
 SPEC = importlib.util.spec_from_file_location("create_channel_verifier", VERIFIER)

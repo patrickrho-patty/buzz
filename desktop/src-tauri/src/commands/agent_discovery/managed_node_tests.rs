@@ -14,9 +14,9 @@ fn test_rewrite_npm_install_uses_private_prefix() {
     assert_eq!(
         rewrite_npm_global_install(
             "npm install -g @agentclientprotocol/codex-acp",
-            "'/tmp/Buzz Node'"
+            "'/tmp/Crew Node'"
         ),
-        "npm install --global --prefix '/tmp/Buzz Node' @agentclientprotocol/codex-acp"
+        "npm install --global --prefix '/tmp/Crew Node' @agentclientprotocol/codex-acp"
     );
 }
 
@@ -239,7 +239,7 @@ fn test_should_invalidate_adapter_keeps_managed_shim_when_node_healthy() {
 
 #[test]
 fn test_resolve_adapter_path_returns_none_when_binary_absent() {
-    let commands: &[&str] = &["nonexistent-buzz-test-binary-xyz"];
+    let commands: &[&str] = &["nonexistent-crew-test-binary-xyz"];
     let adapter_install_commands: &[&str] = &["curl -fsSL https://example.com | bash"];
     assert!(
         resolve_adapter_path(commands, adapter_install_commands).is_none(),

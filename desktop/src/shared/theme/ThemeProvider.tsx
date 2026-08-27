@@ -23,18 +23,18 @@ import {
   resolveSystemTheme,
 } from "./theme-loader";
 
-export const THEME_STORAGE_KEY = "buzz-theme";
+export const THEME_STORAGE_KEY = "crew-theme";
 const CACHE_KEY = "crew-theme-cache";
-export const ACCENT_STORAGE_KEY = "buzz-accent-color";
-export const GLASS_BACKGROUND_STORAGE_KEY = "buzz-glass-background";
-export const GLASS_OPACITY_STORAGE_KEY = "buzz-glass-opacity";
-export const PROMINENT_ACTIVE_TAB_STORAGE_KEY = "buzz-prominent-active-tab";
+export const ACCENT_STORAGE_KEY = "crew-accent-color";
+export const GLASS_BACKGROUND_STORAGE_KEY = "crew-glass-background";
+export const GLASS_OPACITY_STORAGE_KEY = "crew-glass-opacity";
+export const PROMINENT_ACTIVE_TAB_STORAGE_KEY = "crew-prominent-active-tab";
 export const GLASS_OPACITY_MIN = 30;
 export const GLASS_OPACITY_MAX = 90;
 export const DEFAULT_GLASS_OPACITY = 65;
 export const DEFAULT_PROMINENT_ACTIVE_TAB = false;
 export const NEUTRAL_ACCENT = "neutral";
-const FOLLOW_SYSTEM_KEY = "buzz-follow-system";
+const FOLLOW_SYSTEM_KEY = "crew-follow-system";
 const VIDEO_REVIEW_NEUTRAL_ACCENT = "0 0% 98%";
 const VIDEO_REVIEW_CHIP_SURFACE = "#161616";
 const VIDEO_REVIEW_TEXT_CONTRAST = 4.5;
@@ -237,8 +237,8 @@ function applyAccentColor(value: string) {
 }
 
 /**
- * The Buzz themes ship with a fixed neutral accent (the GitHub black/white
- * foreground) rather than a user-selectable accent color. When a Buzz theme is
+ * The Crew themes ship with a fixed neutral accent (the GitHub black/white
+ * foreground) rather than a user-selectable accent color. When a Crew theme is
  * active we force `NEUTRAL_ACCENT` regardless of the stored preference, and the
  * appearance panel hides the accent picker. The user's chosen accent is left
  * untouched in storage so it returns when they switch back to another theme.
@@ -248,7 +248,7 @@ export function isBuzzTheme(themeName: string): boolean {
 }
 
 /**
- * Resolve the accent to actually apply for a theme: Buzz themes are pinned to
+ * Resolve the accent to actually apply for a theme: Crew themes are pinned to
  * the neutral accent; every other theme uses the stored/selected accent.
  */
 function resolveEffectiveAccent(
@@ -258,19 +258,19 @@ function resolveEffectiveAccent(
   return isBuzzTheme(themeName) ? NEUTRAL_ACCENT : accentColor;
 }
 
-/** Toggle the Buzz-specific gradient marker independently from glass. */
+/** Toggle the Crew-specific gradient marker independently from glass. */
 function applyBuzzSidebar(themeName: string) {
   const root = document.documentElement;
   if (isBuzzTheme(themeName)) {
     root.setAttribute("data-crew-sidebar", "");
-    // Keep the concrete Buzz variant on the root as well as the generic
+    // Keep the concrete Crew variant on the root as well as the generic
     // marker. The gradient stylesheet matches this attribute directly, which
     // makes WKWebView invalidate the painted background when light/dark mode
     // changes instead of relying only on a custom-property dependency update.
-    root.setAttribute("data-buzz-theme", themeName);
+    root.setAttribute("data-crew-theme", themeName);
   } else {
     root.removeAttribute("data-crew-sidebar");
-    root.removeAttribute("data-buzz-theme");
+    root.removeAttribute("data-crew-theme");
   }
 }
 
@@ -411,8 +411,8 @@ function applyCachedVars(): string | null {
     glassThemeReady = true;
 
     const accent = getStorageItem(ACCENT_STORAGE_KEY) ?? DEFAULT_ACCENT;
-    // Pin Buzz themes to the neutral accent here too, matching applyTheme.
-    // Otherwise a cached Buzz theme + non-neutral stored accent flashes the
+    // Pin Crew themes to the neutral accent here too, matching applyTheme.
+    // Otherwise a cached Crew theme + non-neutral stored accent flashes the
     // old accent on reload until the async applyTheme effect runs.
     applyAccentColor(resolveEffectiveAccent(themeName, accent));
 
@@ -455,7 +455,7 @@ async function applyTheme(name: SyntaxThemeName): Promise<{
   // Apply the accent synchronously in the same batch as the theme vars so the
   // browser paints the new theme + accent together. Doing this in a later
   // microtask (e.g. the caller's `.then`) let the previous accent flash on the
-  // new theme for a frame — the flicker seen when switching to Buzz. Buzz
+  // new theme for a frame — the flicker seen when switching to Crew. Crew
   // themes resolve to the neutral accent regardless of the stored value.
   applyAccentColor(
     resolveEffectiveAccent(
@@ -524,7 +524,7 @@ export function ThemeProvider({
   const [followSystem, setFollowSystemState] = useState<boolean>(() => {
     const stored = getStorageItem(FOLLOW_SYSTEM_KEY);
     if (stored !== null) return stored === "true";
-    // Fresh profiles (no saved theme) default to System mode so the Buzz
+    // Fresh profiles (no saved theme) default to System mode so the Crew
     // default tracks the OS light/dark scheme. Profiles that picked a theme
     // before this toggle existed keep their fixed theme until they opt in.
     return getStorageItem(THEME_STORAGE_KEY) === null;
@@ -574,8 +574,8 @@ export function ThemeProvider({
     void applyWindowGlass(glassBackground);
   }, [glassBackground]);
 
-  // The stronger selected-row treatment belongs exclusively to Buzz. Keep
-  // the saved preference so it is restored when the user returns to Buzz,
+  // The stronger selected-row treatment belongs exclusively to Crew. Keep
+  // the saved preference so it is restored when the user returns to Crew,
   // but remove the live marker for every other theme.
   useEffect(() => {
     setProminentActiveTabActive(
@@ -626,7 +626,7 @@ export function ThemeProvider({
   }, [followSystem]);
 
   // Re-apply the accent when the user picks a new swatch or the effective theme
-  // changes. applyTheme already applies the (Buzz-neutral-aware) accent in the
+  // changes. applyTheme already applies the (Crew-neutral-aware) accent in the
   // same synchronous batch as the theme vars — the flicker fix — so this effect
   // is idempotent on theme changes and simply covers accent-only changes.
   useEffect(() => {

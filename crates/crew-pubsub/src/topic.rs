@@ -9,7 +9,7 @@ use uuid::Uuid;
 
 use crate::error::PubSubError;
 
-/// Redis key prefix for Buzz-scoped pub/sub topics and keys.
+/// Redis key prefix for Crew-scoped pub/sub topics and keys.
 pub const CREW_PREFIX: &str = "buzz";
 
 /// A tenant-local event routing scope.
@@ -180,7 +180,7 @@ mod tests {
     fn rejects_malformed_or_wrong_prefix_topics() {
         for raw in [
             "",
-            "not-buzz:00000000-0000-0000-0000-00000000aaaa:global",
+            "not-crew:00000000-0000-0000-0000-00000000aaaa:global",
             "buzz:not-a-uuid:global",
             "buzz:00000000-0000-0000-0000-00000000aaaa",
             "buzz:00000000-0000-0000-0000-00000000aaaa:global:extra",

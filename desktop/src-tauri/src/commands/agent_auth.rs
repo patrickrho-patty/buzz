@@ -24,7 +24,7 @@ pub struct AcpAuthMethod {
     pub method_type: Option<String>,
     #[serde(default)]
     pub args: Vec<String>,
-    /// Full terminal command advertised by the adapter. Buzz never guesses
+    /// Full terminal command advertised by the adapter. Crew never guesses
     /// vendor login commands; when present, this argv is the source of truth.
     #[serde(default)]
     pub command: Vec<String>,
@@ -139,11 +139,11 @@ fn run_buzz_acp_auth_command<const N: usize>(
 /// PATH for the crew-acp auth helper child process.
 ///
 /// Uses the augmented agent PATH so `#!/usr/bin/env node` adapter shims
-/// resolve the Buzz-managed Node runtime — the same PATH normal agent
+/// resolve the Crew-managed Node runtime — the same PATH normal agent
 /// launches and readiness probes use.
 ///
 /// On Windows, `login_shell_path()` is intentionally `None`, so the augmented
-/// PATH contains only Buzz-managed directories and the exe parent. Buzz does
+/// PATH contains only Crew-managed directories and the exe parent. Crew does
 /// not ship a managed Node runtime on Windows, and npm `.cmd` adapters need
 /// the user's normal PATH to find `node` (and often `claude`/`codex`), so the
 /// inherited process PATH is appended there instead of being replaced.
@@ -466,14 +466,14 @@ mod tests {
         windows_terminal_args, AcpAuthMethod,
     };
 
-    /// Windows regression: the augmented PATH there holds only Buzz-managed
+    /// Windows regression: the augmented PATH there holds only Crew-managed
     /// dirs and the exe parent (no login-shell PATH, no managed Node), so the
     /// user's inherited PATH must be appended for npm `.cmd` adapters to find
     /// `node`/`claude`/`codex`.
     #[test]
     fn append_inherited_path_appends_after_augmented() {
         let sep = if cfg!(windows) { ';' } else { ':' };
-        let augmented = format!("{0}buzz-bin{1}{0}exe-dir", std::path::MAIN_SEPARATOR, sep);
+        let augmented = format!("{0}crew-bin{1}{0}exe-dir", std::path::MAIN_SEPARATOR, sep);
         let inherited = format!(
             "{0}user-bin{1}{0}system-bin",
             std::path::MAIN_SEPARATOR,
@@ -664,7 +664,7 @@ mod tests {
             method_type: Some("terminal".into()),
             args: vec!["should-not".into(), "be-used".into()],
             command: vec![
-                "definitely-not-on-path-buzz-test".into(),
+                "definitely-not-on-path-crew-test".into(),
                 "auth".into(),
                 "login".into(),
             ],
@@ -673,7 +673,7 @@ mod tests {
         assert_eq!(
             adapter_terminal_argv("Claude Code", &method, "claude-agent-acp").unwrap(),
             vec![
-                "definitely-not-on-path-buzz-test".to_string(),
+                "definitely-not-on-path-crew-test".to_string(),
                 "auth".to_string(),
                 "login".to_string()
             ]
@@ -721,9 +721,9 @@ mod tests {
             meta: None,
         };
         assert_eq!(
-            adapter_terminal_argv("Claude Code", &method, "definitely-not-on-path-buzz-test")
+            adapter_terminal_argv("Claude Code", &method, "definitely-not-on-path-crew-test")
                 .unwrap(),
-            vec!["definitely-not-on-path-buzz-test".to_string()]
+            vec!["definitely-not-on-path-crew-test".to_string()]
         );
     }
 }

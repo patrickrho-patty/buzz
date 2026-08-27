@@ -53,7 +53,7 @@ impl From<String> for ProjectPullRequestMergeError {
             return Self::new(
                 crew_core_pkg::git_perms::GIT_NO_CHANNEL_BINDING_TOKEN,
                 "This repository is not bound to a channel, so the relay cannot \
-                 authorize pushes. Bind it with: buzz repos bind --id <repo> \
+                 authorize pushes. Bind it with: crew repos bind --id <repo> \
                  --channel <channel-uuid>",
             );
         }
@@ -141,7 +141,7 @@ mod tests {
             error.code,
             crew_core_pkg::git_perms::GIT_NO_CHANNEL_BINDING_TOKEN
         );
-        assert!(error.message.contains("buzz repos bind"));
+        assert!(error.message.contains("crew repos bind"));
         assert!(error.recovery.is_none());
 
         // Unrelated push failures keep the generic code and original text.

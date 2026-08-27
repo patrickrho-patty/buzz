@@ -1,6 +1,6 @@
 #![deny(unsafe_code)]
 #![warn(missing_docs)]
-//! `crew-workflow` — Workflow engine for Buzz.
+//! `crew-workflow` — Workflow engine for Crew.
 //!
 //! Channel-scoped automations with sequential execution, variable substitution,
 //! conditional logic, and execution traces.

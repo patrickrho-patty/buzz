@@ -111,14 +111,14 @@ pub fn run() {
             // would shut down the workers Tauri now depends on.
             std::mem::forget(runtime);
             eprintln!(
-                "buzz-mesh: installed tokio runtime with {} MiB worker stacks",
+                "crew-mesh: installed tokio runtime with {} MiB worker stacks",
                 crate::mesh_llm::MESH_WORKER_STACK_SIZE / (1024 * 1024)
             );
         }
         Err(error) => {
             // Fall back to Tauri's default runtime: the app still works,
             // only deep mesh-llm futures are at risk of stack overflow.
-            eprintln!("buzz-mesh: failed to build big-stack tokio runtime, using default: {error}");
+            eprintln!("crew-mesh: failed to build big-stack tokio runtime, using default: {error}");
         }
     }
     let builder = tauri::Builder::default()
@@ -129,7 +129,7 @@ pub fn run() {
             }
             // Forward any deep link URLs from the duplicate launch.
             for arg in &argv {
-                if arg.starts_with("crew://") || arg.starts_with("griddle://") {
+                if arg.starts_with("crew://") || arg.starts_with("crew://") {
                     handle_deep_link_url(app, arg);
                 }
             }
@@ -182,7 +182,7 @@ pub fn run() {
                             .is_err()
                             {
                                 eprintln!(
-                                    "griddle-desktop: initial render did not commit before reveal timeout"
+                                    "crew-desktop: initial render did not commit before reveal timeout"
                                 );
                             }
 
@@ -284,7 +284,7 @@ pub fn run() {
             // memberships, DMs, and relay identity.
             let state = app_handle.state::<AppState>();
             if let Err(e) = resolve_persisted_identity(&app_handle, &state) {
-                eprintln!("griddle-desktop: fatal: identity resolution failed: {e}");
+                eprintln!("crew-desktop: fatal: identity resolution failed: {e}");
                 std::process::exit(1);
             }
 
@@ -307,7 +307,7 @@ pub fn run() {
             // snapshot. Synchronous and best-effort — a failure here must not
             // block launch, but a missing persona is logged loudly inside.
             if let Err(e) = backfill_persona_snapshots(&app_handle) {
-                eprintln!("griddle-desktop: persona-snapshot backfill failed: {e}");
+                eprintln!("crew-desktop: persona-snapshot backfill failed: {e}");
             }
 
             // Warm the loaded-harness registry BEFORE restore so cold-launch
@@ -367,12 +367,12 @@ pub fn run() {
                     .store(port, std::sync::atomic::Ordering::Relaxed);
             });
 
-            // Create the Buzz nest (~/.buzz or ~/.buzz-dev for dev builds) before
+            // Create the Crew nest (~/.crew or ~/.crew-dev for dev builds) before
             // agents are restored, so default_agent_workdir() resolves to the
             // nest directory. Non-fatal: agents fall back to $HOME if nest
             // creation fails.
             if let Err(error) = ensure_nest() {
-                eprintln!("griddle-desktop: failed to create nest: {error}");
+                eprintln!("crew-desktop: failed to create nest: {error}");
             }
             archive::spawn_warm_init(app_handle.clone());
 
@@ -403,14 +403,14 @@ pub fn run() {
             }
 
             // One-time migration for dev builds: copy accumulated knowledge
-            // from the shared ~/.buzz nest into the new dedicated ~/.buzz-dev
+            // from the shared ~/.crew nest into the new dedicated ~/.crew-dev
             // nest so no work is lost when the nest is first namespaced.
-            // Runs only when nest_dir() resolved to ~/.buzz-dev (dev instance).
-            // Suppressed after a reset so re-importing ~/.buzz into ~/.buzz-dev
+            // Runs only when nest_dir() resolved to ~/.crew-dev (dev instance).
+            // Suppressed after a reset so re-importing ~/.crew into ~/.crew-dev
             // doesn't re-populate what was just wiped.
             let is_dev_nest = managed_agents::nest_dir()
                 .and_then(|p| p.file_name().map(|n| n.to_os_string()))
-                .is_some_and(|n| n == ".buzz-dev");
+                .is_some_and(|n| n == ".crew-dev");
             if !reset_outcome.completed && is_dev_nest {
                 migration::migrate_dev_nest();
             }
@@ -420,7 +420,7 @@ pub fn run() {
             if let Ok(exe) = std::env::current_exe() {
                 if let Some(parent) = exe.parent() {
                     if let Err(error) = managed_agents::ensure_cli_symlink(parent, is_dev_nest) {
-                        eprintln!("griddle-desktop: failed to create CLI symlink: {error}");
+                        eprintln!("crew-desktop: failed to create CLI symlink: {error}");
                     }
                 }
             }
@@ -509,7 +509,7 @@ pub fn run() {
                         )
                         .await
                         {
-                            eprintln!("griddle-desktop: event-flush: {e}");
+                            eprintln!("crew-desktop: event-flush: {e}");
                         }
                         tokio::time::sleep(Duration::from_secs(30)).await;
                     }
@@ -874,11 +874,11 @@ pub fn run() {
             event: WindowEvent::CloseRequested { api, .. },
             ..
         } if label == "main" => {
-            // Keep the webview alive so Buzz can be reopened from its tray menu.
+            // Keep the webview alive so Crew can be reopened from its tray menu.
             api.prevent_close();
             if let Some(window) = app_handle.get_webview_window("main") {
                 if let Err(error) = window.hide() {
-                    eprintln!("griddle-desktop: failed to hide main window: {error}");
+                    eprintln!("crew-desktop: failed to hide main window: {error}");
                 }
             }
         }
@@ -901,7 +901,7 @@ pub fn run() {
                     });
             if is_active_huddle_window {
                 if let Err(error) = app_handle.emit("huddle-companion-returned", ()) {
-                    eprintln!("griddle-desktop: failed to restore huddle drawer: {error}");
+                    eprintln!("crew-desktop: failed to restore huddle drawer: {error}");
                 }
             }
         }
@@ -922,7 +922,7 @@ pub fn run() {
             // AppKit terminates through libc exit(), which runs C++ static
             // destructors. The embedded ggml/Metal runtime currently aborts in
             // that destructor phase even after its node has stopped cleanly.
-            // End the process only after Buzz and Mesh shutdown above, while
+            // End the process only after Crew and Mesh shutdown above, while
             // deliberately skipping those native global destructors.
             #[cfg(all(feature = "mesh-llm", target_os = "macos"))]
             hard_exit_after_mesh_shutdown();

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SIDECARS=(crew-acp crew-agent crew-dev-mcp git-credential-nostr buzz)
+SIDECARS=(crew-acp crew-agent crew-dev-mcp git-credential-nostr crew)
 HOST=$(rustc -vV | sed -n 's|host: ||p')
 TARGET=${1:-$HOST}
 if [[ "$TARGET" != *windows* ]]; then

@@ -9,7 +9,7 @@ services:
       CREW_BIND_ADDR: 0.0.0.0:3000
       CREW_HEALTH_PORT: "8080"
       CREW_METRICS_PORT: "9102"
-      DATABASE_URL: postgres://${POSTGRES_USER:-buzz}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-buzz}
+      DATABASE_URL: postgres://${POSTGRES_USER:-crew}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-crew}
       REDIS_URL: redis://:${REDIS_PASSWORD:?set REDIS_PASSWORD}@redis:6379
       CREW_S3_ENDPOINT: http://minio:9000
       # Docker DNS resolves `minio`, not arbitrary `<bucket>.minio` hosts.
@@ -23,7 +23,7 @@ services:
     ports:
       - "${CREW_HTTP_PORT:-3000}:3000"
     volumes:
-      - buzz-git-data:/data/git
+      - crew-git-data:/data/git
     depends_on:
       postgres:
         condition: service_healthy
@@ -51,8 +51,8 @@ services:
   postgres:
     image: postgres:17-alpine
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-buzz}
-      POSTGRES_USER: ${POSTGRES_USER:-buzz}
+      POSTGRES_DB: ${POSTGRES_DB:-crew}
+      POSTGRES_USER: ${POSTGRES_USER:-crew}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
@@ -131,7 +131,7 @@ volumes:
   crew-minio-data:
     labels:
       com.crew.volume: minio
-  buzz-git-data:
+  crew-git-data:
     labels:
       com.crew.volume: git
 

@@ -12,7 +12,7 @@ import {
 } from "./terminal-palette";
 
 /**
- * Buzz theme name. Buzz is a first-party light theme that reuses GitHub
+ * Crew theme name. Crew is a first-party light theme that reuses GitHub
  * Light for every base color (backgrounds, text, borders, code) — the
  * message area and containers are indistinguishable from GitHub Light. Its
  * one distinguishing feature is a branded gradient painted across the
@@ -23,33 +23,33 @@ import {
 export const CREW_THEME_NAME = "crew";
 
 /**
- * Buzz Dark theme name. The dark-mode counterpart to {@link CREW_THEME_NAME}:
+ * Crew Dark theme name. The dark-mode counterpart to {@link CREW_THEME_NAME}:
  * reuses the GitHub Dark palette for every base color, with the same branded
  * sidebar gradient (dark-tuned colors, see `shared/styles/globals/theme.css`).
  * {@link ThemeProvider} toggles the shared `data-crew-sidebar` attribute for
  * this theme too; the `.dark` root class selects the dark gradient values.
  *
- * Buzz and Buzz Dark are paired in {@link THEME_PAIRS}, so the picker shows a
+ * Crew and Crew Dark are paired in {@link THEME_PAIRS}, so the picker shows a
  * combined "Buzz" tile under System mode (follow-OS) plus a single "Buzz" tile
  * under Light and a "Buzz Dark" tile under Dark.
  */
 export const CREW_DARK_THEME_NAME = "crew-dark";
 
-/** The Shiki bundle Buzz borrows its base palette from. */
+/** The Shiki bundle Crew borrows its base palette from. */
 export const CREW_BASE_THEME: SyntaxThemeName = "github-light";
 
-/** The Shiki bundle Buzz Dark borrows its base palette from. */
+/** The Shiki bundle Crew Dark borrows its base palette from. */
 export const CREW_DARK_BASE_THEME: SyntaxThemeName = "github-dark";
 
 /**
  * Resolve a theme name to the real Shiki bundled theme it maps to.
  *
- * Most themes map to themselves, but the Buzz aliases (`buzz` / `crew-dark`)
+ * Most themes map to themselves, but the Crew aliases (`crew` / `crew-dark`)
  * are not bundled Shiki themes — they reuse the GitHub Light / GitHub Dark
  * palettes. The Shiki highlighter engine (used for fenced code blocks in
  * `CodeBlock.tsx`) only understands bundled names, so callers that hand a
  * theme name to `loadTheme` / `codeToTokens` must resolve it through here
- * first; passing a raw Buzz alias makes Shiki throw and code blocks fall
+ * first; passing a raw Crew alias makes Shiki throw and code blocks fall
  * back to unhighlighted plain text.
  */
 export function resolveShikiThemeName(name: string): SyntaxThemeName {
@@ -58,11 +58,11 @@ export function resolveShikiThemeName(name: string): SyntaxThemeName {
   return name as SyntaxThemeName;
 }
 
-// Available themes. "buzz" is a Buzz-branded theme that reuses the
+// Available themes. "crew" is the first-party theme reusing the
 // github-light palette plus a sidebar gradient; the rest are the Shiki
 // bundled syntax themes, alphabetically sorted.
 export const SYNTAX_THEMES = [
-  "buzz",
+  "crew",
   "crew-dark",
   "andromeeda",
   "aurora-x",
@@ -157,9 +157,9 @@ const themeImports: Record<
   SyntaxThemeName,
   () => Promise<{ default: ThemeRegistrationRaw }>
 > = {
-  // Buzz reuses the github-light palette; its gradient is applied separately.
-  buzz: () => import("shiki/themes/github-light.mjs"),
-  // Buzz Dark reuses the github-dark palette; dark gradient applied separately.
+  // Crew reuses the github-light palette; its gradient is applied separately.
+  crew: () => import("shiki/themes/github-light.mjs"),
+  // Crew Dark reuses the github-dark palette; dark gradient applied separately.
   "crew-dark": () => import("shiki/themes/github-dark.mjs"),
   andromeeda: () => import("shiki/themes/andromeeda.mjs"),
   "aurora-x": () => import("shiki/themes/aurora-x.mjs"),
@@ -239,7 +239,7 @@ export function isLightTheme(name: string): boolean {
 export const THEME_PAIRS: ReadonlyMap<SyntaxThemeName, SyntaxThemeName> =
   new Map([
     // Light → Dark
-    // Buzz is the first-party pair; keep it first so it leads every category.
+    // Crew is the first-party pair; keep it first so it leads every category.
     ["buzz", "crew-dark"],
     ["catppuccin-latte", "catppuccin-mocha"],
     ["everforest-light", "everforest-dark"],

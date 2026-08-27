@@ -1,10 +1,10 @@
 import { useId } from "react";
 
 /**
- * The Buzz bee mark with flapping wings. Geometry is identical to the static
+ * The Crew bee mark with flapping wings. Geometry is identical to the static
  * {@link CrewMark} (v8 final keyframe) — the same silhouette, rendered in
  * `currentColor` so it tints per-theme — with the wing-flap keyframes (ported
- * from the Buzz website) beating the wings on an infinite loop.
+ * from the Crew website) beating the wings on an infinite loop.
  *
  * Unlike the static mark's single `<svg>`, each wing here is its own
  * HTML-level `<svg>` layer and the flap animates those elements' CSS

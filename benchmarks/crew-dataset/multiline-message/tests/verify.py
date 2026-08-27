@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic verifier for multiline Buzz message delivery."""
+"""Deterministic verifier for multiline Crew message delivery."""
 
 from __future__ import annotations
 

@@ -4,9 +4,9 @@ set -euo pipefail
 
 DB_HOST="${CREW_DB_HOST:-127.0.0.1}"
 DB_PORT="${CREW_DB_PORT:-5432}"
-DB_USER="${CREW_DB_USER:-buzz}"
+DB_USER="${CREW_DB_USER:-crew}"
 DB_PASS="${CREW_DB_PASS:-crew_dev}"
-DB_NAME="${CREW_DB_NAME:-buzz}"
+DB_NAME="${CREW_DB_NAME:-crew}"
 DB_DOCKER_CONTAINER="${CREW_DB_DOCKER_CONTAINER:-crew-postgres}"
 
 SYSTEM_PUBKEY="0000000000000000000000000000000000000000000000000000000000000000"
@@ -75,15 +75,15 @@ if [[ ! "${COMMUNITY_ID}" =~ ^[0-9a-fA-F-]{36}$ ]]; then
   exit 1
 fi
 
-UUID_GENERAL=$(uuid5_hex "buzz.channel.general")
-UUID_RANDOM=$(uuid5_hex "buzz.channel.random")
-UUID_ENGINEERING=$(uuid5_hex "buzz.channel.engineering")
-UUID_AGENTS=$(uuid5_hex "buzz.channel.agents")
-UUID_WATERCOOLER=$(uuid5_hex "buzz.channel.watercooler")
-UUID_ANNOUNCEMENTS=$(uuid5_hex "buzz.channel.announcements")
-UUID_DM_ALICE_TYLER=$(uuid5_hex "buzz.channel.dm.alice-tyler")
-UUID_DM_BOB_TYLER=$(uuid5_hex "buzz.channel.dm.bob-tyler")
-UUID_DM_BOB_CHARLIE_TYLER=$(uuid5_hex "buzz.channel.dm.bob-charlie-tyler")
+UUID_GENERAL=$(uuid5_hex "crew.channel.general")
+UUID_RANDOM=$(uuid5_hex "crew.channel.random")
+UUID_ENGINEERING=$(uuid5_hex "crew.channel.engineering")
+UUID_AGENTS=$(uuid5_hex "crew.channel.agents")
+UUID_WATERCOOLER=$(uuid5_hex "crew.channel.watercooler")
+UUID_ANNOUNCEMENTS=$(uuid5_hex "crew.channel.announcements")
+UUID_DM_ALICE_TYLER=$(uuid5_hex "crew.channel.dm.alice-tyler")
+UUID_DM_BOB_TYLER=$(uuid5_hex "crew.channel.dm.bob-tyler")
+UUID_DM_BOB_CHARLIE_TYLER=$(uuid5_hex "crew.channel.dm.bob-charlie-tyler")
 
 run_sql "
 INSERT INTO channels

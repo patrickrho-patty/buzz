@@ -1,4 +1,4 @@
-//! Smart HTTP git transport for Buzz.
+//! Smart HTTP git transport for Crew.
 //!
 //! Three endpoints implement the git Smart HTTP protocol:
 //! - `GET  /git/{owner}/{repo}/info/refs?service={svc}` — ref advertisement
@@ -94,7 +94,7 @@ impl axum::extract::FromRequestParts<Arc<AppState>> for GitAuth {
                     .status(StatusCode::UNAUTHORIZED)
                     .header(
                         "WWW-Authenticate",
-                        format!("Nostr realm=\"buzz\", method=\"{method}\""),
+                        format!("Nostr realm=\"crew\", method=\"{method}\""),
                     )
                     .body(Body::from("missing Authorization header"))
                     .unwrap()
@@ -105,7 +105,7 @@ impl axum::extract::FromRequestParts<Arc<AppState>> for GitAuth {
                 .status(StatusCode::UNAUTHORIZED)
                 .header(
                     "WWW-Authenticate",
-                    format!("Nostr realm=\"buzz\", method=\"{method}\""),
+                    format!("Nostr realm=\"crew\", method=\"{method}\""),
                 )
                 .body(Body::from("expected Authorization: Nostr <base64>"))
                 .unwrap()
@@ -523,16 +523,16 @@ async fn authorize_git_read(
                 return Err((
                     StatusCode::NOT_FOUND,
                     format!(
-                        "run: buzz repos bind --id {repo_name} --channel <channel-uuid> — repository {repo_name:?} has no channel binding, so the relay cannot authorize access"
+                        "run: crew repos bind --id {repo_name} --channel <channel-uuid> — repository {repo_name:?} has no channel binding, so the relay cannot authorize access"
                     ),
                 )
                     .into_response());
             }
-            warn!(repo = %repo_name, "git read gate: missing buzz-channel binding (deny)");
+            warn!(repo = %repo_name, "git read gate: missing crew-channel binding (deny)");
             return Err(denied());
         }
         RepoBinding::Broken => {
-            warn!(repo = %repo_name, "git read gate: malformed buzz-channel binding (deny)");
+            warn!(repo = %repo_name, "git read gate: malformed crew-channel binding (deny)");
             return Err(denied());
         }
     };
@@ -668,7 +668,7 @@ fn pkt_line(out: &mut Vec<u8>, payload: &[u8]) {
 /// ```text
 /// <pkt># service=git-upload-pack\n
 /// 0000
-/// <pkt><head-oid> HEAD\0<caps> symref=HEAD:<head-ref> object-format=<fmt> agent=buzz-git\n
+/// <pkt><head-oid> HEAD\0<caps> symref=HEAD:<head-ref> object-format=<fmt> agent=crew-git\n
 /// <pkt><oid> <refname>\n        # each ref, sorted ascending (BTreeMap order)
 /// 0000
 /// ```
@@ -692,7 +692,7 @@ fn build_upload_pack_advertisement(manifest: &super::manifest::Manifest) -> Vec<
         "multi_ack thin-pack side-band side-band-64k ofs-delta shallow \
          deepen-since deepen-not deepen-relative no-progress include-tag \
          multi_ack_detailed no-done symref=HEAD:{head} object-format={fmt} \
-         agent=buzz-git",
+         agent=crew-git",
         head = manifest.head,
         fmt = object_format,
     );
@@ -2202,13 +2202,13 @@ mod track_c_tests {
             "initialize source repository",
         );
         assert_git_success(
-            run_test_git(source.as_path(), &["config", "user.name", "Buzz Test"], &[]),
+            run_test_git(source.as_path(), &["config", "user.name", "Crew Test"], &[]),
             "configure user name",
         );
         assert_git_success(
             run_test_git(
                 source.as_path(),
-                &["config", "user.email", "buzz-test@example.com"],
+                &["config", "user.email", "crew-test@example.com"],
                 &[],
             ),
             "configure user email",
@@ -3356,7 +3356,7 @@ mod sec005_read_gate_tests {
     #[tokio::test]
     #[ignore = "requires Postgres"]
     async fn read_gate_denies_missing_or_malformed_binding_and_absent_repo() {
-        // Missing buzz-channel tag → deny even for a channel member, with
+        // Missing crew-channel tag → deny even for a channel member, with
         // the generic body: the remediation carve-out is author-only.
         let f = setup_repo(Binding::Missing).await;
         let member = f.member_keys.public_key();
@@ -3371,7 +3371,7 @@ mod sec005_read_gate_tests {
              remediation for anyone but the announcement author leaks repo existence"
         );
 
-        // Malformed buzz-channel tag → deny with the generic body EVEN FOR
+        // Malformed crew-channel tag → deny with the generic body EVEN FOR
         // THE AUTHOR. This is the assertion that pins the carve-out to
         // NotBound: if it ever fires on Broken, this fails on bytes, not
         // on Ok/Err (which cannot see the difference).
@@ -3465,7 +3465,7 @@ mod sec005_read_gate_tests {
             .expect("read remediation body");
         let body = String::from_utf8(bytes.to_vec()).expect("utf-8 body");
         assert!(
-            body.starts_with(&format!("run: buzz repos bind --id {}", f.repo)),
+            body.starts_with(&format!("run: crew repos bind --id {}", f.repo)),
             "remediation must lead with the actionable command (got {body:?})"
         );
         assert_ne!(body, GENERIC_DENIAL);

@@ -189,7 +189,7 @@ impl ChannelSummary {
                 "d" => channel_id = val.map(str::to_string),
                 "name" => name = val.map(str::to_string),
                 "t" => channel_type = val.map(str::to_string),
-                // NIP-29 emits both `private` and `public` (Buzz adds the latter).
+                // NIP-29 emits both `private` and `public` (Crew adds the latter).
                 // The presence of either tag is the source of truth; tag value is unused.
                 "private" => visibility = Some("private".to_string()),
                 "public" => visibility = Some("public".to_string()),
@@ -495,7 +495,7 @@ fn apply_cardinality_rule(
                 return Err(CliError::Usage(format!(
                     "persona '{slug}' has {} live instances for this owner ({}); \
                      pass a template with a single instance per persona, or resolve \
-                     the duplicate in Buzz Desktop before creating the channel",
+                     the duplicate in Crew Desktop before creating the channel",
                     many.len(),
                     candidates.join(", ")
                 )));
@@ -646,7 +646,7 @@ async fn build_roster_resolution(
     finalize_roster_resolution(&slugs, found, archived_result, &mut std::io::stderr())
 }
 
-/// `buzz channels create --template <name>`: load a desktop-local channel
+/// `crew channels create --template <name>`: load a desktop-local channel
 /// template, resolve its agent roster against the relay, create the
 /// channel, apply the canvas template, and add resolved agents as members.
 ///
@@ -1030,7 +1030,7 @@ pub async fn cmd_set_add_policy(client: &CrewClient, policy: &str) -> Result<(),
     }
 
     // Check if this policy is allowed by the deployment.
-    // NOTE: This gate covers only the `buzz channels set-add-policy` CLI path.
+    // NOTE: This gate covers only the `crew channels set-add-policy` CLI path.
     // A client that submits a kind:10100 event directly to the relay bypasses
     // this check. Full enforcement requires relay-side validation, which is
     // intentionally out of scope for this change (see team decision: no

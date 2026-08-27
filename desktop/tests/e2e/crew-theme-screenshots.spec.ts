@@ -287,7 +287,7 @@ async function expectBuzzGradientPaint(
     const darkStyles = darkLayer ? getComputedStyle(darkLayer) : null;
     return {
       isDark: root.classList.contains("dark"),
-      theme: root.getAttribute("data-buzz-theme"),
+      theme: root.getAttribute("data-crew-theme"),
       surfaceImage: appStyles?.backgroundImage ?? "",
       lightImage: lightStyles?.backgroundImage ?? "",
       lightOpacity: lightStyles?.opacity ?? "",
@@ -349,7 +349,7 @@ async function expectAppliedBuzzTheme(
         return {
           storedTheme: window.localStorage.getItem(storageKey),
           isDark: root.classList.contains("dark"),
-          crewTheme: root.getAttribute("data-buzz-theme"),
+          crewTheme: root.getAttribute("data-crew-theme"),
           gradientTop: styles.getPropertyValue("--crew-gradient-top").trim(),
           gradientBottom: styles
             .getPropertyValue("--crew-gradient-bottom")

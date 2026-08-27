@@ -1069,9 +1069,9 @@ function createMockRelayMembershipEvent(): RelayEvent {
 /**
  * Per-user custom emoji sets (kind:30030) the mock WS serves for
  * `listCustomEmoji` REQs. The community palette is the client-side UNION of
- * every member's own set (d=`buzz:custom-emoji`). We serve TWO member-authored
+ * every member's own set (d=`crew:custom-emoji`). We serve TWO member-authored
  * sets from distinct pubkeys so the e2e exercises the union/collapse path, not
- * a single relay-owned set. `:buzz:` is the stable shortcode exercised by
+ * a single relay-owned set. `:crew:` is the stable shortcode exercised by
  * custom-emoji.spec.ts (claimed by BOTH members with different URLs, so the
  * palette must collapse it to one deterministic winner); `:narf:` and
  * `:bufo_joy:` prove a second member's distinct emoji unions in.
@@ -1098,7 +1098,7 @@ function createMockCustomEmojiSetEvents(): RelayEvent[] {
       [
         ["d", CUSTOM_EMOJI_SET_D_TAG],
         ["emoji", "narf", "https://example.com/e2e/narf.png"],
-        // member B claims :buzz: with a DIFFERENT url — unionCustomEmoji must
+        // member B claims :crew: with a DIFFERENT url — unionCustomEmoji must
         // collapse it to one deterministic winner, never expose two URLs.
         ["emoji", "buzz", "https://example.com/e2e/crew-b.png"],
         ["emoji", "bufo_joy", "https://example.com/e2e/bufo-joy.png"],
@@ -1467,7 +1467,7 @@ let mockMediaProxyPort = MOCK_MEDIA_PROXY_PORT;
 
 // A relay-hosted custom emoji used by the reaction guard. Its URL matches
 // `rewriteRelayUrl()`'s `/media/{64-hex}.{ext}` pattern on the relay origin, so
-// reacting with it exercises the proxy rewrite (unlike the `:buzz:` fixture,
+// reacting with it exercises the proxy rewrite (unlike the `:crew:` fixture,
 // whose external example.com URL passes through unchanged).
 const REACTION_EMOJI_SHORTCODE = "react";
 const REACTION_EMOJI_SHA = "c".repeat(64);
@@ -2178,7 +2178,7 @@ function buildMockConfigSurface(pubkey: string): {
   };
 
   // Mixed-provenance showcase — top-level rows carry different origins so the
-  // panel witnesses distinct provenance labels in one frame: "Set in Buzz",
+  // panel witnesses distinct provenance labels in one frame: "Set in Crew",
   // "Inherited from template", "From config file (...)" and
   // "From environment variable (...)".
   const multiOriginSurface = {
@@ -2240,7 +2240,7 @@ function buildMockConfigSurface(pubkey: string): {
   const crewAgentSurface = {
     ...gooseSurface,
     runtimeId: "crew-agent",
-    runtimeLabel: "Buzz Agent",
+    runtimeLabel: "Crew Agent",
     advanced: [],
     extensions: [],
     sources: {
@@ -3440,7 +3440,7 @@ type PersistedMockHuddle = {
   state: MockHuddleState;
 };
 
-const MOCK_HUDDLE_STORAGE_KEY = "buzz.e2e.mock-huddle.v1";
+const MOCK_HUDDLE_STORAGE_KEY = "crew.e2e.mock-huddle.v1";
 let mockHuddle: PersistedMockHuddle | null = null;
 
 function persistMockHuddle() {
@@ -4075,9 +4075,9 @@ function assertExpectedRelayScope(
   if (!expected) return;
   let active: string | null = null;
   try {
-    const activeId = window.localStorage.getItem("buzz-active-community-id");
+    const activeId = window.localStorage.getItem("crew-active-community-id");
     const communities = JSON.parse(
-      window.localStorage.getItem("buzz-communities") ?? "[]",
+      window.localStorage.getItem("crew-communities") ?? "[]",
     ) as { id: string; relayUrl: string }[];
     active =
       communities.find((community) => community.id === activeId)?.relayUrl ??
@@ -5752,8 +5752,8 @@ const MOCK_PROJECT_SEEDS = [
     dtag: "buzz",
     name: "buzz",
     description:
-      "Relay, desktop, and mobile clients for the Buzz community platform.",
-    cloneUrl: `${DEFAULT_RELAY_HTTP_URL}/git/${MOCK_IDENTITY_PUBKEY}/buzz`,
+      "Relay, desktop, and mobile clients for the Crew community platform.",
+    cloneUrl: `${DEFAULT_RELAY_HTTP_URL}/git/${MOCK_IDENTITY_PUBKEY}/crew`,
     webUrl: null,
     owner: MOCK_IDENTITY_PUBKEY,
     contributors: [ALICE_PUBKEY, BOB_PUBKEY, CHARLIE_PUBKEY],
@@ -5963,12 +5963,12 @@ function buildMockProjectEvents(): RelayEvent[] {
         ["d", "buzz"],
         ["name", "buzz"],
         ["description", "The complete Buzz community platform."],
-        ["a", `${KIND_REPO_ANNOUNCEMENT}:${projectOwner}:buzz`],
+        ["a", `${KIND_REPO_ANNOUNCEMENT}:${projectOwner}:crew`],
         ["a", `${KIND_REPO_ANNOUNCEMENT}:${ALICE_PUBKEY}:relay-tools`],
       ],
       projectOwner,
       now,
-      "project-buzz".padEnd(64, "0"),
+      "project-crew".padEnd(64, "0"),
     ),
   );
 
@@ -8135,14 +8135,14 @@ async function handleDiscoverAcpRuntimes(
     },
     {
       id: "crew-agent",
-      label: "Buzz Agent",
+      label: "Crew Agent",
       avatar_url: "",
       availability: "available",
       command: "crew-agent",
       binary_path: "/usr/local/bin/crew-agent",
       default_args: [],
       mcp_command: "crew-dev-mcp",
-      install_hint: "Ships with the Buzz desktop app.",
+      install_hint: "Ships with the Crew desktop app.",
       install_instructions_url: "https://github.com/block/buzz",
       can_auto_install: false,
       requires_external_cli: false,
@@ -9147,7 +9147,7 @@ async function handleStartManagedAgent(
         mockMeshState.models.some((model) => model.id === modelId));
     if (!hasLiveTarget) {
       throw new Error(
-        "Buzz shared compute cannot start because no live member is serving this model.",
+        "Crew shared compute cannot start because no live member is serving this model.",
       );
     }
   }
@@ -11653,7 +11653,7 @@ export function maybeInstallE2eTauriMocks() {
       case "check_builderlab_community_name":
         return {
           available: true,
-          normalized_host: `${(payload as { name?: string })?.name ?? "community"}.communities.buzz.xyz`,
+          normalized_host: `${(payload as { name?: string })?.name ?? "community"}.communities.crew.xyz`,
         };
       case "create_builderlab_community": {
         const name = (payload as { name?: string })?.name ?? "community";
@@ -11661,7 +11661,7 @@ export function maybeInstallE2eTauriMocks() {
           community: activeConfig?.mock?.builderlabCreatedCommunity ?? {
             id: `hosted-${name}`,
             name,
-            normalized_host: `${name}.communities.buzz.xyz`,
+            normalized_host: `${name}.communities.crew.xyz`,
           },
         };
       }
@@ -11678,7 +11678,7 @@ export function maybeInstallE2eTauriMocks() {
               name: "Gemma-4-E4B-it-Q4_K_M",
               size: "3.5GB",
               sizeGb: 3.5,
-              description: "Buzz-curated local agent model",
+              description: "Crew-curated local agent model",
               fit: "comfortable",
               installed: true,
               recommended: true,
@@ -12094,7 +12094,7 @@ export function maybeInstallE2eTauriMocks() {
               kind: "blob",
               size: 33120,
               preview_content:
-                "// Smart HTTP git transport\n// Handles upload-pack and receive-pack for Buzz git repos.\n",
+                "// Smart HTTP git transport\n// Handles upload-pack and receive-pack for Crew git repos.\n",
             },
           ],
         };
@@ -12114,7 +12114,7 @@ export function maybeInstallE2eTauriMocks() {
           commit_body: [
             "See the [project guide](https://example.com/project-guide).",
             "",
-            "![Architecture](/buzz.svg)",
+            "![Architecture](/crew.svg)",
             "",
             "![Demo](https://example.com/project-demo.mp4)",
           ].join("\n"),
@@ -13199,7 +13199,7 @@ export function maybeInstallE2eTauriMocks() {
           }
           if (mockMeshState.models.length === 0) {
             throw new Error(
-              "no Buzz shared compute serving members are available",
+              "no Crew shared compute serving members are available",
             );
           }
         }

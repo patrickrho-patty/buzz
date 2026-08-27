@@ -8,12 +8,12 @@
  */
 
 const PURE_CACHE_KEY_PREFIXES = [
-  "buzz-channel-messages.v1:",
-  "buzz-channels.v1:",
+  "crew-channel-messages.v1:",
+  "crew-channels.v1:",
   "crew-observed-unread.v1:",
   "crew-sidebar-skeleton-shape.v1:",
   "crew-timeline-skeleton-shape.v1:",
-  "buzz-user-labels.v1:",
+  "crew-user-labels.v1:",
 ];
 
 const QUOTA_RECOVERY_MARKER_KEY = "crew-local-storage-quota-recovery.v1";
@@ -132,7 +132,7 @@ function notifyStorageFull(): void {
     .then(({ toast }) => {
       toast.error("Local storage is full", {
         description:
-          "Buzz could not save some local data — read positions may not persist across restarts.",
+          "Crew could not save some local data — read positions may not persist across restarts.",
       });
     })
     .catch(() => {});

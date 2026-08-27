@@ -5,7 +5,7 @@ edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
-description = "Privacy-preserving datastore tracing policy macros for Buzz"
+description = "Privacy-preserving datastore tracing policy macros for Crew"
 
 [lib]
 proc-macro = true

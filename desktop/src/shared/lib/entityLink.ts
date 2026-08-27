@@ -1,5 +1,5 @@
 /**
- * `crew://` deep links for Buzz-hosted git entities, mirroring
+ * `crew://` deep links for Crew-hosted git entities, mirroring
  * `features/messages/lib/messageLink.ts` for `crew://message`.
  *
  * Formats:

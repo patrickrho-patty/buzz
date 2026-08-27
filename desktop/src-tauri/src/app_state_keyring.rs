@@ -2,8 +2,8 @@
 /// service, while standalone worktree launches may request a scoped dev service.
 fn dev_keyring_service(configured: Option<String>) -> String {
     configured
-        .filter(|service| service.starts_with("griddle-desktop-dev."))
-        .unwrap_or_else(|| "griddle-desktop-dev".to_string())
+        .filter(|service| service.starts_with("crew-desktop-dev."))
+        .unwrap_or_else(|| "crew-desktop-dev".to_string())
 }
 
 pub(crate) fn keyring_service() -> &'static str {
@@ -13,12 +13,12 @@ pub(crate) fn keyring_service() -> &'static str {
             .get_or_init(|| dev_keyring_service(std::env::var("CREW_DEV_KEYRING_SERVICE").ok()))
             .as_str()
     } else {
-        "griddle-desktop"
+        "crew-desktop"
     }
 }
 
 pub(super) fn migration_marker_name(service: &str, default_name: &str) -> String {
-    if service == "griddle-desktop" || service == "griddle-desktop-dev" {
+    if service == "crew-desktop" || service == "crew-desktop-dev" {
         default_name.to_string()
     } else {
         format!("identity.{service}.migrated")
@@ -32,28 +32,28 @@ mod tests {
     #[test]
     fn standalone_scope_must_remain_under_dev_service() {
         assert_eq!(
-            dev_keyring_service(Some("griddle-desktop-dev.example".to_string())),
-            "griddle-desktop-dev.example"
+            dev_keyring_service(Some("crew-desktop-dev.example".to_string())),
+            "crew-desktop-dev.example"
         );
         assert_eq!(
-            dev_keyring_service(Some("griddle-desktop".to_string())),
-            "griddle-desktop-dev"
+            dev_keyring_service(Some("crew-desktop".to_string())),
+            "crew-desktop-dev"
         );
     }
 
     #[test]
     fn standalone_scope_uses_its_own_migration_marker() {
         assert_eq!(
-            migration_marker_name("griddle-desktop", "identity.migrated"),
+            migration_marker_name("crew-desktop", "identity.migrated"),
             "identity.migrated"
         );
         assert_eq!(
-            migration_marker_name("griddle-desktop-dev", "identity.migrated"),
+            migration_marker_name("crew-desktop-dev", "identity.migrated"),
             "identity.migrated"
         );
         assert_eq!(
-            migration_marker_name("griddle-desktop-dev.example", "identity.migrated"),
-            "identity.griddle-desktop-dev.example.migrated"
+            migration_marker_name("crew-desktop-dev.example", "identity.migrated"),
+            "identity.crew-desktop-dev.example.migrated"
         );
     }
 }

@@ -1,4 +1,4 @@
-//! `buzz projects` commands — NIP-MP kind:30621 write path.
+//! `crew projects` commands — NIP-MP kind:30621 write path.
 //!
 //! All mutations follow a read-modify-write pattern:
 //!   1. Fetch the caller's own live head via `kinds:[30621] + authors:[self] + #d:[slug]`.
@@ -27,9 +27,9 @@ use crate::client::CrewClient;
 use crate::commands::parse_write_response;
 use crate::error::CliError;
 
-// ── Buzz repo-ID grammar (bare --repo shorthand) ─────────────────────────────
+// ── Crew repo-ID grammar (bare --repo shorthand) ─────────────────────────────
 
-/// Pattern for a Buzz-hosted repo identifier (bare `--repo` shorthand).
+/// Pattern for a Crew-hosted repo identifier (bare `--repo` shorthand).
 /// `[a-zA-Z0-9._-]{1,64}` — no colons, so guaranteed collision-free with
 /// `30617:<owner>:<d>` full coordinates.
 fn is_bare_repo_id(s: &str) -> bool {
@@ -114,7 +114,7 @@ fn make_tag(parts: &[&str]) -> Result<Tag, CliError> {
 ///
 /// `link_slug` carries the project's d-tag on creates whose slug fits the
 /// `crew://` link charset; the response then also carries a `link` field,
-/// which renders as a rich preview card in Buzz Desktop when included in a
+/// which renders as a rich preview card in Crew Desktop when included in a
 /// chat message — agents announce projects with it (see base_prompt.md).
 async fn submit_project(
     client: &CrewClient,
@@ -171,7 +171,7 @@ fn rebuild_project(
 
 // ── Command implementations ───────────────────────────────────────────────────
 
-/// `buzz projects create`
+/// `crew projects create`
 pub async fn cmd_create(
     client: &CrewClient,
     slug: &str,
@@ -222,7 +222,7 @@ pub async fn cmd_create(
     // ── Network: collision preflight ──────────────────────────────────────
     if fetch_own_project(client, slug).await?.is_some() {
         return Err(CliError::Conflict(format!(
-            "project {slug:?} already exists; use 'buzz projects update' to modify it"
+            "project {slug:?} already exists; use 'crew projects update' to modify it"
         )));
     }
 
@@ -240,7 +240,7 @@ pub async fn cmd_create(
     .await
 }
 
-/// `buzz projects get`
+/// `crew projects get`
 pub async fn cmd_get(client: &CrewClient, slug: &str, owner: Option<&str>) -> Result<(), CliError> {
     validate_project_slug(slug)?;
     let resp = match fetch_project(client, slug, owner).await? {
@@ -263,7 +263,7 @@ pub async fn cmd_get(client: &CrewClient, slug: &str, owner: Option<&str>) -> Re
     Ok(())
 }
 
-/// `buzz projects list`
+/// `crew projects list`
 pub async fn cmd_list(
     client: &CrewClient,
     owner: Option<&str>,
@@ -288,7 +288,7 @@ pub async fn cmd_list(
     Ok(())
 }
 
-/// `buzz projects add-repo`
+/// `crew projects add-repo`
 pub async fn cmd_add_repo(
     client: &CrewClient,
     slug: &str,
@@ -353,7 +353,7 @@ pub async fn cmd_add_repo(
     submit_project(client, builder, None).await
 }
 
-/// `buzz projects remove-repo`
+/// `crew projects remove-repo`
 pub async fn cmd_remove_repo(
     client: &CrewClient,
     slug: &str,
@@ -416,7 +416,7 @@ pub async fn cmd_remove_repo(
     submit_project(client, builder, None).await
 }
 
-/// `buzz projects update`
+/// `crew projects update`
 ///
 /// Requires at least one setter or clearer; a no-op call is a usage error.
 #[allow(clippy::too_many_arguments)]
@@ -446,7 +446,7 @@ pub async fn cmd_update(
         || clear_visibility;
     if !has_mutation {
         return Err(CliError::Usage(
-            "buzz projects update requires at least one of: \
+            "crew projects update requires at least one of: \
              --name, --clear-name, --description, --clear-description, \
              --channel, --clear-channel, --visibility, --clear-visibility"
                 .into(),
@@ -517,7 +517,7 @@ pub async fn cmd_update(
     submit_project(client, builder, None).await
 }
 
-/// `buzz projects delete`
+/// `crew projects delete`
 ///
 /// Head-based and verified:
 ///   1. Fetch own live head — `NotFound` if absent.
@@ -557,7 +557,7 @@ pub async fn cmd_delete(client: &CrewClient, slug: &str) -> Result<(), CliError>
 // ── Validation helpers ────────────────────────────────────────────────────────
 
 /// Validate a project slug: non-empty, ≤1024 bytes, verbatim.
-/// Does NOT impose the Buzz repo-ID grammar — project slugs are more permissive.
+/// Does NOT impose the Crew repo-ID grammar — project slugs are more permissive.
 fn validate_project_slug(slug: &str) -> Result<(), CliError> {
     if slug.is_empty() {
         return Err(CliError::Usage("project slug must not be empty".into()));
@@ -675,7 +675,7 @@ mod tests {
 
     #[test]
     fn expand_repo_coord_rejects_uppercase_owner() {
-        let upper = "30617:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:buzz";
+        let upper = "30617:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:crew";
         assert!(expand_repo_coord(upper, OWNER_HEX).is_err());
     }
 
@@ -762,7 +762,7 @@ mod tests {
     #[test]
     fn rebuild_project_preserves_hinted_member_tags() {
         // A member 'a' tag with a relay hint must survive RMW untouched.
-        let coord = format!("30617:{OWNER_HEX}:buzz");
+        let coord = format!("30617:{OWNER_HEX}:crew");
         let hint = "wss://relay.example.com";
         let tags = vec![
             make_test_tag(&["d", "platform"]),
@@ -948,7 +948,7 @@ mod tests {
 
     #[test]
     fn update_exactly_one_singleton_after_replace() {
-        // Start with a buzz-channel; replace with a new one; must have exactly one.
+        // Start with a crew-channel; replace with a new one; must have exactly one.
         let uuid1 = "3580ca9b-47b4-4af9-b22a-1068778f26c6";
         let uuid2 = "00000000-0000-0000-0000-000000000000";
         let head = make_head_tags(&[make_test_tag(&["crew-channel", uuid1])]);
@@ -975,7 +975,7 @@ mod tests {
 
     #[test]
     fn duplicate_member_in_foreign_head_fails_rebuild() {
-        let coord = format!("30617:{OWNER_HEX}:buzz");
+        let coord = format!("30617:{OWNER_HEX}:crew");
         let tags = vec![
             make_test_tag(&["d", "platform"]),
             make_test_tag(&["a", &coord]),
@@ -989,7 +989,7 @@ mod tests {
 
     #[test]
     fn validate_project_envelope_accepts_hinted_member() {
-        let coord = format!("30617:{OWNER_HEX}:buzz");
+        let coord = format!("30617:{OWNER_HEX}:crew");
         let tags = vec![
             make_test_tag(&["d", "platform"]),
             Tag::parse(["a", &coord, "wss://relay.example.com"]).unwrap(),
@@ -999,7 +999,7 @@ mod tests {
 
     #[test]
     fn validate_project_envelope_rejects_four_element_member() {
-        let coord = format!("30617:{OWNER_HEX}:buzz");
+        let coord = format!("30617:{OWNER_HEX}:crew");
         let tags = vec![
             make_test_tag(&["d", "platform"]),
             Tag::parse(["a", &coord, "wss://relay.example.com", "extra"]).unwrap(),
@@ -1013,7 +1013,7 @@ mod tests {
         let keys = nostr::Keys::generate();
         let tags = vec![
             make_test_tag(&["d", "platform"]),
-            make_test_tag(&["a", &format!("30617:{OWNER_HEX}:buzz")]),
+            make_test_tag(&["a", &format!("30617:{OWNER_HEX}:crew")]),
         ];
         rebuild_project("", tags, Timestamp::from(created_at))
             .expect("valid head envelope")
@@ -1196,7 +1196,7 @@ mod tests {
     #[tokio::test]
     async fn create_duplicate_repo_returns_usage_before_any_network_call() {
         let client = discard_client();
-        let coord = format!("30617:{OWNER_HEX}:buzz");
+        let coord = format!("30617:{OWNER_HEX}:crew");
         let err = cmd_create(
             &client,
             "my-slug",
@@ -1224,7 +1224,7 @@ mod tests {
     #[tokio::test]
     async fn add_repo_duplicate_coord_returns_usage_before_any_network_call() {
         let client = discard_client();
-        let coord = format!("30617:{OWNER_HEX}:buzz");
+        let coord = format!("30617:{OWNER_HEX}:crew");
         let err = cmd_add_repo(&client, "my-slug", &[coord.clone(), coord.clone()])
             .await
             .expect_err("duplicate repo must fail");
@@ -1243,6 +1243,6 @@ mod tests {
     // ── add-repo no-op guard ──────────────────────────────────────────────────
 
     // The add-repo no-op Conflict path is pinned by the live transcript
-    // (step 7: buzz already present → exit=5). No relay mock is available
+    // (step 7: crew already present → exit=5). No relay mock is available
     // for a unit test; the async no-network tests above cover all pre-await paths.
 }

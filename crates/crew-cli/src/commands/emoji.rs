@@ -73,7 +73,7 @@ fn union_custom_emoji(events: &[serde_json::Value]) -> Vec<EmojiEntry> {
 }
 
 /// List the workspace custom emoji palette: the union of every member's
-/// own kind:30030 set (d=`buzz:custom-emoji`).
+/// own kind:30030 set (d=`crew:custom-emoji`).
 async fn cmd_list(client: &CrewClient) -> Result<(), CliError> {
     let filter = serde_json::json!({
         "kinds": [crew_sdk::kind::KIND_EMOJI_SET],

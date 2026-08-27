@@ -40,7 +40,7 @@ const KIND_NIP29_GROUP_MEMBERS = 39002;
 const participationStore = makeRootIdStore("crew-thread-participation.v1");
 const authoredStore = makeRootIdStore("crew-thread-authored.v1");
 const mutedRootsStore = makeRootIdStore("crew-thread-muted.v1");
-const FOLLOWS_STORAGE_KEY_PREFIX = "buzz-thread-follows.v1";
+const FOLLOWS_STORAGE_KEY_PREFIX = "crew-thread-follows.v1";
 
 export type ThreadRelationships = {
   participatedRootIds: ReadonlySet<string>;

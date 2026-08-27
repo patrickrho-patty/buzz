@@ -520,7 +520,7 @@ fn advance_query_cursor(
 
 pub struct CrewClient {
     http: reqwest::Client,
-    relay_url: String, // base URL, no trailing slash, e.g. "https://relay.buzz.place"
+    relay_url: String, // base URL, no trailing slash, e.g. "https://relay.crew.place"
     keys: Keys,
     /// Optional NIP-OA auth tag injected into every signed event.
     auth_tag: Option<Tag>,

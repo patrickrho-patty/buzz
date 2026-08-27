@@ -1,15 +1,15 @@
-{{- include "buzz.validate" . -}}
-{{- if and .Values.podDisruptionBudget.enabled (gt (include "buzz.minimumReplicas" . | int) 1) -}}
+{{- include "crew.validate" . -}}
+{{- if and .Values.podDisruptionBudget.enabled (gt (include "crew.minimumReplicas" . | int) 1) -}}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "buzz.fullname" . }}
+  name: {{ include "crew.fullname" . }}
   labels:
-    {{- include "buzz.labels" . | nindent 4 }}
+    {{- include "crew.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "buzz.relaySelectorLabels" . | nindent 6 }}
+      {{- include "crew.relaySelectorLabels" . | nindent 6 }}
   {{- if .Values.podDisruptionBudget.minAvailable }}
   minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
   {{- else if .Values.podDisruptionBudget.maxUnavailable }}

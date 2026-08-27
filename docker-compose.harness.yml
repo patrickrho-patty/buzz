@@ -2,7 +2,7 @@
 # Isolated test-relay backing stack — GUI read-model overhaul harness (Dawn).
 #
 # A SEPARATE Compose project (`crew-harness`) so the shared :3000 relay and the
-# default `buzz-*` dev stack are never touched. No fixed container_names (they
+# default `crew-*` dev stack are never touched. No fixed container_names (they
 # collide across projects) and alternate host ports. Mirrors Eva's evaperf-*
 # isolation pattern.
 #

@@ -243,7 +243,7 @@ fn deep_merge(
 
 /// Build the merged `CODEX_CONFIG` environment-variable value for a Codex agent spawn.
 ///
-/// Returns `Some(json_string)` when `has_generated_codex_config` is true (Buzz injected a
+/// Returns `Some(json_string)` when `has_generated_codex_config` is true (Crew injected a
 /// `CODEX_CONFIG` entry via `codex_network_env()`), `None` otherwise.
 ///
 /// # Merge contract (when `has_generated_codex_config` is true)
@@ -273,7 +273,7 @@ pub(crate) fn build_codex_config_env(
     parent_codex_config: Option<&str>,
     has_generated_codex_config: bool,
 ) -> Result<Option<String>, AcpError> {
-    // Without an explicit Buzz-generated overlay signal, skip the merge entirely.
+    // Without an explicit Crew-generated overlay signal, skip the merge entirely.
     // Any persona CODEX_CONFIG is handled by the caller with operator-wins semantics.
     if !has_generated_codex_config {
         return Ok(None);
@@ -369,11 +369,11 @@ const GOOSE_STEER_METHOD: &str = "_goose/unstable/session/steer";
 /// `{outcome}`. Gated on [`AcpClient::steering_supported`].
 const ACP_STEER_METHOD: &str = "_session/steering";
 
-/// `outcome` value meaning the steer was applied to the turn Buzz is waiting
+/// `outcome` value meaning the steer was applied to the turn Crew is waiting
 /// on, which therefore keeps running.
 const STEER_OUTCOME_INJECTED: &str = "injected";
 
-/// `outcome` value meaning the turn Buzz was steering had already finished, so
+/// `outcome` value meaning the turn Crew was steering had already finished, so
 /// the adapter began a fresh turn carrying the message. Still a delivery
 /// success, but the awaited turn is over — see the steer-response arm for why
 /// this must not renew the hard deadline.
@@ -392,8 +392,8 @@ enum SteerTransport {
 
 fn build_client_capabilities() -> serde_json::Value {
     serde_json::json!({
-        // Signal to ACP adapters that Buzz can hand users to terminal-native
-        // auth flows. Adapters decide which auth methods to expose; Buzz does
+        // Signal to ACP adapters that Crew can hand users to terminal-native
+        // auth flows. Adapters decide which auth methods to expose; Crew does
         // not hardcode vendor login commands from this capability.
         "auth": {
             "terminal": true
@@ -773,7 +773,7 @@ impl AcpClient {
     ///
     /// Used for slash-command pass-through: ACP connectors detect commands via
     /// the **first** block's text starting with `/`, so the harness sends
-    /// `["/cmd args", "<buzz context>"]` instead of one wrapped block.
+    /// `["/cmd args", "<crew context>"]` instead of one wrapped block.
     pub async fn session_prompt_blocks_with_idle_timeout(
         &mut self,
         session_id: &str,
@@ -1590,7 +1590,7 @@ impl AcpClient {
                                     } else {
                                         // Success result. Whether it counts as
                                         // a delivered steer — and whether the
-                                        // turn Buzz awaits is still running —
+                                        // turn Crew awaits is still running —
                                         // depends on the transport.
                                         let outcome = match transport {
                                             // goose returns no outcome field;
@@ -2557,7 +2557,7 @@ mod tests {
 
     #[test]
     fn session_prompt_request_format() {
-        let prompt_text = "[Buzz @mention]\nChannel: test\nFrom: npub1...\nMessage: hello";
+        let prompt_text = "[Crew @mention]\nChannel: test\nFrom: npub1...\nMessage: hello";
         let msg = serde_json::json!({
             "jsonrpc": "2.0",
             "id": 2u64,
@@ -3095,7 +3095,7 @@ mod tests {
         observed
     }
 
-    /// Buzz-owned Hermes processes get the configured-MCP isolation default,
+    /// Crew-owned Hermes processes get the configured-MCP isolation default,
     /// and an explicit persona entry still overrides it (defaults are applied
     /// before `extra_env`, so the later `Command::env` write wins).
     #[cfg(unix)]
@@ -3590,14 +3590,14 @@ mod tests {
             .expect("initialize should succeed");
 
         let resp = client
-            .session_new_full("/tmp", vec![], None, Some("Fizz · #buzz-dev"))
+            .session_new_full("/tmp", vec![], None, Some("Fizz · #crew-dev"))
             .await
             .expect("session_new_full should succeed");
 
         let received = &resp.raw["_receivedRequest"];
         assert_eq!(
             received["params"]["_meta"]["sessionTitle"].as_str(),
-            Some("Fizz · #buzz-dev"),
+            Some("Fizz · #crew-dev"),
             "title should ride in _meta.sessionTitle, out of band from the prompt"
         );
     }
@@ -3692,7 +3692,7 @@ mod tests {
                 "/tmp",
                 vec![],
                 Some(SystemPromptTransport::ClaudeMeta("Be concise")),
-                Some("Fizz · #buzz-dev"),
+                Some("Fizz · #crew-dev"),
             )
             .await
             .expect("session_new_full should succeed");
@@ -3705,7 +3705,7 @@ mod tests {
         );
         assert_eq!(
             received["params"]["_meta"]["sessionTitle"].as_str(),
-            Some("Fizz · #buzz-dev"),
+            Some("Fizz · #crew-dev"),
             "_meta.sessionTitle must be present alongside systemPrompt"
         );
     }
@@ -4268,7 +4268,7 @@ mod tests {
     /// Test 8: **codex `extMethod` silent-loss regression guard.** codex-acp's
     /// ext dispatcher answers unrecognized methods with a bare `{}` — a
     /// JSON-RPC *success*, not `-32601` (`src/CodexAcpServer.ts:255-258`).
-    /// Buzz maps `SteerAck::Success` to `queue.remove_event`, so decoding
+    /// Crew maps `SteerAck::Success` to `queue.remove_event`, so decoding
     /// `{}` as success would delete the user's message with no error, no
     /// fallback, and no log. An absent `outcome` must therefore be a
     /// rejection, which releases the event and fires cancel+merge.
@@ -4345,7 +4345,7 @@ mod tests {
     }
 
     /// Test 6: **red/green for the no-renewal rule.** `startedNewTurn` means
-    /// the turn Buzz was steering had already ended and the adapter began a
+    /// the turn Crew was steering had already ended and the adapter began a
     /// fresh, detached one. It acks `Success` (the message WAS delivered, so
     /// the event must not be redelivered) but must NOT renew the hard
     /// deadline — that clock belongs to a turn which is already settled.
@@ -4820,7 +4820,7 @@ mod tests {
 
     #[test]
     fn build_codex_config_env_generated_only_single_entry_with_signal_true_merges_with_parent() {
-        // No persona: Buzz injects one CODEX_CONFIG; signal=true.
+        // No persona: Crew injects one CODEX_CONFIG; signal=true.
         // Parent may have its own CODEX_CONFIG — deep_merge applies, network_access forced.
         let extra = env(&[("CODEX_CONFIG", GENERATED)]);
         let parent =
@@ -4847,7 +4847,7 @@ mod tests {
 
     #[test]
     fn build_codex_config_env_persona_only_signal_false_returns_none() {
-        // Persona set CODEX_CONFIG; Buzz did not inject a generated overlay (signal=false).
+        // Persona set CODEX_CONFIG; Crew did not inject a generated overlay (signal=false).
         // Must return None — no merging, no sandbox widening.
         let persona = r#"{"some_feature":"on"}"#;
         let extra = env(&[("CODEX_CONFIG", persona)]);

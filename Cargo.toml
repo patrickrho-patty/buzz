@@ -47,7 +47,7 @@ repository = "https://github.com/block/sprout"
 tokio       = { version = "1", features = ["rt-multi-thread", "macros", "net", "time", "sync", "io-util", "signal", "process"] }
 tokio-util  = { version = "0.7", features = ["rt", "codec"] }
 
-# Griddle: workforce SSO
+# Crew: workforce SSO
 jsonwebtoken = "9"
 aes-gcm     = "0.10"
 once_cell    = "1"

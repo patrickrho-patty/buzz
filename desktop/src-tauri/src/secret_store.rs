@@ -45,9 +45,9 @@ const BLOB_KEY: &str = "secrets";
 
 // ── Interprocess advisory lock ─────────────────────────────────────────────
 //
-// Two concurrent Buzz processes (e.g. the signed DMG build and an unsigned dev
+// Two concurrent Crew processes (e.g. the signed DMG build and an unsigned dev
 // build via `just staging`) share the same OS keychain blob because the
-// service name `"griddle-desktop"` is a constant — it does not key off the bundle
+// service name `"crew-desktop"` is a constant — it does not key off the bundle
 // identifier. Each process holds its own in-memory cache, so without an
 // interprocess lock a warm-cache write in process A drops keys added by process
 // B between A's last cache-warming read and A's write.
@@ -56,13 +56,13 @@ const BLOB_KEY: &str = "secrets";
 // performs a fresh `read_blob_raw()` inside the lock, applies the mutation,
 // writes back, and releases. The cache is still updated after a successful
 // write, so same-process reads remain fast. The lock is file-based at a fixed
-// per-user path `/tmp/griddle-keychain-<uid>-<service>.lock` on Unix — a path
+// per-user path `/tmp/crew-keychain-<uid>-<service>.lock` on Unix — a path
 // that is invariant to `$TMPDIR`/process environment, so both the GUI-launched
 // signed DMG and a terminal-launched dev build always take the same lock.
 
 /// Return the path of the advisory lockfile for `service`.
 ///
-/// The path is `/tmp/griddle-keychain-<uid>-<service>.lock` on Unix — a
+/// The path is `/tmp/crew-keychain-<uid>-<service>.lock` on Unix — a
 /// deterministic per-user path that is invariant to `$TMPDIR`/process
 /// environment. Both a GUI-launched signed DMG (`launchd`, env-stripped) and a
 /// terminal-launched dev build resolve `/tmp` to the same inode, so they
@@ -76,13 +76,13 @@ fn blob_lockfile_path(service: &str) -> PathBuf {
         // Use the real UID so distinct users get distinct lockfiles.
         // SAFETY: getuid() is always safe on Unix — it never fails.
         let uid = unsafe { libc::getuid() };
-        PathBuf::from(format!("/tmp/griddle-keychain-{uid}-{service}.lock"))
+        PathBuf::from(format!("/tmp/crew-keychain-{uid}-{service}.lock"))
     }
     #[cfg(not(unix))]
     {
         // Windows: no lockfile used (named mutex instead); this path is only
         // used to derive the mutex name and for test assertions.
-        std::env::temp_dir().join(format!("griddle-keychain-{service}.lock"))
+        std::env::temp_dir().join(format!("crew-keychain-{service}.lock"))
     }
 }
 
@@ -237,7 +237,7 @@ impl SecretStore {
     /// cache and one mutex — so concurrent blob read-modify-write operations
     /// see each other's writes and the last-writer-wins race is closed.
     ///
-    /// Only one service name (`"griddle-desktop"`) is used in practice. If a
+    /// Only one service name (`"crew-desktop"`) is used in practice. If a
     /// second service name is ever needed, this can be extended to a registry.
     pub fn shared(service: &'static str) -> &'static SecretStore {
         use std::sync::OnceLock;
@@ -396,9 +396,9 @@ impl SecretStore {
     where
         F: FnOnce(&mut HashMap<String, String>),
     {
-        // Acquire the interprocess advisory lock first. All Buzz processes
+        // Acquire the interprocess advisory lock first. All Crew processes
         // using the same service name contend on the same lockfile at
-        // /tmp/griddle-keychain-<uid>-<service>.lock (a deterministic per-user
+        // /tmp/crew-keychain-<uid>-<service>.lock (a deterministic per-user
         // path invariant to $TMPDIR), so only one process performs a
         // read-modify-write at a time.
         let _lock = acquire_blob_lock(&self.service)?;
@@ -1055,7 +1055,7 @@ mod tests {
         // invariant to $TMPDIR — so both a GUI-launched DMG (env-stripped by
         // launchd) and a terminal-launched dev build resolve the same inode and
         // achieve mutual exclusion.
-        let path = blob_lockfile_path("griddle-desktop");
+        let path = blob_lockfile_path("crew-desktop");
         #[cfg(unix)]
         {
             let uid = unsafe { libc::getuid() };
@@ -1072,8 +1072,8 @@ mod tests {
                 "lockfile {path:?} must contain uid {uid}"
             );
             assert!(
-                name.contains("griddle-keychain"),
-                "lockfile name must contain 'griddle-keychain'"
+                name.contains("crew-keychain"),
+                "lockfile name must contain 'crew-keychain'"
             );
         }
         #[cfg(not(unix))]
@@ -1081,8 +1081,8 @@ mod tests {
             assert!(
                 path.file_name()
                     .and_then(|n| n.to_str())
-                    .is_some_and(|n| n.contains("griddle-keychain")),
-                "lockfile name must contain 'griddle-keychain'"
+                    .is_some_and(|n| n.contains("crew-keychain")),
+                "lockfile name must contain 'crew-keychain'"
             );
         }
     }
@@ -1117,7 +1117,7 @@ mod tests {
         // against the durable cache, not an unpersisted candidate.
         //
         // This is a real-keychain integration test. Run locally with:
-        //   cargo test -p griddle-desktop -- --ignored mutate_blob_does_not_advance
+        //   cargo test -p crew-desktop -- --ignored mutate_blob_does_not_advance
         //
         // On a machine with a reachable keychain the `store()` call succeeds
         // (result.is_ok()) and the write-failure branch is skipped — the test
@@ -1187,7 +1187,7 @@ mod tests {
 
     // Integration tests that exercise the real OS keychain. Skipped in CI
     // (unsigned builds lack keychain entitlements); run locally with:
-    //   cargo test -p griddle-desktop -- --ignored blob_
+    //   cargo test -p crew-desktop -- --ignored blob_
     //
     // Each test uses a unique service name to avoid cross-test pollution.
 

@@ -1,4 +1,4 @@
-//! `crew-test-cli` — Manual testing CLI for the Buzz relay.
+//! `crew-test-cli` — Manual testing CLI for the Crew relay.
 //!
 //! # Usage
 //!
@@ -17,7 +17,7 @@
 //!
 //! Send a message:
 //! ```text
-//! crew-test-cli --channel my-channel --send "Hello, Buzz!"
+//! crew-test-cli --channel my-channel --send "Hello, Crew!"
 //! ```
 //!
 //! Subscribe and watch events:
@@ -209,7 +209,7 @@ fn parse_args(args: &[String]) -> CliOpts {
 
 fn print_help() {
     println!(
-        r#"crew-test-cli — Manual testing CLI for the Buzz relay
+        r#"crew-test-cli — Manual testing CLI for the Crew relay
 
 USAGE:
     crew-test-cli [OPTIONS]
@@ -224,7 +224,7 @@ OPTIONS:
 
 EXAMPLES:
     # Send a message to a channel
-    crew-test-cli --channel my-channel --send "Hello, Buzz!"
+    crew-test-cli --channel my-channel --send "Hello, Crew!"
 
     # Subscribe and watch live events
     crew-test-cli --channel my-channel --subscribe

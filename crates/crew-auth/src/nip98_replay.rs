@@ -104,7 +104,7 @@ pub trait Nip98ReplayGuard: Send + Sync {
 }
 
 /// Redis key for a NIP-98 replay marker:
-/// `buzz:{community}:nip98:{event_id_hex}`.
+/// `crew:{community}:nip98:{event_id_hex}`.
 ///
 /// The community prefix is the S1 isolation fence at the replay layer.
 /// Event ids are content-addressed (SHA-256 of the canonical event tuple) so

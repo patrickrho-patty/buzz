@@ -1,5 +1,5 @@
 //! Regression test for the NIP-43 relay-admin durable-ban bypass
-//! (BUZZ-SEC-007 class, reported 2026-07-27).
+//! (CREW-SEC-007 class, reported 2026-07-27).
 //!
 //! `ingest_event` exempts relay-admin kinds 9030-9033 from its durable
 //! write-path restriction gate so a *timed out* admin keeps its administrative

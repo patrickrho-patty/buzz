@@ -81,8 +81,8 @@ async fn run_rate_limit(
 /// Redis-backed rate limiter using fixed-window counters.
 ///
 /// Pubkey keys are community-scoped via `&TenantContext`:
-/// `buzz:{community}:ratelimit:{pubkey_hex}:{suffix}`. IP keys remain
-/// operator-global: `buzz:ratelimit:ip:{ip}:conn`. The counter and its TTL are
+/// `crew:{community}:ratelimit:{pubkey_hex}:{suffix}`. IP keys remain
+/// operator-global: `crew:ratelimit:ip:{ip}:conn`. The counter and its TTL are
 /// managed atomically via a Lua script to prevent keys from persisting without
 /// expiry.
 pub struct RedisRateLimiter {

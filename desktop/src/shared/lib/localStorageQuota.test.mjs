@@ -41,7 +41,7 @@ test("startup recovery removes disposable caches but preserves user state", () =
   ls.store.set("crew-timeline-skeleton-shape.v1:chan", "small");
   ls.store.set("crew-sidebar-skeleton-shape.v1:community:user", "small");
   ls.store.set("crew-user-labels.v1:relay", "small");
-  ls.store.set("buzz-communities", "keep");
+  ls.store.set("crew-communities", "keep");
 
   recoverLocalStorageQuotaOnStartup();
 
@@ -53,7 +53,7 @@ test("startup recovery removes disposable caches but preserves user state", () =
     null,
   );
   assert.equal(ls.getItem("crew-user-labels.v1:relay"), null);
-  assert.equal(ls.getItem("buzz-communities"), "keep");
+  assert.equal(ls.getItem("crew-communities"), "keep");
   assert.equal(ls.getItem("crew-local-storage-quota-recovery.v1"), "1");
 });
 
@@ -98,12 +98,12 @@ test("startup recovery runs only once", () => {
 test("startup recovery retries after marker write fails", () => {
   const ls = makeQuotaLocalStorage({ maxEntries: 1 });
   install(ls);
-  ls.store.set("buzz-communities", "keep");
+  ls.store.set("crew-communities", "keep");
 
   recoverLocalStorageQuotaOnStartup();
   assert.equal(ls.getItem("crew-local-storage-quota-recovery.v1"), null);
 
-  ls.store.delete("buzz-communities");
+  ls.store.delete("crew-communities");
   ls.store.set("crew-channel-messages.v1:relay:chan", "big");
   recoverLocalStorageQuotaOnStartup();
 
@@ -114,7 +114,7 @@ test("startup recovery retries after marker write fails", () => {
 test("global cache byte budget evicts only oldest entries needed", () => {
   const ls = makeQuotaLocalStorage({ maxEntries: 20 });
   install(ls);
-  ls.store.set("buzz-communities", "keep");
+  ls.store.set("crew-communities", "keep");
   const snapshot = (updatedAt) =>
     JSON.stringify({ updatedAt, payload: "x".repeat(400_000) });
   const oldestKey = "crew-channel-messages.v1:relay:oldest";
@@ -128,13 +128,13 @@ test("global cache byte budget evicts only oldest entries needed", () => {
   assert.equal(ls.getItem(oldestKey), null);
   assert.notEqual(ls.getItem(newerKey), null);
   assert.notEqual(ls.getItem(newestKey), null);
-  assert.equal(ls.getItem("buzz-communities"), "keep");
+  assert.equal(ls.getItem("crew-communities"), "keep");
 });
 
 test("global cache byte budget spans relays and preserves durable state", () => {
   const ls = makeQuotaLocalStorage({ maxEntries: 20 });
   install(ls);
-  ls.store.set("buzz-communities", "keep");
+  ls.store.set("crew-communities", "keep");
   const largeSnapshot = "x".repeat(600_000);
 
   assert.equal(
@@ -157,7 +157,7 @@ test("global cache byte budget spans relays and preserves durable state", () => 
     ls.getItem("crew-channel-messages.v1:relay-two:chan"),
     largeSnapshot,
   );
-  assert.equal(ls.getItem("buzz-communities"), "keep");
+  assert.equal(ls.getItem("crew-communities"), "keep");
 });
 
 test("rejects a single cache entry larger than the global byte budget", () => {
@@ -208,7 +208,7 @@ test("crew-observed-unread.v1: prefix participates in LRU eviction and durable s
   // the bucket becomes invisible to LRU and the wrong entry is evicted instead.
   const ls = makeQuotaLocalStorage({ maxEntries: 20 });
   install(ls);
-  ls.store.set("buzz-communities", "keep");
+  ls.store.set("crew-communities", "keep");
 
   const snapshot = (updatedAt) =>
     JSON.stringify({ updatedAt, payload: "x".repeat(400_000) });
@@ -234,7 +234,7 @@ test("crew-observed-unread.v1: prefix participates in LRU eviction and durable s
     "channel-messages bucket with newer updatedAt must survive",
   );
   assert.equal(
-    ls.getItem("buzz-communities"),
+    ls.getItem("crew-communities"),
     "keep",
     "durable state must survive",
   );

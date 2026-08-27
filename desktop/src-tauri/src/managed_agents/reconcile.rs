@@ -45,11 +45,11 @@ pub(crate) fn reconcile_agents_to_events(
         Ok(0) => {}
         Ok(reconciled) => {
             eprintln!(
-                "griddle-desktop: agent-event-reconcile: {reconciled} agents reconciled to retention"
+                "crew-desktop: agent-event-reconcile: {reconciled} agents reconciled to retention"
             );
         }
         Err(e) => {
-            eprintln!("griddle-desktop: agent-event-reconcile: {e}");
+            eprintln!("crew-desktop: agent-event-reconcile: {e}");
         }
     }
 }

@@ -2303,7 +2303,7 @@ pub async fn run_prompt_task(
     // When the batch is a single slash-command message (e.g. "@Eva /goal …"),
     // `slash_command` holds the bare command. It is sent as the FIRST prompt
     // content block so ACP connectors' slash-command detection
-    // (`prompt[0].text.startsWith("/")`) fires; the wrapped Buzz context
+    // (`prompt[0].text.startsWith("/")`) fires; the wrapped Crew context
     // follows as a second block.
     let mut slash_command: Option<String> = None;
     // Event IDs represented by this prompt. Commit only after ACP reports a
@@ -3231,7 +3231,7 @@ pub(crate) fn render_canvas_section(event_id: &str, timestamp: &str, channel_uui
         "[Channel Canvas]\n\
          Canvas revision (event ID): {event_id}\n\
          Last modified: {timestamp}\n\
-         Fetch current content with: buzz canvas get --channel {channel_uuid}"
+         Fetch current content with: crew canvas get --channel {channel_uuid}"
     )
 }
 
@@ -3249,7 +3249,7 @@ fn conversation_context_event_ids(context: Option<&ConversationContext>) -> Hash
 
 /// Remove events already delivered to this live ACP session. Triggering events
 /// are also excluded because they are rendered separately in `[Event]`.
-/// IDs are compared in Buzz's canonical 64-character lowercase hex form: relay
+/// IDs are compared in Crew's canonical 64-character lowercase hex form: relay
 /// context JSON supplies the same form emitted by `EventId::to_hex()`. A
 /// non-canonical or missing ID deliberately fails open and may be re-sent.
 fn conversation_context_delta(
@@ -4984,13 +4984,13 @@ mod tests {
 
     #[test]
     fn test_framed_system_prompt_absolute_cwd_prepends_workspace_before_base() {
-        let framed = framed_system_prompt("/Users/me/.buzz", Some("base text"), None)
+        let framed = framed_system_prompt("/Users/me/.crew", Some("base text"), None)
             .expect("base yields Some");
         assert!(
             framed.starts_with("[Workspace]\n"),
             "workspace section must lead: {framed}"
         );
-        assert!(framed.contains("`/Users/me/.buzz`"));
+        assert!(framed.contains("`/Users/me/.crew`"));
         assert!(
             framed.contains("\n\n[Base]\nbase text"),
             "base must follow the workspace section: {framed}"
@@ -5001,7 +5001,7 @@ mod tests {
     fn test_framed_system_prompt_persona_only_omits_workspace() {
         // The workspace section grounds the base prompt's layout; a persona-only
         // agent never received that layout, so no [Workspace] anchor is emitted.
-        let framed = framed_system_prompt("/Users/me/.buzz", None, Some("persona text"))
+        let framed = framed_system_prompt("/Users/me/.crew", None, Some("persona text"))
             .expect("persona yields Some");
         assert_eq!(framed, "[System]\npersona text");
     }
@@ -8028,7 +8028,7 @@ printf '%s\n' '{{"jsonrpc":"2.0","id":0,"result":{{"stopReason":"end_turn"}}}}'"
             "[Channel Canvas]\n\
              Canvas revision (event ID): a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2\n\
              Last modified: 2024-01-15T10:30:00+00:00\n\
-             Fetch current content with: buzz canvas get --channel 00f1ccaf-1506-4dd7-9a0e-fa67e9e486ae"
+             Fetch current content with: crew canvas get --channel 00f1ccaf-1506-4dd7-9a0e-fa67e9e486ae"
         );
     }
 
@@ -8138,7 +8138,7 @@ printf '%s\n' '{{"jsonrpc":"2.0","id":0,"result":{{"stopReason":"end_turn"}}}}'"
         let result = canvas_section_from_query_response(&[ev], CHANNEL_UUID);
         let section = result.expect("expected Some");
         assert!(section.contains(&id), "section must contain the event id");
-        assert!(section.contains("buzz canvas get --channel"));
+        assert!(section.contains("crew canvas get --channel"));
         assert!(section.contains(CHANNEL_UUID));
         assert!(section.starts_with("[Channel Canvas]"));
         // Timestamp must use Z suffix, not +00:00

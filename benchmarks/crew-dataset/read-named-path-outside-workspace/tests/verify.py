@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verifier for reading a user-named path outside the Buzz workspace."""
+"""Verifier for reading a user-named path outside the Crew workspace."""
 
 from __future__ import annotations
 

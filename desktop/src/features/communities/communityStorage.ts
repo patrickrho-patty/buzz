@@ -3,12 +3,13 @@ import { homeDir } from "@tauri-apps/api/path";
 import { setLocalStorageItemWithRecovery } from "@/shared/lib/localStorageQuota";
 import { getStorageItem, removeStorageItem } from "@/shared/lib/safeStorage";
 
-const COMMUNITIES_KEY = "buzz-communities";
+const COMMUNITIES_KEY = "crew-communities";
 const ACTIVE_COMMUNITY_KEY = "buzz-active-community-id";
-const LEGACY_WORKSPACES_KEY = "crew-workspaces";
-const LEGACY_ACTIVE_WORKSPACE_KEY = "crew-active-workspace-id";
+// Sprout→Buzz era spellings; still the oldest on-disk generation.
+const LEGACY_WORKSPACES_KEY = "buzz-workspaces";
+const LEGACY_ACTIVE_WORKSPACE_KEY = "buzz-active-workspace-id";
 const COMMUNITY_DISCOVERY_AFTER_LEAVE_KEY =
-  "buzz-community-discovery-after-leave";
+  "crew-community-discovery-after-leave";
 
 /**
  * Expand a leading `~` to the user's home directory. The backend rejects
@@ -197,7 +198,7 @@ export function deriveCommunityName(relayUrl: string): string {
     const parts = host.split(".");
     // Detect staging environments (e.g. crew-oss.stage.blox.sqprod.co)
     if (parts.some((p) => p === "stage" || p === "staging")) {
-      return "Buzz (staging)";
+      return "Crew (staging)";
     }
     // Use the first subdomain segment or the domain itself
     if (parts.length >= 2) {

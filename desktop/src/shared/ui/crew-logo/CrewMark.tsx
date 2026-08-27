@@ -1,5 +1,5 @@
 /**
- * The Griddle mark as a plain static SVG - no SMIL, no scripting, no
+ * The Crew mark as a plain static SVG - no SMIL, no scripting, no
  * animation machinery. Geometry was traced from the official brand asset
  * (`griddle_logo_1.png`) with potrace; rendered in `currentColor` so it
  * adapts to the surrounding text color on any surface.

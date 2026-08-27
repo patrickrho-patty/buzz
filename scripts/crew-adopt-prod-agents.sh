@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 #
-# crew-adopt-prod-agents.sh — copy your installed (production) Buzz agent
+# crew-adopt-prod-agents.sh — copy your installed (production) Crew agent
 # records + owner identity into the dev app-data store so a dev build boots as
 # the SAME agents and the SAME owner npub as your installed DMG.
 #
 # WHY
 #   `just reset` deletes the entire dev app-data dir (agent records included),
-#   every buzz-desktop-dev keychain entry, and the `_dev_migration_v1` marker.
+#   every crew-desktop-dev keychain entry, and the `_dev_migration_v1` marker.
 #   The next dev boot sees an empty store, so key-less records mint fresh
 #   keypairs against the prod relay → duplicate agent instances, and a fresh
 #   owner key → auth-tag split-brain. This script restores the two things the
-#   reset wipes that Buzz cannot re-derive on its own: the agent RECORDS and
+#   reset wipes that Crew cannot re-derive on its own: the agent RECORDS and
 #   the OWNER identity nsec. Everything else the app repairs itself on next boot
 #   (see WHAT THIS DOES NOT DO).
 #
@@ -20,8 +20,8 @@
 #   only a read-only source here — see preflight 1a). Idempotent: refuses to
 #   clobber a non-empty dev store unless --force.
 #
-# WHAT THIS DOES NOT DO (verified against block/buzz origin/main)
-#   - It does NOT touch the buzz-desktop-dev keychain. Agent private keys are
+# WHAT THIS DOES NOT DO (verified against block/crew origin/main)
+#   - It does NOT touch the crew-desktop-dev keychain. Agent private keys are
 #     copied prod→dev automatically at next dev boot by
 #     `migrate_agent_keys_to_dev_service` (desktop/src-tauri/src/managed_agents/
 #     storage.rs:460): the reset wiped the `_dev_migration_v1` marker, so it
@@ -52,7 +52,7 @@
 #
 # ENV OVERRIDES (read-only against prod; exist so the identity read can be
 # fixture-tested against a scratch keychain without touching real secrets)
-#   CREW_KEYCHAIN_SVC   keychain service    (default buzz-desktop)
+#   CREW_KEYCHAIN_SVC   keychain service    (default crew-desktop)
 #   CREW_KEYCHAIN_ACCT  keychain account    (default secrets)
 #
 set -euo pipefail
@@ -64,7 +64,7 @@ set -euo pipefail
 SUPPORT="$HOME/Library/Application Support"
 PROD_DIR="$SUPPORT/xyz.patty.griddle.app"
 DEV_DIR="$SUPPORT/xyz.patty.griddle.app.dev"
-KEYCHAIN_SVC="${CREW_KEYCHAIN_SVC:-buzz-desktop}"
+KEYCHAIN_SVC="${CREW_KEYCHAIN_SVC:-crew-desktop}"
 KEYCHAIN_ACCT="${CREW_KEYCHAIN_ACCT:-secrets}"
 
 DRY_RUN=0
@@ -173,9 +173,9 @@ say "[1/4] Preflight"
 # 1a. Refuse if a running DEV build is detected; a running installed DMG is
 #     allowed (read-only detection; never kills). The main app binary is
 #     `buzz-desktop` for both the installed DMG
-#     (/Applications/Buzz.app/Contents/MacOS/buzz-desktop) and dev builds
-#     (target/<profile>/buzz-desktop via `tauri dev`). Match that path component
-#     exactly so sidecars/helpers (buzz, crew-dev-mcp, crew-agent) don't
+#     (/Applications/Crew.app/Contents/MacOS/crew-desktop) and dev builds
+#     (target/<profile>/crew-desktop via `tauri dev`). Match that path component
+#     exactly so sidecars/helpers (crew, crew-dev-mcp, crew-agent) don't
 #     false-positive.
 #
 #     WHY dev blocks but the DMG doesn't: step 2 atomically swaps the entire dev
@@ -194,7 +194,7 @@ say "[1/4] Preflight"
 #     and resolution (path unresolvable AND process gone) is ignored — it is no
 #     longer running. A PID still alive but unresolvable (permissions, exotic
 #     state) blocks.
-ALLOWED_PROD_EXE="/Applications/Buzz.app/Contents/MacOS/buzz-desktop"
+ALLOWED_PROD_EXE="/Applications/Crew.app/Contents/MacOS/crew-desktop"
 
 # Echo a PID's true executable path (first txt-mapped vnode), or empty if none.
 # lsof exits nonzero when the PID is gone; callers use `|| true` so a raced exit
@@ -221,7 +221,7 @@ pid_gone() {
   [[ $rc -eq 1 && -z "$out" && $had_err -eq 0 ]]
 }
 
-running_pids="$(pgrep -f '/buzz-desktop( |$)' 2>/dev/null || true)"
+running_pids="$(pgrep -f '/crew-desktop( |$)' 2>/dev/null || true)"
 dmg_running=0
 dev_blocking=()   # "pid:reason" for each PID that blocks the run
 if [[ -n "$running_pids" ]]; then
@@ -244,7 +244,7 @@ if [[ -n "$running_pids" ]]; then
   done <<< "$running_pids"
 fi
 if [[ ${#dev_blocking[@]} -gt 0 ]]; then
-  warn "A non-installed buzz-desktop process is running (dev build or unresolvable):"
+  warn "A non-installed crew-desktop process is running (dev build or unresolvable):"
   for entry in "${dev_blocking[@]}"; do warn "  PID ${entry%%:*} → ${entry#*:}"; done
   warn "Quit any running dev build, then re-run. This script never kills processes."
   exit 1
@@ -253,7 +253,7 @@ if [[ $dmg_running -eq 1 ]]; then
   info "installed DMG is running — allowed (read-only source)"
   warn "Do NOT create/archive agents or edit teams in the DMG while this runs; the 4-file bundle is read as one snapshot."
 else
-  info "no running Buzz process detected"
+  info "no running Crew process detected"
 fi
 
 # 1b. On-disk symlink refusals. The paths are fixed canonical constants, so
@@ -466,7 +466,7 @@ say "[4/4] Done. Next steps"
 cat <<EOF
   1. Start your dev build (\`just production\` or \`just dev\`).
      - First boot re-runs the agent-key migration → ONE prod-keychain prompt
-       (copies agent:<pubkey> keys buzz-desktop → buzz-desktop-dev).
+       (copies agent:<pubkey> keys crew-desktop → crew-desktop-dev).
      - First boot adopts identity.key into the dev keyring, then deletes it.
   2. Worktree launches: worktree-suffixed dev dirs are symlinked to the
      canonical dev dir by sync_shared_agent_data ONLY when CREW_SHARE_IDENTITY=1.

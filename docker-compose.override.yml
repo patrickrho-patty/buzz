@@ -1,4 +1,4 @@
-# Local dev port overrides — keeps Buzz services off 5432/6379, which are
+# Local dev port overrides — keeps Crew services off 5432/6379, which are
 # occupied by rho-postgres and a native redis-server on this machine.
 # Pair with .env DATABASE_URL/REDIS_URL pointing at 5433/6380.
 services:

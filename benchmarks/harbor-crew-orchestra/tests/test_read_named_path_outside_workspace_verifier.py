@@ -5,7 +5,7 @@ from pathlib import Path
 from harbor_crew_orchestra.evidence import build_buzz_evidence
 from harbor_crew_orchestra.provisioning import AgentCredential, TrialHandle
 
-# The Buzz-native tasks are a sibling dataset of this harness package.
+# The Crew-native tasks are a sibling dataset of this harness package.
 DATASET_ROOT = Path(__file__).resolve().parents[2] / "crew-dataset"
 FIXTURES = Path(__file__).parent / "fixtures" / "transcripts"
 VERIFIER = DATASET_ROOT / "read-named-path-outside-workspace" / "tests" / "verify.py"

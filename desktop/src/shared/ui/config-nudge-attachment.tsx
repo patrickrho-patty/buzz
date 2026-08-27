@@ -157,7 +157,7 @@ export function focusTargetForRequirement(
 }
 
 /**
- * Inline card rendered when the desktop detects a `buzz:config-nudge`
+ * Inline card rendered when the desktop detects a `crew:config-nudge`
  * sentinel in a kind:9 message body.
  *
  * Uses the `Attachment` primitive's built-in `state="error"` destructive-tint
@@ -399,8 +399,8 @@ function RequirementRow({
     }
     case "cli_config_invalid": {
       // Config-invalid rows are purely informational — the user must edit an
-      // external file. No Agent runtimes CTA (Buzz can't repair ~/.codex/config.toml)
-      // and no Edit Agent CTA (the field isn't managed by Buzz).
+      // external file. No Agent runtimes CTA (Crew can't repair ~/.codex/config.toml)
+      // and no Edit Agent CTA (the field isn't managed by Crew).
       const cli = requirement.probe_args[0] ?? "the CLI";
       const configFile = `~/.${cli}/config.toml`;
       return (

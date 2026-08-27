@@ -2,7 +2,7 @@
 //!
 //! These tests exercise the full pack-resolve pipeline and verify that:
 //! - Goose personas emit GOOSE_PROVIDER, GOOSE_MODEL, GOOSE_TEMPERATURE
-//! - Buzz-agent personas emit CREW_AGENT_MODEL, CREW_AGENT_PROVIDER
+//! - Crew-agent personas emit CREW_AGENT_MODEL, CREW_AGENT_PROVIDER
 //! - The import filter strips derived provider/model keys but preserves knobs
 //! - Multi-runtime packs produce correct per-persona env var prefixes
 //! - Models without a provider prefix emit only the model key (no provider)
@@ -229,7 +229,7 @@ fn full_pipeline_two_runtimes_different_env_vars() {
   "version": "1.0.0",
   "personas": [
     "agents/goose-bot.persona.md",
-    "agents/buzz-bot.persona.md"
+    "agents/crew-bot.persona.md"
   ],
   "defaults": {}
 }"#,
@@ -250,17 +250,17 @@ You are a goose bot.
     )
     .unwrap();
 
-    // Buzz-agent persona
+    // Crew-agent persona
     fs::write(
-        root.join("agents/buzz-bot.persona.md"),
+        root.join("agents/crew-bot.persona.md"),
         r#"---
-name: "buzz-bot"
-display_name: "Buzz Bot"
+name: "crew-bot"
+display_name: "Crew Bot"
 description: "A crew-agent runtime bot"
 runtime: "crew-agent"
 model: "openai:gpt-4o"
 ---
-You are a buzz bot.
+You are a crew bot.
 "#,
     )
     .unwrap();
@@ -276,8 +276,8 @@ You are a buzz bot.
     let crew = pack
         .personas
         .iter()
-        .find(|p| p.name == "buzz-bot")
-        .expect("buzz-bot should exist");
+        .find(|p| p.name == "crew-bot")
+        .expect("crew-bot should exist");
 
     // Goose persona gets GOOSE_* env vars
     let goose_env: std::collections::HashMap<_, _> = goose
@@ -299,7 +299,7 @@ You are a buzz bot.
         "goose persona must not emit CREW_AGENT_PROVIDER"
     );
 
-    // Buzz-agent persona gets CREW_AGENT_* env vars
+    // Crew-agent persona gets CREW_AGENT_* env vars
     let crew_env: std::collections::HashMap<_, _> = crew
         .runtime_env_vars
         .iter()

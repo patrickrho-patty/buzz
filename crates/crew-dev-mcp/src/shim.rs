@@ -12,7 +12,7 @@ use zeroize::Zeroize;
 /// 3. Prepends the shim dir to PATH
 ///
 /// Shell children receive `path_env`, `git_env`, and `CREW_PRIVATE_KEY` (for
-/// the buzz CLI). `NOSTR_PRIVATE_KEY` is removed from the process env after
+/// the crew CLI). `NOSTR_PRIVATE_KEY` is removed from the process env after
 /// the keyfile is written — git helpers read from the keyfile only.
 /// Cleaned up on drop (TempDir).
 pub struct Shim {
@@ -149,8 +149,8 @@ fn write_keyfile_atomic(path: &Path, data: &[u8]) -> std::io::Result<()> {
 }
 
 /// Derive a NIP-05-style email from the pubkey and relay URL.
-/// Format: `<hex_pubkey>@<relay_host>` (e.g., `ab12...cd@relay.buzz.dev`).
-/// Falls back to `<hex_pubkey>@buzz` if no relay URL is configured.
+/// Format: `<hex_pubkey>@<relay_host>` (e.g., `ab12...cd@relay.crew.dev`).
+/// Falls back to `<hex_pubkey>@crew` if no relay URL is configured.
 fn derive_git_email(pubkey_hex: &str) -> String {
     let host = crew_core::env_alias::env_lookup("CREW_RELAY_URL")
         .ok()
@@ -241,7 +241,7 @@ fn is_unicode_format(c: char) -> bool {
     )
 }
 
-/// Normalize a Buzz display name into a git author name, or `None` to fall
+/// Normalize a Crew display name into a git author name, or `None` to fall
 /// back to the npub.
 ///
 /// Strips control and Unicode format characters plus angle brackets, collapses
@@ -289,14 +289,14 @@ fn build_git_env(info: &KeyInfo) -> Vec<(String, String)> {
         .and_then(sanitize_git_user_name)
         .unwrap_or_else(|| info.npub.clone());
     let entries: Vec<(&str, String)> = vec![
-        // Identity — Buzz display name (npub fallback), NIP-05-style email
+        // Identity — Crew display name (npub fallback), NIP-05-style email
         ("user.name", user_name),
         ("user.email", email),
-        // Nostr credential helper is additive — it silently declines non-Buzz
+        // Nostr credential helper is additive — it silently declines non-Crew
         // remotes (exits 0, no credential), so git falls through to system
         // helpers (osxkeychain, store, etc.) for GitHub/GitLab/etc.
         ("credential.helper", "nostr".into()),
-        // Required: Buzz relay verifies NIP-98 against the full repo-root URL.
+        // Required: Crew relay verifies NIP-98 against the full repo-root URL.
         // Without useHttpPath, git only passes the host and auth is rejected.
         ("credential.useHttpPath", "true".into()),
         ("nostr.keyfile", info.keyfile_path.clone()),
@@ -637,7 +637,7 @@ mod git_user_name_tests {
         // matching key on — must stay in the email untouched.
         assert_eq!(
             git_config(&env, "user.email").as_deref(),
-            Some(format!("{PUBKEY_HEX}@buzz").as_str())
+            Some(format!("{PUBKEY_HEX}@crew").as_str())
         );
         assert_eq!(
             git_config(&env, "user.signingkey").as_deref(),
@@ -658,7 +658,7 @@ mod git_user_name_tests {
         assert_eq!(git_config(&env, "user.name").as_deref(), Some(NPUB));
         assert_eq!(
             git_config(&env, "user.email").as_deref(),
-            Some(format!("{PUBKEY_HEX}@buzz").as_str())
+            Some(format!("{PUBKEY_HEX}@crew").as_str())
         );
     }
 

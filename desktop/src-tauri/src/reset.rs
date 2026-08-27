@@ -98,7 +98,7 @@ pub(crate) struct ResetContext<'a> {
     /// present and non-empty, wiped alongside `app_data_dir` to prevent
     /// `migrate_legacy_app_data_dir` from restoring the old identity.
     pub legacy_app_data_dir: Option<PathBuf>,
-    /// Nest dir (`~/.buzz` or `~/.buzz-dev`) scoped to this build's variant,
+    /// Nest dir (`~/.crew` or `~/.crew-dev`) scoped to this build's variant,
     /// injected so unit tests can override without touching the global OnceLock.
     pub nest_dir: Option<PathBuf>,
     pub keychain: &'a dyn ResetKeychain,
@@ -173,7 +173,7 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
 
     if app_data_dir.exists() {
         if let Err(e) = rename_to_trash(app_data_dir) {
-            eprintln!("griddle-desktop reset: {e}");
+            eprintln!("crew-desktop reset: {e}");
             return ResetOutcome {
                 completed: false,
                 failed: true,
@@ -186,7 +186,7 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
     if let Some(ref legacy) = ctx.legacy_app_data_dir {
         if legacy.exists() {
             if let Err(e) = rename_to_trash(legacy) {
-                eprintln!("griddle-desktop reset: {e}");
+                eprintln!("crew-desktop reset: {e}");
                 // Non-fatal for legacy dir — continue
             }
         }
@@ -202,7 +202,7 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
         let tw = trash_path(&webkit_dir);
         if webkit_dir.exists() {
             if let Err(e) = rename_to_trash(&webkit_dir) {
-                eprintln!("griddle-desktop reset: {e}");
+                eprintln!("crew-desktop reset: {e}");
                 // Non-fatal — continue
             }
         }
@@ -224,7 +224,7 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
 
     // ── Step 4: keychain — LAST so we can read keys before deleting ──────────
     if let Err(e) = ctx.keychain.delete_all_with_legacy() {
-        eprintln!("griddle-desktop reset: keychain delete: {e}");
+        eprintln!("crew-desktop reset: keychain delete: {e}");
         // Keychain failure is fatal: keep sentinel, signal failure.
         // Restore all three dirs so the app returns to a coherent pre-reset state.
         if trash_app.exists() {
@@ -286,7 +286,7 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
         || !trash_webkit_gone
     {
         eprintln!(
-            "griddle-desktop reset: verification failed (keychain_wiped={keychain_ok}, \
+            "crew-desktop reset: verification failed (keychain_wiped={keychain_ok}, \
              app_data_gone={app_data_gone}, legacy_gone={legacy_gone}, nest_gone={nest_gone}, \
              trash_app_gone={trash_app_gone}, trash_legacy_gone={trash_legacy_gone}, \
              trash_webkit_gone={trash_webkit_gone})"
@@ -299,7 +299,7 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
 
     // ── Step 7: delete sentinel → success ────────────────────────────────────
     if let Err(e) = delete_sentinel(app_data_dir) {
-        eprintln!("griddle-desktop reset: delete sentinel: {e}");
+        eprintln!("crew-desktop reset: delete sentinel: {e}");
         // Sentinel not deleted — keep failed=false so the app boots into
         // onboarding, but on next boot the reset will retry (idempotent).
     }
@@ -564,8 +564,8 @@ mod tests {
         let tmp = TempDir::new().unwrap();
 
         // Create both nests.
-        let dev_nest = tmp.path().join(".buzz-dev");
-        let prod_nest = tmp.path().join(".buzz");
+        let dev_nest = tmp.path().join(".crew-dev");
+        let prod_nest = tmp.path().join(".crew");
         std::fs::create_dir_all(&dev_nest).unwrap();
         std::fs::create_dir_all(&prod_nest).unwrap();
 
@@ -600,8 +600,8 @@ mod tests {
         let tmp = TempDir::new().unwrap();
 
         // Create both nests.
-        let dev_nest = tmp.path().join(".buzz-dev");
-        let prod_nest = tmp.path().join(".buzz");
+        let dev_nest = tmp.path().join(".crew-dev");
+        let prod_nest = tmp.path().join(".crew");
         std::fs::create_dir_all(&dev_nest).unwrap();
         std::fs::create_dir_all(&prod_nest).unwrap();
 
@@ -719,13 +719,13 @@ mod tests {
         std::fs::create_dir_all(&app_data).unwrap();
         write_sentinel(&app_data).unwrap();
 
-        // Seed prod ~/.buzz/.repos-dir so the migration has something to copy.
+        // Seed prod ~/.crew/.repos-dir so the migration has something to copy.
         let home = tmp.path().join("home");
-        let prod_nest = home.join(".buzz");
+        let prod_nest = home.join(".crew");
         std::fs::create_dir_all(&prod_nest).unwrap();
         std::fs::write(prod_nest.join(".repos-dir"), "/some/workspace").unwrap();
 
-        let dev_nest = tmp.path().join(".buzz-dev");
+        let dev_nest = tmp.path().join(".crew-dev");
 
         // Run a real reset and take the REAL outcome.completed.
         let kc = FakeKeychain::ok();
@@ -750,7 +750,7 @@ mod tests {
         // Arm 2 (positive control): non-reset dev boot → dev nest IS created
         // with .repos-dir copied. This proves the test would have caught the
         // pass-3 resurrection live.
-        let dev_nest_2 = tmp.path().join(".buzz-dev-control");
+        let dev_nest_2 = tmp.path().join(".crew-dev-control");
         crate::migration::maybe_migrate_dev_repos_dir(true, false, &home, &dev_nest_2);
         assert!(
             dev_nest_2.join(".repos-dir").exists(),
@@ -763,7 +763,7 @@ mod tests {
         );
 
         // Arm 3: prod build (is_dev=false) → nothing created regardless.
-        let dev_nest_3 = tmp.path().join(".buzz-dev-prod");
+        let dev_nest_3 = tmp.path().join(".crew-dev-prod");
         crate::migration::maybe_migrate_dev_repos_dir(false, false, &home, &dev_nest_3);
         assert!(
             !dev_nest_3.join(".repos-dir").exists(),

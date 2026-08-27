@@ -84,11 +84,11 @@ pub fn migrate_personas_to_events(app: &tauri::AppHandle, keys: &nostr::Keys, db
         Ok(0) => {}
         Ok(migrated) => {
             eprintln!(
-                "griddle-desktop: persona-event-migration: {migrated} personas migrated to retention"
+                "crew-desktop: persona-event-migration: {migrated} personas migrated to retention"
             );
         }
         Err(e) => {
-            eprintln!("griddle-desktop: persona-event-migration: {e}");
+            eprintln!("crew-desktop: persona-event-migration: {e}");
         }
     }
 }
@@ -245,7 +245,7 @@ pub fn migrate_teams_to_events(
         Ok(0) => Ok(()),
         Ok(migrated) => {
             eprintln!(
-                "griddle-desktop: team-event-migration: {migrated} teams migrated to retention"
+                "crew-desktop: team-event-migration: {migrated} teams migrated to retention"
             );
             Ok(())
         }

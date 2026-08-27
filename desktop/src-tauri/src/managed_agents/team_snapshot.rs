@@ -1,4 +1,4 @@
-//! `buzz-team-snapshot v1` — manifest type, encoder, and decoder.
+//! `crew-team-snapshot v1` — manifest type, encoder, and decoder.
 //!
 //! A team snapshot is a portable, shareable representation of a team: its
 //! header (name, description) plus a `members` array where each member
@@ -69,7 +69,7 @@ pub struct TeamSnapshotMeta {
 
 // ── Top-level manifest ────────────────────────────────────────────────────────
 
-/// The top-level `buzz-team-snapshot v1` manifest.
+/// The top-level `crew-team-snapshot v1` manifest.
 ///
 /// Serializes to / from JSON. Embedded in `.team.json` directly, or in the
 /// `buzz_team_snapshot` tEXt chunk of a `.team.png` (base64-encoded).
@@ -524,7 +524,7 @@ mod tests {
     fn format_and_version_correct_in_output() {
         let json = team_json_string();
         assert!(
-            json.contains("\"buzz-team-snapshot\""),
+            json.contains("\"crew-team-snapshot\""),
             "format discriminator must be present"
         );
         assert!(json.contains("\"version\": 1"), "version must be 1");

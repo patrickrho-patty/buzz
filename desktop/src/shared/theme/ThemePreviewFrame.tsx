@@ -4,7 +4,7 @@ import { cn } from "@/shared/lib/cn";
 export type ThemePreviewVars = Record<string, string>;
 
 /**
- * Buzz sidebar-gradient stop tokens, keyed by theme name. The actual custom
+ * Crew sidebar-gradient stop tokens, keyed by theme name. The actual custom
  * colors live once in `shared/styles/globals/theme.css`; the picker consumes
  * those same semantic variables instead of duplicating raw values here.
  */
@@ -12,7 +12,7 @@ export const CREW_GRADIENT_STOPS: Record<
   string,
   { top: string; bottom: string }
 > = {
-  buzz: {
+  crew: {
     top: "var(--crew-gradient-light-top)",
     bottom: "var(--crew-gradient-light-bottom)",
   },
@@ -60,7 +60,7 @@ function ThemePreviewSvg({
   sidebarGradient?: { top: string; bottom: string };
 }) {
   const clipId = React.useId().replace(/:/g, "");
-  const gradientId = `${clipId}-buzz`;
+  const gradientId = `${clipId}-crew`;
   const background = hsl(vars, "--background");
   const border = hsl(vars, "--border");
   const foreground = hsl(vars, "--foreground");

@@ -26,7 +26,7 @@
 //! record — never blob metadata, never the upload response, never the
 //! hash-chained audit log.
 //!
-//! ## Consumer contract (buzz-moderation)
+//! ## Consumer contract (crew-moderation)
 //!
 //! The moderation pipeline triggers on `ObjectCreated` events under the
 //! `_uploads/` prefix and parses this record instead of HEADing blobs:

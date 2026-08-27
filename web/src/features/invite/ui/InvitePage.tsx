@@ -197,7 +197,7 @@ export function InvitePage({ code }: { code: string }) {
             className="h-12 w-12 overflow-hidden bg-black"
             style={{ borderRadius: "22.37%" }}
           >
-            <img alt="Griddle" className="h-full w-full" src={crewAppIcon} />
+            <img alt="Crew" className="h-full w-full" src={crewAppIcon} />
           </div>
           <h1 className="mt-4 text-2xl font-semibold tracking-tight text-black">
             You&apos;re invited to
@@ -247,7 +247,7 @@ export function InvitePage({ code }: { code: string }) {
                 <a
                   href={`crew://join?relay=${encodeURIComponent(relay)}&code=${encodeURIComponent(code)}`}
                 >
-                  Accept invite in Buzz
+                  Accept invite in Crew
                 </a>
               </Button>
             ) : (
@@ -260,7 +260,7 @@ export function InvitePage({ code }: { code: string }) {
                 disabled={disabled}
                 onClick={openInvite}
               >
-                Accept invite in Buzz
+                Accept invite in Crew
               </Button>
             )}
             {browserJoinError ? (

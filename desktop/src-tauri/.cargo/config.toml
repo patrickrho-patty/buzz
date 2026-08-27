@@ -1,0 +1,5 @@
+# Share the repository-root build cache: overlapping dependencies compile once
+# instead of twice, keeping steady-state cache size near ~15GB instead of ~45GB.
+# Pruned together with the root cache by `just tidy`.
+[build]
+target-dir = "../../target"

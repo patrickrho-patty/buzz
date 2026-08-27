@@ -79,12 +79,12 @@ const REPLY_GUARD_SERVER: &str = "crew-agent";
 /// Explicitly licenses silence. The base prompt tells agents that publishing is
 /// optional and "silence is usually correct"; a reminder that argued otherwise
 /// would fight that instruction and make agents chattier.
-const REPLY_GUARD_NAG: &str = "You are about to end this turn without calling `buzz messages send`. \
+const REPLY_GUARD_NAG: &str = "You are about to end this turn without calling `crew messages send`. \
 Your assistant text and reasoning are never shown to anyone — if you did work, found an answer, \
 or hit a blocker that someone is waiting on, it exists only if you publish it. \
 If you already posted, or if silence is genuinely correct for this turn, ignore this and end your turn.";
 
-/// Whether `call` is a recognized attempt to publish a reply to Buzz.
+/// Whether `call` is a recognized attempt to publish a reply to Crew.
 ///
 /// Recognizes an *attempt*, not a successful publish: the command text is
 /// inspected, never the exit status. That is deliberate — a send that fails
@@ -100,7 +100,7 @@ fn is_buzz_reply_call(call: &ToolCall, mcp: &McpRegistry) -> bool {
     mcp.has(&call.name) && !mcp.is_hook(&call.name) && is_reply_shaped(&call.name, &call.arguments)
 }
 
-/// Whether a tool name and arguments have the shape of a Buzz publish command.
+/// Whether a tool name and arguments have the shape of a Crew publish command.
 ///
 /// Split from [`is_buzz_reply_call`] only so the matcher is testable without a
 /// live [`McpRegistry`]; callers must apply the registry checks first.
@@ -117,7 +117,7 @@ fn is_buzz_reply_call(call: &ToolCall, mcp: &McpRegistry) -> bool {
 /// cannot suppress the guard, and a non-string `command` is rejected rather than
 /// coerced. Known limits, both accepted: a command assembled at runtime (`$CMD`)
 /// or hidden in a wrapper script is missed, and text that merely quotes a send
-/// (`echo "buzz messages send"`) matches. Missing a real post is the expensive
+/// (`echo "crew messages send"`) matches. Missing a real post is the expensive
 /// direction, and substring matching is the more forgiving one there.
 fn is_reply_shaped(name: &str, arguments: &serde_json::Value) -> bool {
     name.ends_with("__shell")
@@ -1314,14 +1314,14 @@ mod tests {
     #[test]
     fn reply_shape_matches_documented_send_forms() {
         for cmd in [
-            "buzz messages send --channel X --content Y",
-            "buzz --relay wss://r messages send --channel X --content Y",
-            "/abs/path/buzz messages send",
-            "printf 'hi' | buzz messages send --content -",
-            "buzz messages send-diff --diff -",
-            "buzz reactions add --event E --emoji +",
+            "crew messages send --channel X --content Y",
+            "crew --relay wss://r messages send --channel X --content Y",
+            "/abs/path/crew messages send",
+            "printf 'hi' | crew messages send --content -",
+            "crew messages send-diff --diff -",
+            "crew reactions add --event E --emoji +",
             // Assembled through another shell: rev 3's tokenizer missed this.
-            r#"sh -c "buzz messages send --channel X""#,
+            r#"sh -c "crew messages send --channel X""#,
         ] {
             assert!(
                 is_reply_shaped("dev__shell", &json!({ "command": cmd })),
@@ -1335,12 +1335,12 @@ mod tests {
     #[test]
     fn reply_shape_rejects_non_reply_commands() {
         for cmd in [
-            "buzz messages get --channel X",
-            "buzz channels list",
-            "buzz reactions remove --event E",
-            "buzz pr open --title T",
-            "buzz social publish --content hi",
-            "buzz notes set --name n",
+            "crew messages get --channel X",
+            "crew channels list",
+            "crew reactions remove --event E",
+            "crew pr open --title T",
+            "crew social publish --content hi",
+            "crew notes set --name n",
             "cargo test -p crew-agent",
         ] {
             assert!(
@@ -1355,7 +1355,7 @@ mod tests {
     /// `has()` proves registration, not the bare name.
     #[test]
     fn reply_shape_requires_the_qname_separator() {
-        let args = json!({ "command": "buzz messages send --channel X" });
+        let args = json!({ "command": "crew messages send --channel X" });
         for name in [
             "dev__powershell",
             "dev__noshell",
@@ -1378,11 +1378,11 @@ mod tests {
     fn reply_shape_reads_only_the_command_field() {
         assert!(!is_reply_shaped(
             "dev__shell",
-            &json!({ "description": "buzz messages send --channel X" })
+            &json!({ "description": "crew messages send --channel X" })
         ));
         assert!(!is_reply_shaped(
             "dev__shell",
-            &json!({ "workdir": "buzz messages send" })
+            &json!({ "workdir": "crew messages send" })
         ));
         // Malformed `command` is rejected, not coerced — and must not panic.
         assert!(!is_reply_shaped("dev__shell", &json!({ "command": 42 })));

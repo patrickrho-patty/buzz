@@ -84,7 +84,7 @@ const BACKOFF_INITIAL_SECS: u64 = 1;
 /// Maximum reconnect backoff (30 seconds).
 const BACKOFF_MAX_SECS: u64 = 30;
 
-/// Subscribes to `buzz:*:conn-control` and forwards scoped commands to the
+/// Subscribes to `crew:*:conn-control` and forwards scoped commands to the
 /// broadcast. Mirrors [`crate::cache_invalidation::run_cache_invalidation_subscriber`]:
 /// a reconnect loop with exponential backoff. Never returns.
 pub async fn run_conn_control_subscriber(

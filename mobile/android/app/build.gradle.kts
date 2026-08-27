@@ -136,7 +136,7 @@ android {
             if (debugAppName != null) {
                 resValue("string", "app_name", debugAppName)
             } else if (worktreeLabel != null) {
-                resValue("string", "app_name", "Buzz ($worktreeLabel)")
+                resValue("string", "app_name", "Crew ($worktreeLabel)")
             }
         }
         release {

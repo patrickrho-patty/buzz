@@ -2,7 +2,7 @@
 
 use crate::error::MediaError;
 
-/// Blossom kind:24242 verbs Buzz currently accepts.
+/// Blossom kind:24242 verbs Crew currently accepts.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BlossomVerb {
     Upload,
@@ -443,7 +443,7 @@ mod tests {
             .unwrap();
         // Should fail — server tag present but doesn't match our domain
         assert!(matches!(
-            verify_blossom_upload_auth(&event, &sha256, Some("buzz.example.com"), 600),
+            verify_blossom_upload_auth(&event, &sha256, Some("crew.example.com"), 600),
             Err(MediaError::ServerMismatch)
         ));
         // Should pass when our domain matches

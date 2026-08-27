@@ -123,8 +123,8 @@ const SINGLETON_METADATA_TAGS = [
 const LEGACY_TAG_ALIASES: Partial<
   Record<(typeof SINGLETON_METADATA_TAGS)[number], string>
 > = {
-  "crew-channel": "buzz-channel",
-  "crew-visibility": "buzz-visibility",
+  "crew-channel": "crew-channel",
+  "crew-visibility": "crew-visibility",
 };
 
 const MAX_METADATA_TAG_BYTES: Record<string, number> = {

@@ -96,7 +96,7 @@ fn endpoint_bytes(endpoint: &str) -> Option<Vec<u8>> {
 fn endpoint_fingerprint(profile: AppProfile, token: &[u8]) -> [u8; 32] {
     use sha2::{Digest, Sha256};
     let mut h = Sha256::new();
-    h.update(b"buzz-apns-endpoint-v1\0");
+    h.update(b"crew-apns-endpoint-v1\0");
     h.update(profile.as_str().as_bytes());
     h.update([0]);
     h.update(token);
@@ -186,7 +186,7 @@ async fn enroll(State(s): State<AppState>, body: Bytes) -> Response {
         endpoint_epoch: r.endpoint_epoch,
         expires_at: r.expires_at,
     };
-    let signed = match transcript("buzz.push.enroll.v1", &t) {
+    let signed = match transcript("crew.push.enroll.v1", &t) {
         Some(v) => v,
         None => return error(StatusCode::BAD_REQUEST, "invalid_request"),
     };
@@ -326,7 +326,7 @@ async fn delegate(State(s): State<AppState>, body: Bytes) -> Response {
         r.challenge_id,
         &r.challenge,
         &r.assertion,
-        "buzz.push.delegate.v1",
+        "crew.push.delegate.v1",
         &t,
     )
     .await
@@ -418,7 +418,7 @@ async fn rotate_endpoint(State(s): State<AppState>, body: Bytes) -> Response {
         r.challenge_id,
         &r.challenge,
         &r.assertion,
-        "buzz.push.rotate-endpoint.v1",
+        "crew.push.rotate-endpoint.v1",
         &t,
     )
     .await
@@ -477,7 +477,7 @@ async fn revoke_delegation(State(s): State<AppState>, body: Bytes) -> Response {
         r.challenge_id,
         &r.challenge,
         &r.assertion,
-        "buzz.push.revoke-delegation.v1",
+        "crew.push.revoke-delegation.v1",
         &t,
     )
     .await
@@ -529,7 +529,7 @@ async fn revoke_installation(State(s): State<AppState>, body: Bytes) -> Response
         r.challenge_id,
         &r.challenge,
         &r.assertion,
-        "buzz.push.revoke-installation.v1",
+        "crew.push.revoke-installation.v1",
         &t,
     )
     .await

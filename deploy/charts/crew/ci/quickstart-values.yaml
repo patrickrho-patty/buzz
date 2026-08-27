@@ -9,7 +9,7 @@ redis:
   enabled: true
 minio:
   enabled: true
-relayUrl: wss://buzz.test.local
+relayUrl: wss://crew.test.local
 ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000001"
 relay:
   # Don't enforce membership in CI — we're testing the chart renders and the

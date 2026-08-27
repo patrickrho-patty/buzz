@@ -1,7 +1,7 @@
-//! Buzz Nest — persistent agent workspace at `~/.buzz`.
+//! Crew Nest — persistent agent workspace at `~/.crew`.
 //!
 //! Creates a shared knowledge directory on first launch so every
-//! Buzz-spawned agent starts with orientation (AGENTS.md) and a
+//! Crew-spawned agent starts with orientation (AGENTS.md) and a
 //! place to accumulate research, plans, and logs across sessions.
 //!
 //! Static template content in AGENTS.md (above the managed-section markers)
@@ -42,7 +42,7 @@ const NEST_DIRS: &[&str] = &[
 pub(crate) const AGENTS_MD: &str = include_str!("nest_agents.md");
 
 /// Default SKILL.md content for the crew-cli skill.
-/// Written to ~/.buzz/.agents/skills/crew-cli/SKILL.md on first init.
+/// Written to ~/.crew/.agents/skills/crew-cli/SKILL.md on first init.
 const CREW_CLI_SKILL_MD: &str = include_str!("nest_skill.md");
 
 /// Template content version for AGENTS.md static content (above managed markers).
@@ -54,20 +54,20 @@ const NEST_AGENTS_VERSION: u32 = 4;
 /// Bump this when changing `nest_skill.md` to trigger refresh on existing installs.
 const NEST_SKILL_VERSION: u32 = 5;
 
-const BEGIN_MARKER: &str = "<!-- BEGIN BUZZ MANAGED";
-const END_MARKER: &str = "<!-- END BUZZ MANAGED -->";
+const BEGIN_MARKER: &str = "<!-- BEGIN CREW MANAGED";
+const END_MARKER: &str = "<!-- END CREW MANAGED -->";
 
 /// Canonical skill directory path relative to the nest root.
 const CANONICAL_SKILL_DIR: &str = ".agents/skills/crew-cli";
 
 /// Nest directory name for production builds.
-const NEST_DIR_PROD: &str = ".buzz";
+const NEST_DIR_PROD: &str = ".crew";
 
 /// Nest directory name for dev builds. Dev builds (those whose Tauri app-data
 /// directory name starts with `"xyz.patty.griddle.app.dev"`) use a separate nest
 /// so that the DMG and dev-build instances don't clobber each other's
 /// `.repos-dir` dotfile and `REPOS` symlink.
-const NEST_DIR_DEV: &str = ".buzz-dev";
+const NEST_DIR_DEV: &str = ".crew-dev";
 
 /// Process-lifetime nest directory. Initialized once at startup via
 /// [`init_nest_dir`] before any call to [`nest_dir`].
@@ -95,11 +95,11 @@ pub fn init_nest_dir(is_dev: bool) {
     let _ = NEST_DIR.set(path);
 }
 
-/// Returns the nest root path (`~/.buzz` for prod, `~/.buzz-dev` for dev),
+/// Returns the nest root path (`~/.crew` for prod, `~/.crew-dev` for dev),
 /// or `None` if the home directory cannot be resolved.
 ///
 /// If [`init_nest_dir`] has not been called yet (e.g. in unit tests), falls
-/// back to the production path `~/.buzz`.
+/// back to the production path `~/.crew`.
 pub fn nest_dir() -> Option<PathBuf> {
     match NEST_DIR.get() {
         Some(path) => path.clone(),
@@ -108,7 +108,7 @@ pub fn nest_dir() -> Option<PathBuf> {
     }
 }
 
-/// Creates the Buzz nest at `~/.buzz` if it doesn't already exist.
+/// Creates the Crew nest at `~/.crew` if it doesn't already exist.
 ///
 /// Delegates to [`ensure_nest_at`] with the resolved nest directory.
 /// Returns an error string if the home directory cannot be resolved.
@@ -117,7 +117,7 @@ pub fn ensure_nest() -> Result<(), String> {
     ensure_nest_at(&root)
 }
 
-/// Creates a Buzz nest at the given `root` path.
+/// Creates a Crew nest at the given `root` path.
 ///
 /// - Creates the root directory and all subdirectories.
 /// - Writes `AGENTS.md` only if it doesn't already exist.
@@ -314,7 +314,7 @@ fn ensure_skill_symlinks(_root: &Path) -> Result<(), String> {
 ///
 /// Dev builds (`is_dev = true`) use `"buzz-dev"` so that a running DMG and a
 /// concurrent dev build each own a separate link and never clobber each other —
-/// the same isolation that separates `~/.buzz` (prod) from `~/.buzz-dev` (dev).
+/// the same isolation that separates `~/.crew` (prod) from `~/.crew-dev` (dev).
 pub fn cli_link_name(is_dev: bool) -> &'static str {
     if is_dev {
         "buzz-dev"
@@ -329,7 +329,7 @@ pub fn cli_link_name(is_dev: bool) -> &'static str {
 /// The link name is split by `is_dev` so that an installed DMG and a
 /// concurrently running dev build each maintain their own symlink and never
 /// overwrite each other's target — the same isolation that separates the
-/// `~/.buzz` and `~/.buzz-dev` nests (see [`NEST_DIR_DEV`]).
+/// `~/.crew` and `~/.crew-dev` nests (see [`NEST_DIR_DEV`]).
 ///
 /// On every boot: replaces any existing symlink unconditionally (the `buzz` /
 /// `buzz-dev` name is our namespace), creates a new one if absent, and leaves
@@ -388,7 +388,7 @@ fn read_version_file(path: &Path) -> u32 {
 
 /// Refresh AGENTS.md static content if the template version has changed.
 ///
-/// Preserves everything from the `<!-- BEGIN BUZZ MANAGED` marker onward
+/// Preserves everything from the `<!-- BEGIN CREW MANAGED` marker onward
 /// (the dynamic section managed by `upsert_managed_section`). Replaces
 /// only the static template content above the marker.
 fn refresh_agents_md_if_stale(root: &Path) -> Result<(), String> {
@@ -547,7 +547,7 @@ pub fn render_dynamic_section(
         .filter(|a| !is_archived(a, archived))
         .collect();
     let active_agents = if live.is_empty() {
-        "## Active Agents\n\n*(No agents deployed yet. Add agents in the Buzz desktop app.)*"
+        "## Active Agents\n\n*(No agents deployed yet. Add agents in the Crew desktop app.)*"
             .to_string()
     } else {
         let mut table =
@@ -830,7 +830,7 @@ pub fn try_regenerate_nest(app: &AppHandle) {
     let app = app.clone();
     tauri::async_runtime::spawn(async move {
         if let Err(error) = regenerate_nest_context(&app, generation).await {
-            eprintln!("griddle-desktop: nest context regeneration failed: {error}");
+            eprintln!("crew-desktop: nest context regeneration failed: {error}");
         }
     });
 }

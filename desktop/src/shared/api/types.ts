@@ -463,7 +463,7 @@ export type ControlResultFrame = {
   modelId?: string;
   /** Opaque per-pick id echoed from the request; correlates late frames. */
   requestId?: string;
-  /** Buzz channel UUID from the observer envelope; disambiguates channels. */
+  /** Crew channel UUID from the observer envelope; disambiguates channels. */
   channelId?: string | null;
 };
 
@@ -710,7 +710,7 @@ export type AgentPersona = {
   systemPrompt: string;
   /** Preferred ACP runtime ID (e.g. "goose", "claude"). */
   runtime: string | null;
-  /** Opaque, harness-specific model identifier string. Buzz stores and passes through without interpretation. */
+  /** Opaque, harness-specific model identifier string. Crew stores and passes through without interpretation. */
   model: string | null;
   /** LLM inference provider (e.g. "databricks", "anthropic"). Injected as the runtime's provider env var at spawn time. */
   provider: string | null;

@@ -7,7 +7,7 @@ templates:
 tests:
   - it: does not render the pairing relay by default
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       externalRedis.url: redis://h:6379
@@ -26,7 +26,7 @@ tests:
 
   - it: renders and advertises the configured pairing relay
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       externalRedis.url: redis://h:6379
@@ -34,7 +34,7 @@ tests:
       s3.accessKey: a
       s3.secretKey: s
       pairingRelay.enabled: true
-      pairingRelay.url: wss://pairing.buzz.xyz
+      pairingRelay.url: wss://pairing.crew.xyz
     asserts:
       - equal:
           path: kind
@@ -50,5 +50,5 @@ tests:
           path: spec.template.spec.containers[0].env
           content:
             name: CREW_PAIRING_RELAY_URL
-            value: wss://pairing.buzz.xyz
+            value: wss://pairing.crew.xyz
         template: templates/deployment.yaml

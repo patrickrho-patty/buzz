@@ -36,7 +36,7 @@ pub(crate) struct PendingNavigationDeepLinks(Mutex<VecDeque<PendingNavigationDee
 impl PendingNavigationDeepLinks {
     fn lock(&self) -> std::sync::MutexGuard<'_, VecDeque<PendingNavigationDeepLink>> {
         self.0.lock().unwrap_or_else(|poisoned| {
-            eprintln!("griddle-desktop: recovering poisoned pending navigation deep-link queue");
+            eprintln!("crew-desktop: recovering poisoned pending navigation deep-link queue");
             poisoned.into_inner()
         })
     }
@@ -243,13 +243,13 @@ fn activate_main_window(app: &tauri::AppHandle) {
     };
 
     if let Err(error) = window.unminimize() {
-        eprintln!("griddle-desktop: failed to unminimize main window for deep link: {error}");
+        eprintln!("crew-desktop: failed to unminimize main window for deep link: {error}");
     }
     if let Err(error) = window.show() {
-        eprintln!("griddle-desktop: failed to show main window for deep link: {error}");
+        eprintln!("crew-desktop: failed to show main window for deep link: {error}");
     }
     if let Err(error) = window.set_focus() {
-        eprintln!("griddle-desktop: failed to focus main window for deep link: {error}");
+        eprintln!("crew-desktop: failed to focus main window for deep link: {error}");
     }
 }
 
@@ -301,7 +301,7 @@ pub(crate) fn install_deep_link_handlers(app: &mut tauri::App) {
             }
         }
         Ok(None) => {}
-        Err(error) => eprintln!("griddle-desktop: failed to read launch deep link: {error}"),
+        Err(error) => eprintln!("crew-desktop: failed to read launch deep link: {error}"),
     }
 }
 
@@ -595,7 +595,7 @@ pub(crate) fn handle_deep_link_url(app: &tauri::AppHandle, url_str: &str) {
     let url = match Url::parse(url_str) {
         Ok(u) => u,
         Err(e) => {
-            eprintln!("griddle-desktop: invalid deep link URL {url_str:?}: {e}");
+            eprintln!("crew-desktop: invalid deep link URL {url_str:?}: {e}");
             return;
         }
     };
@@ -606,11 +606,11 @@ pub(crate) fn handle_deep_link_url(app: &tauri::AppHandle, url_str: &str) {
         return;
     }
 
-    // `griddle://auth/callback?code=…&state=…` — the OIDC redirect from the
+    // `crew://auth/callback?code=…&state=…` — the OIDC redirect from the
     // system browser after a workforce SSO (Keycloak) login. Forward the raw
     // params to the frontend, which validates state and completes the code
     // exchange against the relay.
-    if scheme == "griddle" {
+    if scheme == "crew" {
         match url.host_str() {
             Some("auth") => {
                 let code = url
@@ -622,7 +622,7 @@ pub(crate) fn handle_deep_link_url(app: &tauri::AppHandle, url_str: &str) {
                     .find(|(k, _)| k == "state")
                     .map(|(_, v)| v.to_string());
                 let (Some(code), Some(state)) = (code, state) else {
-                    eprintln!("griddle-desktop: auth callback missing code/state: {url_str}");
+                    eprintln!("crew-desktop: auth callback missing code/state: {url_str}");
                     return;
                 };
                 activate_main_window(app);
@@ -632,7 +632,7 @@ pub(crate) fn handle_deep_link_url(app: &tauri::AppHandle, url_str: &str) {
                 );
             }
             other => {
-                eprintln!("griddle-desktop: ignoring unsupported griddle host: {other:?}");
+                eprintln!("crew-desktop: ignoring unsupported crew host: {other:?}");
             }
         }
         return;
@@ -641,7 +641,7 @@ pub(crate) fn handle_deep_link_url(app: &tauri::AppHandle, url_str: &str) {
     match url.host_str() {
         Some("connect") => {
             let Some(relay_url) = parse_websocket_relay_param(&url) else {
-                eprintln!("griddle-desktop: connect deep link missing/invalid relay: {url_str}");
+                eprintln!("crew-desktop: connect deep link missing/invalid relay: {url_str}");
                 return;
             };
             activate_main_window(app);
@@ -654,7 +654,7 @@ pub(crate) fn handle_deep_link_url(app: &tauri::AppHandle, url_str: &str) {
             // invite against the relay's HTTP API, then adds the workspace.
             let Some(payload) = parse_join_deep_link(&url) else {
                 eprintln!(
-                    "griddle-desktop: join deep link missing/invalid relay or code: {url_str}"
+                    "crew-desktop: join deep link missing/invalid relay or code: {url_str}"
                 );
                 return;
             };
@@ -668,7 +668,7 @@ pub(crate) fn handle_deep_link_url(app: &tauri::AppHandle, url_str: &str) {
         Some("add-community") => {
             let Some(payload) = parse_add_community_deep_link(&url) else {
                 eprintln!(
-                    "griddle-desktop: add-community deep link missing/invalid relay: {url_str}"
+                    "crew-desktop: add-community deep link missing/invalid relay: {url_str}"
                 );
                 return;
             };
@@ -685,7 +685,7 @@ pub(crate) fn handle_deep_link_url(app: &tauri::AppHandle, url_str: &str) {
         }
         Some("channel") => {
             let Some(payload) = parse_channel_deep_link(&url) else {
-                eprintln!("griddle-desktop: channel deep link missing/invalid channel: {url_str}");
+                eprintln!("crew-desktop: channel deep link missing/invalid channel: {url_str}");
                 return;
             };
             activate_main_window(app);
@@ -707,7 +707,7 @@ pub(crate) fn handle_deep_link_url(app: &tauri::AppHandle, url_str: &str) {
             // structure on this side (serde JSON) and let the TS code own
             // any further normalisation.
             let Some(payload) = parse_message_deep_link(&url) else {
-                eprintln!("griddle-desktop: message deep link missing channel or id: {url_str}");
+                eprintln!("crew-desktop: message deep link missing channel or id: {url_str}");
                 return;
             };
             activate_main_window(app);
@@ -721,7 +721,7 @@ pub(crate) fn handle_deep_link_url(app: &tauri::AppHandle, url_str: &str) {
             // routing (`useEntityDeepLinks`), so the validated URL is
             // forwarded unchanged.
             if parse_entity_deep_link(&url).is_none() {
-                eprintln!("griddle-desktop: malformed entity deep link: {url_str}");
+                eprintln!("crew-desktop: malformed entity deep link: {url_str}");
                 return;
             }
             activate_main_window(app);
@@ -734,14 +734,14 @@ pub(crate) fn handle_deep_link_url(app: &tauri::AppHandle, url_str: &str) {
                 let _ = app.emit("deep-link-nostr-bind", payload);
             }
             Err(error) => {
-                eprintln!("griddle-desktop: rejecting nostr-bind deep link: {error}: {url_str}");
+                eprintln!("crew-desktop: rejecting nostr-bind deep link: {error}: {url_str}");
             }
         },
         Some(action) => {
-            eprintln!("griddle-desktop: unknown deep link action: {action}");
+            eprintln!("crew-desktop: unknown deep link action: {action}");
         }
         None => {
-            eprintln!("griddle-desktop: deep link missing action: {url_str}");
+            eprintln!("crew-desktop: deep link missing action: {url_str}");
         }
     }
 }

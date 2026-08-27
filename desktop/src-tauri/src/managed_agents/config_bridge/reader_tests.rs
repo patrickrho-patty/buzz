@@ -203,11 +203,11 @@ fn surface_reports_mcp_specific_config_path() {
 fn goose_mcp_config_path_follows_path_root_override() {
     let record = test_record();
     let runtime = test_runtime();
-    let surface = with_goose_path_root(Some("/tmp/buzz-goose-root"), || {
+    let surface = with_goose_path_root(Some("/tmp/crew-goose-root"), || {
         read_config_surface(&record, Some(runtime), None, &no_tiers(), None)
     });
 
-    let expected_path = Path::new("/tmp/buzz-goose-root")
+    let expected_path = Path::new("/tmp/crew-goose-root")
         .join("config")
         .join("config.yaml");
     assert_eq!(
@@ -621,7 +621,7 @@ fn extra_env_var_skipped_when_already_in_file_config_extra() {
 fn crew_agent_runtime() -> &'static KnownAcpRuntime {
     &KnownAcpRuntime {
         id: "crew-agent",
-        label: "Buzz Agent",
+        label: "Crew Agent",
         commands: &["crew-agent"],
         aliases: &[],
         avatar_url: "",

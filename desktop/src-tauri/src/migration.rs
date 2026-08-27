@@ -144,7 +144,7 @@ fn run_boot_migrations_inner(app: &tauri::AppHandle, reset_completed: bool) {
         false
     };
 
-    // On dev builds, copy `.repos-dir` from ~/.buzz → ~/.buzz-dev BEFORE
+    // On dev builds, copy `.repos-dir` from ~/.crew → ~/.crew-dev BEFORE
     // control returns to lib.rs where resolve_repos_at_boot() reads it. This
     // ensures the dev nest boots with the correct workspace on its first launch,
     // matching what the prod nest had configured. Skip-if-dest-exists so it is
@@ -157,7 +157,7 @@ fn run_boot_migrations_inner(app: &tauri::AppHandle, reset_completed: bool) {
     migrate_legacy_app_data_dir(app);
     sync_shared_agent_data(app);
     // Dev-build-only: copy any agent keys that exist in the production
-    // keyring ("griddle-desktop") into the dev service ("griddle-desktop-dev")
+    // keyring ("crew-desktop") into the dev service ("crew-desktop-dev")
     // so existing agents don't lose their keys after the service-name split.
     // Must run after sync_shared_agent_data (JSON symlinked) and before
     // any load_managed_agents call (which runs hydrate_keys against the
@@ -251,7 +251,7 @@ const LEGACY_NEST_KNOWLEDGE: &[&str] = &[
 /// Migrate the legacy agent nest (`~/.sprout`) into the current nest.
 ///
 /// PR #960 renamed the nest directory but shipped no migration, stranding the
-/// agent's accumulated knowledge in `~/.sprout` while `~/.buzz` booted empty —
+/// agent's accumulated knowledge in `~/.sprout` while `~/.crew` booted empty —
 /// so agents searched `$HOME` for files they "remembered", triggering macOS TCC
 /// prompts. This copies only the knowledge directories (see
 /// [`LEGACY_NEST_KNOWLEDGE`]), never `REPOS/`.
@@ -271,7 +271,7 @@ pub fn migrate_legacy_nest() -> bool {
         eprintln!("crew-desktop: nest-migration: cannot resolve home directory");
         return false;
     };
-    // Destination is the current build's nest dir (`.buzz` or `.buzz-dev`).
+    // Destination is the current build's nest dir (`.crew` or `.crew-dev`).
     let Some(current_nest) = crate::managed_agents::nest_dir() else {
         eprintln!("crew-desktop: nest-migration: cannot resolve nest directory");
         return false;
@@ -291,7 +291,7 @@ fn migrate_legacy_nest_at(legacy: &Path, current: &Path) -> bool {
     // A deliberate dev reset pre-creates this marker to opt out of every
     // production/legacy nest import. Normal first-run migration still copies
     // `.sprout` before `migrate_dev_nest()` writes the marker later in boot.
-    if current.file_name().is_some_and(|name| name == ".buzz-dev")
+    if current.file_name().is_some_and(|name| name == ".crew-dev")
         && current.join(DEV_NEST_MIGRATED_SENTINEL).exists()
     {
         return false;
@@ -305,7 +305,7 @@ fn migrate_legacy_nest_at(legacy: &Path, current: &Path) -> bool {
         let result = if src.is_dir() {
             copy_dir_all(&src, &dst)
         } else if *name == "AGENTS.md" {
-            // `ensure_nest` writes a default `~/.buzz/AGENTS.md` before this
+            // `ensure_nest` writes a default `~/.crew/AGENTS.md` before this
             // migration runs, so the plain absent-only guard would always skip
             // the legacy file and strand the user's instructions. Overwrite the
             // destination only when it is still the untouched generated default;
@@ -331,11 +331,11 @@ fn migrate_legacy_nest_at(legacy: &Path, current: &Path) -> bool {
 }
 
 /// Filename of the completion sentinel written after a successful dev-nest
-/// knowledge migration. Presence of this file means `~/.buzz` content has
-/// already been copied into `~/.buzz-dev` and subsequent boots can skip the
+/// knowledge migration. Presence of this file means `~/.crew` content has
+/// already been copied into `~/.crew-dev` and subsequent boots can skip the
 /// copy. Using an explicit marker instead of checking for RESEARCH/PLANS
 /// content decouples the dev migration from the `.sprout` migration, which
-/// also copies into `~/.buzz-dev` and could otherwise set the sentinel early.
+/// also copies into `~/.crew-dev` and could otherwise set the sentinel early.
 const DEV_NEST_MIGRATED_SENTINEL: &str = ".dev-nest-migrated";
 
 /// Returns true when `migrate_dev_repos_dir` should run: dev build AND no
@@ -345,11 +345,11 @@ pub(crate) fn should_migrate_dev_repos_dir(is_dev: bool, reset_completed: bool) 
     is_dev && !reset_completed
 }
 
-/// Injectable core: copy `.repos-dir` from `<home>/.buzz/` into `dev_nest`,
+/// Injectable core: copy `.repos-dir` from `<home>/.crew/` into `dev_nest`,
 /// non-destructively. Extracted so tests can inject temp paths without
 /// touching `dirs::home_dir()` or the global `nest_dir()` OnceLock.
 pub(crate) fn migrate_dev_repos_dir_at(home: &Path, dev_nest: &Path) {
-    let src = home.join(".buzz").join(".repos-dir");
+    let src = home.join(".crew").join(".repos-dir");
     if !src.exists() {
         return;
     }
@@ -397,22 +397,22 @@ pub(crate) fn maybe_migrate_dev_repos_dir(
     }
 }
 
-/// One-time migration of dev-build nest contents from `~/.buzz` → `~/.buzz-dev`.
+/// One-time migration of dev-build nest contents from `~/.crew` → `~/.crew-dev`.
 ///
 /// When a dev build first boots after this change ships, it switches from the
-/// shared `~/.buzz` nest to a dedicated `~/.buzz-dev` nest. Without migration,
+/// shared `~/.crew` nest to a dedicated `~/.crew-dev` nest. Without migration,
 /// all accumulated knowledge (RESEARCH/, PLANS/, GUIDES/, WORK_LOGS/, mem_*
 /// slugs, AGENTS.md, managed-agents.json) would be invisible to dev instances.
 ///
 /// Migration is non-destructive: `copy_dir_all` skips files already at the
 /// destination, so a partially-migrated state is safe to re-run. The source
-/// `~/.buzz` is never deleted — prod builds continue to use it normally.
+/// `~/.crew` is never deleted — prod builds continue to use it normally.
 ///
 /// Completion is tracked by a [`DEV_NEST_MIGRATED_SENTINEL`] file written into
-/// `~/.buzz-dev`. Using an explicit sentinel (rather than RESEARCH/PLANS file
-/// presence) decouples this migration from the `.sprout` → `~/.buzz-dev`
+/// `~/.crew-dev`. Using an explicit sentinel (rather than RESEARCH/PLANS file
+/// presence) decouples this migration from the `.sprout` → `~/.crew-dev`
 /// migration that runs earlier in the same boot, which might otherwise populate
-/// RESEARCH/PLANS and incorrectly suppress the `~/.buzz` copy.
+/// RESEARCH/PLANS and incorrectly suppress the `~/.crew` copy.
 ///
 /// Only runs on dev builds (checked by the caller). Returns `true` when
 /// contents were copied (useful for a one-time log message, not required).
@@ -421,8 +421,8 @@ pub fn migrate_dev_nest() -> bool {
         eprintln!("crew-desktop: dev-nest-migration: cannot resolve home directory");
         return false;
     };
-    let legacy = home.join(".buzz");
-    let current = home.join(".buzz-dev");
+    let legacy = home.join(".crew");
+    let current = home.join(".crew-dev");
     // If legacy doesn't exist, nothing to migrate.
     if !legacy.exists() {
         return false;
@@ -1259,7 +1259,7 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
             // Also clear the model field — a V1 model name (e.g. "dbrx-instruct")
             // on a V2 provider would shadow the baked DATABRICKS_MODEL at spawn time
             // (BUZZ_AGENT_MODEL from runtime_metadata_env_vars takes priority in
-            // buzz-agent config.rs). Clearing it lets the baked V2 default win.
+            // crew-agent config.rs). Clearing it lets the baked V2 default win.
             if obj.remove("model").is_some() {
                 eprintln!(
                     "crew-desktop: databricks-v1-to-v2: {name:?}: cleared stale V1 model field",

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic verifier for exact Buzz channel creation and membership."""
+"""Deterministic verifier for exact Crew channel creation and membership."""
 
 from __future__ import annotations
 

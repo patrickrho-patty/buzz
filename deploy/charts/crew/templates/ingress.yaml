@@ -1,8 +1,8 @@
-{{- include "buzz.validate" . -}}
+{{- include "crew.validate" . -}}
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "buzz.fullname" . -}}
+{{- $fullName := include "crew.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
-{{- $defaultHost := include "buzz.relayHost" . -}}
+{{- $defaultHost := include "crew.relayHost" . -}}
 {{- $hosts := .Values.ingress.hosts -}}
 {{- if not $hosts -}}
 {{- $hosts = list (dict "host" $defaultHost "paths" (list (dict "path" "/" "pathType" "Prefix"))) -}}
@@ -12,7 +12,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    {{- include "buzz.labels" . | nindent 4 }}
+    {{- include "crew.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

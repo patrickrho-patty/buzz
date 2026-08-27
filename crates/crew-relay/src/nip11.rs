@@ -125,7 +125,7 @@ impl RelayInfo {
     /// `relay_self` is the relay's own signing pubkey (hex), advertised as the
     /// NIP-11 `self` field. NIP-11 defines `self` generically as the relay's
     /// identity key; other NIPs reference it. Notably NIP-29 (group metadata
-    /// kinds 39000/39001/39002, which Buzz signs with `state.relay_keypair`
+    /// kinds 39000/39001/39002, which Crew signs with `state.relay_keypair`
     /// unconditionally) requires clients to verify those events against
     /// `self`. Pass `Some` whenever the relay has a stable signing key.
     ///
@@ -156,8 +156,8 @@ impl RelayInfo {
         }
 
         Self {
-            name: "Griddle Relay".to_string(),
-            description: "Griddle — private team communication relay".to_string(),
+            name: "Crew Relay".to_string(),
+            description: "Crew — private team communication relay".to_string(),
             icon: icon.filter(|s| !s.is_empty()).map(|s| s.to_string()),
             pubkey: None,
             contact: None,
@@ -402,13 +402,13 @@ mod tests {
             None,
             false,
             DEFAULT_MAX_FRAME_BYTES,
-            Some("wss://pairing.buzz.xyz"),
+            Some("wss://pairing.crew.xyz"),
         );
         let json = serde_json::to_value(&info).expect("serialize");
         assert_eq!(
             json.get("pairing_relay_url")
                 .and_then(|value| value.as_str()),
-            Some("wss://pairing.buzz.xyz")
+            Some("wss://pairing.crew.xyz")
         );
 
         let info = RelayInfo::build(None, None, false, DEFAULT_MAX_FRAME_BYTES, None);

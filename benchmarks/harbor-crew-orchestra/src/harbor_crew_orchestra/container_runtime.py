@@ -1,9 +1,9 @@
-"""Run the production Buzz agent stack inside the Harbor task container.
+"""Run the production Crew agent stack inside the Harbor task container.
 
 Each provisioned identity is a full ``crew-acp`` → ``crew-agent`` →
 ``crew-dev-mcp`` process tree launched *inside* the task container — the same
 binaries and the same MCP toolset (shell, file tools, the ``crew`` CLI on
-PATH) that the desktop app gives a Buzz agent. The harness stays outside:
+PATH) that the desktop app gives a Crew agent. The harness stays outside:
 it provisions, uploads the pinned binaries, posts the task as the trial
 user, and observes the channel until the orchestrator publishes DONE.
 """
@@ -35,7 +35,7 @@ DEFAULT_MAX_AGENT_ROUNDS = (
 # level across endpoints instead of "whatever the provider happens to default
 # to", which is neither captured in the condition hash nor comparable.
 THINKING_EFFORT = "medium"
-# Container-side layout for the uploaded Buzz stack.
+# Container-side layout for the uploaded Crew stack.
 REMOTE_ROOT = "/opt/crew"
 REMOTE_BIN = f"{REMOTE_ROOT}/bin"
 REMOTE_PROMPTS = f"{REMOTE_ROOT}/prompts"
@@ -61,7 +61,7 @@ TURN_ENDED_MARKERS = (
 
 
 class RuntimeLaunchError(RuntimeError):
-    """Raised when a Buzz agent process cannot be launched or exits early."""
+    """Raised when a Crew agent process cannot be launched or exits early."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -82,7 +82,7 @@ class _Agent:
 
 
 class BuzzContainerRuntime:
-    """Launch one production Buzz agent stack per identity in the container."""
+    """Launch one production Crew agent stack per identity in the container."""
 
     def __init__(
         self,
@@ -176,7 +176,7 @@ class BuzzContainerRuntime:
             await self._wait_for_agents_ready(
                 environment, agents, trial.channel_id, infra
             )
-            # The task arrives exactly as it would in production Buzz: a
+            # The task arrives exactly as it would in production Crew: a
             # user prompt @mentioning the orchestrator. The harness never
             # speaks as any agent. The orchestrator is mentioned by pubkey,
             # not by name resolution: task text is untrusted payload, and any
@@ -735,7 +735,7 @@ class BuzzContainerRuntime:
                 )
         return observed
 
-    # -- Buzz CLI as the trial user / provisioning identities -------------------
+    # -- Crew CLI as the trial user / provisioning identities -------------------
 
     @staticmethod
     async def _verify_m1_output(
@@ -790,7 +790,7 @@ class BuzzContainerRuntime:
     ) -> list[dict[str, str | None]]:
         """Inject task-declared events through the production CLI.
 
-        Messages are sent back-to-back so Buzz's normal queueing and batching
+        Messages are sent back-to-back so Crew's normal queueing and batching
         decide how the agent sees them. The verifier receives only public event
         metadata; fixture signing keys stay inside the runtime handle.
         """
@@ -927,7 +927,7 @@ class BuzzContainerRuntime:
     ) -> Path:
         """Append the trial's team roster to the pinned persona.
 
-        The analogue of a production Buzz workspace's team context: each agent
+        The analogue of a production Crew workspace's team context: each agent
         knows its own identity, its channel, the user it reports to, and its
         teammates' names, pubkeys, and roles from its system prompt — it never
         has to discover them over the relay.
@@ -938,7 +938,7 @@ class BuzzContainerRuntime:
             "## Your team",
             "",
             f"You are `{credential.agent_id}` (pubkey `{credential.nostr_pubkey}`).",
-            f"The team coordinates in Buzz channel `{trial.channel_id}`.",
+            f"The team coordinates in Crew channel `{trial.channel_id}`.",
             (
                 f"Tasks come from the user `{trial.user.agent_id}` "
                 f"(pubkey `{trial.user.nostr_pubkey}`); address your final report "

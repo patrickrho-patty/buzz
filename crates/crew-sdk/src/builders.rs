@@ -127,7 +127,7 @@ pub const MAX_CUSTOM_EMOJI_REACTION_LEN: usize = MAX_CUSTOM_EMOJI_SHORTCODE_LEN 
 
 /// Validate and normalize a NIP-30 custom emoji shortcode.
 ///
-/// Shortcodes are case-insensitive in Buzz's relay-global set; lowercase
+/// Shortcodes are case-insensitive in Crew's relay-global set; lowercase
 /// normalization prevents `party_parrot` and `Party_Parrot` from colliding.
 pub fn normalize_custom_emoji_shortcode(shortcode: &str) -> Result<String, SdkError> {
     let trimmed = shortcode.trim().trim_matches(':');
@@ -410,7 +410,7 @@ pub struct DeleteMessageOptions<'a> {
     pub public_reason: Option<&'a str>,
 }
 
-/// Build a Buzz-native delete event (kind 9005).
+/// Build a Crew-native delete event (kind 9005).
 pub fn build_delete_message(
     channel_id: Uuid,
     target_event_id: nostr::EventId,
@@ -418,7 +418,7 @@ pub fn build_delete_message(
     build_delete_message_with_options(channel_id, target_event_id, DeleteMessageOptions::default())
 }
 
-/// Build a Buzz-native delete event (kind 9005) with optional moderation metadata.
+/// Build a Crew-native delete event (kind 9005) with optional moderation metadata.
 pub fn build_delete_message_with_options(
     channel_id: Uuid,
     target_event_id: nostr::EventId,
@@ -2260,7 +2260,7 @@ pub fn build_project(
     // Channel UUID validation
     if let Some(ch) = channel {
         uuid::Uuid::parse_str(ch).map_err(|_| {
-            SdkError::InvalidInput(format!("buzz-channel must be a valid UUID (got {ch:?})"))
+            SdkError::InvalidInput(format!("crew-channel must be a valid UUID (got {ch:?})"))
         })?;
     }
 
@@ -2268,7 +2268,7 @@ pub fn build_project(
     if let Some(vis) = visibility {
         if vis != "listed" && vis != "unlisted" {
             return Err(SdkError::InvalidInput(format!(
-                "buzz-visibility must be 'listed' or 'unlisted' (got {vis:?})"
+                "crew-visibility must be 'listed' or 'unlisted' (got {vis:?})"
             )));
         }
     }
@@ -3820,7 +3820,7 @@ mod tests {
 
     #[test]
     fn git_patch_rejects_whitespace_only_content() {
-        // Regression: a failed `git format-patch | buzz patches send
+        // Regression: a failed `git format-patch | crew patches send
         // --patch-file -` must not silently publish a whitespace-only
         // (i.e. unappliable) patch.
         let repo = GitRepoCoord {
@@ -4669,7 +4669,7 @@ mod tests {
         assert_eq!(d_tags.len(), 1);
         assert_eq!(d_tags[0][1], "my-proj");
 
-        // name, description, buzz-channel, buzz-visibility present.
+        // name, description, crew-channel, crew-visibility present.
         let name_tags: Vec<_> = all_tags.iter().filter(|t| t[0] == "name").collect();
         assert_eq!(name_tags.len(), 1);
         assert_eq!(name_tags[0][1], "My Project");
@@ -4692,7 +4692,7 @@ mod tests {
         // member a tag.
         let a_tags: Vec<_> = all_tags.iter().filter(|t| t[0] == "a").collect();
         assert_eq!(a_tags.len(), 1);
-        assert_eq!(a_tags[0][1], format!("30617:{OWNER64}:buzz"));
+        assert_eq!(a_tags[0][1], format!("30617:{OWNER64}:crew"));
     }
 
     #[test]

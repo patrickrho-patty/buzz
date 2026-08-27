@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
-# Reinstall Griddle.app from the local build output over the existing
-# /Applications/Griddle.app, in place — no DMG drag-install needed.
+# Reinstall Crew.app from the local build output over the existing
+# /Applications/Crew.app, in place — no DMG drag-install needed.
 #
 # Usage: just scripts/install-crew.sh
 #   Optional: scripts/install-crew.sh /custom/install/path
 set -euo pipefail
 BUNDLE_DIR="$(cd "$(dirname "$0")/../desktop/src-tauri/target/release/bundle/macos" 2>/dev/null && pwd)"
 DEST="${1:-/Applications}"
-APP_SRC="$BUNDLE_DIR/Griddle.app"
-APP_DST="$DEST/Griddle.app"
+APP_SRC="$BUNDLE_DIR/Crew.app"
+APP_DST="$DEST/Crew.app"
 
 [[ -d "$APP_SRC" ]] || { echo "error: $APP_SRC not found — run: just desktop-dev / pnpm tauri build --bundles app" >&2; exit 1; }
 
-if pgrep -f "Griddle.app/Contents/MacOS/buzz-desktop" >/dev/null 2>&1; then
-  echo "stopping running Griddle..."
-  pkill -x buzz-desktop || true
+if pgrep -f "Crew.app/Contents/MacOS/crew-desktop" >/dev/null 2>&1; then
+  echo "stopping running Crew..."
+  pkill -x crew-desktop || true
   sleep 1
 fi
 

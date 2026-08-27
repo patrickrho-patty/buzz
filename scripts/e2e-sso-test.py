@@ -5,7 +5,7 @@ Drives the complete employee flow with a headless browser:
   1. GET /auth/oidc/start  → authorization URL + PKCE verifier + state
   2. Headless Chromium opens the Keycloak authorization URL
   3. Fills username (e2e-test@patty.io) + password on the Keycloak login form
-  4. Keycloak redirects to griddle://auth/callback?code=…&state=…
+  4. Keycloak redirects to crew://auth/callback?code=…&state=…
      (the browser cannot follow that scheme — we intercept the redirect URL,
       same as the OS would hand it to the desktop app)
   5. POST /auth/oidc/complete {code, code_verifier}
@@ -28,7 +28,7 @@ import base64
 import hashlib
 import secrets
 
-RELAY = "https://griddle.patty.io"
+RELAY = "https://crew.patty.io"
 KEYCLOAK_USER = "e2e-test@patty.io"
 KEYCLOAK_PASS = "E2eTest!2026"
 
@@ -65,10 +65,10 @@ def main():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        # griddle:// is not navigable — catch the request that tries
+        # crew:// is not navigable — catch the request that tries
         def on_request(request):
             nonlocal callback_query
-            if request.url.startswith("griddle://"):
+            if request.url.startswith("crew://"):
                 callback_query = request.url
 
         page.on("request", on_request)
@@ -79,11 +79,11 @@ def main():
         page.fill("#username", KEYCLOAK_USER)
         page.fill("#password", KEYCLOAK_PASS)
         page.click("#kc-login")
-        # The redirect to griddle:// fires; give it a moment
+        # The redirect to crew:// fires; give it a moment
         page.wait_for_timeout(4000)
         browser.close()
 
-    assert callback_query, "never saw griddle:// callback redirect"
+    assert callback_query, "never saw crew:// callback redirect"
     q = urllib.parse.urlparse(callback_query).query
     params = dict(urllib.parse.parse_qsl(q))
     code = params["code"]
@@ -111,13 +111,13 @@ def main():
     # 6b. Keycloak attribute persistence
     step(5, "verify Keycloak nostr attributes persisted")
     out = subprocess.run(
-        ["kubectl", "-n", "griddle", "get", "secret", "griddle-oidc",
+        ["kubectl", "-n", "crew", "get", "secret", "crew-oidc",
          "-o", "jsonpath={.data.CREW_OIDC_BRIDGE_CLIENT_SECRET}"],
         capture_output=True, text=True).stdout.strip()
     bridge_secret = base64.b64decode(out).decode()
     tok_body = urllib.parse.urlencode({
         "grant_type": "client_credentials",
-        "client_id": "griddle-bridge",
+        "client_id": "crew-bridge",
         "client_secret": bridge_secret,
     }).encode()
     status, body = req("POST", "https://login.patty.io/realms/internal/protocol/openid-connect/token", data=tok_body)
@@ -138,7 +138,7 @@ def main():
     # 6c. relay membership row
     step(6, "verify relay_members oidc row")
     kubectl_cmd = [
-        "kubectl", "-n", "griddle", "exec", "griddle-postgresql-0", "--",
+        "kubectl", "-n", "crew", "exec", "griddle-postgresql-0", "--",
         "psql", "-U", "buzz", "-d", "buzz", "-t", "-A", "-c",
         f"SELECT added_by FROM relay_members WHERE pubkey='{result['pubkey']}';",
     ]
@@ -148,7 +148,7 @@ def main():
 
     # 7. cleanup membership row so the test is repeatable
     subprocess.run([
-        "kubectl", "-n", "griddle", "exec", "griddle-postgresql-0", "--",
+        "kubectl", "-n", "crew", "exec", "griddle-postgresql-0", "--",
         "psql", "-U", "buzz", "-d", "buzz", "-t", "-A", "-c",
         f"DELETE FROM relay_members WHERE pubkey='{result['pubkey']}' AND added_by='oidc';",
     ], capture_output=True, text=True)

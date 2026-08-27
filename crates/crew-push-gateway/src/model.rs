@@ -16,7 +16,7 @@ pub enum AppProfile {
     CrewIosSandbox,
 }
 impl AppProfile {
-    /// Serialized profile ids stay on the legacy `buzz-ios-*` spellings for
+    /// Serialized profile ids stay on the legacy `crew-ios-*` spellings for
     /// now: they key APNs credentials for the shipped app bundles and rows
     /// already stored in `push_leases.app_profile`. New `crew-ios-*` ids are
     /// accepted as aliases (see parsers) so future builds can migrate.

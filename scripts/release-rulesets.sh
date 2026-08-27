@@ -16,7 +16,7 @@ require_canonical_repository() {
     git@github.com:block/buzz.git|ssh://git@github.com/block/buzz.git|https://github.com/block/buzz.git|https://github.com/block/buzz)
       ;;
     *)
-      fail_release_ruleset "origin must point to canonical block/buzz, not '$origin_url'" || return 1
+      fail_release_ruleset "origin must point to canonical block/crew, not '$origin_url'" || return 1
       ;;
   esac
 }

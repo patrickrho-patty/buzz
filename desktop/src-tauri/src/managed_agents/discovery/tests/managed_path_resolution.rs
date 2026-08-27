@@ -8,7 +8,7 @@ fn login_shell_lookup_treats_command_as_data() {
 
     let _guard = crate::managed_agents::lock_path_mutex();
     let marker =
-        std::env::temp_dir().join(format!("buzz-discovery-marker-{}", uuid::Uuid::new_v4()));
+        std::env::temp_dir().join(format!("crew-discovery-marker-{}", uuid::Uuid::new_v4()));
     let payload = format!("doesnotexist; touch {} #", marker.display());
 
     let resolved = find_via_login_shell(&payload);
@@ -108,7 +108,7 @@ fn resolve_command_prefers_buzz_managed_npm_shim_over_path() {
     assert_eq!(
         resolved.as_deref(),
         Some(managed_shim.as_path()),
-        "Buzz-managed npm shim must win over PATH/global shims"
+        "Crew-managed npm shim must win over PATH/global shims"
     );
 }
 

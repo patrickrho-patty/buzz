@@ -76,7 +76,7 @@ export GH_TAG_OBJECT_SHA=2222222222222222222222222222222222222222
 
 "$publisher" 1.2.3 1 "$GH_TARGET_SHA"
 grep -Fq -- '-f tag=mobile-v1.2.3-rc.1' "$GH_CALLS"
-grep -Fq -- '-f message=Buzz Mobile 1.2.3 release candidate 1' "$GH_CALLS"
+grep -Fq -- '-f message=Crew Mobile 1.2.3 release candidate 1' "$GH_CALLS"
 grep -Fq -- "-f object=$GH_TARGET_SHA" "$GH_CALLS"
 grep -Fq -- '-f type=commit' "$GH_CALLS"
 grep -Fq -- '-f ref=refs/tags/mobile-v1.2.3-rc.1' "$GH_CALLS"
@@ -149,7 +149,7 @@ else
   echo "publisher did not sequence from the highest exact candidate" >&2
   exit 1
 fi
-if GITHUB_REPOSITORY=attacker/buzz "$publisher" 1.2.3 1 "$GH_TARGET_SHA" >/dev/null 2>&1; then
+if GITHUB_REPOSITORY=attacker/crew "$publisher" 1.2.3 1 "$GH_TARGET_SHA" >/dev/null 2>&1; then
   echo "publisher accepted the wrong repository" >&2
   exit 1
 fi

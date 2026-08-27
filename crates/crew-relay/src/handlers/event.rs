@@ -1702,7 +1702,7 @@ mod tests {
                 register_presence_sub(&receiver, "receiver-presence");
 
             // Under the community-scoped bus, Redis delivery is demand-driven:
-            // a relay only PSUBSCRIBEs `buzz:{community}:global` after it retains
+            // a relay only PSUBSCRIBEs `crew:{community}:global` after it retains
             // interest in that topic. Both relays share one explicit tenant and
             // retain Global before publishing — origin too, so the echo-
             // suppression assertion still exercises `mark_local_event` against a
@@ -1789,7 +1789,7 @@ mod tests {
                 .expect("seed community");
             let tenant = TenantContext::resolved(CommunityId::from_uuid(community_uuid), host);
 
-            // Relay-signed event tagged buzz:workflow so workflow triggering is
+            // Relay-signed event tagged crew:workflow so workflow triggering is
             // skipped; the signer is the RELAY key, distinct from the actor.
             let signer = &state.relay_keypair;
             let actor = Keys::generate();

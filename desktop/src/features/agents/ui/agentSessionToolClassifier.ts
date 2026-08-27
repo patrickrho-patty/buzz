@@ -85,7 +85,7 @@ const CREW_CLI_READ_VERBS = new Set([
 
 const TOOL_CLASS_LABELS: Record<AgentActivityRenderClass, string> = {
   message: "Message",
-  "relay-op": "Buzz relay op",
+  "relay-op": "Crew relay op",
   "file-edit": "File edit",
   "file-read": "File read",
   "skill-read": "Skill read",
@@ -294,7 +294,7 @@ function classifyBuzzTool(
     operation,
     object: preview,
     source: "mcp",
-    groupKey: `buzz:${operation}`,
+    groupKey: `crew:${operation}`,
   };
 }
 
@@ -561,7 +561,7 @@ export function tokenizeShellCommand(command: string): string[] {
 
 function isBuzzExecutable(token: string) {
   const base = token.split(/[\\/]/).pop();
-  // `crew` is the canonical binary; `buzz` accepted for older transcripts.
+  // `crew` is the canonical binary; `crew` accepted for older transcripts.
   return base === "crew" || base === "buzz" || token === "buzz";
 }
 

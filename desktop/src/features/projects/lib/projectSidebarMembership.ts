@@ -1,4 +1,4 @@
-const PROJECT_SIDEBAR_MEMBERSHIP_PREFIX = "buzz.sidebar.projects.membership.v1";
+const PROJECT_SIDEBAR_MEMBERSHIP_PREFIX = "crew.sidebar.projects.membership.v1";
 export const PROJECT_SIDEBAR_MEMBERSHIP_EVENT =
   "buzz:project-sidebar-membership-change";
 

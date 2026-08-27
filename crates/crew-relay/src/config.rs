@@ -51,7 +51,7 @@ pub struct JoinPolicyConfig {
 /// WebSocket close-frame delivery after the final delayed cancellation.
 pub const MAX_DRAIN_JITTER_MS: u64 = 20_000;
 
-/// Keycloak workforce SSO configuration (Griddle fork).
+/// Keycloak workforce SSO configuration (Crew fork).
 ///
 /// Enabled only when `CREW_OIDC_ISSUER` is set. The desktop client opens the
 /// system browser for a PKCE Authorization Code flow; the relay exchanges the
@@ -301,7 +301,7 @@ pub struct Config {
     /// Used to authenticate internal policy endpoint requests.
     pub git_hook_hmac_secret: String,
 
-    /// Keycloak workforce SSO configuration (Griddle fork).
+    /// Keycloak workforce SSO configuration (Crew fork).
     /// Disabled (None) unless CREW_OIDC_ISSUER and friends are set.
     pub oidc: OidcConfig,
 
@@ -898,7 +898,7 @@ impl Config {
         let push_executor_key_id =
             std::env::var("CREW_PUSH_EXECUTOR_KEY_ID").unwrap_or_else(|_| "relay-v1".to_string());
 
-        // ── Keycloak workforce SSO (Griddle fork) ────────────────────────────
+        // ── Keycloak workforce SSO (Crew fork) ────────────────────────────
         let oidc = {
             let issuer = std::env::var("CREW_OIDC_ISSUER")
                 .unwrap_or_default()
@@ -1612,7 +1612,7 @@ mod tests {
         );
         std::env::set_var(
             "RELAY_OPERATOR_API_ORIGIN",
-            "http://buzz.mesh.bb-production.com",
+            "http://crew.mesh.bb-production.com",
         );
         let config = Config::from_env().expect("config");
         std::env::remove_var("RELAY_OPERATOR_PUBKEYS");
@@ -1660,7 +1660,7 @@ mod tests {
     #[test]
     fn relay_operator_api_origin_rejects_paths() {
         let _guard = ENV_MUTEX.lock().unwrap();
-        std::env::set_var("RELAY_OPERATOR_API_ORIGIN", "https://buzz.example/operator");
+        std::env::set_var("RELAY_OPERATOR_API_ORIGIN", "https://crew.example/operator");
         let result = Config::from_env();
         std::env::remove_var("RELAY_OPERATOR_API_ORIGIN");
 
@@ -1760,14 +1760,14 @@ mod tests {
     #[test]
     fn pairing_relay_url_accepts_websocket_urls_and_rejects_http() {
         let _guard = ENV_MUTEX.lock().unwrap();
-        std::env::set_var("CREW_PAIRING_RELAY_URL", "wss://pairing.buzz.xyz");
+        std::env::set_var("CREW_PAIRING_RELAY_URL", "wss://pairing.crew.xyz");
         let config = Config::from_env().expect("config");
         assert_eq!(
             config.pairing_relay_url.as_deref(),
-            Some("wss://pairing.buzz.xyz")
+            Some("wss://pairing.crew.xyz")
         );
 
-        std::env::set_var("CREW_PAIRING_RELAY_URL", "https://pairing.buzz.xyz");
+        std::env::set_var("CREW_PAIRING_RELAY_URL", "https://pairing.crew.xyz");
         let result = Config::from_env();
         std::env::remove_var("CREW_PAIRING_RELAY_URL");
         assert!(matches!(
@@ -1790,7 +1790,7 @@ mod tests {
         let _guard = ENV_MUTEX.lock().unwrap();
         // Pick a path under temp_dir that definitely doesn't exist yet.
         let base = std::env::temp_dir().join(format!(
-            "buzz-test-git-repo-path-{}-{}",
+            "crew-test-git-repo-path-{}-{}",
             std::process::id(),
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)

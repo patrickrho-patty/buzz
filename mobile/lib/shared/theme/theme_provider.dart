@@ -13,7 +13,7 @@ const _themeModeKey = 'crew_theme_mode';
 const _accentKey = 'crew_accent_color';
 const _schemeKey = 'crew_color_scheme';
 
-/// Buzz ships as the default: the first-party pair, so a fresh install gets the
+/// Crew ships as the default: the first-party pair, so a fresh install gets the
 /// branded top-section gradient without picking a theme first.
 const defaultSchemeName = crewThemeName;
 const defaultSchemeDisplayName = 'Buzz';

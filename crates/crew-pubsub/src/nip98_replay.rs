@@ -15,7 +15,7 @@ use nostr::EventId;
 /// Redis-backed NIP-98 replay seen-set.
 ///
 /// Each `try_mark(ctx, event_id, ttl)` issues a single
-/// `SET buzz:{community}:nip98:{event_id_hex} 1 NX EX <ttl>` against Redis.
+/// `SET crew:{community}:nip98:{event_id_hex} 1 NX EX <ttl>` against Redis.
 /// `NX` makes the operation atomic set-if-absent — the freshness proof comes
 /// from Redis returning `OK` only on the first claim. Subsequent claims within
 /// the TTL window return `nil`, which we surface as `Ok(false)` so the caller

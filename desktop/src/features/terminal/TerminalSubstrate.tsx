@@ -185,7 +185,7 @@ export function TerminalSubstrate({
   /**
    * Tab chords are handled at the window in capture phase, like the ⌘J
    * handoff, so they win over the focused textarea. Gated on terminal
-   * ownership: in Buzz mode these keys belong to the rest of the app.
+   * ownership: in Crew mode these keys belong to the rest of the app.
    */
   const runTabChord = React.useEffectEvent((event: KeyboardEvent): boolean => {
     if (owner !== "terminal" || event.isComposing) return false;
@@ -475,7 +475,7 @@ export function TerminalSubstrate({
 
   return (
     <section
-      aria-label="Buzz Term"
+      aria-label="Crew Term"
       className="crew-terminal-substrate"
       data-terminal-mode={mode}
       data-terminal-owner={owner}
@@ -505,7 +505,7 @@ export function TerminalSubstrate({
     >
       {mode === "docked" ? (
         <hr
-          aria-label="Resize Buzz Term"
+          aria-label="Resize Crew Term"
           aria-orientation="horizontal"
           aria-valuemax={Math.round(window.innerHeight * 0.7)}
           aria-valuemin={180}
@@ -646,7 +646,7 @@ export function TerminalSubstrate({
             </div>
           ))}
           <button
-            aria-label="New Buzz Term tab"
+            aria-label="New Crew Term tab"
             className="crew-terminal-new-tab"
             onClick={() => runTabAction(onNewSession)}
             type="button"
@@ -657,7 +657,7 @@ export function TerminalSubstrate({
         <div className="crew-terminal-readout">
           <button
             aria-label={
-              mode === "maximized" ? "Restore Buzz Term" : "Maximize Buzz Term"
+              mode === "maximized" ? "Restore Crew Term" : "Maximize Crew Term"
             }
             className="crew-terminal-window-action"
             onClick={() =>
@@ -668,7 +668,7 @@ export function TerminalSubstrate({
             {mode === "maximized" ? <Minimize2 /> : <Maximize2 />}
           </button>
           <button
-            aria-label="Hide Buzz Term"
+            aria-label="Hide Crew Term"
             className="crew-terminal-window-action"
             onClick={onHide}
             type="button"
@@ -806,7 +806,7 @@ export function TerminalSubstrate({
         />
       </div>
       <div aria-live="polite" className="sr-only">
-        {owner === "terminal" ? "Buzz Term mode" : "Buzz mode"}
+        {owner === "terminal" ? "Crew Term mode" : "Crew mode"}
       </div>
     </section>
   );

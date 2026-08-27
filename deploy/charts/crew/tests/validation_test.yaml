@@ -13,7 +13,7 @@ tests:
 
   - it: fails when ownerPubkey is missing and requireRelayMembership is true
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: ""
       externalPostgresql.url: postgres://u:p@h:5432/d
     asserts:
@@ -22,7 +22,7 @@ tests:
 
   - it: fails when ownerPubkey is not 64 lowercase hex (schema-level)
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "NOTAHEX"
       externalPostgresql.url: postgres://u:p@h:5432/d
     asserts:
@@ -31,7 +31,7 @@ tests:
 
   - it: fails when replicaCount>1 without Redis
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       replicaCount: 3
@@ -41,7 +41,7 @@ tests:
 
   - it: fails when ingress and httproute both enabled
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       ingress.enabled: true
@@ -52,7 +52,7 @@ tests:
 
   - it: fails when Postgres source is missing
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
     asserts:
       - failedTemplate:
@@ -60,7 +60,7 @@ tests:
 
   - it: rejects an invalid S3 addressing style
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       s3.endpoint: http://minio:9000
@@ -71,7 +71,7 @@ tests:
 
   - it: fails when S3/object-storage source is missing
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
     asserts:

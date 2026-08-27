@@ -1,4 +1,4 @@
-"""Stable, verifier-facing evidence derived from a Buzz channel transcript."""
+"""Stable, verifier-facing evidence derived from a Crew channel transcript."""
 
 from __future__ import annotations
 

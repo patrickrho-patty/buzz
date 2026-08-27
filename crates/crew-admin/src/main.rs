@@ -1,6 +1,6 @@
 #![deny(unsafe_code)]
 
-//! Buzz instance administration CLI.
+//! Crew instance administration CLI.
 //!
 //! # Member management (NIP-43)
 //!
@@ -34,7 +34,7 @@ use nostr::{EventBuilder, Keys, Kind, Tag};
 use tracing::warn;
 
 #[derive(Parser)]
-#[command(name = "crew-admin", about = "Buzz instance administration")]
+#[command(name = "crew-admin", about = "Crew instance administration")]
 struct Cli {
     #[command(subcommand)]
     command: Command,
@@ -78,7 +78,7 @@ enum Command {
     GenerateKey,
     /// Run pending database migrations.
     Migrate,
-    /// Inspect deployment-wide Buzz product feedback.
+    /// Inspect deployment-wide Crew product feedback.
     ProductFeedback {
         #[command(subcommand)]
         command: ProductFeedbackCommand,

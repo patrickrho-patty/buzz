@@ -186,7 +186,7 @@ impl MediaStorage {
     /// VersionId would only insert delete markers, not prove logical absence.
     pub async fn bucket_versioning_detected(&self) -> Result<bool, MediaError> {
         let key = format!("probe/deletion-versioning-{}", uuid::Uuid::new_v4());
-        self.put(&key, b"buzz deletion versioning probe", "text/plain")
+        self.put(&key, b"crew deletion versioning probe", "text/plain")
             .await?;
         let inspected = self.bucket.head_object(&key).await;
         let removed = self.bucket.delete_object(&key).await;

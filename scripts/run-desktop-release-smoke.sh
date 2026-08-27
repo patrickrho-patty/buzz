@@ -6,7 +6,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ARTIFACT_DIR="${CREW_RELEASE_SMOKE_ARTIFACT_DIR:-${ROOT}/desktop/test-results/release-smoke}"
 DB_NAME="${CREW_RELEASE_SMOKE_DB:-crew_release_smoke_${$}}"
 REDIS_DB="${CREW_RELEASE_SMOKE_REDIS_DB:-}"
-LOCK_DIR="${TMPDIR:-/tmp}/buzz-desktop-release-smoke.lock"
+LOCK_DIR="${TMPDIR:-/tmp}/crew-desktop-release-smoke.lock"
 RELAY_PID=""
 LOCK_HELD=false
 
@@ -84,9 +84,9 @@ phase services "${phase_start}"
 phase_start="$(date +%s)"
 log "creating isolated database ${DB_NAME}"
 docker exec crew-postgres createdb -U crew "${DB_NAME}"
-export PGHOST=localhost PGPORT=5432 PGUSER=buzz PGPASSWORD=crew_dev PGDATABASE="${DB_NAME}"
+export PGHOST=localhost PGPORT=5432 PGUSER=crew PGPASSWORD=crew_dev PGDATABASE="${DB_NAME}"
 export PGSCHEMA_PLAN_HOST=localhost PGSCHEMA_PLAN_PORT=5432 PGSCHEMA_PLAN_DB="${DB_NAME}"
-export PGSCHEMA_PLAN_USER=buzz PGSCHEMA_PLAN_PASSWORD=crew_dev
+export PGSCHEMA_PLAN_USER=crew PGSCHEMA_PLAN_PASSWORD=crew_dev
 ./bin/pgschema apply --file schema/schema.sql --auto-approve
 docker exec -i -e PGPASSWORD=crew_dev crew-postgres \
   psql -U crew -d "${DB_NAME}" -v ON_ERROR_STOP=1 < scripts/attach-schema-partitions.sql

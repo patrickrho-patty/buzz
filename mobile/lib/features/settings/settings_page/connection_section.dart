@@ -52,7 +52,7 @@ class _ConnectionSection extends ConsumerWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text(
-                          'Buzz did not return to the foreground. Try again.',
+                          'Crew did not return to the foreground. Try again.',
                         ),
                       ),
                     );

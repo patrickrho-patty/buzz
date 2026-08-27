@@ -360,14 +360,14 @@ pub(crate) fn mint_media_get_auth(state: &AppState, base_url: &str) -> Option<St
     let keys = match state.signing_keys() {
         Ok(k) => k,
         Err(e) => {
-            eprintln!("griddle-desktop: media get auth unavailable (unsigned request): {e}");
+            eprintln!("crew-desktop: media get auth unavailable (unsigned request): {e}");
             return None;
         }
     };
     match sign_blossom_get_auth_header(&keys, base_url, MEDIA_GET_AUTH_EXPIRY_SECS) {
         Ok(header) => Some(header),
         Err(e) => {
-            eprintln!("griddle-desktop: media get auth signing failed (unsigned request): {e}");
+            eprintln!("crew-desktop: media get auth signing failed (unsigned request): {e}");
             None
         }
     }
@@ -606,7 +606,7 @@ async fn process_picked_path(
     if let Some(poster) = poster_bytes {
         match do_upload(poster, "image/jpeg", state, None, None).await {
             Ok(poster_desc) => descriptor.image = Some(poster_desc.url),
-            Err(e) => eprintln!("griddle-desktop: poster upload failed (non-fatal): {e}"),
+            Err(e) => eprintln!("crew-desktop: poster upload failed (non-fatal): {e}"),
         }
     }
 
@@ -732,7 +732,7 @@ pub(super) async fn upload_media_bytes_inner(
         let cancellation = cancellation.cloned();
         tokio::task::spawn_blocking(move || -> Result<(Vec<u8>, Option<Vec<u8>>), String> {
             let tmp_input =
-                std::env::temp_dir().join(format!("buzz-drop-{}", uuid::Uuid::new_v4()));
+                std::env::temp_dir().join(format!("crew-drop-{}", uuid::Uuid::new_v4()));
             // Cleanup guard: remove temp file on ALL exit paths (including write failure).
             let result = (|| {
                 std::fs::write(&tmp_input, &data)
@@ -752,7 +752,7 @@ pub(super) async fn upload_media_bytes_inner(
         let cancellation = cancellation.cloned();
         tokio::task::spawn_blocking(move || -> Result<(Vec<u8>, Option<Vec<u8>>), String> {
             let tmp_input =
-                std::env::temp_dir().join(format!("buzz-drop-{}", uuid::Uuid::new_v4()));
+                std::env::temp_dir().join(format!("crew-drop-{}", uuid::Uuid::new_v4()));
             // Cleanup guard: remove temp file on ALL exit paths (including write failure).
             let result = (|| {
                 std::fs::write(&tmp_input, &data)
@@ -786,7 +786,7 @@ pub(super) async fn upload_media_bytes_inner(
     if let Some(poster) = poster_bytes {
         match do_upload(poster, "image/jpeg", &state, None, cancellation).await {
             Ok(poster_desc) => descriptor.image = Some(poster_desc.url),
-            Err(e) => eprintln!("griddle-desktop: poster upload failed (non-fatal): {e}"),
+            Err(e) => eprintln!("crew-desktop: poster upload failed (non-fatal): {e}"),
         }
     }
 

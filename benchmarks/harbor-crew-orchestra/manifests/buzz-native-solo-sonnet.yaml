@@ -1,4 +1,4 @@
-# Single production Buzz agent for the local Buzz-native Harbor dataset.
+# Single production Crew agent for the local Crew-native Harbor dataset.
 # crew-acp supplies crates/crew-acp/src/base_prompt.md from the checked-out
 # source build; this small persona only establishes that there is no team.
 schema_version: "1"

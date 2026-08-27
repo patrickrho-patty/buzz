@@ -393,7 +393,7 @@ fn required_scope_for_kind(kind: u32, event: &Event) -> Result<Scope, &'static s
         KIND_NIP29_PUT_USER | KIND_NIP29_REMOVE_USER | KIND_NIP29_DELETE_GROUP => {
             Ok(Scope::AdminChannels)
         }
-        // NIP-43: relay membership admin commands (9030–9032) + Buzz
+        // NIP-43: relay membership admin commands (9030–9032) + Crew
         // workspace-profile command (9033).
         k if k == RELAY_ADMIN_ADD_MEMBER
             || k == RELAY_ADMIN_REMOVE_MEMBER
@@ -4996,7 +4996,7 @@ mod tests {
     #[test]
     fn project_envelope_rejects_member_wrong_kind_prefix() {
         // kind:30618 is repository *state*; a project groups announcements.
-        let coord = format!("30618:{OWNER_A}:buzz");
+        let coord = format!("30618:{OWNER_A}:crew");
         let ev = make_project(&[&["d", "platform"], &["a", &coord]]);
         let err = validate_project_envelope(&ev).unwrap_err();
         assert!(
@@ -5091,7 +5091,7 @@ mod tests {
 
     #[test]
     fn project_envelope_rejects_duplicates_across_legacy_spelling() {
-        // One crew-channel plus one legacy buzz-channel is still
+        // One crew-channel plus one legacy crew-channel is still
         // reader-dependent: cardinality must count both spellings.
         let ev = make_project(&[
             &["d", "platform"],

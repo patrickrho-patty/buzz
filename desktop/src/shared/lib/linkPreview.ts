@@ -47,7 +47,7 @@ export type SupportedLinkPreview = {
     | "link";
 };
 
-// Buzz relay hosts differ per community, so relay git URLs are recognized by
+// Crew relay hosts differ per community, so relay git URLs are recognized by
 // their distinctive path shape (`/git/<64-hex-pubkey>/<repo>`) rather than by
 // hostname, and require an explicit scheme. Generic previews remain HTTPS-only.
 const SUPPORTED_URL_RE =
@@ -355,7 +355,7 @@ const CREW_GIT_PATH_RE =
   /^\/git\/([a-f0-9]{64})\/([a-zA-Z0-9._-]+?)(?:\.git)?\/?$/;
 
 /**
- * Recognize a Buzz relay git URL (`{relay-origin}/git/<owner-pubkey>/<repo>`,
+ * Recognize a Crew relay git URL (`{relay-origin}/git/<owner-pubkey>/<repo>`,
  * the clone URL shape agents paste when announcing work). The preview href
  * is normalized to the canonical `crew://repo` deep link: the raw git
  * transport endpoint is not a browsable page, and the crew:// href gives the
@@ -364,7 +364,7 @@ const CREW_GIT_PATH_RE =
  *
  * Security: the URL origin must equal `activeRelayOrigin` (the currently
  * connected relay). Path shape alone is not proof that a host belongs to the
- * active Buzz relay — an arbitrary external URL sharing the path shape must
+ * active Crew relay — an arbitrary external URL sharing the path shape must
  * remain an ordinary external link. Pass `null` when the relay origin is not
  * yet resolved; the link stays external until it can be verified.
  */

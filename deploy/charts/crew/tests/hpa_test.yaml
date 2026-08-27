@@ -4,7 +4,7 @@ templates:
   - templates/deployment.yaml
   - templates/secret-chart.yaml
 set:
-  relayUrl: wss://buzz.example.com
+  relayUrl: wss://crew.example.com
   ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
   externalPostgresql.url: postgres://u:p@h:5432/d
   externalRedis.url: redis://h:6379
@@ -35,7 +35,7 @@ tests:
           value: 15
       - equal:
           path: spec.scaleTargetRef.name
-          value: RELEASE-NAME-buzz
+          value: RELEASE-NAME-crew
       - equal:
           path: spec.metrics[0].resource.target.averageUtilization
           value: 65

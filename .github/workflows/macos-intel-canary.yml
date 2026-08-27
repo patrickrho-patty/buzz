@@ -104,7 +104,7 @@ jobs:
       - name: Upload Intel canary
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: buzz-macos-intel-canary-${{ github.sha }}
+          name: crew-macos-intel-canary-${{ github.sha }}
           path: ${{ steps.artifact.outputs.dmg }}
           if-no-files-found: error
           retention-days: 7

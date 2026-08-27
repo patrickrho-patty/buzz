@@ -665,7 +665,7 @@ mod api_tokens_nip98_replay {
     /// spendable in B" — IS asserted by this test, but as a **positive
     /// control** rather than a mutate-bite. Reasoning:
     ///
-    /// The replay key shape is `buzz:{community}:nip98:{event_id_hex}` (see
+    /// The replay key shape is `crew:{community}:nip98:{event_id_hex}` (see
     /// `crates/crew-auth/src/nip98_replay.rs:103 nip98_replay_key`). The
     /// community prefix is what makes the key per-community; the
     /// `event_id_hex` is what makes it per-event. **On natural wire traffic
@@ -709,7 +709,7 @@ mod api_tokens_nip98_replay {
     ///
     /// What the tripwire DOES catch: a future regression that globalizes the
     /// seen-set namespace by truncating or normalizing the key (e.g.,
-    /// "simplifying" the key to just `buzz:nip98:{event_id}`, or
+    /// "simplifying" the key to just `crew:nip98:{event_id}`, or
     /// canonicalizing `u` in a way that collapses cross-tenant `u` values
     /// into the same event_id) would break the "spend in A doesn't burn the
     /// slot in B" arm even though u-tags differ. The tripwire assertion gives
@@ -2472,7 +2472,7 @@ mod pubsub_presence_typing {
         );
     }
 
-    /// Obligation: keys are `buzz:{community}:…`; cross-node fan-out never
+    /// Obligation: keys are `crew:{community}:…`; cross-node fan-out never
     /// delivers an A event to a B subscription, even for the same channel UUID;
     /// the same pubkey can be online in A and away in B independently.
     ///
@@ -2484,7 +2484,7 @@ mod pubsub_presence_typing {
     ///    → `crew_pubsub::get_presence_bulk`). A's query must return only A's
     ///    status and B's only B's. This bites the Redis key format in
     ///    `crates/crew-pubsub/src/presence.rs::presence_key`, which must include
-    ///    `ctx.community()` (`buzz:{community}:presence:{pubkey}`). Same pubkey
+    ///    `ctx.community()` (`crew:{community}:presence:{pubkey}`). Same pubkey
     ///    is required: it proves the isolation coordinate is community, not key.
     ///
     /// 2. **Typing / subscription fan-out fence.** The same channel UUID is

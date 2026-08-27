@@ -43,11 +43,11 @@ export type MarkdownRuntime = {
   leadingInlineContent?: React.ReactNode;
   mentionPubkeysByName?: Record<string, string>;
   onOpenChannel: (channelId: string) => void;
-  /** Navigate to a Buzz git entity (`crew://pr|issue|repo` deep link). */
+  /** Navigate to a Crew git entity (`crew://pr|issue|repo` deep link). */
   onOpenEntityLink: (link: ParsedEntityLink) => void;
   onOpenMessageLink: (link: ParsedMessageLink) => void;
   /**
-   * The resolved relay origin (e.g. `https://buzz.block.builderlab.xyz`),
+   * The resolved relay origin (e.g. `https://crew.block.builderlab.xyz`),
    * or `null` when not yet resolved. Used by the anchor component to
    * validate that clone-URL rewrites point to the active relay only.
    */

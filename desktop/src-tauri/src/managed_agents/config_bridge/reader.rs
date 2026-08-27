@@ -546,7 +546,7 @@ fn build_thinking_field(
     tiers: &InheritedConfigTiers,
 ) -> Option<NormalizedField> {
     // Tier ordering:
-    //   record env > record.effort_level (canonical Buzz-persisted) > ACP >
+    //   record env > record.effort_level (canonical Crew-persisted) > ACP >
     //   persona env > global env > definition env > config file.
     //
     // `record.effort_level` is the B5 canonical value: the effort a spawn will

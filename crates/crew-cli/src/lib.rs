@@ -63,9 +63,9 @@ where
 #[derive(Parser)]
 #[command(
     name = "crew",
-    about = "Crew CLI — interact with a Buzz relay",
+    about = "Crew CLI — interact with a Crew relay",
     long_about = "\
-Crew CLI — interact with a Buzz relay
+Crew CLI — interact with a Crew relay
 
 Configuration (flags override env vars):
   CREW_RELAY_URL     Relay base URL        [default: http://localhost:3000]
@@ -262,7 +262,7 @@ impl RespondToArg {
 
 #[derive(Subcommand)]
 pub enum AgentsCmd {
-    /// Open a prefilled create-agent form in the owner's Buzz Desktop
+    /// Open a prefilled create-agent form in the owner's Crew Desktop
     DraftCreate {
         /// Current channel UUID; the new agent is added here after save
         #[arg(long)]
@@ -274,7 +274,7 @@ pub enum AgentsCmd {
         #[arg(long)]
         system_prompt: String,
     },
-    /// Open a prefilled edit-agent form in the owner's Buzz Desktop
+    /// Open a prefilled edit-agent form in the owner's Crew Desktop
     DraftUpdate {
         /// Current channel UUID
         #[arg(long)]
@@ -309,8 +309,8 @@ running under CREW_AUTH_TAG signs as itself, so it can only ever satisfy \
 the self path (target == signer) — not the owner-of-agent path for another \
 identity.\n\n\
 Examples:\n  \
-buzz agents archive <PUBKEY> --reason retired\n  \
-buzz agents archive <PUBKEY> --reason bot-rebuilt --replaced-by <NEW_PUBKEY>"
+crew agents archive <PUBKEY> --reason retired\n  \
+crew agents archive <PUBKEY> --reason bot-rebuilt --replaced-by <NEW_PUBKEY>"
     )]
     Archive {
         /// Target identity pubkey (hex)
@@ -337,7 +337,7 @@ buzz agents archive <PUBKEY> --reason bot-rebuilt --replaced-by <NEW_PUBKEY>"
 extraction failure, then exits with an error if still unresolvable. Use --admin to bypass \
 for relay-admin callers.\n\n\
 Examples:\n  \
-buzz agents unarchive <PUBKEY> --reason returned"
+crew agents unarchive <PUBKEY> --reason returned"
     )]
     Unarchive {
         /// Target identity pubkey (hex)
@@ -362,7 +362,7 @@ and NIP-70 `-` protection tag before trusting it. Any trust failure is a \
 nonzero-exit error, never a false-empty success — this command's whole \
 purpose is verification.\n\n\
 Examples:\n  \
-buzz agents archived"
+crew agents archived"
     )]
     Archived,
 }
@@ -371,10 +371,10 @@ buzz agents archived"
 pub enum MessagesCmd {
     /// Send a message to a channel
     #[command(
-        after_help = "Examples:\n  buzz messages send --channel <UUID> --content \"hello\"\n  buzz messages send --channel <UUID> --content \"@alice check this\"\n  echo \"hello from stdin\" | buzz messages send --channel <UUID> --content -"
+        after_help = "Examples:\n  crew messages send --channel <UUID> --content \"hello\"\n  crew messages send --channel <UUID> --content \"@alice check this\"\n  echo \"hello from stdin\" | crew messages send --channel <UUID> --content -"
     )]
     Send {
-        /// Channel UUID (from 'buzz channels list')
+        /// Channel UUID (from 'crew channels list')
         #[arg(long)]
         channel: String,
         /// Message text — supports @mentions and markdown. Use '-' to read from stdin.
@@ -461,7 +461,7 @@ pub enum MessagesCmd {
     },
     /// Retrieve messages from a channel
     #[command(
-        after_help = "Examples:\n  buzz messages get --channel <UUID>\n  buzz messages get --channel <UUID> --limit 50 --kinds 1,1984"
+        after_help = "Examples:\n  crew messages get --channel <UUID>\n  crew messages get --channel <UUID> --limit 50 --kinds 1,1984"
     )]
     Get {
         /// Channel UUID
@@ -480,9 +480,9 @@ pub enum MessagesCmd {
         #[arg(long)]
         kinds: Option<String>,
     },
-    /// Get the containing thread for a message or Buzz message link
+    /// Get the containing thread for a message or Crew message link
     #[command(
-        after_help = "Examples:\n  buzz messages thread --channel <UUID> --event <EVENT_ID>\n  buzz messages thread --link 'crew://message?channel=<UUID>&id=<EVENT_ID>&thread=<ROOT_ID>'"
+        after_help = "Examples:\n  crew messages thread --channel <UUID> --event <EVENT_ID>\n  crew messages thread --link 'crew://message?channel=<UUID>&id=<EVENT_ID>&thread=<ROOT_ID>'"
     )]
     Thread {
         /// Channel UUID; required unless --link is supplied
@@ -503,7 +503,7 @@ pub enum MessagesCmd {
     },
     /// Full-text search across messages
     #[command(
-        after_help = "Examples:\n  buzz messages search --query checkout\n  buzz messages search --author npub1... --since 1783497600\n  buzz messages search --author Aaron --query checkout --limit 20"
+        after_help = "Examples:\n  crew messages search --query checkout\n  crew messages search --author npub1... --since 1783497600\n  crew messages search --author Aaron --query checkout --limit 20"
     )]
     Search {
         /// Search query string (optional when --author is given)
@@ -534,7 +534,7 @@ pub enum MessagesCmd {
 pub enum ChannelsCmd {
     /// List channels visible to the current identity
     #[command(
-        after_help = "Examples:\n  buzz channels list\n  buzz channels list --visibility open"
+        after_help = "Examples:\n  crew channels list\n  crew channels list --visibility open"
     )]
     List {
         /// Filter by visibility
@@ -555,7 +555,7 @@ pub enum ChannelsCmd {
     },
     /// Search channels by human-readable name
     #[command(
-        after_help = "Examples:\n  buzz channels search --query composer\n  buzz channels search --query buzz-chat-composer --exact\n  buzz channels search --query design --include-archived"
+        after_help = "Examples:\n  crew channels search --query composer\n  crew channels search --query crew-chat-composer --exact\n  crew channels search --query design --include-archived"
     )]
     Search {
         /// Search query (case-insensitive substring of channel name)
@@ -573,7 +573,7 @@ pub enum ChannelsCmd {
     },
     /// Create a new channel
     #[command(
-        after_help = "Examples:\n  buzz channels create --name general --type stream --visibility open\n  buzz channels create --name design --type forum --visibility open --description \"Design discussions\"\n  buzz channels create --name standup --type stream --visibility open --ttl 3600  # ephemeral, archived after 1h idle\n  buzz channels create --name project-x --template \"Buzz Team\"  # type/visibility/canvas/roster from the template; explicit flags override"
+        after_help = "Examples:\n  crew channels create --name general --type stream --visibility open\n  crew channels create --name design --type forum --visibility open --description \"Design discussions\"\n  crew channels create --name standup --type stream --visibility open --ttl 3600  # ephemeral, archived after 1h idle\n  crew channels create --name project-x --template \"Crew Team\"  # type/visibility/canvas/roster from the template; explicit flags override"
     )]
     Create {
         /// Channel name
@@ -605,7 +605,7 @@ pub enum ChannelsCmd {
     },
     /// Update channel name, description, visibility, or ephemeral TTL
     #[command(
-        after_help = "Examples:\n  buzz channels update --channel <uuid> --name general\n  buzz channels update --channel <uuid> --visibility open\n  buzz channels update --channel <uuid> --visibility private"
+        after_help = "Examples:\n  crew channels update --channel <uuid> --name general\n  crew channels update --channel <uuid> --visibility open\n  crew channels update --channel <uuid> --visibility private"
     )]
     Update {
         /// Channel UUID
@@ -938,7 +938,7 @@ pub enum WorkflowsCmd {
     },
     /// Trigger a workflow run
     #[command(
-        after_help = "Examples:\n  buzz workflows trigger --workflow <UUID>\n  buzz workflows trigger --workflow <UUID> --inputs '{\"key\":\"value\"}'"
+        after_help = "Examples:\n  crew workflows trigger --workflow <UUID>\n  crew workflows trigger --workflow <UUID> --inputs '{\"key\":\"value\"}'"
     )]
     Trigger {
         /// Workflow UUID
@@ -959,7 +959,7 @@ pub enum WorkflowsCmd {
     },
     /// Approve or deny a workflow step
     #[command(
-        after_help = "Examples:\n  buzz workflows approve --token <UUID>\n  buzz workflows approve --token <UUID> --approved false --note \"needs revision\""
+        after_help = "Examples:\n  crew workflows approve --token <UUID>\n  crew workflows approve --token <UUID> --approved false --note \"needs revision\""
     )]
     Approve {
         /// The approval token UUID (from the approval request)
@@ -1076,7 +1076,7 @@ pub enum NotesCmd {
     /// title is carried forward when `--title` is omitted, and `--title ""`
     /// explicitly clears it.
     #[command(
-        after_help = "Examples:\n  echo '# Hello' | buzz notes set --name hello --title 'Hello' --content -\n  buzz notes set --name hello --tag onboarding --content - < draft.md"
+        after_help = "Examples:\n  echo '# Hello' | crew notes set --name hello --title 'Hello' --content -\n  crew notes set --name hello --tag onboarding --content - < draft.md"
     )]
     Set {
         /// Slug — becomes the `d` tag. `[a-z0-9._-]{1,80}`.
@@ -1170,7 +1170,7 @@ pub enum ReposCmd {
         relays: Vec<String>,
         /// Channel UUID to bind the repo to. The `crew-channel` tag is the
         /// git ACL: without it the relay 404s every clone/fetch/push until
-        /// the author runs `buzz repos bind` (issue #3527).
+        /// the author runs `crew repos bind` (issue #3527).
         #[arg(long)]
         channel: Option<String>,
     },
@@ -1289,7 +1289,7 @@ pub enum ProjectsCmd {
     Create {
         /// Project identifier (slug), up to 1024 bytes
         slug: String,
-        /// Member repository coordinate: bare Buzz repo id (e.g. `buzz`) or full
+        /// Member repository coordinate: bare Crew repo id (e.g. `crew`) or full
         /// `30617:<owner-hex>:<repo-d>` for cross-owner or colon-bearing repo ids.
         /// At least one --repo is required.
         #[arg(long = "repo", required = true)]
@@ -1300,7 +1300,7 @@ pub enum ProjectsCmd {
         /// Description (≤2048 bytes)
         #[arg(long)]
         description: Option<String>,
-        /// Associated Buzz channel UUID
+        /// Associated Crew channel UUID
         #[arg(long)]
         channel: Option<String>,
         /// Visibility: `listed` (default) or `unlisted`
@@ -1359,7 +1359,7 @@ pub enum ProjectsCmd {
         /// Remove the description
         #[arg(long, group = "mutation", conflicts_with = "description")]
         clear_description: bool,
-        /// Set the associated Buzz channel UUID
+        /// Set the associated Crew channel UUID
         #[arg(long, group = "mutation")]
         channel: Option<String>,
         /// Remove the associated channel
@@ -1383,7 +1383,7 @@ pub enum ProjectsCmd {
 pub enum PatchesCmd {
     /// Send a git patch (NIP-34 kind:1617)
     #[command(
-        after_help = "Examples:\n  git format-patch -1 HEAD --stdout | buzz patches send --repo-owner <hex> --repo-id myrepo --patch-file - --root\n  buzz patches send --repo-owner <hex> --repo-id myrepo --patch-file 0001-fix.patch --reply-to <prev-patch-id>"
+        after_help = "Examples:\n  git format-patch -1 HEAD --stdout | crew patches send --repo-owner <hex> --repo-id myrepo --patch-file - --root\n  crew patches send --repo-owner <hex> --repo-id myrepo --patch-file 0001-fix.patch --reply-to <prev-patch-id>"
     )]
     Send {
         /// Repo owner pubkey (64-char hex)
@@ -1489,7 +1489,7 @@ pub enum PatchesCmd {
 pub enum PrCmd {
     /// Open a git pull request (NIP-34 kind:1618)
     #[command(
-        after_help = "Examples:\n  buzz pr open --repo-owner <hex> --repo-id myrepo --subject 'Fix bug' --body-file - --commit $(git rev-parse HEAD) --clone https://relay/git/owner/myrepo --branch-name fix-bug\n  buzz pr update --repo-owner <hex> --repo-id myrepo --pr <event> --pr-author <hex> --commit $(git rev-parse HEAD) --clone https://relay/git/owner/myrepo"
+        after_help = "Examples:\n  crew pr open --repo-owner <hex> --repo-id myrepo --subject 'Fix bug' --body-file - --commit $(git rev-parse HEAD) --clone https://relay/git/owner/myrepo --branch-name fix-bug\n  crew pr update --repo-owner <hex> --repo-id myrepo --pr <event> --pr-author <hex> --commit $(git rev-parse HEAD) --clone https://relay/git/owner/myrepo"
     )]
     Open {
         /// Repo owner pubkey (64-char hex)
@@ -1767,7 +1767,7 @@ pub enum MediaCmd {
     },
 }
 
-/// Subcommands for `buzz mem`.
+/// Subcommands for `crew mem`.
 #[derive(Subcommand)]
 pub enum MemCmd {
     /// List non-tombstoned memory entries
@@ -1823,8 +1823,8 @@ pub enum MemCmd {
         #[arg(long)]
         patch_file: Option<String>,
         /// sha256 hex digest (lowercase) of the value the patch was generated
-        /// against. Hashes the exact UTF-8 bytes returned by `buzz mem get`,
-        /// not normalized lines. Run `buzz mem hash <slug>` to capture this
+        /// against. Hashes the exact UTF-8 bytes returned by `crew mem get`,
+        /// not normalized lines. Run `crew mem hash <slug>` to capture this
         /// before editing.
         #[arg(long)]
         base_hash: Option<String>,
@@ -1850,7 +1850,7 @@ pub enum MemCmd {
     },
 }
 
-/// Subcommands for `buzz pack`.
+/// Subcommands for `crew pack`.
 #[derive(Subcommand)]
 pub enum PackCmd {
     /// Validate a persona pack directory
@@ -1875,7 +1875,7 @@ pub enum PackCmd {
 pub enum ModerationCmd {
     /// List reports in the moderation queue (newest first)
     #[command(
-        after_help = "Examples:\n  buzz moderation reports\n  buzz moderation reports --status open --limit 20"
+        after_help = "Examples:\n  crew moderation reports\n  crew moderation reports --status open --limit 20"
     )]
     Reports {
         /// Filter by status: open | resolved | dismissed | escalated (default: all)
@@ -1887,7 +1887,7 @@ pub enum ModerationCmd {
     },
     /// Resolve or dismiss a report (kind 9044)
     #[command(
-        after_help = "Examples:\n  buzz moderation resolve --report <REPORT_EVENT_ID> --status dismissed --action dismiss\n  buzz moderation resolve --report <REPORT_EVENT_ID> --status resolved --action ban --reason \"rule 3\""
+        after_help = "Examples:\n  crew moderation resolve --report <REPORT_EVENT_ID> --status dismissed --action dismiss\n  crew moderation resolve --report <REPORT_EVENT_ID> --status resolved --action ban --reason \"rule 3\""
     )]
     Resolve {
         /// Hex event id of the kind:1984 report being resolved
@@ -1905,7 +1905,7 @@ pub enum ModerationCmd {
     },
     /// Ban a member from the community (kind 9040)
     #[command(
-        after_help = "Examples:\n  buzz moderation ban --pubkey <HEX>\n  buzz moderation ban --pubkey <HEX> --expires-in 604800 --reason \"repeated spam\""
+        after_help = "Examples:\n  crew moderation ban --pubkey <HEX>\n  crew moderation ban --pubkey <HEX> --expires-in 604800 --reason \"repeated spam\""
     )]
     Ban {
         /// Target member pubkey (hex)
@@ -1929,7 +1929,7 @@ pub enum ModerationCmd {
     },
     /// Time out a member — a write-block, not a disconnect (kind 9042)
     #[command(
-        after_help = "Examples:\n  buzz moderation timeout --pubkey <HEX> --expires-in 3600\n  buzz moderation timeout --pubkey <HEX> --expires-at 1783500000 --reason \"cool off\""
+        after_help = "Examples:\n  crew moderation timeout --pubkey <HEX> --expires-in 3600\n  crew moderation timeout --pubkey <HEX> --expires-at 1783500000 --reason \"cool off\""
     )]
     Timeout {
         /// Target member pubkey (hex)

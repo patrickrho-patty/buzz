@@ -62,7 +62,7 @@ pub(in crate::commands) fn propagate_membership_best_effort(
         Ok(())
     })();
     if let Err(e) = result {
-        eprintln!("griddle-desktop: team-membership-propagate: {e}");
+        eprintln!("crew-desktop: team-membership-propagate: {e}");
     }
 }
 
@@ -240,7 +240,7 @@ pub(super) fn retain_team_pending(app: &AppHandle, state: &AppState, team: &Team
         )
     })();
     if let Err(e) = result {
-        eprintln!("griddle-desktop: team-retain: {e}");
+        eprintln!("crew-desktop: team-retain: {e}");
     }
 }
 
@@ -290,7 +290,7 @@ fn tombstone_team_pending(app: &AppHandle, state: &AppState, d_tag: &str) {
         )
     })();
     if let Err(e) = result {
-        eprintln!("griddle-desktop: team-tombstone: {e}");
+        eprintln!("crew-desktop: team-tombstone: {e}");
     }
 }
 

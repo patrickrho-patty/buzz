@@ -2,7 +2,7 @@ import { normalizeRelayUrl } from "@/features/profile/lib/selfProfileStorage";
 import { ACCENT_COLORS } from "./ThemeProvider";
 import { SYNTAX_THEMES, type SyntaxThemeName } from "./theme-loader";
 
-const STORAGE_KEY_PREFIX = "buzz-community-theme.v1";
+const STORAGE_KEY_PREFIX = "crew-community-theme.v1";
 const OUTBOX_KEY_PREFIX = "crew-community-theme-outbox.v1";
 const MIGRATION_KEY_PREFIX = "crew-community-theme-migrated.v1";
 

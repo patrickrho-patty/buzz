@@ -2,7 +2,7 @@
 set -euo pipefail
 
 VERSION="${1:-}"
-REPOSITORY="${GITHUB_REPOSITORY:-block/buzz}"
+REPOSITORY="${GITHUB_REPOSITORY:-block/crew}"
 TAG="desktop-v${VERSION}"
 CANDIDATE="updater-manifest.json"
 ROLLING_TAG="buzz-desktop-latest"

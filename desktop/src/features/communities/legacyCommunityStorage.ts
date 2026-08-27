@@ -2,10 +2,10 @@ import { invokeTauri } from "@/shared/api/tauri";
 import { getStorageItem } from "@/shared/lib/safeStorage";
 import { migrateLegacyCommunityStorage } from "./communityStorage";
 
-const CREW_COMMUNITIES_KEY = "buzz-communities";
-const CREW_ACTIVE_COMMUNITY_KEY = "buzz-active-community-id";
+const CREW_COMMUNITIES_KEY = "crew-communities";
+const CREW_ACTIVE_COMMUNITY_KEY = "crew-active-community-id";
 const CREW_ONBOARDING_COMPLETION_STORAGE_KEY_PREFIX =
-  "buzz-onboarding-complete.v1:";
+  "crew-onboarding-complete.v1:";
 const LOCAL_DEV_RELAY_URLS = new Set([
   "ws://localhost:3000",
   "ws://127.0.0.1:3000",
@@ -105,11 +105,11 @@ export function applyLegacyCommunityStorage(
 }
 
 /**
- * Seed Buzz localStorage from legacy Sprout WebKit localStorage before the app
+ * Seed Crew localStorage from legacy Sprout WebKit localStorage before the app
  * renders providers that read community state. The native command reads the old
  * app identifier's WebKit SQLite database; this frontend step writes only when
- * Buzz does not already have community state, except for the known broken
- * Sprout→Buzz first-run handoff that created a single localhost community.
+ * Crew does not already have community state, except for the known broken
+ * Sprout→Crew first-run handoff that created a single localhost community.
  */
 export async function migrateLegacyCommunityStorageBeforeRender(): Promise<void> {
   if (typeof window === "undefined") {

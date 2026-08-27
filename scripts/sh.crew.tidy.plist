@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<!-- Weekly Crew build-cache sweep: prunes target/ artifacts older than 21d
+     and fails (visible via `launchctl list | grep crew.tidy`) if the cache
+     exceeds 20GB. Install:
+       launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/sh.crew.tidy.plist
+-->
+<dict>
+    <key>Label</key>
+    <string>sh.crew.tidy</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/patrickrho/projects/griddle/scripts/crew-tidy.sh</string>
+        <string>/Users/patrickrho/projects/griddle</string>
+        <string>21</string>
+        <string>20</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Weekday</key>
+        <integer>6</integer>
+        <key>Hour</key>
+        <integer>9</integer>
+        <key>Minute</key>
+        <integer>30</integer>
+    </dict>
+    <key>StandardErrorPath</key>
+    <string>/tmp/crew-tidy.err.log</string>
+    <key>StandardOutPath</key>
+    <string>/tmp/crew-tidy.out.log</string>
+</dict>
+</plist>

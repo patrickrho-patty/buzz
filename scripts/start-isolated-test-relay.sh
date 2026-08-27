@@ -4,13 +4,13 @@
 # =============================================================================
 # Stands up a FULLY ISOLATED relay for seeding + parity/perf runs, from source
 # on the current branch. Never touches the shared :3000 team relay or the
-# default `buzz-*` dev stack. Backing services run under the dedicated
+# default `crew-*` dev stack. Backing services run under the dedicated
 # `crew-harness` Compose project (docker-compose.harness.yml); the relay runs
 # in the foreground on override ports.
 #
 #   Topology (reuse this exact tuple for desktop parity runs):
 #     compose project : crew-harness
-#     postgres        : localhost:5471  (db=buzz, user=buzz, pass=crew_dev)
+#     postgres        : localhost:5471  (db=crew, user=crew, pass=crew_dev)
 #     redis           : localhost:6471
 #     minio           : localhost:9471 (console 9472)
 #     relay main      : localhost:3030   ← CREW_E2E_RELAY_URL=http://localhost:3030
@@ -95,8 +95,8 @@ log "Resetting isolated database and applying schema..."
 # schema planning or test results.
 psql_h -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
 export PGSCHEMA_PLAN_HOST=localhost PGSCHEMA_PLAN_PORT=${PG_PORT}
-export PGSCHEMA_PLAN_DB=buzz PGSCHEMA_PLAN_USER=buzz PGSCHEMA_PLAN_PASSWORD=crew_dev
-export PGHOST=localhost PGPORT=${PG_PORT} PGUSER=buzz PGDATABASE=crew
+export PGSCHEMA_PLAN_DB=crew PGSCHEMA_PLAN_USER=crew PGSCHEMA_PLAN_PASSWORD=crew_dev
+export PGHOST=localhost PGPORT=${PG_PORT} PGUSER=crew PGDATABASE=crew
 ./bin/pgschema apply --file schema/schema.sql --auto-approve
 psql_h < scripts/attach-schema-partitions.sql
 ok "Schema applied"
@@ -109,8 +109,8 @@ ok "Schema applied"
 # CREW_DB_HOST/PORT rather than the shared `crew-postgres` container.)
 log "Seeding community (host=${COMMUNITY_HOST}), channels, and members..."
 CREW_COMMUNITY_HOST="${COMMUNITY_HOST}" \
-  CREW_DB_HOST=localhost CREW_DB_PORT=${PG_PORT} CREW_DB_USER=buzz \
-  CREW_DB_PASS=crew_dev CREW_DB_NAME=buzz \
+  CREW_DB_HOST=localhost CREW_DB_PORT=${PG_PORT} CREW_DB_USER=crew \
+  CREW_DB_PASS=crew_dev CREW_DB_NAME=crew \
   CREW_DB_DOCKER_CONTAINER="${PROJECT}-postgres-1" \
   ./scripts/setup-desktop-test-data.sh
 ok "Community + channels + members seeded"
@@ -141,7 +141,7 @@ if command -v lsof >/dev/null 2>&1 && lsof -nP -iTCP:"${RELAY_MAIN}" -sTCP:LISTE
 fi
 log "Starting relay in tmux session '${TMUX_SESSION}' on :${RELAY_MAIN} (health :${RELAY_HEALTH}, metrics :${RELAY_METRICS})..."
 tmux new-session -d -s "${TMUX_SESSION}" "cd '${REPO_ROOT}' && env \
-  DATABASE_URL=postgres://crew:crew_dev@localhost:${PG_PORT}/buzz \
+  DATABASE_URL=postgres://crew:crew_dev@localhost:${PG_PORT}/crew \
   REDIS_URL=redis://localhost:${REDIS_PORT} \
   RELAY_URL=ws://localhost:${RELAY_MAIN} \
   CREW_BIND_ADDR=0.0.0.0:${RELAY_MAIN} \

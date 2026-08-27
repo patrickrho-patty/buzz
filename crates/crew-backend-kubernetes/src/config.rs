@@ -175,7 +175,7 @@ pub fn parse(cfg: &serde_json::Value) -> Result<ProviderConfig, String> {
     })
 }
 
-/// A fresh `buzz-agents-<rand6>` namespace default.
+/// A fresh `crew-agents-<rand6>` namespace default.
 ///
 /// Computed per `info` call, which is how "random default" is satisfied with
 /// zero UI changes: the schema's `default` prefills the form (§K8s Namespace).
@@ -186,7 +186,7 @@ pub fn generated_namespace() -> String {
     let suffix: String = (0..6)
         .map(|_| ALPHABET[rng.random_range(0..ALPHABET.len())] as char)
         .collect();
-    format!("buzz-agents-{suffix}")
+    format!("crew-agents-{suffix}")
 }
 
 /// The `config_schema` returned by `info`. Drives the UI form:

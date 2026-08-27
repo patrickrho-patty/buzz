@@ -13,10 +13,10 @@ name: Auto-tag on Release PR Merge
 #
 # Mobile candidate tags do not come from merged PRs. Operators create immutable
 # mobile-v<v>-rc.N tags directly from remote main with scripts/mobile-release.sh,
-# then hand the exact tag to buzz-releases.
+# then hand the exact tag to crew-releases.
 #
 # Release tags are created with a short-lived token from the dedicated
-# buzz-release-bot GitHub App. GitHub attributes the ref creation to that
+# crew-release-bot GitHub App. GitHub attributes the ref creation to that
 # App, so the consumer's `on.push.tags` trigger runs normally. The workflow's
 # default GITHUB_TOKEN remains read-only and is never used to create a tag.
 #

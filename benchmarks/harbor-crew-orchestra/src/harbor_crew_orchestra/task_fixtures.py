@@ -1,4 +1,4 @@
-"""Public setup declarations for Buzz-native benchmark tasks."""
+"""Public setup declarations for Crew-native benchmark tasks."""
 
 from __future__ import annotations
 

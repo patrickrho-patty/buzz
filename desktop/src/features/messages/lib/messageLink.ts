@@ -67,8 +67,8 @@ export function parseMessageLink(url: string): MessageLinkParseResult {
     return { ok: false, reason: "invalid-url" };
   }
 
-  // `crew://` is canonical; legacy `buzz://` links keep parsing during the
-  // Buzz→Crew rename window.
+  // `crew://` is canonical; legacy `crew://` links keep parsing during the
+  // Crew→Crew rename window.
   if (parsed.protocol !== MESSAGE_LINK_SCHEME && parsed.protocol !== "buzz:") {
     return { ok: false, reason: "wrong-scheme" };
   }

@@ -1,6 +1,6 @@
 //! Presence tracking — online/away status with TTL.
 //!
-//! Stored as `SET buzz:{community}:presence:{pubkey_hex} "online" EX 180`.
+//! Stored as `SET crew:{community}:presence:{pubkey_hex} "online" EX 180`.
 //! TTL is 3x the 60s heartbeat interval so a single missed heartbeat doesn't
 //! cause presence flap. Clean disconnect deletes immediately.
 

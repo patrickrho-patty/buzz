@@ -195,7 +195,7 @@ mod tests {
         let result = extract_config_fields(&config, &[]);
         assert_eq!(
             result
-                .get("projects./Users/foo/dev/buzz.trust_level")
+                .get("projects./Users/foo/dev/crew.trust_level")
                 .map(|s| s.as_str()),
             Some("trusted")
         );

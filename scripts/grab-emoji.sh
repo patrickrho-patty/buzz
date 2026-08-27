@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
-# grab-emoji.sh — Register custom Slack emoji in Buzz
+# grab-emoji.sh — Register custom Slack emoji in Crew
 #
-# Looks up each emoji name in your Slack workspace and registers it in Buzz
-# via `buzz emoji set`, making it available as :name: in the Buzz emoji picker.
+# Looks up each emoji name in your Slack workspace and registers it in Crew
+# via `crew emoji set`, making it available as :name: in the Crew emoji picker.
 #
 # Usage:
-#   SLACK_TOKEN=xoxp-... ./scripts/grab-emoji.sh [--name <buzz-name>] <emoji-name> [emoji-name ...]
+#   SLACK_TOKEN=xoxp-... ./scripts/grab-emoji.sh [--name <crew-name>] <emoji-name> [emoji-name ...]
 #
 # Options:
-#   --name <buzz-name>  Override the shortcode used in Buzz (only valid with a single emoji)
+#   --name <crew-name>  Override the shortcode used in Crew (only valid with a single emoji)
 #
 # Env:
 #   SLACK_TOKEN  — Slack user token (xoxp-...) with emoji:read scope
 #
 # Output:
-#   name → registered as :name: in Buzz   on success
+#   name → registered as :name: in Crew   on success
 #   name → ERROR: reason                  on failure (script continues to next emoji)
 
 set -euo pipefail
@@ -49,7 +49,7 @@ done
 # ── Preflight checks ──────────────────────────────────────────────────────────
 
 if [[ $# -eq 0 ]]; then
-  echo "Usage: SLACK_TOKEN=xoxp-... $0 [--name <buzz-name>] <emoji-name> [emoji-name ...]" >&2
+  echo "Usage: SLACK_TOKEN=xoxp-... $0 [--name <crew-name>] <emoji-name> [emoji-name ...]" >&2
   exit 1
 fi
 
@@ -156,11 +156,11 @@ for emoji_name in "$@"; do
     continue
   }
 
-  # Register in Buzz
-  set_output=$(buzz emoji set --shortcode "$crew_shortcode" --url "$emoji_url" 2>&1) || {
-    echo "${emoji_name} → ERROR: buzz emoji set failed — ${set_output}"
+  # Register in Crew
+  set_output=$(crew emoji set --shortcode "$crew_shortcode" --url "$emoji_url" 2>&1) || {
+    echo "${emoji_name} → ERROR: crew emoji set failed — ${set_output}"
     continue
   }
 
-  echo "${emoji_name} → registered as :${crew_shortcode}: in Buzz"
+  echo "${emoji_name} → registered as :${crew_shortcode}: in Crew"
 done

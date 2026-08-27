@@ -1,21 +1,21 @@
-{{- include "buzz.validate" . -}}
+{{- include "crew.validate" . -}}
 {{- if .Values.pairingRelay.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "buzz.fullname" . }}-pairing
+  name: {{ include "crew.fullname" . }}-pairing
   labels:
-    {{- include "buzz.labels" . | nindent 4 }}
+    {{- include "crew.labels" . | nindent 4 }}
     app.kubernetes.io/component: pairing-relay
 spec:
   replicas: {{ .Values.pairingRelay.replicaCount }}
   selector:
     matchLabels:
-      {{- include "buzz.pairingRelaySelectorLabels" . | nindent 6 }}
+      {{- include "crew.pairingRelaySelectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "buzz.pairingRelaySelectorLabels" . | nindent 8 }}
+        {{- include "crew.pairingRelaySelectorLabels" . | nindent 8 }}
         {{- with .Values.pairingRelay.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -28,7 +28,7 @@ spec:
         {{- toYaml .Values.relay.securityContext | nindent 8 }}
       containers:
         - name: pairing-relay
-          image: {{ include "buzz.image" . }}
+          image: {{ include "crew.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["/usr/local/bin/crew-pair-relay"]
           securityContext:
@@ -52,9 +52,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "buzz.fullname" . }}-pairing
+  name: {{ include "crew.fullname" . }}-pairing
   labels:
-    {{- include "buzz.labels" . | nindent 4 }}
+    {{- include "crew.labels" . | nindent 4 }}
     app.kubernetes.io/component: pairing-relay
   {{- with .Values.pairingRelay.service.annotations }}
   annotations:
@@ -63,7 +63,7 @@ metadata:
 spec:
   type: {{ .Values.pairingRelay.service.type }}
   selector:
-    {{- include "buzz.pairingRelaySelectorLabels" . | nindent 4 }}
+    {{- include "crew.pairingRelaySelectorLabels" . | nindent 4 }}
   ports:
     - name: websocket
       port: {{ .Values.pairingRelay.service.port }}

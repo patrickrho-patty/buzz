@@ -25,7 +25,7 @@ const AUTH_COMPLETE_HTML: &str = r#"<!doctype html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Buzz authentication complete</title>
+  <title>Crew authentication complete</title>
   <style>
     :root {
       color-scheme: light;
@@ -134,7 +134,7 @@ const AUTH_COMPLETE_HTML: &str = r#"<!doctype html>
     </svg>
     <div class="eyebrow">Authentication complete</div>
     <h1>You&rsquo;re signed in.</h1>
-    <p>You can close this window and return to Buzz.</p>
+    <p>You can close this window and return to Crew.</p>
   </main>
 </body>
 </html>"#;
@@ -647,12 +647,12 @@ mod tests {
     #[test]
     fn auth_complete_page_uses_buzz_brand() {
         for expected in [
-            "<title>Buzz authentication complete</title>",
+            "<title>Crew authentication complete</title>",
             "#d7d72e",
             "#231e1e",
             "#d7e7f6",
-            "aria-label=\"Buzz\"",
-            "return to Buzz",
+            "aria-label=\"Crew\"",
+            "return to Crew",
         ] {
             assert!(
                 AUTH_COMPLETE_HTML.contains(expected),

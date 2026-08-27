@@ -1,9 +1,9 @@
 # Default condition for the local benchmarks/crew-dataset suite: one production
-# Buzz agent on gpt-5.6-luna at reasoning effort `medium`.
+# Crew agent on gpt-5.6-luna at reasoning effort `medium`.
 #
 # crew-acp supplies crates/crew-acp/src/base_prompt.md from the checked-out
 # source build; the persona below only establishes that there is no team. The
-# suite scores Buzz product behavior (threading, mentions, exact membership),
+# suite scores Crew product behavior (threading, mentions, exact membership),
 # and that behavior comes from the base prompt — so the cheap model at a
 # middling effort is the right default. A weak result here is a prompt finding,
 # not a model finding.

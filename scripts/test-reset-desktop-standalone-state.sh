@@ -10,7 +10,7 @@ mkdir -p "$HOME/Library/Application Support/xyz.patty.griddle.app.dev.example"
 mkdir -p "$HOME/Library/Application Support/xyz.patty.griddle.app.dev.other"
 mkdir -p "$HOME/Library/Application Support/xyz.patty.griddle.app"
 mkdir -p "$HOME/.buzz-dev"
-touch "$HOME/.buzz-dev/keep"
+touch "$HOME/.crew-dev/keep"
 mkdir -p "$tmp/bin"
 cat > "$tmp/bin/security" <<'MOCK'
 #!/usr/bin/env bash
@@ -27,7 +27,7 @@ export PATH="$tmp/bin:$PATH"
 [[ -d "$HOME/Library/Application Support/xyz.patty.griddle.app.dev.other" ]]
 [[ -d "$HOME/Library/Application Support/xyz.patty.griddle.app" ]]
 [[ -f "$HOME/.buzz-dev/keep" ]]
-grep -Fx -- "delete-generic-password -s griddle-desktop-dev.example" "$HOME/security-calls" >/dev/null
+grep -Fx -- "delete-generic-password -s crew-desktop-dev.example" "$HOME/security-calls" >/dev/null
 
 if "$repo_root/scripts/reset-desktop-standalone-state.sh" \
     xyz.patty.griddle.app griddle-desktop >/dev/null 2>&1; then

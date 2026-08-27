@@ -1,7 +1,7 @@
 //! Pack manifest types and `plugin.json` parser.
 //!
 //! Every persona pack ships a `.plugin/plugin.json` that describes the pack
-//! (OPS metadata) and tells Buzz where to find personas, hooks, and MCP
+//! (OPS metadata) and tells Crew where to find personas, hooks, and MCP
 //! config.
 //!
 //! ```json
@@ -35,9 +35,12 @@ pub enum ManifestError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub struct Engines {
-    /// Semver range the Buzz runtime must satisfy (e.g. `">=0.9.0"`).
-    #[serde(skip_serializing_if = "Option::is_none", alias = "buzz")]
-    pub buzz: Option<String>,
+    /// Semver range the Crew runtime must satisfy (e.g. `">=0.9.0"`).
+    ///
+    /// Serialized as `crew`; pre-rename packs carrying `buzz` still parse
+    /// through the alias below. New packs always emit the new spelling.
+    #[serde(rename = "crew", alias = "buzz", skip_serializing_if = "Option::is_none")]
+    pub crew: Option<String>,
 }
 
 /// Pack-wide behavioral defaults.
@@ -126,7 +129,7 @@ pub struct PackManifest {
 /// Intentionally permissive (no `deny_unknown_fields`): `plugin.json` is an
 /// OPS superset and may carry fields from other tools (e.g. `ops_category`,
 /// `marketplace_tags`). Unknown fields are silently ignored here; the
-/// validator issues advisory warnings for Buzz-unknown keys.
+/// validator issues advisory warnings for Crew-unknown keys.
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "snake_case")]
 struct RawManifest {
@@ -221,7 +224,7 @@ mod tests {
             "license": "MIT",
             "homepage": "https://example.com",
             "keywords": ["ai", "bot"],
-            "engines": {"buzz": ">=0.9.0"},
+            "engines": {"crew": ">=0.9.0"},
             "personas": ["personas/a.persona.md", "personas/b.persona.md"],
             "pack_instructions": "instructions.md",
             "mcp_config": ".mcp.json",
@@ -235,7 +238,7 @@ mod tests {
         let m = parse_manifest(json).unwrap();
         assert_eq!(m.id, "full-pack");
         assert_eq!(m.keywords, vec!["ai", "bot"]);
-        assert_eq!(m.engines.unwrap().buzz.as_deref(), Some(">=0.9.0"));
+        assert_eq!(m.engines.unwrap().crew.as_deref(), Some(">=0.9.0"));
         assert_eq!(m.personas.len(), 2);
         assert_eq!(m.pack_instructions.as_deref(), Some("instructions.md"));
         let d = m.defaults.unwrap();

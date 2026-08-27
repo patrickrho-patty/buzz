@@ -715,7 +715,7 @@ fn reconcile_mcp_commands_handles_mixed_agents() {
             {"name": "Stale Goose", "agent_command": "goose", "mcp_command": "buzz-mcp-server"},
             {"name": "Clean Goose", "agent_command": "goose", "mcp_command": ""},
             {"name": "Custom Agent", "agent_command": "goose", "mcp_command": "my-custom-mcp"},
-            {"name": "Stale Buzz", "agent_command": "crew-agent", "mcp_command": "buzz-mcp-server"}
+            {"name": "Stale Crew", "agent_command": "crew-agent", "mcp_command": "buzz-mcp-server"}
         ]),
     );
     reconcile_mcp_commands_in_file(&dir.path().join("agents/managed-agents.json"));
@@ -730,7 +730,7 @@ fn reconcile_mcp_commands_handles_mixed_agents() {
 fn reconcile_mcp_commands_resolves_persona_runtime_over_stale_snapshot() {
     // The frozen snapshot is crew-agent (wants crew-dev-mcp), but the linked
     // persona's runtime is goose (wants no mcp). The reconcile must follow the
-    // EFFECTIVE harness (persona-wins) and clear the stale buzz-mcp-server.
+    // EFFECTIVE harness (persona-wins) and clear the stale crew-mcp-server.
     let dir = tempfile::tempdir().unwrap();
     write_agents_json(
         dir.path(),
@@ -840,7 +840,7 @@ fn reconcile_mcp_commands_skips_record_without_agent_command() {
 fn migrate_legacy_nest_carries_knowledge_and_skips_repos() {
     let dir = tempfile::tempdir().unwrap();
     let legacy = dir.path().join(".sprout");
-    let current = dir.path().join(".buzz");
+    let current = dir.path().join(".crew");
 
     // Knowledge: a top-level file plus a nested dir.
     std::fs::create_dir_all(legacy.join("RESEARCH")).unwrap();
@@ -871,7 +871,7 @@ fn migrate_legacy_nest_carries_knowledge_and_skips_repos() {
 fn migrate_legacy_nest_does_not_clobber_existing_destination() {
     let dir = tempfile::tempdir().unwrap();
     let legacy = dir.path().join(".sprout");
-    let current = dir.path().join(".buzz");
+    let current = dir.path().join(".crew");
 
     std::fs::create_dir_all(legacy.join("RESEARCH")).unwrap();
     std::fs::write(legacy.join("AGENTS.md"), "legacy-agents").unwrap();
@@ -899,7 +899,7 @@ fn migrate_legacy_nest_does_not_clobber_existing_destination() {
 fn migrate_legacy_nest_is_idempotent_on_rerun() {
     let dir = tempfile::tempdir().unwrap();
     let legacy = dir.path().join(".sprout");
-    let current = dir.path().join(".buzz");
+    let current = dir.path().join(".crew");
 
     std::fs::create_dir_all(legacy.join("PLANS")).unwrap();
     std::fs::write(legacy.join("PLANS/PLAN.md"), "plan").unwrap();
@@ -917,7 +917,7 @@ fn migrate_legacy_nest_is_idempotent_on_rerun() {
 fn migrate_legacy_nest_noops_when_legacy_absent() {
     let dir = tempfile::tempdir().unwrap();
     let legacy = dir.path().join(".sprout");
-    let current = dir.path().join(".buzz");
+    let current = dir.path().join(".crew");
 
     let migrated = super::migrate_legacy_nest_at(&legacy, &current);
 
@@ -932,7 +932,7 @@ fn migrate_legacy_nest_noops_when_legacy_absent() {
 fn migrate_legacy_nest_respects_deliberate_dev_reset() {
     let dir = tempfile::tempdir().unwrap();
     let legacy = dir.path().join(".sprout");
-    let current = dir.path().join(".buzz-dev");
+    let current = dir.path().join(".crew-dev");
 
     std::fs::create_dir_all(legacy.join("RESEARCH")).unwrap();
     std::fs::write(legacy.join("RESEARCH/NOTES.md"), "legacy-notes").unwrap();
@@ -949,13 +949,13 @@ fn migrate_legacy_nest_respects_deliberate_dev_reset() {
 fn migrate_legacy_nest_overwrites_generated_default_agents_md() {
     let dir = tempfile::tempdir().unwrap();
     let legacy = dir.path().join(".sprout");
-    let current = dir.path().join(".buzz");
+    let current = dir.path().join(".crew");
 
     std::fs::create_dir_all(&legacy).unwrap();
     std::fs::write(legacy.join("AGENTS.md"), "legacy team instructions").unwrap();
 
     // First-time launch order: ensure_nest writes the generated default into
-    // ~/.buzz/AGENTS.md, then migration runs.
+    // ~/.crew/AGENTS.md, then migration runs.
     crate::managed_agents::ensure_nest_at(&current).unwrap();
     assert_eq!(
         std::fs::read_to_string(current.join("AGENTS.md")).unwrap(),
@@ -976,7 +976,7 @@ fn migrate_legacy_nest_overwrites_generated_default_agents_md() {
 fn migrate_legacy_nest_preserves_user_edited_agents_md() {
     let dir = tempfile::tempdir().unwrap();
     let legacy = dir.path().join(".sprout");
-    let current = dir.path().join(".buzz");
+    let current = dir.path().join(".crew");
 
     std::fs::create_dir_all(&legacy).unwrap();
     std::fs::write(legacy.join("AGENTS.md"), "legacy team instructions").unwrap();

@@ -302,7 +302,7 @@ function snapshot(
 /** Seed the communities the provider will load from localStorage. */
 function seedCommunities(activeId) {
   storage.set(
-    "buzz-communities",
+    "crew-communities",
     JSON.stringify([
       {
         id: COMMUNITY_A,
@@ -318,7 +318,7 @@ function seedCommunities(activeId) {
       },
     ]),
   );
-  storage.set("buzz-active-community-id", activeId);
+  storage.set("crew-active-community-id", activeId);
 }
 
 /**

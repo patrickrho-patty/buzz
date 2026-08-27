@@ -98,7 +98,7 @@ pub fn init<R: tauri::Runtime>(app_handle: &tauri::AppHandle<R>) {
     if let Some(monitor) = monitor {
         std::mem::forget(monitor);
     } else {
-        eprintln!("griddle-desktop: mouse-nav: failed to install NSEvent monitor");
+        eprintln!("crew-desktop: mouse-nav: failed to install NSEvent monitor");
     }
 }
 

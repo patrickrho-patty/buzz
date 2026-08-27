@@ -1,4 +1,4 @@
-//! Embedded SQLx migrations for Buzz.
+//! Embedded SQLx migrations for Crew.
 //!
 //! Fresh deployments apply the checked-in SQL files under `migrations/`. The
 //! multi-tenant rewrite owns a clean consolidated `0001`; legacy single-tenant
@@ -13,7 +13,7 @@ use crate::Result;
 
 static MIGRATOR: sqlx::migrate::Migrator = sqlx::migrate!("../../migrations");
 
-/// Run all pending Buzz database migrations.
+/// Run all pending Crew database migrations.
 ///
 /// The entire run holds the exclusive [`SCHEMA_DESTRUCTION_LOCK_KEY`] session
 /// lock, serializing schema changes against destructive deletion transactions
@@ -1091,7 +1091,7 @@ mod tests {
             extract_roster_fence(desired_schema)
         );
 
-        // Buzz→Crew sentinel rename: migration 0033 supersedes every runtime
+        // Crew→Crew sentinel rename: migration 0033 supersedes every runtime
         // contract literal shared with pre-rename binaries. Historical files
         // keep their legacy spellings (asserted above); this layer pins the
         // post-rename state so accidental regeneration cannot resurrect them.
@@ -1505,7 +1505,7 @@ mod tests {
             .expect("embedded migration 0029")
             .sql
             .as_ref();
-        // 0033 (Buzz→Crew sentinel rename) supersedes some function bodies
+        // 0033 (Crew→Crew sentinel rename) supersedes some function bodies
         // with `CREATE OR REPLACE`. The deployed end state — and therefore
         // schema.sql — is 0029 with those bodies overridden, so parity runs
         // against the merged surface, not the historical text alone.

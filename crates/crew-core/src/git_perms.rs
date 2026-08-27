@@ -1,6 +1,6 @@
 //! Git permission types — ref patterns, protection rules, and policy evaluation inputs.
 //!
-//! This module defines the core data types for the Buzz git permission system.
+//! This module defines the core data types for the Crew git permission system.
 //! The permission model: channel role = repo role; `buzz-protect` tags on
 //! kind:30617 add constraints that apply to everyone (including the owner).
 //!
@@ -301,7 +301,7 @@ pub enum RuleParseError {
 impl fmt::Display for RuleParseError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::TooFewValues => write!(f, "buzz-protect tag needs pattern + at least one rule"),
+            Self::TooFewValues => write!(f, "crew-protect tag needs pattern + at least one rule"),
             Self::TooManyRules => write!(f, "exceeds max {MAX_PROTECTION_RULES} rules per repo"),
             Self::InvalidPattern(e) => write!(f, "invalid pattern: {e}"),
             Self::UnknownRule(r) => write!(f, "unknown rule: {r:?}"),

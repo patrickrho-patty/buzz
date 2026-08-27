@@ -269,7 +269,7 @@ fn resolve_effective_agent_env_with_def(
     );
     env.extend(user_env);
 
-    // Buzz shared compute is a native Buzz provider. Translate it to crew-agent's
+    // Crew shared compute is a native Crew provider. Translate it to crew-agent's
     // OpenAI-compatible transport only in the effective runtime environment.
     #[cfg(feature = "mesh-llm")]
     super::apply_relay_mesh_env(
@@ -473,7 +473,7 @@ fn crew_agent_requirements(effective: &EffectiveAgentEnv) -> Vec<Requirement> {
     // Also accept provider-specific model fallback keys, matching crew-agent's
     // own config.rs `from_env()` resolution order (e.g. DATABRICKS_MODEL for
     // databricks/databricks_v2, ANTHROPIC_MODEL for anthropic, etc.). The
-    // baked buzz-releases env sets DATABRICKS_MODEL but not CREW_AGENT_MODEL,
+    // baked crew-releases env sets DATABRICKS_MODEL but not CREW_AGENT_MODEL,
     // so without this fallback agents baked from releases appear "not ready".
     let provider_model_key = match provider {
         Some("databricks") | Some("databricks_v2") | Some("databricks-v2") => {
@@ -545,7 +545,7 @@ fn crew_agent_requirements(effective: &EffectiveAgentEnv) -> Vec<Requirement> {
 ///
 /// File-config tier: goose reads `~/.config/goose/config.yaml` at startup.
 /// Requirements already satisfied there are silenced — we don't need to
-/// require them from Buzz's env layer.  The file layer only *silences*
+/// require them from Crew's env layer.  The file layer only *silences*
 /// requirements; it never injects values into the spawn env.
 ///
 /// `file_cfg` is injected by the caller (read once at `collect_missing_requirements`)
@@ -1187,7 +1187,7 @@ mod tests {
         let exe = present_binary_str();
         let rt = make_cli_runtime(static_commands(vec![exe]), Some(exe));
         let reqs =
-            cli_login::requirements(&[exe, "--buzz-probe-fail-xyz"], "run `tool login`", &rt);
+            cli_login::requirements(&[exe, "--crew-probe-fail-xyz"], "run `tool login`", &rt);
         assert!(
             !reqs.is_empty(),
             "non-zero probe must produce a CliLogin requirement (logged out)"
@@ -1294,14 +1294,14 @@ mod tests {
         let (dir, orig) = setup_temp_codex_acp("#!/bin/sh\nexit 1\n");
         let exe = present_binary_str();
         // Use the fixture's absolute adapter path here. Bare `codex-acp`
-        // intentionally prefers Buzz's managed npm shim when it exists, which
+        // intentionally prefers Crew's managed npm shim when it exists, which
         // would make this version-gate regression test depend on machine state.
         let rt = make_codex_runtime(
             leaked_adapter_commands(&dir.path().join("codex-acp")),
             Some(exe),
         );
         let reqs = cli_login::requirements(
-            &[exe, "--buzz-probe-must-not-run-xyz"],
+            &[exe, "--crew-probe-must-not-run-xyz"],
             "run `codex login`",
             &rt,
         );
@@ -1341,7 +1341,7 @@ mod tests {
             Some(exe),
         );
         let reqs = cli_login::requirements(
-            &[exe, "--buzz-probe-must-not-run-xyz"],
+            &[exe, "--crew-probe-must-not-run-xyz"],
             "run `codex login`",
             &rt,
         );
@@ -1549,7 +1549,7 @@ mod tests {
 
     #[test]
     fn crew_agent_databricks_v2_with_databricks_model_but_no_crew_agent_model_is_ready() {
-        // The baked buzz-releases env sets DATABRICKS_MODEL but not CREW_AGENT_MODEL.
+        // The baked crew-releases env sets DATABRICKS_MODEL but not CREW_AGENT_MODEL.
         // An agent with only DATABRICKS_MODEL must pass the readiness gate.
         let env = make_env(
             "crew-agent",

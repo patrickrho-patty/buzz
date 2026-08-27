@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# Uninstalls stale worktree-suffixed Buzz debug builds from booted iOS
+# Uninstalls stale worktree-suffixed Crew debug builds from booted iOS
 # simulators and connected Android devices/emulators. Production installs
-# (com.crew.buzzMobile / xyz.block.buzz.mobile, no suffix) are never touched:
+# (com.crew.buzzMobile / xyz.block.crew.mobile, no suffix) are never touched:
 # only identifiers with a worktree suffix appended after the production id
 # are matched. Run `just mobile-clean` (or this script directly); pass
 # --dry-run to list what would be removed without uninstalling.
 set -euo pipefail
 
 ios_prefix="com.crew.buzzMobile."
-android_prefix="xyz.block.buzz.mobile."
+android_prefix="xyz.block.crew.mobile."
 
 dry_run=0
 if [[ "${1:-}" == "--dry-run" ]]; then
@@ -58,7 +58,7 @@ if command -v adb &>/dev/null; then
 fi
 
 if [[ "$removed" == "0" ]]; then
-    echo "no worktree-suffixed Buzz installs found (production apps untouched)"
+    echo "no worktree-suffixed Crew installs found (production apps untouched)"
 elif [[ "$dry_run" == "1" ]]; then
     echo "dry run: $removed worktree install(s) would be removed (production apps untouched)"
 else

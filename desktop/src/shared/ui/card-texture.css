@@ -71,6 +71,6 @@
   --crew-card-textured-min-size: 136px;
 }
 
-.crew-card-textured-dark.buzz-card-textured-compact {
+.crew-card-textured-dark.crew-card-textured-compact {
   --crew-card-textured-source: url("./assets/card-texture-dark-compact.png");
 }

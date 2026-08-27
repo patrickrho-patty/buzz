@@ -1,10 +1,10 @@
-{{- include "buzz.validate" . -}}
+{{- include "crew.validate" . -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "buzz.fullname" . }}
+  name: {{ include "crew.fullname" . }}
   labels:
-    {{- include "buzz.labels" . | nindent 4 }}
+    {{- include "crew.labels" . | nindent 4 }}
   {{- with .Values.service.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -12,7 +12,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   selector:
-    {{- include "buzz.relaySelectorLabels" . | nindent 4 }}
+    {{- include "crew.relaySelectorLabels" . | nindent 4 }}
   ports:
     - { name: app,     port: {{ .Values.service.port }},        targetPort: app,     protocol: TCP }
     - { name: health,  port: {{ .Values.service.healthPort }},  targetPort: health,  protocol: TCP }

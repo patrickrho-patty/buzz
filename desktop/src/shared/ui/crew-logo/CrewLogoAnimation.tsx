@@ -622,7 +622,7 @@ function RestWindowFade({
 }
 
 export default function CrewLogoAnimation({
-  ariaLabel = "Buzz logo animation",
+  ariaLabel = "Crew logo animation",
   className = "",
   fullScreen = true,
   loop = false,

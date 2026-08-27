@@ -5,7 +5,7 @@ import {
 import { setLocalStorageItemWithRecovery } from "@/shared/lib/localStorageQuota";
 import type { Profile } from "@/shared/api/types";
 
-const STORAGE_KEY = "buzz-community-onboarding-transaction.v1";
+const STORAGE_KEY = "crew-community-onboarding-transaction.v1";
 
 export type CommunityOnboardingSource =
   | "first-community"
@@ -225,7 +225,7 @@ export function markCommunityOnboardingComplete(
   );
   // The legacy gate is identity-scoped. Marking it here prevents the old profile
   // flow from reopening after the first community transaction completes.
-  storage.setItem(`buzz-onboarding-complete.v1:${pubkey}`, "true");
+  storage.setItem(`crew-onboarding-complete.v1:${pubkey}`, "true");
 }
 
 /**

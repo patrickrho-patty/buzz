@@ -153,7 +153,7 @@ impl PeerSlot {
                 recovering_playout: false,
             }),
             Err(e) => {
-                eprintln!("griddle-desktop: jitter buffer init peer {peer_idx}: {e}");
+                eprintln!("crew-desktop: jitter buffer init peer {peer_idx}: {e}");
                 None
             }
         }
@@ -268,7 +268,7 @@ pub(crate) async fn run_playout_recv_loop(
                             slot.update_playout_recovery();
                             if slot.player.len() >= PLAYOUT_QUEUE_EMERGENCY_HIGH_WATER {
                                 eprintln!(
-                                    "griddle-desktop: playout queue emergency high-water for peer \
+                                    "crew-desktop: playout queue emergency high-water for peer \
                                      {peer_idx} (depth={}) — dropping oldest frame",
                                     slot.player.len(),
                                 );
@@ -278,7 +278,7 @@ pub(crate) async fn run_playout_recv_loop(
                         }
                         Err(e) => {
                             eprintln!(
-                                "griddle-desktop: jitter get_audio peer {peer_idx}: {e}"
+                                "crew-desktop: jitter get_audio peer {peer_idx}: {e}"
                             );
                         }
                     }
@@ -333,7 +333,7 @@ pub(crate) async fn run_playout_recv_loop(
                             // the slice is too short, which `if data.len() <= ...`
                             // already guards. Defensive log + drop.
                             eprintln!(
-                                "griddle-desktop: dropping malformed audio frame from peer {peer_idx} ({} bytes)",
+                                "crew-desktop: dropping malformed audio frame from peer {peer_idx} ({} bytes)",
                                 data.len(),
                             );
                             continue;
@@ -384,7 +384,7 @@ pub(crate) async fn run_playout_recv_loop(
                                 .insert_packet(header.seq, header.ts_48k, opus_bytes)
                         {
                             eprintln!(
-                                "griddle-desktop: jitter insert peer {peer_idx}: {err}"
+                                "crew-desktop: jitter insert peer {peer_idx}: {err}"
                             );
                         } else {
                             // Heartbeat for the playout tick's idle-peer

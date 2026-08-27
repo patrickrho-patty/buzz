@@ -418,7 +418,7 @@ class MessageContent extends HookConsumerWidget {
 
     final renderedLink = isCanonicalBuzzLabel && crewPresentation != null
         ? _TokenPill(
-            key: ValueKey('buzz-link-chip:$url'),
+            key: ValueKey('crew-link-chip:$url'),
             icon: crewPresentation.icon,
             interactive: crewPresentation.interactive,
             semanticLabel: crewPresentation.semanticLabel,

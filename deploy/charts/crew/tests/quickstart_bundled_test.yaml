@@ -13,7 +13,7 @@ tests:
       name: rel
       revision: 1
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       postgresql.enabled: true
       redis.enabled: true
@@ -41,7 +41,7 @@ tests:
     release:
       name: rel
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       postgresql.enabled: true
       redis.enabled: true
@@ -58,7 +58,7 @@ tests:
     release:
       name: rel
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       postgresql.enabled: true
       redis.enabled: true
@@ -78,7 +78,7 @@ tests:
     release:
       name: rel
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       postgresql.enabled: true
       redis.enabled: true

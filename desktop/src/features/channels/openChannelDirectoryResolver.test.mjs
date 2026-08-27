@@ -289,8 +289,8 @@ before(async () => {
 beforeEach(() => {
   ipc.reset();
   localStorage.clear();
-  localStorage.setItem("buzz-communities", JSON.stringify([COMMUNITY]));
-  localStorage.setItem("buzz-active-community-id", COMMUNITY.id);
+  localStorage.setItem("crew-communities", JSON.stringify([COMMUNITY]));
+  localStorage.setItem("crew-active-community-id", COMMUNITY.id);
 });
 
 afterEach(() => ipc.reset());

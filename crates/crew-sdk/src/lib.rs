@@ -1,6 +1,6 @@
 #![deny(unsafe_code)]
 #![warn(missing_docs)]
-//! `crew-sdk` — typed Nostr event builders for Buzz operations.
+//! `crew-sdk` — typed Nostr event builders for Crew operations.
 //!
 //! # Mental Model
 //!

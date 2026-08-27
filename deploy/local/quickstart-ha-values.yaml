@@ -22,7 +22,7 @@ redis:
   enabled: true
 minio:
   enabled: true
-relayUrl: wss://buzz.test.local
+relayUrl: wss://crew.test.local
 ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000001"
 relay:
   # Testbed, not business-logic validation — same rationale as CI quickstart.

@@ -314,7 +314,7 @@ fn encrypt_private_key(state: &AppState, priv_hex: &str) -> Result<String, Strin
             Nonce::from_slice(&nonce_bytes),
             Payload {
                 msg: priv_hex.as_bytes(),
-                aad: b"griddle-nostr-privkey",
+                aad: b"crew-nostr-privkey",
             },
         )
         .map_err(|_| "aes-gcm encrypt failed".to_string())?;
@@ -341,7 +341,7 @@ fn decrypt_private_key(state: &AppState, blob_b64: &str) -> Result<String, Strin
             Nonce::from_slice(nonce_bytes),
             Payload {
                 msg: ct,
-                aad: b"griddle-nostr-privkey",
+                aad: b"crew-nostr-privkey",
             },
         )
         .map_err(|_| "aes-gcm decrypt failed (wrong master key?)".to_string())?;
@@ -352,12 +352,12 @@ fn decrypt_private_key(state: &AppState, blob_b64: &str) -> Result<String, Strin
 // Keycloak Admin API client (service account)
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Minimal Keycloak Admin REST client authenticated as the `griddle-bridge`
+/// Minimal Keycloak Admin REST client authenticated as the `crew-bridge`
 /// service account (client_credentials). Caches the admin token in-memory.
 pub struct KeycloakAdmin {
     base_url: String,  // https://login.patty.io
     realm: String,     // internal
-    client_id: String, // griddle-bridge
+    client_id: String, // crew-bridge
     client_secret: String,
     http: reqwest::Client,
     token_cache: RwLock<Option<(String, std::time::Instant)>>,
@@ -655,7 +655,7 @@ mod tests {
                 Nonce::from_slice(&nonce_bytes),
                 Payload {
                     msg: priv_hex.as_bytes(),
-                    aad: b"griddle-nostr-privkey",
+                    aad: b"crew-nostr-privkey",
                 },
             )
             .unwrap();
@@ -673,7 +673,7 @@ mod tests {
                 Nonce::from_slice(n),
                 Payload {
                     msg: ct,
-                    aad: b"griddle-nostr-privkey",
+                    aad: b"crew-nostr-privkey",
                 },
             )
             .unwrap();
@@ -695,7 +695,7 @@ mod tests {
                 Nonce::from_slice(&nonce_bytes),
                 Payload {
                     msg: b"secret-data",
-                    aad: b"griddle-nostr-privkey",
+                    aad: b"crew-nostr-privkey",
                 },
             )
             .unwrap();
@@ -706,7 +706,7 @@ mod tests {
             Nonce::from_slice(&nonce_bytes),
             Payload {
                 msg: &tampered,
-                aad: b"griddle-nostr-privkey",
+                aad: b"crew-nostr-privkey",
             },
         );
         assert!(result.is_err(), "tampered ciphertext must not decrypt");

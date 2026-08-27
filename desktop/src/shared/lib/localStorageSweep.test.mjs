@@ -43,8 +43,8 @@ test("sweeps stale whitelisted caches and keeps fresh or durable state", () => {
       [`${keyPrefix}fresh-${index}`, snapshot(now - maxAgeMs + 1)],
     ],
   );
-  entries.push(["buzz-communities", snapshot(0)]);
-  entries.push(["buzz-theme", snapshot(0)]);
+  entries.push(["crew-communities", snapshot(0)]);
+  entries.push(["crew-theme", snapshot(0)]);
   entries.push(["crew-self-profile.v1:offline", snapshot(0)]);
   const localStorage = makeLocalStorage(entries);
   installWindow(localStorage);
@@ -67,8 +67,8 @@ test("sweeps stale whitelisted caches and keeps fresh or durable state", () => {
       true,
     );
   }
-  assert.equal(localStorage.getItem("buzz-communities"), snapshot(0));
-  assert.equal(localStorage.getItem("buzz-theme"), snapshot(0));
+  assert.equal(localStorage.getItem("crew-communities"), snapshot(0));
+  assert.equal(localStorage.getItem("crew-theme"), snapshot(0));
   assert.equal(
     localStorage.getItem("crew-self-profile.v1:offline"),
     snapshot(0),

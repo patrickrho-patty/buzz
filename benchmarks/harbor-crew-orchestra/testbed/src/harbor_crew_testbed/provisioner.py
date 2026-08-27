@@ -1,4 +1,4 @@
-"""Channel-per-trial Buzz provisioning against a local benchmark stack."""
+"""Channel-per-trial Crew provisioning against a local benchmark stack."""
 
 from __future__ import annotations
 
@@ -56,7 +56,7 @@ def provisioner_from_dict(config: dict[str, object]) -> BuzzTrialProvisioner:
 
 
 class BuzzTrialProvisioner:
-    """Implements the TrialHandle v1.1 contract against a live Buzz relay.
+    """Implements the TrialHandle v1.1 contract against a live Crew relay.
 
     Guarantees (contract PLANS/HARBOR_CREW_TRIALHANDLE_CONTRACT.md):
     - create_trial is synchronous and idempotent per (run_id, trial_id);
@@ -156,7 +156,7 @@ class BuzzTrialProvisioner:
         credentials = self._mint_credentials(manifest)
         user = self._mint_user(task_name)
         # The user identity creates the channel and invites the agents —
-        # mirroring production Buzz, where a human owns the channel their
+        # mirroring production Crew, where a human owns the channel their
         # agents work in.
         cli = self._cli_for(user)
         name = (

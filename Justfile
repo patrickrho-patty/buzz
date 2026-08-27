@@ -103,6 +103,48 @@ file-size-check:
     node web/scripts/check-file-sizes.mjs
     node mobile/scripts/check-file-sizes.mjs
 
+# Build-cache hygiene: prune artifacts older than SWEEP_DAYS from every Rust
+# target dir and fail if a dir still exceeds SIZE_CAP_GB. Fresh-vs-stale is
+# decided by access time where the FS preserves it, falling back to mtime.
+# Defaults sweep >21d-old artifacts, cap each dir at 20GB. Tune via
+# `just tidy 7 10`.
+sweep_days := "21"
+size_cap_gb := "20"
+tidy days=sweep_days cap=size_cap_gb:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    targets=("target")  # single shared cache: root + desktop/src-tauri via desktop/.cargo/config.toml
+    dirs_present=()
+    for dir in "${targets[@]}"; do [[ -d "$dir" ]] && dirs_present+=("$dir"); done
+    before=$([[ ${#dirs_present[@]} -gt 0 ]] && du -sg "${dirs_present[@]}" 2>/dev/null | awk '{s+=$1} END {print s+0}' || echo 0)
+    for dir in "${targets[@]}"; do
+        [[ -d "$dir" ]] || continue
+        echo "sweeping $dir (artifacts older than {{days}}d)…"
+        find "$dir" -type f \( -atime +"{{days}}" -o -mtime +"{{days}}" \) -print0 2>/dev/null \
+            | xargs -0 rm -f 2>/dev/null || true
+        find "$dir" -mindepth 1 -type d -empty -delete 2>/dev/null || true
+    done
+    after=$([[ ${#dirs_present[@]} -gt 0 ]] && du -sg "${dirs_present[@]}" 2>/dev/null | awk '{s+=$1} END {print s+0}' || echo 0)
+    echo "target dirs: ${before}GB -> ${after}GB"
+    seen=""
+    for dir in "${targets[@]}"; do
+        [[ -d "$dir" ]] || continue
+        case ":$seen:" in *":$dir:"*) continue;; esac
+        seen="$seen:$dir"
+        gb=$(du -sg "$dir" | cut -f1)
+        if (( gb > {{cap}} )); then
+            echo "ERROR: $dir is ${gb}GB (cap {{cap}}GB). Run 'just tidy 3' or 'cargo clean' in $dir." >&2
+            exit 1
+        fi
+    done
+    echo "cache OK (caps: {{cap}}GB per target dir)"
+
+# Wipe all build caches entirely (next build is cold). Use after toolchain
+# bumps or large refactors when fingerprints are mostly dead anyway.
+clean-caches:
+    cargo clean
+    cd desktop/src-tauri && cargo clean
+
 # Format all Rust code
 fmt:
     cargo fmt --all

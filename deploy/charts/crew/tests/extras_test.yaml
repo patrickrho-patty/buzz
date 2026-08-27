@@ -3,7 +3,7 @@ templates:
   - templates/extramanifests.yaml
   - templates/servicemonitor.yaml
 set:
-  relayUrl: wss://buzz.example.com
+  relayUrl: wss://crew.example.com
   ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
   externalPostgresql.url: postgres://u:p@h:5432/d
   externalRedis.url: redis://h:6379
@@ -24,7 +24,7 @@ tests:
         - apiVersion: v1
           kind: ConfigMap
           metadata:
-            name: '{{ include "buzz.fullname" . }}-extra'
+            name: '{{ include "crew.fullname" . }}-extra'
           data:
             host: '{{ .Values.relayUrl }}'
     asserts:
@@ -35,10 +35,10 @@ tests:
           value: ConfigMap
       - equal:
           path: metadata.name
-          value: RELEASE-NAME-buzz-extra
+          value: RELEASE-NAME-crew-extra
       - equal:
           path: data.host
-          value: wss://buzz.example.com
+          value: wss://crew.example.com
 
   - it: omits the ServiceMonitor unless enabled
     template: templates/servicemonitor.yaml
@@ -62,7 +62,7 @@ tests:
           value: metrics
       - equal:
           path: spec.selector.matchLabels["app.kubernetes.io/name"]
-          value: buzz
+          value: crew
       - notExists:
           path: spec.selector.matchLabels["app.kubernetes.io/component"]
       - equal:

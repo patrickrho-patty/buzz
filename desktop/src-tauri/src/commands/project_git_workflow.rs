@@ -585,11 +585,11 @@ pub async fn merge_project_pull_request(
                 ));
             }
 
-            let merge_email = format!("{merger_pubkey}@users.noreply.buzz");
+            let merge_email = format!("{merger_pubkey}@users.noreply.crew");
             let merge_result = run_git(
                 &[
                     "-c",
-                    "user.name=Buzz User",
+                    "user.name=Crew User",
                     "-c",
                     format!("user.email={merge_email}").as_str(),
                     "merge",
@@ -781,7 +781,7 @@ mod tests {
         let pull_request_id = "d".repeat(64);
         let pull_request_author = "b".repeat(64);
         let merge_commit = "e".repeat(40);
-        let repo_address = format!("30617:{owner}:buzz");
+        let repo_address = format!("30617:{owner}:crew");
         let before = Timestamp::now().as_secs();
         let event = Event::from_json(
             build_merged_status_event(
@@ -814,7 +814,7 @@ mod tests {
         let event = Event::from_json(
             build_merged_status_event(
                 &keys,
-                &format!("30617:{owner}:buzz"),
+                &format!("30617:{owner}:crew"),
                 &"d".repeat(64),
                 &"b".repeat(64),
                 &"e".repeat(40),
@@ -831,21 +831,21 @@ mod tests {
     fn merge_status_metadata_is_rejected_before_git_work() {
         let owner = "a".repeat(64);
         assert!(validate_merge_status_metadata(
-            &format!("30617:{}:buzz", "b".repeat(64)),
+            &format!("30617:{}:crew", "b".repeat(64)),
             &owner,
             &"d".repeat(64),
             &"e".repeat(64),
         )
         .is_err());
         assert!(validate_merge_status_metadata(
-            &format!("30617:{owner}:buzz"),
+            &format!("30617:{owner}:crew"),
             &owner,
             "not-an-event-id",
             &"e".repeat(64),
         )
         .is_err());
         assert!(validate_merge_status_metadata(
-            &format!("30617:{owner}:buzz"),
+            &format!("30617:{owner}:crew"),
             &owner,
             &"d".repeat(64),
             "not-an-author",
@@ -861,7 +861,7 @@ mod tests {
         let event = Event::from_json(
             build_pull_request_status_event(
                 &keys,
-                &format!("30617:{owner}:buzz"),
+                &format!("30617:{owner}:crew"),
                 &"d".repeat(64),
                 &author,
                 "closed",
@@ -887,7 +887,7 @@ mod tests {
 
         assert!(build_pull_request_status_event(
             &keys,
-            &format!("30617:{owner}:buzz"),
+            &format!("30617:{owner}:crew"),
             &"d".repeat(64),
             &"b".repeat(64),
             "merged",

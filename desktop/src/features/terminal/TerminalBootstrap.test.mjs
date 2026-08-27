@@ -33,7 +33,7 @@ before(async () => {
     isTauri: true,
     window: dom.window,
   });
-  dom.window.localStorage.setItem("buzz-follow-system", "false");
+  dom.window.localStorage.setItem("crew-follow-system", "false");
   dom.window.isTauri = true;
   dom.window.matchMedia = () => ({
     // This suite exercises bootstrap/IPC behavior, not banner motion. Keeping

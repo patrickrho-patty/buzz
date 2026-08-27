@@ -14,7 +14,7 @@
  *   - `imeta` tags come exclusively from the edit (full new attachment set);
  *   - `p` tags from the edit join the original set because only newly added
  *     mentions notify. Reference-only `mention` tags, by contrast, are a full
- *     snapshot from the edited composer (marked by `buzz:mention-snapshot`)
+ *     snapshot from the edited composer (marked by `crew:mention-snapshot`)
  *     and therefore replace the original set; this preserves the edited body's
  *     stable recipient identities even before profiles load or after an alias
  *     changes;

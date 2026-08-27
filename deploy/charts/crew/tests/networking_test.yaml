@@ -6,7 +6,7 @@ templates:
 tests:
   - it: Service exposes app/health/metrics ports
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       s3.endpoint: http://minio:9000
@@ -24,7 +24,7 @@ tests:
 
   - it: Ingress disabled by default
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       s3.endpoint: http://minio:9000
@@ -40,7 +40,7 @@ tests:
 
   - it: Ingress renders with derived host when relayUrl provided
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       s3.endpoint: http://minio:9000
@@ -59,7 +59,7 @@ tests:
 
   - it: HTTPRoute renders when enabled
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       s3.endpoint: http://minio:9000

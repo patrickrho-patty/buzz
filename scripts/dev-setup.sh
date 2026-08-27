@@ -49,11 +49,11 @@ load_env() {
     set +o allexport
   fi
 
-  # Smooth the local rename path for developers with a pre-Buzz .env copied
+  # Smooth the local rename path for developers with a pre-Crew .env copied
   # from .env.example. Only rewrite the old default values; custom values stay
   # untouched.
   if [[ "${DATABASE_URL:-}" == "postgres://sprout:sprout_dev@localhost:5432/sprout" ]]; then
-    warn "Migrating legacy default DATABASE_URL from sprout to buzz for this setup run"
+    warn "Migrating legacy default DATABASE_URL from sprout to crew for this setup run"
     DATABASE_URL="postgres://crew:crew_dev@localhost:5432/crew"
   fi
   if [[ "${PGUSER:-}" == "sprout" ]]; then PGUSER="buzz"; fi
@@ -63,9 +63,9 @@ load_env() {
   export DATABASE_URL="${DATABASE_URL:-postgres://crew:crew_dev@localhost:5432/crew}"
   export PGHOST="${PGHOST:-localhost}"
   export PGPORT="${PGPORT:-5432}"
-  export PGUSER="${PGUSER:-buzz}"
+  export PGUSER="${PGUSER:-crew}"
   export PGPASSWORD="${PGPASSWORD:-crew_dev}"
-  export PGDATABASE="${PGDATABASE:-buzz}"
+  export PGDATABASE="${PGDATABASE:-crew}"
   export REDIS_URL="${REDIS_URL:-redis://localhost:6379}"
 }
 
@@ -76,7 +76,7 @@ cleanup_legacy_sprout_containers() {
     return
   fi
 
-  warn "Stopping/removing legacy sprout-* dev containers so buzz-* containers can bind the standard ports"
+  warn "Stopping/removing legacy sprout-* dev containers so crew-* containers can bind the standard ports"
   echo "${legacy_containers}" | xargs docker stop >/dev/null 2>&1 || true
   echo "${legacy_containers}" | xargs docker rm >/dev/null 2>&1 || true
   success "Legacy sprout-* containers removed (volumes preserved)"
@@ -182,7 +182,7 @@ success "Git hooks installed"
 
 echo ""
 echo -e "${GREEN}=======================================================${NC}"
-echo -e "${GREEN}  Buzz dev environment is ready!${NC}"
+echo -e "${GREEN}  Crew dev environment is ready!${NC}"
 echo -e "${GREEN}=======================================================${NC}"
 echo ""
 echo -e "  ${BLUE}Postgres${NC}    ${DATABASE_URL}"

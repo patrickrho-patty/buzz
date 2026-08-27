@@ -1,4 +1,4 @@
-//! git-credential-nostr — NIP-98 git credential helper for Buzz.
+//! git-credential-nostr — NIP-98 git credential helper for Crew.
 //!
 //! Git calls this via the credential helper protocol (stdin/stdout).
 //! We read the request, sign a kind:27235 event, and return the base64-encoded
@@ -9,7 +9,7 @@ use std::env::VarError;
 use std::io::{self, BufRead, Write};
 
 /// Reads CREW_* names, falling back to legacy BUZZ_* spellings during the
-/// Buzz → Crew rename window.
+/// Crew → Crew rename window.
 fn crew_env_with_legacy(key: &str) -> Result<String, VarError> {
     match std::env::var(key) {
         Ok(v) => Ok(v),
@@ -85,7 +85,7 @@ fn load_key() -> Result<String, String> {
     Ok(raw.trim().to_string())
 }
 
-/// Load the NIP-OA owner attestation injected by Buzz Desktop/ACP.
+/// Load the NIP-OA owner attestation injected by Crew Desktop/ACP.
 ///
 /// The tag must be part of the signed NIP-98 event: Git's credential protocol
 /// can return an Authorization value, but it cannot add a separate HTTP header.
@@ -189,9 +189,9 @@ pub fn run() -> i32 {
         };
     }
 
-    // No Nostr challenge from the server — this isn't a Buzz remote.
+    // No Nostr challenge from the server — this isn't a Crew remote.
     // Exit silently so git falls through to the next credential helper.
-    // This check comes FIRST so non-Buzz remotes never hit validation errors.
+    // This check comes FIRST so non-Crew remotes never hit validation errors.
     let wwwauth = match req.wwwauth.as_deref() {
         Some(v) => v,
         None => return 0,

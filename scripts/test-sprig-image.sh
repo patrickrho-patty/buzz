@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-IMAGE="${1:-buzz-sprig:contract-test}"
+IMAGE="${1:-crew-sprig:contract-test}"
 if [[ "${SKIP_BUILD:-0}" != 1 ]]; then
     docker build --file Dockerfile.sprig --tag "$IMAGE" .
 fi
@@ -13,7 +13,7 @@ assert_run() {
 assert_run '
   command -v bash git update-ca-certificates >/dev/null
   test "$(readlink /usr/local/bin/crew-acp)" = sprig
-  for name in crew-agent crew-dev-mcp rg tree buzz git-credential-nostr git-sign-nostr; do
+  for name in crew-agent crew-dev-mcp rg tree crew git-credential-nostr git-sign-nostr; do
     test "$(readlink "/usr/local/bin/$name")" = sprig
   done
   test "$(git config --system gpg.x509.program)" = /usr/local/bin/git-sign-nostr

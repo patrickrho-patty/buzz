@@ -18,7 +18,7 @@ impl TtsPipeline {
                 text,
             })
             .map_err(|e| {
-                eprintln!("griddle-desktop: TTS queue saturated, dropping message: {e}");
+                eprintln!("crew-desktop: TTS queue saturated, dropping message: {e}");
                 format!("TTS queue full, dropping: {e}")
             })
     }
@@ -75,7 +75,7 @@ impl TtsPipeline {
             voice,
         );
         if acknowledged.is_some() {
-            eprintln!("griddle-desktop: tts stage=cancellation reason=voice_switch route_id=0");
+            eprintln!("crew-desktop: tts stage=cancellation reason=voice_switch route_id=0");
         }
         acknowledged
     }
@@ -91,7 +91,7 @@ impl TtsPipeline {
 
     /// Signal the worker thread to stop.
     pub fn shutdown(&self) {
-        eprintln!("griddle-desktop: tts stage=cancellation reason=shutdown route_id=0");
+        eprintln!("crew-desktop: tts stage=cancellation reason=shutdown route_id=0");
         self.shutdown.store(true, Ordering::Release);
     }
 

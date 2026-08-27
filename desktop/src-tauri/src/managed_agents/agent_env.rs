@@ -1,6 +1,6 @@
 //! Build-time agent env passthrough.
 //!
-//! Internal builds (buzz-releases) bake arbitrary `KEY=VALUE` pairs into the
+//! Internal builds (crew-releases) bake arbitrary `KEY=VALUE` pairs into the
 //! binary via `CREW_BUILD_AGENT_ENV` (base64-encoded, newline-delimited).
 //! OSS builds leave the compile-time var unset — nothing is injected.
 
@@ -29,7 +29,7 @@ pub(super) fn idle_pool_sleep_env(lazy: bool) -> &'static str {
 
 /// Return the baked-in build-time env pairs as a map.
 ///
-/// Internal builds (buzz-releases) bake provider/model defaults and arbitrary
+/// Internal builds (crew-releases) bake provider/model defaults and arbitrary
 /// `KEY=VALUE` pairs into the binary at compile time. This function returns
 /// those pairs as an owned map so callers can fold them into an in-process env
 /// at the **lowest** precedence layer — user/persona values layered on top
@@ -86,7 +86,7 @@ fn build_env_map(
     map.retain(|key, _| {
         if super::env_vars::is_reserved_env_key(key) {
             eprintln!(
-                "griddle-desktop: ignoring reserved env var `{key}` from the baked build env"
+                "crew-desktop: ignoring reserved env var `{key}` from the baked build env"
             );
             return false;
         }
@@ -394,7 +394,7 @@ mod tests {
     // ── baked reserved-key filtering ──────────────────────────────────────
     //
     // The baked map is written into a spawned agent's environment LAST (see
-    // `managed_agents/runtime.rs`), after Buzz sets the access gates. If a
+    // `managed_agents/runtime.rs`), after Crew sets the access gates. If a
     // baked reserved key survived here, an internal build packaged with
     // `CREW_ACP_RESPOND_TO=anyone` would answer anyone while the UI shows
     // "Only me". `build.rs` rejects such a key at build time; these tests pin

@@ -1,4 +1,4 @@
-# Griddle on rho-cluster (EKS ap-northeast-2).
+# Crew on rho-cluster (EKS ap-northeast-2).
 #
 # Profile: bundled Postgres/Redis/MinIO in-cluster (quickstart services) so the
 # stack runs standalone today. Swapping to RDS/ElastiCache/S3 later is a
@@ -12,7 +12,7 @@ image:
   tag: v0.2.7
 
 # Canonical relay identity.
-relayUrl: wss://griddle.patty.io
+relayUrl: wss://crew.patty.io
 
 # Nostr identity of the workspace owner.
 ownerPubkey: "ebf0b5847e34a95716bca3cd83c1cd91efd8f6b610cc62b4531ec5e7d9825026"
@@ -22,11 +22,11 @@ ownerPubkey: "ebf0b5847e34a95716bca3cd83c1cd91efd8f6b610cc62b4531ec5e7d9825026"
 # When migrating to external RDS/ElastiCache/S3, create a Secret with
 # DATABASE_URL / REDIS_URL / S3 keys and set:
 #   secrets:
-#     existingSecret: griddle-secrets
+#     existingSecret: crew-secrets
 
 # ── Workforce SSO (Keycloak) ────────────────────────────────────────────────
 # Secret values (bridge client secret, key-wrap master key) live in the
-# `griddle-oidc` Secret; non-secret routing values are inline below.
+# `crew-oidc` Secret; non-secret routing values are inline below.
 # ── Relay ────────────────────────────────────────────────────────────────────
 # Strict agent enrollment (relay.allowNipOaAuth=false): agent keys get NO
 # implicit workspace access via NIP-OA owner attestation. Every legitimate
@@ -37,14 +37,14 @@ relay:
     - name: CREW_OIDC_ISSUER
       value: https://login.patty.io/realms/internal
     - name: CREW_OIDC_DESKTOP_CLIENT_ID
-      value: griddle-desktop
+      value: crew-desktop
     - name: CREW_OIDC_REDIRECT_URI
-      value: griddle://auth/callback
+      value: crew://auth/callback
     - name: CREW_OIDC_BRIDGE_CLIENT_ID
-      value: griddle-bridge
+      value: crew-bridge
   extraEnvFrom:
     - secretRef:
-        name: griddle-oidc
+        name: crew-oidc
 
 # ── Bundled backing services (in-cluster) ───────────────────────────────────
 # rho-cluster's gp2 StorageClass is marked default, so bundled services bind

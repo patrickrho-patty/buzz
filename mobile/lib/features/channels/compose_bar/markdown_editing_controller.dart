@@ -515,7 +515,7 @@ class _ComposerBuzzLinkChip extends StatelessWidget {
       label: semanticLabel,
       excludeSemantics: true,
       child: Container(
-        key: ValueKey('composer-buzz-link-chip:$label'),
+        key: ValueKey('composer-crew-link-chip:$label'),
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
         decoration: BoxDecoration(
           color: context.colors.primary.withValues(alpha: 0.16),

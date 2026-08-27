@@ -263,7 +263,7 @@ pub async fn cmd_create_repo(
     let event = client.sign_event(builder)?;
     let owner = event.pubkey.to_hex();
     let resp = client.submit_event(event).await?;
-    // `link` renders as a rich preview card in Buzz Desktop when included in
+    // `link` renders as a rich preview card in Crew Desktop when included in
     // a chat message — agents announce repos with it (see base_prompt.md).
     let link = crate::links::repo_link(&owner, repo_id);
     crate::client::print_create_response(&resp, "link", &link);
@@ -785,7 +785,7 @@ mod tests {
             .iter()
             .filter(|tag| tag.as_slice().first().map(String::as_str) == Some("crew-channel"))
             .collect();
-        assert_eq!(bindings.len(), 1, "exactly one buzz-channel tag");
+        assert_eq!(bindings.len(), 1, "exactly one crew-channel tag");
         assert_eq!(bindings[0].as_slice(), ["crew-channel", channel.as_str()]);
         // The standard metadata still rides along.
         assert!(event.tags.iter().any(|tag| tag.as_slice() == ["d", "demo"]));

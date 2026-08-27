@@ -10,9 +10,9 @@ deploys leave minio.enabled=false and point s3.* at managed object storage.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "buzz.minioFullname" . }}
+  name: {{ include "crew.minioFullname" . }}
   labels:
-    {{- include "buzz.labels" . | nindent 4 }}
+    {{- include "crew.labels" . | nindent 4 }}
     app.kubernetes.io/component: minio
 spec:
   replicas: 1
@@ -20,12 +20,12 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      {{- include "buzz.selectorLabels" . | nindent 6 }}
+      {{- include "crew.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: minio
   template:
     metadata:
       labels:
-        {{- include "buzz.selectorLabels" . | nindent 8 }}
+        {{- include "crew.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: minio
     spec:
       containers:
@@ -36,12 +36,12 @@ spec:
             - name: MINIO_ROOT_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "buzz.chartSecretName" . }}
+                  name: {{ include "crew.chartSecretName" . }}
                   key: CREW_S3_ACCESS_KEY
             - name: MINIO_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "buzz.chartSecretName" . }}
+                  name: {{ include "crew.chartSecretName" . }}
                   key: CREW_S3_SECRET_KEY
           ports:
             - { name: api, containerPort: 9000 }
@@ -60,7 +60,7 @@ spec:
         - name: data
           {{- if .Values.minio.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ include "buzz.minioFullname" . }}
+            claimName: {{ include "crew.minioFullname" . }}
           {{- else }}
           emptyDir: {}
           {{- end }}
@@ -68,13 +68,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "buzz.minioFullname" . }}
+  name: {{ include "crew.minioFullname" . }}
   labels:
-    {{- include "buzz.labels" . | nindent 4 }}
+    {{- include "crew.labels" . | nindent 4 }}
     app.kubernetes.io/component: minio
 spec:
   selector:
-    {{- include "buzz.selectorLabels" . | nindent 4 }}
+    {{- include "crew.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: minio
   ports:
     - { name: api, port: 9000, targetPort: api }
@@ -84,9 +84,9 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "buzz.minioFullname" . }}
+  name: {{ include "crew.minioFullname" . }}
   labels:
-    {{- include "buzz.labels" . | nindent 4 }}
+    {{- include "crew.labels" . | nindent 4 }}
     app.kubernetes.io/component: minio
   annotations:
     helm.sh/resource-policy: keep

@@ -43,7 +43,7 @@ Back up these before upgrades and on a regular schedule:
 - The owner private key if bootstrap generated one for RELAY_OWNER_PUBKEY
 - Postgres data (prefer pg_dump or a quiesced volume snapshot)
 - MinIO/S3 bucket contents for media and git objects
-- buzz-git-data volume (CREW_GIT_REPO_PATH=/data/git)
+- crew-git-data volume (CREW_GIT_REPO_PATH=/data/git)
 - Caddy data/config volumes if using compose.caddy.yml
 
 Keep Postgres + object/git state snapshots from the same maintenance window.
@@ -100,7 +100,7 @@ case "${1:-help}" in
 Usage: ./run.sh <command>
 
 Commands:
-  start         Start Buzz with docker compose up -d --wait
+  start         Start Crew with docker compose up -d --wait
   stop          Stop containers without deleting volumes
   restart       Recreate the relay after env/image changes
   pull          Pull configured images

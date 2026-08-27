@@ -9,7 +9,7 @@ if [[ "$instance_id" != "xyz.patty.griddle.app.dev" && "$instance_id" != xyz.pat
     echo "reset-desktop-standalone-state: refusing non-dev bundle identifier: $instance_id" >&2
     exit 1
 fi
-if [[ "$keyring_service" != "griddle-desktop-dev" && "$keyring_service" != griddle-desktop-dev.* ]]; then
+if [[ "$keyring_service" != "crew-desktop-dev" && "$keyring_service" != crew-desktop-dev.* ]]; then
     echo "reset-desktop-standalone-state: refusing non-dev keyring service: $keyring_service" >&2
     exit 1
 fi

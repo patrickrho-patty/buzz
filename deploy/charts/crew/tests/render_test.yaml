@@ -10,7 +10,7 @@ templates:
 tests:
   - it: renders cleanly in production profile (external pg/redis)
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       externalRedis.url: redis://h:6379
@@ -50,7 +50,7 @@ tests:
         template: templates/deployment.yaml
   - it: renders virtual-hosted S3 addressing for providers that require it
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       externalRedis.url: redis://h:6379
@@ -76,7 +76,7 @@ tests:
 
   - it: lets an explicit value disable huddle audio in a single-replica render
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       externalRedis.url: redis://h:6379
@@ -94,7 +94,7 @@ tests:
 
   - it: lets an explicit value enable huddle audio in HA when the operator owns external audio behavior
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       externalRedis.url: redis://h:6379
@@ -114,7 +114,7 @@ tests:
 
   - it: renders HA cleanly with replicaCount=3 + RWO git + Redis (no RWM needed)
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       externalRedis.url: redis://h:6379
@@ -141,7 +141,7 @@ tests:
 
   - it: mounts a per-pod emptyDir git scratch volume when persistence is disabled
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       externalRedis.url: redis://h:6379
@@ -177,7 +177,7 @@ tests:
 
   - it: preserves image defaults when Pod extensions are empty
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       externalRedis.url: redis://h:6379
@@ -197,7 +197,7 @@ tests:
 
   - it: appends generic Pod extensions and overrides the relay command
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       externalPostgresql.url: postgres://u:p@h:5432/d
       externalRedis.url: redis://h:6379
@@ -272,7 +272,7 @@ tests:
     release:
       name: rel
     set:
-      relayUrl: wss://buzz.example.com
+      relayUrl: wss://crew.example.com
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       postgresql.enabled: true
       redis.enabled: true

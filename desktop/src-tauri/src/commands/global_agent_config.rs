@@ -164,7 +164,7 @@ fn collect_restart_candidates(
         Ok(r) => r,
         Err(e) => {
             eprintln!(
-                "griddle-desktop: set_global_agent_config: failed to load agents for restart scan: {e}"
+                "crew-desktop: set_global_agent_config: failed to load agents for restart scan: {e}"
             );
             return (Vec::new(), Vec::new());
         }
@@ -173,7 +173,7 @@ fn collect_restart_candidates(
         Ok(p) => p,
         Err(e) => {
             eprintln!(
-                "griddle-desktop: set_global_agent_config: failed to load personas for restart scan: {e}"
+                "crew-desktop: set_global_agent_config: failed to load personas for restart scan: {e}"
             );
             return (Vec::new(), Vec::new());
         }
@@ -335,13 +335,13 @@ async fn restart_local_agent_on_config_change(
         Ok(Ok(runtime_keys)) => runtime_keys,
         Ok(Err(e)) => {
             eprintln!(
-                "griddle-desktop: set_global_agent_config: skipping restart of {pubkey}: {e}"
+                "crew-desktop: set_global_agent_config: skipping restart of {pubkey}: {e}"
             );
             return RestartOutcome::Skipped;
         }
         Err(e) => {
             eprintln!(
-                "griddle-desktop: set_global_agent_config: spawn_blocking failed for stop of {pubkey}: {e}"
+                "crew-desktop: set_global_agent_config: spawn_blocking failed for stop of {pubkey}: {e}"
             );
             return RestartOutcome::Skipped;
         }
@@ -355,17 +355,17 @@ async fn restart_local_agent_on_config_change(
     {
         Ok(_) => {
             eprintln!(
-                "griddle-desktop: set_global_agent_config: restarted agent {pubkey} with updated config"
+                "crew-desktop: set_global_agent_config: restarted agent {pubkey} with updated config"
             );
             RestartOutcome::Restarted
         }
         Err(e) => {
             eprintln!(
-                "griddle-desktop: set_global_agent_config: failed to start {pubkey} after restart: {e}"
+                "crew-desktop: set_global_agent_config: failed to start {pubkey} after restart: {e}"
             );
             if let Err(save_err) = persist_last_error(app, pubkey, &e) {
                 eprintln!(
-                    "griddle-desktop: set_global_agent_config: failed to persist last_error for {pubkey}: {save_err}"
+                    "crew-desktop: set_global_agent_config: failed to persist last_error for {pubkey}: {save_err}"
                 );
             }
             RestartOutcome::FailedAfterStop

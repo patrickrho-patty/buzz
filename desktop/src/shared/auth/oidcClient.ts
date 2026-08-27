@@ -3,7 +3,7 @@ import { openUrl } from "@tauri-apps/plugin-opener";
 import { invokeTauri } from "@/shared/api/tauri";
 
 /**
- * Workforce SSO (Keycloak OIDC) client for the Griddle desktop app.
+ * Workforce SSO (Keycloak OIDC) client for the Crew desktop app.
  *
  * Flow (PKCE Authorization Code, system browser):
  *  1. `startOidcLogin()` fetches `/auth/oidc/start` from the company relay,
@@ -11,7 +11,7 @@ import { invokeTauri } from "@/shared/api/tauri";
  *     verifier + state it generated for us.
  *  2. The authorization URL opens in the system browser; the employee signs
  *     in with their work identity (Google broker behind Keycloak).
- *  3. Keycloak redirects to `griddle://auth/callback?code=…&state=…`, which
+ *  3. Keycloak redirects to `crew://auth/callback?code=…&state=…`, which
  *     macOS routes back into this app (deep-link scheme registered in
  *     tauri.conf.json and parsed in src-tauri/src/deep_link.rs).
  *  4. The Rust layer emits `oidc-auth-callback`; this module validates the
@@ -23,7 +23,7 @@ import { invokeTauri } from "@/shared/api/tauri";
  */
 
 /** HTTP origin of the company relay. REST calls (OIDC) use plain HTTPS. */
-export const CREW_RELAY_HTTP_ORIGIN = "https://griddle.patty.io";
+export const CREW_RELAY_HTTP_ORIGIN = "https://crew.patty.io";
 
 type OidcStartResponse = {
   authorization_url: string;
@@ -79,7 +79,7 @@ export function startOidcLogin(
         }
         start = (await resp.json()) as OidcStartResponse;
       } catch (e) {
-        reject(new Error(`Could not reach Griddle SSO: ${String(e)}`));
+        reject(new Error(`Could not reach Crew SSO: ${String(e)}`));
         return;
       }
 
@@ -193,7 +193,7 @@ export async function resolveWorkspaceEmail(
   relayUrl?: string,
 ): Promise<string> {
   const debug = (msg: string, data?: unknown) =>
-    console.info(`[griddle-sso] ${msg}`, data ?? "");
+    console.info(`[crew-sso] ${msg}`, data ?? "");
   debug("resolveWorkspaceEmail: start", { relayUrl });
   try {
     const email = await invokeTauri<string>(
@@ -203,7 +203,7 @@ export async function resolveWorkspaceEmail(
     debug("whoami returned", email);
     if (email && email.includes("@")) {
       try {
-        localStorage.setItem("griddle.ssoEmail", email);
+        localStorage.setItem("crew.ssoEmail", email);
       } catch {
         /* cache write best-effort */
       }
@@ -215,7 +215,7 @@ export async function resolveWorkspaceEmail(
     debug("whoami invoke FAILED", String(e));
   }
   try {
-    const cached = localStorage.getItem("griddle.ssoEmail") ?? "";
+    const cached = localStorage.getItem("crew.ssoEmail") ?? "";
     debug("cache fallback", cached);
     return cached;
   } catch {

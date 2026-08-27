@@ -92,7 +92,7 @@ const BACKOFF_INITIAL_SECS: u64 = 1;
 /// Maximum reconnect backoff (30 seconds).
 const BACKOFF_MAX_SECS: u64 = 30;
 
-/// Subscribes to `buzz:*:cache-invalidate` and forwards scoped drops to the broadcast.
+/// Subscribes to `crew:*:cache-invalidate` and forwards scoped drops to the broadcast.
 ///
 /// Mirrors `subscriber::run_subscriber`: a reconnect loop with exponential
 /// backoff (1s → 2s → 4s → … → 30s max). Never returns — runs for the lifetime

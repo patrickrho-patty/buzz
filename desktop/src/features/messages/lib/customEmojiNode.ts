@@ -78,8 +78,8 @@ export function registerCustomEmojiMarkdownIt(
     if (state.src.charCodeAt(state.pos) !== 0x3a /* : */) return false;
 
     // Word-boundary guard: don't fire when the `:` is glued to a preceding
-    // word char. This keeps prose and URLs intact — `not:buzz:` and
-    // `http://x:y:buzz:` must NOT turn the inner `:buzz:` into an image;
+    // word char. This keeps prose and URLs intact — `not:crew:` and
+    // `http://x:y:crew:` must NOT turn the inner `:crew:` into an image;
     // only a `:shortcode:` at a boundary (start of line, after whitespace or
     // punctuation) materializes. Slack-style boundary semantics.
     if (state.pos > 0) {

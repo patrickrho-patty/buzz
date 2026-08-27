@@ -237,7 +237,7 @@ impl SetupPayload {
     ///
     /// The body contains two parts separated by a blank line:
     /// 1. Human-readable markdown (unchanged; used by CLI and non-card clients).
-    /// 2. A fenced `buzz:config-nudge` sentinel block containing the structured
+    /// 2. A fenced `crew:config-nudge` sentinel block containing the structured
     ///    payload as JSON. The desktop client parses this block to render a
     ///    `ConfigNudgeCard`; clients that don't understand it see a code block.
     fn nudge_body(&self) -> String {
@@ -273,11 +273,11 @@ impl SetupPayload {
                 // help. Don't send the user there.
                 "Fix the config file(s) and restart the agent.".to_string()
             } else if any_external {
-                // Mixed: some Buzz-managed fields, some external config.
-                "Open Edit Agent in the Buzz app for the Buzz-managed fields; fix the external CLI config files manually and restart the agent.".to_string()
+                // Mixed: some Crew-managed fields, some external config.
+                "Open Edit Agent in the Crew app for the Crew-managed fields; fix the external CLI config files manually and restart the agent.".to_string()
             } else {
-                // All Buzz-managed — original footer unchanged.
-                "Open Edit Agent in the Buzz app to set these.".to_string()
+                // All Crew-managed — original footer unchanged.
+                "Open Edit Agent in the Crew app to set these.".to_string()
             };
 
             format!(
@@ -293,7 +293,7 @@ impl SetupPayload {
         let sentinel_json =
             serde_json::to_string(self).expect("SetupPayload must be serializable to JSON");
 
-        format!("{}\n\n```buzz:config-nudge\n{}\n```", prose, sentinel_json)
+        format!("{}\n\n```crew:config-nudge\n{}\n```", prose, sentinel_json)
     }
 }
 
@@ -690,7 +690,7 @@ mod tests {
     #[test]
     fn setup_payload_deserializes_git_bash_requirement() {
         let payload: SetupPayload = serde_json::from_str(
-            r#"{"agent_name":"Buzz Agent","agent_pubkey":"test","requirements":[{"surface":"git_bash"}]}"#,
+            r#"{"agent_name":"Crew Agent","agent_pubkey":"test","requirements":[{"surface":"git_bash"}]}"#,
         )
         .unwrap();
         assert!(matches!(
@@ -783,7 +783,7 @@ mod tests {
     #[test]
     fn nudge_body_git_bash_copy_points_to_agent_runtimes() {
         let payload = SetupPayload {
-            agent_name: "Buzz Agent".to_string(),
+            agent_name: "Crew Agent".to_string(),
             agent_pubkey: "test".to_string(),
             requirements: vec![RequirementPayload::GitBash],
         };
@@ -849,7 +849,7 @@ mod tests {
 
     #[test]
     fn nudge_body_mixed_requirements_uses_split_footer() {
-        // Mixed list: one Buzz-managed env key + one external config invalid.
+        // Mixed list: one Crew-managed env key + one external config invalid.
         // Footer must address both sides.
         let payload = SetupPayload {
             agent_name: "Codex".to_string(),
@@ -874,7 +874,7 @@ mod tests {
 
     #[test]
     fn nudge_body_all_buzz_managed_retains_original_footer() {
-        // Pure Buzz-managed requirements → original "Open Edit Agent" footer unchanged.
+        // Pure Crew-managed requirements → original "Open Edit Agent" footer unchanged.
         let payload = SetupPayload {
             agent_name: "Fizz".to_string(),
             agent_pubkey: "test".to_string(),
@@ -884,7 +884,7 @@ mod tests {
         };
         let body = payload.nudge_body();
         assert!(
-            body.contains("Open Edit Agent in the Buzz app to set these."),
+            body.contains("Open Edit Agent in the Crew app to set these."),
             "all-managed nudge must use the original Edit Agent footer; got: {body:?}"
         );
     }
@@ -893,7 +893,7 @@ mod tests {
 
     #[test]
     fn nudge_body_contains_sentinel_block() {
-        // The body must end with a ```buzz:config-nudge fence so the desktop
+        // The body must end with a ```crew:config-nudge fence so the desktop
         // can detect and strip it before rendering the ConfigNudgeCard.
         let payload = SetupPayload {
             agent_name: "Fizz".to_string(),
@@ -904,7 +904,7 @@ mod tests {
         };
         let body = payload.nudge_body();
         assert!(
-            body.contains("```buzz:config-nudge\n"),
+            body.contains("```crew:config-nudge\n"),
             "body must open the sentinel fence; got: {body:?}"
         );
         assert!(
@@ -937,7 +937,7 @@ mod tests {
         let body = payload.nudge_body();
 
         // Extract the JSON between the fence markers.
-        let fence_open = "```buzz:config-nudge\n";
+        let fence_open = "```crew:config-nudge\n";
         let fence_close = "\n```";
         let start = body
             .rfind(fence_open)
@@ -981,7 +981,7 @@ mod tests {
         assert!(body.contains("Fizz"), "prose must name the agent");
         // Sentinel is also present.
         assert!(
-            body.contains("```buzz:config-nudge"),
+            body.contains("```crew:config-nudge"),
             "sentinel must follow"
         );
     }
@@ -1056,7 +1056,7 @@ mod tests {
     // deserialization and the desktop card never rendered.
 
     fn extract_sentinel_json(body: &str) -> String {
-        let fence_open = "```buzz:config-nudge\n";
+        let fence_open = "```crew:config-nudge\n";
         let fence_close = "\n```";
         let start = body
             .rfind(fence_open)

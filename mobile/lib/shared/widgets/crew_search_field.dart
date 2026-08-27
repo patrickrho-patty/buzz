@@ -16,9 +16,9 @@ const double _searchIdleTextInset =
 const double _searchCompactTextInset =
     _searchIdleIconInset + _searchCompactIconSize + Grid.xxs;
 
-/// Buzz's global-search text field treatment, shared by search-like inputs.
+/// Crew's global-search text field treatment, shared by search-like inputs.
 class CrewSearchField extends StatelessWidget {
-  /// Creates a search field with Buzz's shared styling.
+  /// Creates a search field with Crew's shared styling.
   const CrewSearchField({
     required this.controller,
     required this.focusNode,
