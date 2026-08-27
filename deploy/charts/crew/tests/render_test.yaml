@@ -160,7 +160,7 @@ tests:
           path: spec.template.spec.containers[0].volumeMounts
           content:
             name: git-repos
-            mountPath: /var/lib/buzz/git
+            mountPath: /var/lib/crew/git
         template: templates/deployment.yaml
       # …but as a per-pod emptyDir, not a shared PVC (no multi-attach).
       - contains:

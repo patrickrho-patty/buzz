@@ -16,7 +16,7 @@ const TYPE_REM_SIZE_PX: Record<FontSize, number> = {
   larger: 15 / 0.875,
 };
 
-const TYPE_REM_PROPERTY = "--buzz-type-rem";
+const TYPE_REM_PROPERTY = "--crew-type-rem";
 
 const listeners = new Set<() => void>();
 let fontSize: FontSize = DEFAULT_FONT_SIZE;

@@ -6,7 +6,7 @@ use uuid::Uuid;
 
 use crate::client::{
     extract_d_tag, extract_p_tags, extract_tag_value, normalize_write_response,
-    print_create_response, BuzzClient,
+    print_create_response, CrewClient,
 };
 use crate::commands::agents::fetch_archived_snapshot;
 use crate::commands::channel_templates::{self, ChannelTemplateRecord, TemplateAgentRoster};
@@ -23,7 +23,7 @@ fn extract_channel_metadata(e: &serde_json::Value) -> serde_json::Value {
 }
 
 pub async fn cmd_list_channels(
-    client: &BuzzClient,
+    client: &CrewClient,
     visibility: Option<&str>,
     member: Option<bool>,
     limit: Option<u32>,
@@ -117,7 +117,7 @@ pub async fn cmd_list_channels(
 /// (private channels they're not a member of), so we just post-filter the
 /// returned events by name and project them into a stable JSON shape.
 pub async fn cmd_search_channels(
-    client: &BuzzClient,
+    client: &CrewClient,
     query: &str,
     exact: bool,
     include_archived: bool,
@@ -225,7 +225,7 @@ fn name_matches(name: &str, needle_lower: &str, exact: bool) -> bool {
     }
 }
 
-pub async fn cmd_get_channel(client: &BuzzClient, channel_id: &str) -> Result<(), CliError> {
+pub async fn cmd_get_channel(client: &CrewClient, channel_id: &str) -> Result<(), CliError> {
     validate_uuid(channel_id)?;
     let filter = serde_json::json!({
         "kinds": [39000],
@@ -246,7 +246,7 @@ pub async fn cmd_get_channel(client: &BuzzClient, channel_id: &str) -> Result<()
 }
 
 pub async fn cmd_list_channel_members(
-    client: &BuzzClient,
+    client: &CrewClient,
     channel_id: &str,
 ) -> Result<(), CliError> {
     validate_uuid(channel_id)?;
@@ -263,7 +263,7 @@ pub async fn cmd_list_channel_members(
     Ok(())
 }
 
-pub async fn cmd_get_canvas(client: &BuzzClient, channel_id: &str) -> Result<(), CliError> {
+pub async fn cmd_get_canvas(client: &CrewClient, channel_id: &str) -> Result<(), CliError> {
     validate_uuid(channel_id)?;
     let filter = serde_json::json!({
         "kinds": [40100],
@@ -284,7 +284,7 @@ pub async fn cmd_get_canvas(client: &BuzzClient, channel_id: &str) -> Result<(),
 }
 
 pub async fn cmd_create_channel(
-    client: &BuzzClient,
+    client: &CrewClient,
     name: &str,
     channel_type: &str,
     visibility: &str,
@@ -401,7 +401,7 @@ struct RosterResolution {
 /// set — the CLI reads a single relay snapshot, not a local reconciled
 /// merge, so "unknown" here is indistinguishable from "empty."
 async fn fetch_team_persona_slugs(
-    client: &BuzzClient,
+    client: &CrewClient,
     owner: &str,
     team_id: &str,
 ) -> Result<Vec<String>, CliError> {
@@ -442,7 +442,7 @@ async fn fetch_team_persona_slugs(
 /// instance across requests). Returns every event whose `content.persona_id`
 /// is in `slugs`, keyed by the event's `d` tag (the agent pubkey).
 async fn scan_managed_agents_by_owner(
-    client: &BuzzClient,
+    client: &CrewClient,
     owner: &str,
     slugs: &HashSet<&str>,
 ) -> Result<Vec<ResolvedAgent>, CliError> {
@@ -611,7 +611,7 @@ fn finalize_roster_resolution(
 /// entirely before any channel-creation side effect — a cardinality error
 /// aborts with nothing created.
 async fn build_roster_resolution(
-    client: &BuzzClient,
+    client: &CrewClient,
     owner: &str,
     roster: &TemplateAgentRoster,
 ) -> Result<RosterResolution, CliError> {
@@ -657,7 +657,7 @@ async fn build_roster_resolution(
 /// not fatal.
 #[allow(clippy::too_many_arguments)]
 pub async fn cmd_create_channel_from_template(
-    client: &BuzzClient,
+    client: &CrewClient,
     name: &str,
     template_name: &str,
     templates_file: Option<&str>,
@@ -849,7 +849,7 @@ fn validate_update_channel_fields(
 }
 
 pub async fn cmd_update_channel(
-    client: &BuzzClient,
+    client: &CrewClient,
     channel_id: &str,
     name: Option<&str>,
     description: Option<&str>,
@@ -879,7 +879,7 @@ pub async fn cmd_update_channel(
 }
 
 pub async fn cmd_set_channel_topic(
-    client: &BuzzClient,
+    client: &CrewClient,
     channel_id: &str,
     topic: &str,
 ) -> Result<(), CliError> {
@@ -895,7 +895,7 @@ pub async fn cmd_set_channel_topic(
 }
 
 pub async fn cmd_set_channel_purpose(
-    client: &BuzzClient,
+    client: &CrewClient,
     channel_id: &str,
     purpose: &str,
 ) -> Result<(), CliError> {
@@ -910,7 +910,7 @@ pub async fn cmd_set_channel_purpose(
     Ok(())
 }
 
-pub async fn cmd_join_channel(client: &BuzzClient, channel_id: &str) -> Result<(), CliError> {
+pub async fn cmd_join_channel(client: &CrewClient, channel_id: &str) -> Result<(), CliError> {
     let channel_uuid = parse_uuid(channel_id)?;
 
     let builder = crew_sdk::build_join(channel_uuid)
@@ -922,7 +922,7 @@ pub async fn cmd_join_channel(client: &BuzzClient, channel_id: &str) -> Result<(
     Ok(())
 }
 
-pub async fn cmd_leave_channel(client: &BuzzClient, channel_id: &str) -> Result<(), CliError> {
+pub async fn cmd_leave_channel(client: &CrewClient, channel_id: &str) -> Result<(), CliError> {
     let channel_uuid = parse_uuid(channel_id)?;
 
     let builder = crew_sdk::build_leave(channel_uuid)
@@ -934,7 +934,7 @@ pub async fn cmd_leave_channel(client: &BuzzClient, channel_id: &str) -> Result<
     Ok(())
 }
 
-pub async fn cmd_archive_channel(client: &BuzzClient, channel_id: &str) -> Result<(), CliError> {
+pub async fn cmd_archive_channel(client: &CrewClient, channel_id: &str) -> Result<(), CliError> {
     let channel_uuid = parse_uuid(channel_id)?;
 
     let builder = crew_sdk::build_archive(channel_uuid)
@@ -946,7 +946,7 @@ pub async fn cmd_archive_channel(client: &BuzzClient, channel_id: &str) -> Resul
     Ok(())
 }
 
-pub async fn cmd_unarchive_channel(client: &BuzzClient, channel_id: &str) -> Result<(), CliError> {
+pub async fn cmd_unarchive_channel(client: &CrewClient, channel_id: &str) -> Result<(), CliError> {
     let channel_uuid = parse_uuid(channel_id)?;
 
     let builder = crew_sdk::build_unarchive(channel_uuid)
@@ -958,7 +958,7 @@ pub async fn cmd_unarchive_channel(client: &BuzzClient, channel_id: &str) -> Res
     Ok(())
 }
 
-pub async fn cmd_delete_channel(client: &BuzzClient, channel_id: &str) -> Result<(), CliError> {
+pub async fn cmd_delete_channel(client: &CrewClient, channel_id: &str) -> Result<(), CliError> {
     let channel_uuid = parse_uuid(channel_id)?;
 
     let builder = crew_sdk::build_delete_channel(channel_uuid)
@@ -971,7 +971,7 @@ pub async fn cmd_delete_channel(client: &BuzzClient, channel_id: &str) -> Result
 }
 
 pub async fn cmd_add_channel_member(
-    client: &BuzzClient,
+    client: &CrewClient,
     channel_id: &str,
     pubkey: &str,
     role: Option<&str>,
@@ -1002,7 +1002,7 @@ pub async fn cmd_add_channel_member(
 }
 
 pub async fn cmd_remove_channel_member(
-    client: &BuzzClient,
+    client: &CrewClient,
     channel_id: &str,
     pubkey: &str,
 ) -> Result<(), CliError> {
@@ -1019,7 +1019,7 @@ pub async fn cmd_remove_channel_member(
 }
 
 /// Set the channel addition policy — sign and submit a kind:10100 (agent profile) event.
-pub async fn cmd_set_add_policy(client: &BuzzClient, policy: &str) -> Result<(), CliError> {
+pub async fn cmd_set_add_policy(client: &CrewClient, policy: &str) -> Result<(), CliError> {
     match policy {
         "anyone" | "owner_only" | "nobody" => {}
         _ => {
@@ -1064,7 +1064,7 @@ pub async fn cmd_set_add_policy(client: &BuzzClient, policy: &str) -> Result<(),
 }
 
 pub async fn cmd_set_canvas(
-    client: &BuzzClient,
+    client: &CrewClient,
     channel_id: &str,
     content: &str,
 ) -> Result<(), CliError> {
@@ -1082,7 +1082,7 @@ pub async fn cmd_set_canvas(
 
 pub async fn dispatch(
     cmd: crate::ChannelsCmd,
-    client: &BuzzClient,
+    client: &CrewClient,
     format: &crate::OutputFormat,
 ) -> Result<(), CliError> {
     use crate::ChannelsCmd;
@@ -1185,7 +1185,7 @@ pub async fn dispatch(
     }
 }
 
-pub async fn dispatch_canvas(cmd: crate::CanvasCmd, client: &BuzzClient) -> Result<(), CliError> {
+pub async fn dispatch_canvas(cmd: crate::CanvasCmd, client: &CrewClient) -> Result<(), CliError> {
     use crate::CanvasCmd;
     match cmd {
         CanvasCmd::Get { channel } => cmd_get_canvas(client, &channel).await,
@@ -1201,7 +1201,7 @@ mod tests {
         validate_ttl_seconds, validate_update_channel_fields, ArchivedExclusion, ChannelSummary,
         ResolvedAgent, RosterResolution, SkippedSlug,
     };
-    use crate::client::BuzzClient;
+    use crate::client::CrewClient;
     use crate::CliError;
     use serde_json::json;
 
@@ -1386,12 +1386,12 @@ mod tests {
     // If the CREW_ACP_ALLOWED_CHANNEL_ADD_POLICIES check were removed from cmd_set_add_policy,
     // this test would fail (it would proceed to sign_event and return a different error).
 
-    fn make_test_client() -> BuzzClient {
+    fn make_test_client() -> CrewClient {
         // Scalar = 1 is the smallest valid secp256k1 private key.
         let keys =
             nostr::Keys::parse("0000000000000000000000000000000000000000000000000000000000000001")
                 .expect("valid test key");
-        BuzzClient::new("ws://localhost:3000".to_string(), keys, None, None)
+        CrewClient::new("ws://localhost:3000".to_string(), keys, None, None)
             .expect("client construction should not fail")
     }
 

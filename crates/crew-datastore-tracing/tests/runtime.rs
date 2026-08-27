@@ -59,7 +59,7 @@ async fn exports_policy_fields_without_error_or_argument_data() {
             .iter()
             .map(|attribute| (attribute.key.as_str(), attribute.value.to_string()))
             .collect::<Vec<_>>();
-        assert!(attributes.contains(&("target", "buzz_datastore".to_owned())));
+        assert!(attributes.contains(&("target", "crew_datastore".to_owned())));
         assert!(attributes.contains(&("db.system.name", "postgresql".to_owned())));
         assert!(attributes.contains(&("limit", expected_limit.to_string())));
         assert!(!attributes

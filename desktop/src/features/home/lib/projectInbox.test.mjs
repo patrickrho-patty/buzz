@@ -43,7 +43,7 @@ const repository = {
 };
 
 const project = {
-  id: "buzz-project",
+  id: "crew-project",
   name: "Buzz",
   owner: OWNER,
   repositories: [repository],

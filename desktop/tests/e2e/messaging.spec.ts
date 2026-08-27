@@ -1192,7 +1192,7 @@ test("draft auto-send promotes link preview preparation and sends exactly once",
       );
     },
     {
-      storeKey: `buzz-drafts.v1:${"deadbeef".repeat(8)}`,
+      storeKey: `crew-drafts.v1:${"deadbeef".repeat(8)}`,
       draftKey: channelId,
       content: previewUrl,
       channel: channelId,

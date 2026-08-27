@@ -75,7 +75,7 @@ function ChannelMetadataTooltip({
           {description ? (
             <span
               className="line-clamp-2 [overflow-wrap:anywhere] whitespace-normal"
-              data-buzz-tooltip-metadata-content=""
+              data-crew-tooltip-metadata-content=""
             >
               {description}
             </span>
@@ -85,7 +85,7 @@ function ChannelMetadataTooltip({
               "line-clamp-2 max-w-full [overflow-wrap:anywhere] whitespace-normal text-2xs text-secondary-foreground/80",
               description && "mt-1",
             )}
-            data-buzz-tooltip-metadata-type=""
+            data-crew-tooltip-metadata-type=""
           >
             {channelTooltipFooter(channel)}
           </span>
@@ -179,7 +179,7 @@ function ResolvedAuthoredDeepLink({
   const label = getReactNodeText(children);
   if (!openable) {
     return (
-      <span className="font-medium text-current" data-buzz-link={href}>
+      <span className="font-medium text-current" data-crew-link={href}>
         {children}
       </span>
     );
@@ -245,7 +245,7 @@ export function AuthoredDeepLinkAnchor({
   }
   if (!resolveChannelReferences) {
     return (
-      <span className="font-medium text-current" data-buzz-link={href}>
+      <span className="font-medium text-current" data-crew-link={href}>
         {children}
       </span>
     );

@@ -3,7 +3,7 @@ import test from "node:test";
 
 import { detectPrefixQuery } from "./detectPrefixQuery.ts";
 
-const CHANNELS = ["buzz-bugs", "buzz dev", "general"];
+const CHANNELS = ["crew-bugs", "buzz dev", "general"];
 const PEOPLE = ["alice", "bob jones"];
 
 // Helper: detect at end-of-string (the usual cursor position while typing).

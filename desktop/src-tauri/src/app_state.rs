@@ -647,7 +647,9 @@ fn recover_from_keyring(
     data_dir: &std::path::Path,
     error: &str,
 ) -> Result<ResolvedIdentity, String> {
-    eprintln!("griddle-desktop: corrupt nsec in keyring ({error}), clearing and recovering from file");
+    eprintln!(
+        "griddle-desktop: corrupt nsec in keyring ({error}), clearing and recovering from file"
+    );
     if let Err(e) = store.delete(IDENTITY_KEY_NAME) {
         eprintln!("griddle-desktop: failed to clear corrupt keyring value: {e}");
     }

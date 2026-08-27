@@ -6,7 +6,7 @@ export function HuddleStartingView() {
   return (
     <div
       aria-label="Starting huddle"
-      className="buzz-setup-loading-shell flex min-h-0 flex-1 items-center justify-center overflow-hidden px-6 text-foreground"
+      className="crew-setup-loading-shell flex min-h-0 flex-1 items-center justify-center overflow-hidden px-6 text-foreground"
       data-testid="huddle-starting-view"
       role="status"
     >

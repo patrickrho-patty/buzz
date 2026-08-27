@@ -288,10 +288,10 @@ impl ReadSession {
                             error = %e,
                             "replica session query failed mid-request; degrading to writer"
                         );
-                        // Deliberately not a `buzz_db_route_decision` event:
+                        // Deliberately not a `crew_db_route_decision` event:
                         // the page's route was already recorded, and the
                         // offload metric must stay one-event-per-request.
-                        metrics::counter!("buzz_db_read_session_degraded").increment(1);
+                        metrics::counter!("crew_db_read_session_degraded").increment(1);
                         writer.clone()
                     }
                 }
@@ -561,7 +561,7 @@ impl Default for DbConfig {
     /// At 20 main + 5 audit = 25/pod, four relay pods fit within the PG limit.
     fn default() -> Self {
         Self {
-            database_url: "postgres://buzz:buzz_dev@localhost:5432/buzz".to_string(), // sadscan:disable np.postgres.1
+            database_url: "postgres://buzz:crew_dev@localhost:5432/buzz".to_string(), // sadscan:disable np.postgres.1
             read_database_url: None,
             max_connections: 20,
             read_max_connections: None,
@@ -953,7 +953,7 @@ impl Db {
             // The acquire miss gets its own reason code: the reader pool's
             // short acquire timeout (READER_ACQUIRE_TIMEOUT) makes this the
             // fast fail-closed path under load, and
-            // `buzz_db_route_decision{decision="writer",reason="reader_acquire_timeout"}`
+            // `crew_db_route_decision{decision="writer",reason="reader_acquire_timeout"}`
             // is the operator's alert signal for a struggling reader pool.
             //
             // The reason deliberately names the mechanism, not a diagnosis:
@@ -965,7 +965,7 @@ impl Db {
             // nor `size >= max` recovers the missing causal bit (in-flight
             // dials hold a size slot, and a cold burst can push
             // `active = size - idle` toward max with zero busy connections).
-            // Runbook: correlate with `buzz_db_read_pool_active` / `_max`
+            // Runbook: correlate with `crew_db_read_pool_active` / `_max`
             // and reader connection health/latency; high active suggests
             // contention, but this metric alone does not distinguish
             // contention from slow connects. Note the gauge is a coarse
@@ -1035,7 +1035,7 @@ impl Db {
     /// went, and why.
     fn record_route(path: &'static str, decision: &'static str, reason: &'static str) {
         metrics::counter!(
-            "buzz_db_route_decision",
+            "crew_db_route_decision",
             "path" => path,
             "decision" => decision,
             "reason" => reason,
@@ -2723,7 +2723,7 @@ impl Db {
     ///
     /// Returns `true` if a new row was inserted (first time), `false` if it
     /// already existed. Callers use the `true` return to increment
-    /// `buzz_users_created_total`.
+    /// `crew_users_created_total`.
     #[datastore_span(name = "ensure_user", system = "postgresql")]
     pub async fn ensure_user(&self, community_id: CommunityId, pubkey: &[u8]) -> Result<bool> {
         user::ensure_user(&self.pool, community_id, pubkey).await
@@ -5499,7 +5499,7 @@ mod tests {
     use sqlx::{Acquire, PgPool};
     use uuid::Uuid;
 
-    const TEST_DB_URL: &str = "postgres://buzz:buzz_dev@localhost:5432/buzz";
+    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz";
 
     async fn setup_db() -> Db {
         let database_url =
@@ -8469,10 +8469,10 @@ mod tests {
             .snapshot()
             .into_vec()
             .into_iter()
-            .filter(|(key, ..)| key.key().name() == "buzz_db_route_decision")
+            .filter(|(key, ..)| key.key().name() == "crew_db_route_decision")
             .map(|(key, _, _, value)| {
                 let metrics_util::debugging::DebugValue::Counter(n) = value else {
-                    panic!("buzz_db_route_decision must be a counter");
+                    panic!("crew_db_route_decision must be a counter");
                 };
                 let labels: Vec<_> = key.key().labels().collect();
                 let get = |name: &str| {

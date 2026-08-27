@@ -688,7 +688,9 @@ impl ModelManager {
     /// Start a background Pocket TTS download. No-op if already ready or downloading.
     pub fn start_tts_download(&self, http_client: reqwest::Client) {
         if let Err(error) = voice_upgrade::install_vctk_presets_into_v4_model(&self.models_dir) {
-            eprintln!("griddle-desktop: could not upgrade existing Pocket voices in place: {error}");
+            eprintln!(
+                "griddle-desktop: could not upgrade existing Pocket voices in place: {error}"
+            );
         }
         let manager = self.clone();
         self.tts.start_download(

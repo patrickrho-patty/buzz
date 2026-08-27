@@ -40,7 +40,7 @@ export function FuzzyLogo({
     <CrewLogoAnimation
       ariaLabel={ariaLabel}
       className={cn(
-        pulse && !fuzz && !hasRestWindow && "buzz-logo--pulse",
+        pulse && !fuzz && !hasRestWindow && "crew-logo--pulse",
         className,
       )}
       fullScreen={false}

@@ -42,9 +42,9 @@ type LocalStorageSweepRule = {
 export const LOCAL_STORAGE_SWEEP_RULES: readonly LocalStorageSweepRule[] = [
   { keyPrefix: "buzz-channel-messages.v1:", maxAgeMs: 14 * DAY_MS },
   { keyPrefix: "buzz-channels.v1:", maxAgeMs: 14 * DAY_MS },
-  { keyPrefix: "buzz-observed-unread.v1:", maxAgeMs: 14 * DAY_MS },
-  { keyPrefix: "buzz-sidebar-skeleton-shape.v1:", maxAgeMs: 14 * DAY_MS },
-  { keyPrefix: "buzz-timeline-skeleton-shape.v1:", maxAgeMs: 14 * DAY_MS },
+  { keyPrefix: "crew-observed-unread.v1:", maxAgeMs: 14 * DAY_MS },
+  { keyPrefix: "crew-sidebar-skeleton-shape.v1:", maxAgeMs: 14 * DAY_MS },
+  { keyPrefix: "crew-timeline-skeleton-shape.v1:", maxAgeMs: 14 * DAY_MS },
   { keyPrefix: "buzz-user-labels.v1:", maxAgeMs: 14 * DAY_MS },
   // Do not add buzz-self-profile.v1: here. It is the load-bearing offline
   // identity fallback when the relay is unreachable, not a repaintable cache.

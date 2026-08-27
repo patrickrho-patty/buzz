@@ -1673,7 +1673,7 @@ test("project overview presents collapsible context beside grouped activity", as
   const overviewLayout = page.getByTestId("projects-overview-layout");
   const overviewContentPod = page.getByTestId("projects-overview-content-pod");
   const appContentSurface = page
-    .locator("[data-buzz-content-surface]")
+    .locator("[data-crew-content-surface]")
     .filter({ has: overviewLayout })
     .first();
   await expect(appContentSurface).toHaveCSS(
@@ -2083,7 +2083,7 @@ test("project overview info control animates the context rail", async ({
   const toggle = page.getByTestId("projects-overview-context-toggle");
   const rail = page.getByTestId("projects-overview-context-rail");
   const railPanel = page.getByTestId("projects-overview-context-rail-panel");
-  const contentSurface = page.locator("[data-buzz-content-surface]");
+  const contentSurface = page.locator("[data-crew-content-surface]");
   await expect(page.getByTestId("projects-overview-layout")).toHaveAttribute(
     "data-project-context-detached",
     "true",
@@ -2408,7 +2408,7 @@ test("repository info control animates the context rail from the far right", asy
   const rail = page.getByTestId("project-context-rail");
   const repositoryPanel = page.getByTestId("project-repository-actions-panel");
   const layout = page.getByTestId("project-panel-layout");
-  const contentSurface = page.locator("[data-buzz-content-surface]");
+  const contentSurface = page.locator("[data-crew-content-surface]");
   const workspaceHeader = page.getByTestId("project-workspace-tab-menu");
   await expect(
     workspaceHeader.getByTestId("project-right-panel-chat-tab"),
@@ -3026,7 +3026,7 @@ test("external repositories stay on local source after a branch round trip", asy
     const localBranch =
       "wintermute/entity-link-recipient-cards-with-a-long-branch-name";
     window.sessionStorage.setItem(
-      "buzz-e2e-project-branches",
+      "crew-e2e-project-branches",
       JSON.stringify({ "relay-tools": { [localBranch]: commit } }),
     );
     window.__CREW_E2E_PROJECT_REPO_SYNC_STATUS__ = {

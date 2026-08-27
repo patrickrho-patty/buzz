@@ -115,13 +115,13 @@ function MessageLinkMetadataTooltip({
         >
           <span
             className="line-clamp-3 [overflow-wrap:anywhere] whitespace-normal"
-            data-buzz-tooltip-metadata-content=""
+            data-crew-tooltip-metadata-content=""
           >
             {content}
           </span>
           <span
             className="mt-1 block max-w-full truncate whitespace-nowrap text-2xs text-secondary-foreground/80"
-            data-buzz-tooltip-metadata-type=""
+            data-crew-tooltip-metadata-type=""
           >
             {footer}
             {sender ? ` · ${sender}` : null}
@@ -204,8 +204,8 @@ function MessageLinkPillContents({
               : `Open message in channel ${channelLabel}`
         }
         className={cn(
-          metadata.state.kind === "unavailable" && "buzz-link-unavailable",
-          isDeleted && "buzz-link-deleted",
+          metadata.state.kind === "unavailable" && "crew-link-unavailable",
+          isDeleted && "crew-link-deleted",
         )}
         interactive={openable && interactive}
         onOpenLink={() => {

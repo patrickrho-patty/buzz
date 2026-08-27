@@ -513,7 +513,7 @@ test("aligns the sidebar search with the channel title outside the Buzz theme", 
   const root = page.locator("html");
   const search = page.getByTestId("open-search");
   const channelTitle = page.getByTestId("chat-title");
-  await expect(root).not.toHaveAttribute("data-buzz-sidebar", "");
+  await expect(root).not.toHaveAttribute("data-crew-sidebar", "");
   await expect(search).toBeVisible();
   await expect(channelTitle).toHaveText("general");
 
@@ -538,7 +538,7 @@ test("keeps only search pinned while primary navigation scrolls", async ({
 
   const search = page.getByTestId("open-search");
   const primaryMenu = page.getByTestId("sidebar-primary-menu");
-  const sidebarScroller = page.locator(".buzz-sidebar-scrollbar");
+  const sidebarScroller = page.locator(".crew-sidebar-scrollbar");
   const [initialSearchBox, initialMenuBox] = await Promise.all([
     search.boundingBox(),
     primaryMenu.boundingBox(),

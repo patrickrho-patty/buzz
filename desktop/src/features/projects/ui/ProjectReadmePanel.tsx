@@ -103,7 +103,7 @@ export function ReadmePanel({
   sourceControls,
   unavailableReason,
 }: {
-  /** `buzz-channel` binding of the repository, for access-restricted copy. */
+  /** `crew-channel` binding of the repository, for access-restricted copy. */
   accessChannelId?: string | null;
   file: ProjectRepoFile | null;
   fileContentSource?: RepositoryFileContentSource;

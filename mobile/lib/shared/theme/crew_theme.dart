@@ -18,7 +18,10 @@ const crewDarkThemeName = 'crew-dark';
 /// Whether [themeName] is either half of the Buzz pair. Both halves enable the
 /// gradient so System mode keeps it on across an OS light/dark switch.
 bool isCrewTheme(String themeName) =>
-    themeName == crewThemeName || themeName == crewDarkThemeName || themeName == 'buzz-dark' || themeName == 'buzz';
+    themeName == crewThemeName ||
+    themeName == crewDarkThemeName ||
+    themeName == 'buzz-dark' ||
+    themeName == 'buzz';
 
 /// Whether the current widget tree is using the first-party Buzz treatment.
 bool isCrewThemeContext(BuildContext context) =>

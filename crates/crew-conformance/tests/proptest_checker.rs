@@ -21,7 +21,7 @@
 //! - the checker never panics and is deterministic
 //!
 //! The only checker surface these tests touch is the public
-//! [`buzz_conformance::checker::check_trace`]. They never call
+//! [`crew_conformance::checker::check_trace`]. They never call
 //! `transitions::check_step`, and they never depend on a production crate.
 //!
 //! ## Fail-fast discipline

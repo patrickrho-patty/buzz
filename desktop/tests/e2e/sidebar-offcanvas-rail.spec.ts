@@ -48,7 +48,7 @@ async function setup(page: Page, theme: string) {
  * fragments on the transparent Buzz chrome. The collapsed sidebar must be
  * invisible and non-interactive, leaving the rail clean in every theme.
  */
-for (const theme of ["buzz", "buzz-dark", "vesper"]) {
+for (const theme of ["buzz", "crew-dark", "vesper"]) {
   test(`collapsed sidebar leaves the community rail clean — ${theme}`, async ({
     page,
   }) => {

@@ -951,8 +951,8 @@ mod tests {
     fn static_keys_build_store_with_configured_region() {
         let store = GitStore::new(
             "http://localhost:9000",
-            "buzz_dev",
-            "buzz_dev_secret",
+            "crew_dev",
+            "crew_dev_secret",
             "buzz-git",
             "us-west-2",
             crew_media::config::S3AddressingStyle::Path,
@@ -980,8 +980,8 @@ mod tests {
         ] {
             let store = GitStore::new(
                 "https://storage.example",
-                "buzz_dev",
-                "buzz_dev_secret",
+                "crew_dev",
+                "crew_dev_secret",
                 "buzz-git",
                 "us-east-1",
                 style,
@@ -994,7 +994,7 @@ mod tests {
 
     #[test]
     fn partial_static_keys_are_rejected() {
-        for (access, secret) in [("buzz_dev", ""), ("", "buzz_dev_secret")] {
+        for (access, secret) in [("crew_dev", ""), ("", "crew_dev_secret")] {
             let err = match GitStore::new(
                 "http://localhost:9000",
                 access,
@@ -1038,9 +1038,9 @@ mod probe {
         // The hydrate/CAS live tests use explicit local MinIO fixtures instead.
         let endpoint =
             std::env::var("CREW_S3_ENDPOINT").unwrap_or_else(|_| "http://localhost:9000".into());
-        let access_key = std::env::var("CREW_S3_ACCESS_KEY").unwrap_or_else(|_| "buzz_dev".into());
+        let access_key = std::env::var("CREW_S3_ACCESS_KEY").unwrap_or_else(|_| "crew_dev".into());
         let secret_key =
-            std::env::var("CREW_S3_SECRET_KEY").unwrap_or_else(|_| "buzz_dev_secret".into());
+            std::env::var("CREW_S3_SECRET_KEY").unwrap_or_else(|_| "crew_dev_secret".into());
         let bucket = std::env::var("CREW_S3_BUCKET").unwrap_or_else(|_| "buzz-git".into());
         let region = std::env::var("CREW_S3_REGION").unwrap_or_else(|_| "us-east-1".into());
         let addressing_style = std::env::var("CREW_S3_ADDRESSING_STYLE")

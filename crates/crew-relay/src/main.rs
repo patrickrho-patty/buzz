@@ -6,7 +6,7 @@ use tracing::{error, info, warn};
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 
 fn log_env_filter(rust_log: Option<&str>) -> EnvFilter {
-    EnvFilter::new(rust_log.unwrap_or("buzz_relay=info"))
+    EnvFilter::new(rust_log.unwrap_or("crew_relay=info"))
 }
 use uuid::Uuid;
 
@@ -42,7 +42,7 @@ fn crew_auto_migrate_enabled(value: Option<&str>) -> bool {
 /// communities would incur five-figure monthly costs if every community always
 /// gets a full set of series.  This knob is the cost lever.
 ///
-/// Fleet-wide totals (`buzz_total_*`) always emit regardless of mode.
+/// Fleet-wide totals (`crew_total_*`) always emit regardless of mode.
 ///
 /// Set via `CREW_USAGE_METRICS_PER_COMMUNITY`:
 ///   - `all` — emit per-community series for every community (default)
@@ -156,7 +156,7 @@ async fn main() -> anyhow::Result<()> {
     let usage_interval_secs = usage_metrics_interval_secs();
     let usage_idle_timeout_secs = usage_metrics_idle_timeout_secs(usage_interval_secs);
     relay_metrics::install(config.metrics_port, usage_idle_timeout_secs);
-    metrics::gauge!("buzz_audit_enabled").set(if config.audit_enabled { 1.0 } else { 0.0 });
+    metrics::gauge!("crew_audit_enabled").set(if config.audit_enabled { 1.0 } else { 0.0 });
     info!(
         port = config.metrics_port,
         idle_timeout_secs = usage_idle_timeout_secs,
@@ -905,7 +905,7 @@ async fn main() -> anyhow::Result<()> {
                         .await;
                     }
                     Err(tokio::sync::broadcast::error::RecvError::Lagged(n)) => {
-                        metrics::counter!("buzz_multinode_fanout_lag_total").increment(n);
+                        metrics::counter!("crew_multinode_fanout_lag_total").increment(n);
                         tracing::warn!("Multi-node fan-out lagged by {n} messages");
                     }
                     Err(tokio::sync::broadcast::error::RecvError::Closed) => {
@@ -936,7 +936,7 @@ async fn main() -> anyhow::Result<()> {
                             .apply_cache_invalidation(scoped.community_id, scoped.invalidation);
                     }
                     Err(tokio::sync::broadcast::error::RecvError::Lagged(n)) => {
-                        metrics::counter!("buzz_cache_invalidation_lag_total").increment(n);
+                        metrics::counter!("crew_cache_invalidation_lag_total").increment(n);
                         tracing::warn!("Cache-invalidation consumer lagged by {n} messages");
                     }
                     Err(tokio::sync::broadcast::error::RecvError::Closed) => {
@@ -998,7 +998,7 @@ async fn main() -> anyhow::Result<()> {
                         }
                     },
                     Err(tokio::sync::broadcast::error::RecvError::Lagged(n)) => {
-                        metrics::counter!("buzz_conn_control_lag_total").increment(n);
+                        metrics::counter!("crew_conn_control_lag_total").increment(n);
                         tracing::warn!("Connection-control consumer lagged by {n} messages");
                     }
                     Err(tokio::sync::broadcast::error::RecvError::Closed) => {
@@ -1027,17 +1027,17 @@ async fn main() -> anyhow::Result<()> {
                 interval.tick().await;
                 let db_stats = pool_state.db.pool_stats();
                 let active = db_stats.size.saturating_sub(db_stats.idle);
-                metrics::gauge!("buzz_db_pool_size").set(db_stats.size as f64);
-                metrics::gauge!("buzz_db_pool_idle").set(db_stats.idle as f64);
-                metrics::gauge!("buzz_db_pool_active").set(active as f64);
-                metrics::gauge!("buzz_db_pool_max").set(db_stats.max as f64);
+                metrics::gauge!("crew_db_pool_size").set(db_stats.size as f64);
+                metrics::gauge!("crew_db_pool_idle").set(db_stats.idle as f64);
+                metrics::gauge!("crew_db_pool_active").set(active as f64);
+                metrics::gauge!("crew_db_pool_max").set(db_stats.max as f64);
 
                 if let Some(read_stats) = pool_state.db.read_pool_stats() {
                     let read_active = read_stats.size.saturating_sub(read_stats.idle);
-                    metrics::gauge!("buzz_db_read_pool_size").set(read_stats.size as f64);
-                    metrics::gauge!("buzz_db_read_pool_idle").set(read_stats.idle as f64);
-                    metrics::gauge!("buzz_db_read_pool_active").set(read_active as f64);
-                    metrics::gauge!("buzz_db_read_pool_max").set(read_stats.max as f64);
+                    metrics::gauge!("crew_db_read_pool_size").set(read_stats.size as f64);
+                    metrics::gauge!("crew_db_read_pool_idle").set(read_stats.idle as f64);
+                    metrics::gauge!("crew_db_read_pool_active").set(read_active as f64);
+                    metrics::gauge!("crew_db_read_pool_max").set(read_stats.max as f64);
 
                     // Fence observability: 1 when replica routing is
                     // eligible, and the verified-freshness lag in seconds.
@@ -1045,40 +1045,40 @@ async fn main() -> anyhow::Result<()> {
                     match pool_state.db.fence().verified_through() {
                         Some(fence_ts) => {
                             let lag = (chrono::Utc::now() - fence_ts).num_seconds();
-                            metrics::gauge!("buzz_db_replica_fence_open").set(1.0);
-                            metrics::gauge!("buzz_db_replica_fence_lag_seconds").set(lag as f64);
+                            metrics::gauge!("crew_db_replica_fence_open").set(1.0);
+                            metrics::gauge!("crew_db_replica_fence_lag_seconds").set(lag as f64);
                         }
                         None => {
-                            metrics::gauge!("buzz_db_replica_fence_open").set(0.0);
+                            metrics::gauge!("crew_db_replica_fence_open").set(0.0);
                         }
                     }
                     // Probe liveness, ungated by staleness: how long since
                     // the probe last committed a heartbeat token.
                     if let Some(age) = pool_state.db.fence().heartbeat_age() {
-                        metrics::gauge!("buzz_db_replica_heartbeat_age_seconds")
+                        metrics::gauge!("crew_db_replica_heartbeat_age_seconds")
                             .set(age.as_secs_f64());
                     }
                 }
 
                 let rs = pool_state.redis_pool.status();
-                metrics::gauge!("buzz_redis_pool_available").set(rs.available as f64);
-                metrics::gauge!("buzz_redis_pool_size").set(rs.size as f64);
-                metrics::gauge!("buzz_redis_pool_max").set(rs.max_size as f64);
-                metrics::gauge!("buzz_redis_pool_waiting").set(rs.waiting as f64);
+                metrics::gauge!("crew_redis_pool_available").set(rs.available as f64);
+                metrics::gauge!("crew_redis_pool_size").set(rs.size as f64);
+                metrics::gauge!("crew_redis_pool_max").set(rs.max_size as f64);
+                metrics::gauge!("crew_redis_pool_waiting").set(rs.waiting as f64);
 
                 let deletion_store = pool_state.db.deletion_store();
                 match deletion_store.reap_expired_serving_write_leases(1000).await {
-                    Ok(reaped) => metrics::counter!("buzz_deletion_serving_leases_reaped_total")
+                    Ok(reaped) => metrics::counter!("crew_deletion_serving_leases_reaped_total")
                         .increment(reaped),
                     Err(error) => tracing::warn!(%error, "serving-lease reaper failed"),
                 }
                 match deletion_store.serving_lease_stats().await {
                     Ok(stats) => {
-                        metrics::gauge!("buzz_deletion_serving_leases_active")
+                        metrics::gauge!("crew_deletion_serving_leases_active")
                             .set(stats.active as f64);
-                        metrics::gauge!("buzz_deletion_serving_leases_expired")
+                        metrics::gauge!("crew_deletion_serving_leases_expired")
                             .set(stats.expired as f64);
-                        metrics::gauge!("buzz_deletion_serving_leases_dead_tuples")
+                        metrics::gauge!("crew_deletion_serving_leases_dead_tuples")
                             .set(stats.dead_tuples as f64);
                     }
                     Err(error) => tracing::warn!(%error, "serving-lease metrics failed"),
@@ -1129,7 +1129,7 @@ async fn main() -> anyhow::Result<()> {
                 {
                     error!(error = %e, "Usage metrics tick failed — skipping");
                 }
-                metrics::gauge!("buzz_usage_poller_is_leader").set(if leader.is_some() {
+                metrics::gauge!("crew_usage_poller_is_leader").set(if leader.is_some() {
                     1.0
                 } else {
                     0.0
@@ -1168,29 +1168,29 @@ mod env_filter_tests {
     fn unset_enables_datastore_only_for_otel_filter() {
         let logs = tracing_subscriber::registry().with(log_env_filter(None));
         tracing::subscriber::with_default(logs, || {
-            assert!(!tracing::enabled!(target: "buzz_datastore", tracing::Level::INFO));
-            assert!(tracing::enabled!(target: "buzz_relay", tracing::Level::INFO));
+            assert!(!tracing::enabled!(target: "crew_datastore", tracing::Level::INFO));
+            assert!(tracing::enabled!(target: "crew_relay", tracing::Level::INFO));
         });
 
         let otel = tracing_subscriber::registry().with(otel_env_filter(None));
         tracing::subscriber::with_default(otel, || {
-            assert!(tracing::enabled!(target: "buzz_datastore", tracing::Level::INFO));
+            assert!(tracing::enabled!(target: "crew_datastore", tracing::Level::INFO));
         });
     }
 
     #[test]
     fn explicit_datastore_off_is_preserved_alone() {
         assert_eq!(
-            otel_env_filter(Some("buzz_datastore=off")).to_string(),
-            "buzz_datastore=off"
+            otel_env_filter(Some("crew_datastore=off")).to_string(),
+            "crew_datastore=off"
         );
     }
 
     #[test]
     fn explicit_datastore_debug_is_preserved_alone() {
         assert_eq!(
-            otel_env_filter(Some("buzz_datastore=debug")).to_string(),
-            "buzz_datastore=debug"
+            otel_env_filter(Some("crew_datastore=debug")).to_string(),
+            "crew_datastore=debug"
         );
     }
 
@@ -1198,8 +1198,8 @@ mod env_filter_tests {
     fn log_and_otel_filters_are_configured_independently() {
         assert_eq!(log_env_filter(Some("warn")).to_string(), "warn");
         assert_eq!(
-            otel_env_filter(Some("buzz_relay=debug")).to_string(),
-            "buzz_relay=debug"
+            otel_env_filter(Some("crew_relay=debug")).to_string(),
+            "crew_relay=debug"
         );
     }
 }
@@ -1509,15 +1509,15 @@ impl InMemoryMetricKey {
     fn set(&self, value: f64) {
         match self {
             Self::WsConnections(community) => {
-                metrics::gauge!("buzz_community_ws_connections", "community" => community.clone())
+                metrics::gauge!("crew_community_ws_connections", "community" => community.clone())
                     .set(value);
             }
             Self::UsersOnline(community) => {
-                metrics::gauge!("buzz_community_users_online_pod", "community" => community.clone())
+                metrics::gauge!("crew_community_users_online_pod", "community" => community.clone())
                     .set(value);
             }
             Self::Subscriptions(community) => {
-                metrics::gauge!("buzz_community_subscriptions", "community" => community.clone())
+                metrics::gauge!("crew_community_subscriptions", "community" => community.clone())
                     .set(value);
             }
         }
@@ -1532,8 +1532,8 @@ impl InMemoryMetricKey {
 /// that generation, so this retains a steady gauge without a snapshot `set()`
 /// racing the lifecycle-relative increments and decrements.
 fn refresh_legacy_active_gauge_recency() {
-    metrics::gauge!("buzz_ws_connections_active").increment(0.0);
-    metrics::gauge!("buzz_subscriptions_active").increment(0.0);
+    metrics::gauge!("crew_ws_connections_active").increment(0.0);
+    metrics::gauge!("crew_subscriptions_active").increment(0.0);
 }
 
 /// Emit pod-local gauges and zero only label keys that disappeared since the
@@ -1551,9 +1551,9 @@ fn emit_in_memory_usage_metrics(
     let total_connections = connections.values().sum::<u64>();
     let total_subscriptions = subscriptions.values().sum::<u64>();
 
-    metrics::gauge!("buzz_total_ws_connections").set(total_connections as f64);
-    metrics::gauge!("buzz_total_users_online_pod").set(users_online.values().sum::<u64>() as f64);
-    metrics::gauge!("buzz_total_subscriptions").set(total_subscriptions as f64);
+    metrics::gauge!("crew_total_ws_connections").set(total_connections as f64);
+    metrics::gauge!("crew_total_users_online_pod").set(users_online.values().sum::<u64>() as f64);
+    metrics::gauge!("crew_total_subscriptions").set(total_subscriptions as f64);
     refresh_legacy_active_gauge_recency();
 
     let Some(host_map) = host_map else {
@@ -1742,7 +1742,7 @@ async fn emit_db_usage_metrics(
     // --- Determine which community IDs receive per-community series (K1) ---
     //
     // `active_set` is the subset of host_map IDs that get per-community gauges
-    // this tick. Fleet-wide totals (buzz_total_*) always emit regardless.
+    // this tick. Fleet-wide totals (crew_total_*) always emit regardless.
     let active_set: HashSet<Uuid> = host_map
         .keys()
         .filter(|id| emission_scope.allows(id))
@@ -1753,10 +1753,10 @@ async fn emit_db_usage_metrics(
 
     // --- A. Adoption stocks (DB-polled) ---
 
-    // buzz_communities_total (no tag — fleet-wide count)
-    metrics::gauge!("buzz_communities_total").set(community_total as f64);
+    // crew_communities_total (no tag — fleet-wide count)
+    metrics::gauge!("crew_communities_total").set(community_total as f64);
 
-    // buzz_community_users{community, type:human|agent}
+    // crew_community_users{community, type:human|agent}
     // Emit from host_map so communities that have zero users still get a 0
     // rather than keeping the last nonzero value until process restart.
     {
@@ -1765,22 +1765,22 @@ async fn emit_db_usage_metrics(
         let (total_human, total_agent): (i64, i64) = rows
             .values()
             .fold((0, 0), |(h, a), r| (h + r.human, a + r.agent));
-        metrics::gauge!("buzz_total_users", "type" => "human").set(total_human as f64);
-        metrics::gauge!("buzz_total_users", "type" => "agent").set(total_agent as f64);
+        metrics::gauge!("crew_total_users", "type" => "human").set(total_human as f64);
+        metrics::gauge!("crew_total_users", "type" => "agent").set(total_agent as f64);
         // Per-community series (gated by active_set).
         for (&id, community) in host_map {
             if !active_set.contains(&id) {
                 continue;
             }
             let (human, agent) = rows.get(&id).map(|r| (r.human, r.agent)).unwrap_or((0, 0));
-            metrics::gauge!("buzz_community_users", "community" => community.clone(), "type" => "human")
+            metrics::gauge!("crew_community_users", "community" => community.clone(), "type" => "human")
                 .set(human as f64);
-            metrics::gauge!("buzz_community_users", "community" => community.clone(), "type" => "agent")
+            metrics::gauge!("crew_community_users", "community" => community.clone(), "type" => "agent")
                 .set(agent as f64);
         }
     }
 
-    // buzz_community_channels{community, type}
+    // crew_community_channels{community, type}
     // Zero-fill across all (community, channel_type) pairs so a type that
     // drops to zero emits 0 rather than retaining its last nonzero value.
     {
@@ -1807,7 +1807,7 @@ async fn emit_db_usage_metrics(
                 .keys()
                 .map(|id| rows.get(&(*id, ct)).copied().unwrap_or(0))
                 .sum();
-            metrics::gauge!("buzz_total_channels", "type" => ct).set(total as f64);
+            metrics::gauge!("crew_total_channels", "type" => ct).set(total as f64);
         }
         // Per-community series (gated by active_set).
         for (&id, community) in host_map {
@@ -1817,7 +1817,7 @@ async fn emit_db_usage_metrics(
             for &ct in CHANNEL_TYPES {
                 let count = rows.get(&(id, ct)).copied().unwrap_or(0);
                 metrics::gauge!(
-                    "buzz_community_channels",
+                    "crew_community_channels",
                     "community" => community.clone(),
                     "type" => ct
                 )
@@ -1826,7 +1826,7 @@ async fn emit_db_usage_metrics(
         }
     }
 
-    // buzz_community_messages{community}
+    // crew_community_messages{community}
     // Emit 0 for communities with no messages so dashboards don't stale-read.
     {
         let rows: HashMap<Uuid, i64> = message_rows
@@ -1835,19 +1835,19 @@ async fn emit_db_usage_metrics(
             .collect();
         // Fleet total (always emitted).
         let total: i64 = rows.values().sum();
-        metrics::gauge!("buzz_total_messages").set(total as f64);
+        metrics::gauge!("crew_total_messages").set(total as f64);
         // Per-community series (gated by active_set).
         for (&id, community) in host_map {
             if !active_set.contains(&id) {
                 continue;
             }
             let count = rows.get(&id).copied().unwrap_or(0);
-            metrics::gauge!("buzz_community_messages", "community" => community.clone())
+            metrics::gauge!("crew_community_messages", "community" => community.clone())
                 .set(count as f64);
         }
     }
 
-    // buzz_community_relay_members{community, role}
+    // crew_community_relay_members{community, role}
     // Zero-fill across all (community, role) pairs; relay_members.role is a
     // CHECK constraint over {'owner', 'admin', 'member'}.
     {
@@ -1874,7 +1874,7 @@ async fn emit_db_usage_metrics(
                 .keys()
                 .map(|id| rows.get(&(*id, role)).copied().unwrap_or(0))
                 .sum();
-            metrics::gauge!("buzz_total_relay_members", "role" => role).set(total as f64);
+            metrics::gauge!("crew_total_relay_members", "role" => role).set(total as f64);
         }
         // Per-community series (gated by active_set).
         for (&id, community) in host_map {
@@ -1884,7 +1884,7 @@ async fn emit_db_usage_metrics(
             for &role in RELAY_ROLES {
                 let count = rows.get(&(id, role)).copied().unwrap_or(0);
                 metrics::gauge!(
-                    "buzz_community_relay_members",
+                    "crew_community_relay_members",
                     "community" => community.clone(),
                     "role" => role
                 )
@@ -1893,7 +1893,7 @@ async fn emit_db_usage_metrics(
         }
     }
 
-    // buzz_community_workflows{community, status}
+    // crew_community_workflows{community, status}
     // Zero-fill across all (community, status) pairs; workflow_status is a
     // DB enum: {'active', 'disabled', 'archived'}.
     {
@@ -1920,7 +1920,7 @@ async fn emit_db_usage_metrics(
                 .keys()
                 .map(|id| rows.get(&(*id, status)).copied().unwrap_or(0))
                 .sum();
-            metrics::gauge!("buzz_total_workflows", "status" => status).set(total as f64);
+            metrics::gauge!("crew_total_workflows", "status" => status).set(total as f64);
         }
         // Per-community series (gated by active_set).
         for (&id, community) in host_map {
@@ -1930,7 +1930,7 @@ async fn emit_db_usage_metrics(
             for &status in WORKFLOW_STATUSES {
                 let count = rows.get(&(id, status)).copied().unwrap_or(0);
                 metrics::gauge!(
-                    "buzz_community_workflows",
+                    "crew_community_workflows",
                     "community" => community.clone(),
                     "status" => status
                 )
@@ -1939,7 +1939,7 @@ async fn emit_db_usage_metrics(
         }
     }
 
-    // buzz_community_git_repos{community}
+    // crew_community_git_repos{community}
     // Emit 0 for communities with no repos.
     {
         let rows: HashMap<Uuid, i64> = git_repo_rows
@@ -1948,14 +1948,14 @@ async fn emit_db_usage_metrics(
             .collect();
         // Fleet total (always emitted).
         let total: i64 = rows.values().sum();
-        metrics::gauge!("buzz_total_git_repos").set(total as f64);
+        metrics::gauge!("crew_total_git_repos").set(total as f64);
         // Per-community series (gated by active_set).
         for (&id, community) in host_map {
             if !active_set.contains(&id) {
                 continue;
             }
             let count = rows.get(&id).copied().unwrap_or(0);
-            metrics::gauge!("buzz_community_git_repos", "community" => community.clone())
+            metrics::gauge!("crew_community_git_repos", "community" => community.clone())
                 .set(count as f64);
         }
     }
@@ -1976,11 +1976,11 @@ async fn emit_db_usage_metrics(
             rows.values().fold((0, 0, 0), |(h, a, u), r| {
                 (h + r.human, a + r.agent, u + r.unknown)
             });
-        metrics::gauge!("buzz_total_active_users", "window" => label, "type" => "human")
+        metrics::gauge!("crew_total_active_users", "window" => label, "type" => "human")
             .set(total_human as f64);
-        metrics::gauge!("buzz_total_active_users", "window" => label, "type" => "agent")
+        metrics::gauge!("crew_total_active_users", "window" => label, "type" => "agent")
             .set(total_agent as f64);
-        metrics::gauge!("buzz_total_active_users", "window" => label, "type" => "unknown")
+        metrics::gauge!("crew_total_active_users", "window" => label, "type" => "unknown")
             .set(total_unknown as f64);
         // Per-community series (gated by active_set).
         for (&id, community) in host_map {
@@ -1992,21 +1992,21 @@ async fn emit_db_usage_metrics(
                 .map(|r| (r.human, r.agent, r.unknown))
                 .unwrap_or((0, 0, 0));
             metrics::gauge!(
-                "buzz_community_active_users",
+                "crew_community_active_users",
                 "community" => community.clone(),
                 "window" => label,
                 "type" => "human"
             )
             .set(human as f64);
             metrics::gauge!(
-                "buzz_community_active_users",
+                "crew_community_active_users",
                 "community" => community.clone(),
                 "window" => label,
                 "type" => "agent"
             )
             .set(agent as f64);
             metrics::gauge!(
-                "buzz_community_active_users",
+                "crew_community_active_users",
                 "community" => community.clone(),
                 "window" => label,
                 "type" => "unknown"
@@ -2022,7 +2022,7 @@ async fn emit_db_usage_metrics(
             .collect();
         // Fleet total (always emitted).
         let total: i64 = rows.values().sum();
-        metrics::gauge!("buzz_total_active_channels", "window" => label).set(total as f64);
+        metrics::gauge!("crew_total_active_channels", "window" => label).set(total as f64);
         // Per-community series (gated by active_set).
         for (&id, community) in host_map {
             if !active_set.contains(&id) {
@@ -2030,7 +2030,7 @@ async fn emit_db_usage_metrics(
             }
             let count = rows.get(&id).copied().unwrap_or(0);
             metrics::gauge!(
-                "buzz_community_active_channels",
+                "crew_community_active_channels",
                 "community" => community.clone(),
                 "window" => label
             )
@@ -2129,8 +2129,8 @@ mod tests {
         let snapshotter = recorder.snapshotter();
 
         metrics::with_local_recorder(&recorder, || {
-            let connections = metrics::gauge!("buzz_ws_connections_active");
-            let subscriptions = metrics::gauge!("buzz_subscriptions_active");
+            let connections = metrics::gauge!("crew_ws_connections_active");
+            let subscriptions = metrics::gauge!("crew_subscriptions_active");
             connections.increment(1.0);
             subscriptions.increment(1.0);
 
@@ -2152,8 +2152,8 @@ mod tests {
             })
             .collect::<std::collections::HashMap<_, _>>();
 
-        assert_eq!(values.get("buzz_ws_connections_active"), Some(&0.0));
-        assert_eq!(values.get("buzz_subscriptions_active"), Some(&2.0));
+        assert_eq!(values.get("crew_ws_connections_active"), Some(&0.0));
+        assert_eq!(values.get("crew_subscriptions_active"), Some(&2.0));
     }
 
     #[test]

@@ -38,10 +38,10 @@ export function AppShellChannelSurface({
           isHuddleRoom ? "bg-background" : "bg-sidebar",
           hasCollapsedSidebarGutter && "pl-2",
         )}
-        data-buzz-content-surface={isHuddleRoom ? true : undefined}
-        data-buzz-content-unframed={isHuddleRoom ? true : undefined}
-        data-buzz-glass-inset
-        data-buzz-shadow-viewport
+        data-crew-content-surface={isHuddleRoom ? true : undefined}
+        data-crew-content-unframed={isHuddleRoom ? true : undefined}
+        data-crew-glass-inset
+        data-crew-shadow-viewport
         style={chromeCssVarDefaults as React.CSSProperties}
       >
         {hasCollapsedSidebarGutter ? (

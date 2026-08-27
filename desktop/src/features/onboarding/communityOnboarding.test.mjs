@@ -144,7 +144,7 @@ test("completion is scoped by relay and pubkey and preserves legacy gate", () =>
   markCommunityOnboardingComplete("pubkey", "wss://relay.example", storage);
   assert.equal(
     storage.getItem(
-      "buzz-community-onboarding-complete.v1:wss%3A%2F%2Frelay.example:pubkey",
+      "crew-community-onboarding-complete.v1:wss%3A%2F%2Frelay.example:pubkey",
     ),
     "true",
   );

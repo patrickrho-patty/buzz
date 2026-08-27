@@ -35,7 +35,7 @@ export function FlappingBee({ className }: { className?: string }) {
     <div
       aria-hidden="true"
       className={[
-        "buzz-mark",
+        "crew-mark",
         "bee-sprite",
         "relative",
         "aspect-[466/309]",

@@ -3131,7 +3131,7 @@ mod postgres_tests {
     async fn store() -> (Db, DeletionStore) {
         let database_url = std::env::var("CREW_TEST_DATABASE_URL")
             .or_else(|_| std::env::var("DATABASE_URL"))
-            .unwrap_or_else(|_| "postgres://buzz:buzz_dev@localhost:5432/buzz".to_string());
+            .unwrap_or_else(|_| "postgres://buzz:crew_dev@localhost:5432/buzz".to_string());
         let db = Db::new(&DbConfig {
             database_url,
             max_connections: 5,
@@ -4409,11 +4409,11 @@ mod postgres_tests {
         // per-database, so the parked migration lock cannot stall them.
         let base_url = std::env::var("CREW_TEST_DATABASE_URL")
             .or_else(|_| std::env::var("DATABASE_URL"))
-            .unwrap_or_else(|_| "postgres://buzz:buzz_dev@localhost:5432/buzz".to_string());
+            .unwrap_or_else(|_| "postgres://buzz:crew_dev@localhost:5432/buzz".to_string());
         let admin = PgPool::connect(&base_url)
             .await
             .expect("connect admin database");
-        let probe_db = format!("buzz_lock_probe_{}", Uuid::new_v4().simple());
+        let probe_db = format!("crew_lock_probe_{}", Uuid::new_v4().simple());
         sqlx::query(AssertSqlSafe(format!("CREATE DATABASE {probe_db}")))
             .execute(&admin)
             .await
@@ -4594,11 +4594,11 @@ mod postgres_tests {
     async fn desired_state_schema_bootstrap_progresses_beyond_fencing() {
         let base_url = std::env::var("CREW_TEST_DATABASE_URL")
             .or_else(|_| std::env::var("DATABASE_URL"))
-            .unwrap_or_else(|_| "postgres://buzz:buzz_dev@localhost:5432/buzz".to_string());
+            .unwrap_or_else(|_| "postgres://buzz:crew_dev@localhost:5432/buzz".to_string());
         let admin = PgPool::connect(&base_url)
             .await
             .expect("connect admin database");
-        let probe_db = format!("buzz_desired_state_{}", Uuid::new_v4().simple());
+        let probe_db = format!("crew_desired_state_{}", Uuid::new_v4().simple());
         sqlx::query(AssertSqlSafe(format!("CREATE DATABASE {probe_db}")))
             .execute(&admin)
             .await

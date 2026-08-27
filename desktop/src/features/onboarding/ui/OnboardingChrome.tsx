@@ -12,20 +12,20 @@ const ONBOARDING_CTA_SHAPE = "h-[2.375rem] rounded-full px-6";
 
 /**
  * Primary-CTA styling for the in-step onboarding pages: the shared pill with a
- * light-blue label (`--buzz-onboarding-cta-label`, available on any
- * `.buzz-onboarding-neutral-theme` subtree).
+ * light-blue label (`--crew-onboarding-cta-label`, available on any
+ * `.crew-onboarding-neutral-theme` subtree).
  */
-export const ONBOARDING_PRIMARY_CTA_CLASS = `${ONBOARDING_CTA_SHAPE} text-[var(--buzz-onboarding-cta-label)]`;
+export const ONBOARDING_PRIMARY_CTA_CLASS = `${ONBOARDING_CTA_SHAPE} text-[var(--crew-onboarding-cta-label)]`;
 
 /** Inverted primary action used only on dark backup-security surfaces. */
 export const ONBOARDING_SECURITY_PRIMARY_CTA_CLASS = `${ONBOARDING_CTA_SHAPE} bg-white text-black/80 hover:bg-white/90 hover:text-black`;
 
 /**
  * Primary-CTA styling for the landing screen only: the shared pill with the
- * chartreuse label (`--buzz-welcome-chartreuse`). The blue label is reserved
+ * chartreuse label (`--crew-welcome-chartreuse`). The blue label is reserved
  * for the CTAs inside the steps.
  */
-export const ONBOARDING_LANDING_CTA_CLASS = `${ONBOARDING_CTA_SHAPE} text-[var(--buzz-welcome-chartreuse)]`;
+export const ONBOARDING_LANDING_CTA_CLASS = `${ONBOARDING_CTA_SHAPE} text-[var(--crew-welcome-chartreuse)]`;
 
 /** Shared quiet pill for secondary actions throughout onboarding. */
 export const ONBOARDING_SECONDARY_CTA_CLASS =
@@ -33,13 +33,13 @@ export const ONBOARDING_SECONDARY_CTA_CLASS =
 
 /**
  * Icon-control styling for onboarding surfaces that sit on the textured card:
- * olive backup ink (`--buzz-onboarding-backup-ink`) with a plain
+ * olive backup ink (`--crew-onboarding-backup-ink`) with a plain
  * brighten-to-foreground hover (no hover pill, which would read as a floating
  * box on the texture). Used by the identity-help dialog close button and the
  * key-import reveal toggle.
  */
 export const ONBOARDING_INK_ICON_CLASS =
-  "text-[color:var(--buzz-onboarding-backup-ink)] hover:bg-transparent hover:text-foreground";
+  "text-[color:var(--crew-onboarding-backup-ink)] hover:bg-transparent hover:text-foreground";
 
 /** Icon controls on the dark noisy backup surfaces stay visually unboxed. */
 export const ONBOARDING_SECURITY_ICON_CLASS =

@@ -1100,7 +1100,7 @@ function createMockCustomEmojiSetEvents(): RelayEvent[] {
         ["emoji", "narf", "https://example.com/e2e/narf.png"],
         // member B claims :buzz: with a DIFFERENT url — unionCustomEmoji must
         // collapse it to one deterministic winner, never expose two URLs.
-        ["emoji", "buzz", "https://example.com/e2e/buzz-b.png"],
+        ["emoji", "buzz", "https://example.com/e2e/crew-b.png"],
         ["emoji", "bufo_joy", "https://example.com/e2e/bufo-joy.png"],
       ],
       "b".repeat(64),
@@ -5818,7 +5818,7 @@ function mulberry32(seed: number) {
 }
 
 let mockProjectEventStore: RelayEvent[] | null = null;
-const MOCK_PROJECT_BRANCHES_KEY = "buzz-e2e-project-branches";
+const MOCK_PROJECT_BRANCHES_KEY = "crew-e2e-project-branches";
 
 function readMockProjectBranches(): Record<string, Record<string, string>> {
   try {
@@ -5873,7 +5873,7 @@ function buildMockProjectEvents(): RelayEvent[] {
           ["name", seed.name],
           ["description", seed.description],
           [
-            "buzz-channel",
+            "crew-channel",
             getConfig()?.mock?.projectAccessChannelId ??
               "9a1657ac-f7aa-5db0-b632-d8bbeb6dfb50",
           ],
@@ -11786,7 +11786,7 @@ export function maybeInstallE2eTauriMocks() {
       }
       case "save_ncryptsec_copy": {
         const paths = activeConfig?.mock?.backupSavePaths ?? [
-          "/tmp/buzz-identity.ncryptsec",
+          "/tmp/crew-identity.ncryptsec",
         ];
         const index = Math.min(backupSaveCallCount, paths.length - 1);
         backupSaveCallCount += 1;

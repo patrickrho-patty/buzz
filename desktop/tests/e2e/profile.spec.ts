@@ -827,7 +827,7 @@ test("renders emoji avatars with a static background layer", async ({
     "background-color",
     "rgb(255, 231, 92)",
   );
-  await expect(avatarPreview).not.toHaveClass(/buzz-avatar-squish/);
+  await expect(avatarPreview).not.toHaveClass(/crew-avatar-squish/);
   await expect(page.getByTestId("profile-avatar-preview-emoji")).toHaveText(
     "😀",
   );
@@ -1318,7 +1318,7 @@ test("renders agent profile ingress subviews from the Playwright mock bridge", a
       return {
         heroHeight: Number.parseFloat(
           getComputedStyle(layout).getPropertyValue(
-            "--buzz-profile-sticky-hero-height",
+            "--crew-profile-sticky-hero-height",
           ),
         ),
         tabsTop: tabs ? Number.parseFloat(getComputedStyle(tabs).top) : 0,
@@ -2491,7 +2491,7 @@ test("supports webview zoom keyboard shortcuts", async ({ page }) => {
     page.evaluate(() => ({
       rootFontSize: getComputedStyle(document.documentElement).fontSize,
       textRemSize: getComputedStyle(document.documentElement)
-        .getPropertyValue("--buzz-type-rem")
+        .getPropertyValue("--crew-type-rem")
         .trim(),
       storedScale: localStorage.getItem("buzz:text-scale"),
       webviewZoom: (window as Window & { __CREW_E2E_WEBVIEW_ZOOM__?: number })
@@ -2591,7 +2591,7 @@ test("storage clear resets composed font size and keyboard zoom across windows",
       page.evaluate(() => ({
         fontSize: document.documentElement.dataset.fontSize,
         textRemSize: getComputedStyle(document.documentElement)
-          .getPropertyValue("--buzz-type-rem")
+          .getPropertyValue("--crew-type-rem")
           .trim(),
         textScale: localStorage.getItem("buzz:text-scale"),
       })),
@@ -2612,7 +2612,7 @@ test("storage clear resets composed font size and keyboard zoom across windows",
       page.evaluate(() => ({
         fontSize: document.documentElement.dataset.fontSize,
         textRemSize: getComputedStyle(document.documentElement)
-          .getPropertyValue("--buzz-type-rem")
+          .getPropertyValue("--crew-type-rem")
           .trim(),
         textScale: localStorage.getItem("buzz:text-scale"),
       })),
@@ -2630,7 +2630,7 @@ test("storage clear resets composed font size and keyboard zoom across windows",
     .poll(() =>
       page.evaluate(() => ({
         textRemSize: getComputedStyle(document.documentElement)
-          .getPropertyValue("--buzz-type-rem")
+          .getPropertyValue("--crew-type-rem")
           .trim(),
         textScale: localStorage.getItem("buzz:text-scale"),
       })),

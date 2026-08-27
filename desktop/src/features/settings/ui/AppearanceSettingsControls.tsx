@@ -282,11 +282,11 @@ function crewGradientSampleImage(isDark: boolean): string {
   const readToken = (token: string, fallback: string): string =>
     styles?.getPropertyValue(token).trim() || fallback;
   const top = isDark
-    ? readToken("--buzz-gradient-dark-top", "#4a4616")
-    : readToken("--buzz-gradient-light-top", "#e6e6b6");
+    ? readToken("--crew-gradient-dark-top", "#4a4616")
+    : readToken("--crew-gradient-light-top", "#e6e6b6");
   const bottom = isDark
-    ? readToken("--buzz-gradient-dark-bottom", "#0a1423")
-    : readToken("--buzz-gradient-light-bottom", "#c4d0da");
+    ? readToken("--crew-gradient-dark-bottom", "#0a1423")
+    : readToken("--crew-gradient-light-bottom", "#c4d0da");
   const shapeToken = isDark ? "--foreground" : "--background";
   const shapeFallback = isDark ? "0 0% 98%" : "0 0% 100%";
   const shape = `hsl(${readToken(shapeToken, shapeFallback)})`;
@@ -507,11 +507,11 @@ function ThreadLayoutDiagram({ mode }: { mode: ThreadViewMode }) {
   // Inline SVG resolves CSS variables, so the frame gradient references the
   // Buzz gradient tokens directly and follows theme.css automatically.
   const gradientTop = isDark
-    ? "var(--buzz-gradient-dark-top, #4a4616)"
-    : "var(--buzz-gradient-light-top, #e6e6b6)";
+    ? "var(--crew-gradient-dark-top, #4a4616)"
+    : "var(--crew-gradient-light-top, #e6e6b6)";
   const gradientBottom = isDark
-    ? "var(--buzz-gradient-dark-bottom, #0a1423)"
-    : "var(--buzz-gradient-light-bottom, #c4d0da)";
+    ? "var(--crew-gradient-dark-bottom, #0a1423)"
+    : "var(--crew-gradient-light-bottom, #c4d0da)";
   const channelSurface = "hsl(var(--muted))";
   const threadSurface = "hsl(var(--background))";
   const channelOpacity = isDark ? 0.88 : 0.78;

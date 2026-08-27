@@ -245,7 +245,7 @@ pub(crate) async fn fan_out_event_to_local_subscribers(
 ) {
     let matches = state.sub_registry.fan_out_scoped(community_id, stored);
     let matches = filter_fanout_by_access(state, community_id, stored, matches, None).await;
-    metrics::histogram!("buzz_fanout_recipients").record(matches.len() as f64);
+    metrics::histogram!("crew_fanout_recipients").record(matches.len() as f64);
     if matches.is_empty() {
         return;
     }
@@ -305,7 +305,7 @@ pub async fn fan_out_pubsub_event(state: &Arc<AppState>, channel_event: crew_pub
 
     let matches = state.sub_registry.fan_out_scoped(community_id, &stored);
     let matches = filter_fanout_by_access(state, community_id, &stored, matches, None).await;
-    metrics::counter!("buzz_multinode_fanout_total").increment(1);
+    metrics::counter!("crew_multinode_fanout_total").increment(1);
     if matches.is_empty() {
         return;
     }
@@ -370,7 +370,7 @@ pub(crate) async fn dispatch_persistent_event(
     let stored_event = stored_event.clone();
     let actor_pubkey_hex = actor_pubkey_hex.to_owned();
 
-    metrics::counter!("buzz_post_commit_dispatch_scheduled_total").increment(1);
+    metrics::counter!("crew_post_commit_dispatch_scheduled_total").increment(1);
     tokio::spawn(async move {
         let recipients = dispatch_persistent_event_inner(
             &tenant,
@@ -437,7 +437,7 @@ async fn dispatch_persistent_event_inner(
         threaded_visibility.as_ref(),
     )
     .await;
-    metrics::histogram!("buzz_fanout_recipients").record(matches.len() as f64);
+    metrics::histogram!("crew_fanout_recipients").record(matches.len() as f64);
     debug!(
         event_id = %event_id_hex,
         channel_id = ?stored_event.channel_id,
@@ -449,7 +449,7 @@ async fn dispatch_persistent_event_inner(
         Ok(json) => json,
         Err(e) => {
             error!(event_id = %event_id_hex, "Failed to serialize event for fan-out: {e}");
-            metrics::counter!("buzz_post_commit_dispatch_errors_total", "stage" => "serialize")
+            metrics::counter!("crew_post_commit_dispatch_errors_total", "stage" => "serialize")
                 .increment(1);
             return 0;
         }
@@ -548,7 +548,7 @@ async fn dispatch_persistent_event_inner(
                 tracing::error!(event_id = ?workflow_event.event.id, "Workflow trigger failed: {e}");
             } else {
                 metrics::counter!(
-                    "buzz_workflow_runs_total",
+                    "crew_workflow_runs_total",
                     "trigger" => trigger_kind,
                     "community" => workflow_community_host
                 )
@@ -596,7 +596,7 @@ async fn enqueue_event_created_audit(
     };
     if let Err(e) = audit_tx.send(audit_entry).await {
         error!(event_id = %event_id_hex, "Audit channel closed — entry lost: {e}");
-        metrics::counter!("buzz_audit_send_errors_total").increment(1);
+        metrics::counter!("crew_audit_send_errors_total").increment(1);
     }
 }
 
@@ -621,12 +621,12 @@ pub async fn handle_event(event: Event, conn: Arc<ConnectionState>, state: Arc<A
     // Rationale: bounded_kind_label passes through all 10k values in
     // 20000..=29999 (client-controlled ephemeral range). Crossing kind ×
     // community would produce up to millions of series. Keep kind fleet-wide.
-    metrics::counter!("buzz_events_received_total", "kind" => kind_str).increment(1);
+    metrics::counter!("crew_events_received_total", "kind" => kind_str).increment(1);
     // Per-community volume counter: community-only, no kind tag.
     // Use this for per-community throughput graphs; the fleet counter above
     // for per-kind breakdowns.
     metrics::counter!(
-        "buzz_community_events_received_total",
+        "crew_community_events_received_total",
         "community" => conn.tenant.host().to_owned()
     )
     .increment(1);
@@ -761,7 +761,7 @@ pub async fn handle_event(event: Event, conn: Arc<ConnectionState>, state: Arc<A
     match super::ingest::ingest_event(&state, &conn.tenant, event, ingest_auth).await {
         Ok(result) => {
             if result.accepted {
-                // buzz_events_stored_total is emitted inside ingest_event()
+                // crew_events_stored_total is emitted inside ingest_event()
                 // (shared WS/HTTP seam), not here.
                 info!(
                     event_id = %result.event_id,
@@ -770,7 +770,7 @@ pub async fn handle_event(event: Event, conn: Arc<ConnectionState>, state: Arc<A
                     "Event ingested"
                 );
             }
-            metrics::histogram!("buzz_event_processing_seconds")
+            metrics::histogram!("crew_event_processing_seconds")
                 .record(start.elapsed().as_secs_f64());
             conn.send(RelayMessage::ok(
                 &result.event_id,

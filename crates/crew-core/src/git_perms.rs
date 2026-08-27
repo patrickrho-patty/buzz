@@ -16,7 +16,7 @@ use crate::channel::MemberRole;
 use std::fmt;
 
 /// Machine-readable token prefixing the push-policy denial for a kind:30617
-/// announcement with no `buzz-channel` binding.
+/// announcement with no `crew-channel` binding.
 ///
 /// This is a **declared cross-component contract**, not a log string. Known
 /// consumers switch on it:

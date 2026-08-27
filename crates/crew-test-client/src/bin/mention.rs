@@ -1,7 +1,7 @@
 //! Send an @mention event to a Buzz channel targeting a specific pubkey.
 //! Usage: mention <channel_uuid> <target_pubkey_hex> <message>
 
-use crew_test_client::BuzzTestClient;
+use crew_test_client::CrewTestClient;
 use nostr::{EventBuilder, Keys, Kind, Tag};
 
 #[tokio::main]
@@ -22,7 +22,7 @@ async fn main() -> anyhow::Result<()> {
     let keys = Keys::generate();
     println!("Sender pubkey: {}", keys.public_key().to_hex());
 
-    let mut client = BuzzTestClient::connect(&url, &keys).await?;
+    let mut client = CrewTestClient::connect(&url, &keys).await?;
 
     let h_tag = Tag::parse(["h", channel_id])?;
     let p_tag = Tag::parse(["p", target_pubkey])?;

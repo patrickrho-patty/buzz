@@ -82,9 +82,9 @@ wait_healthy() {
   return 1
 }
 
-wait_healthy "Postgres" "buzz-postgres"
-wait_healthy "Redis" "buzz-redis"
-wait_healthy "MinIO" "buzz-minio"
+wait_healthy "Postgres" "crew-postgres"
+wait_healthy "Redis" "crew-redis"
+wait_healthy "MinIO" "crew-minio"
 
 # ── Apply database schema ────────────────────────────────────────────────────
 
@@ -104,7 +104,7 @@ export PGSCHEMA_PLAN_USER=crew
 export PGSCHEMA_PLAN_PASSWORD=crew_dev
 
 ./bin/pgschema apply --file schema/schema.sql --auto-approve
-docker exec -i -e PGPASSWORD="${PGPASSWORD}" buzz-postgres \
+docker exec -i -e PGPASSWORD="${PGPASSWORD}" crew-postgres \
   psql -U "${PGUSER}" -d "${PGDATABASE}" -v ON_ERROR_STOP=1 < scripts/attach-schema-partitions.sql
 ok "Schema applied"
 
@@ -116,13 +116,13 @@ ok "Schema applied"
 # (ensure_configured_community has no callers) and fails closed on an unmapped
 # host, so without this row every e2e connection would 404 at host-binding.
 # The unique index is on lower(host), so ON CONFLICT must target that expression.
-# psql is not on PATH in the hermit env; postgres runs as the buzz-postgres
+# psql is not on PATH in the hermit env; postgres runs as the crew-postgres
 # docker container, so exec into it (same fallback as setup-desktop-test-data.sh).
 log "Seeding deployment community (host=localhost:3000)..."
 if command -v psql >/dev/null 2>&1; then
   seed_psql() { PGPASSWORD="${PGPASSWORD}" psql -h "${PGHOST}" -p "${PGPORT}" -U "${PGUSER}" -d "${PGDATABASE}" -qtA "$@"; }
 else
-  seed_psql() { docker exec -e PGPASSWORD="${PGPASSWORD}" buzz-postgres psql -U "${PGUSER}" -d "${PGDATABASE}" -qtA "$@"; }
+  seed_psql() { docker exec -e PGPASSWORD="${PGPASSWORD}" crew-postgres psql -U "${PGUSER}" -d "${PGDATABASE}" -qtA "$@"; }
 fi
 seed_psql -c "
 INSERT INTO communities (id, host)

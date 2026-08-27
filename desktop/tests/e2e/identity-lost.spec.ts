@@ -175,9 +175,9 @@ test("phone recovery uses the desktop pairing card semantics", async ({
   await expect(qrCode).toBeVisible();
   await expect(qrCode).toHaveAttribute("data-qr-matrix-size", "57");
   await expect(qrCode.locator("[data-qr-finder-pattern]")).toHaveCount(3);
-  await expect(qrCode.locator(".buzz-qr-cell-reveal").first()).toHaveCSS(
+  await expect(qrCode.locator(".crew-qr-cell-reveal").first()).toHaveCSS(
     "animation-name",
-    "buzz-qr-cell-reveal",
+    "crew-qr-cell-reveal",
   );
   const qrBox = await qrContainer.boundingBox();
   const copyBox = await copyButton.boundingBox();

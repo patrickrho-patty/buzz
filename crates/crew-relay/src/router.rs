@@ -210,7 +210,7 @@ fn http_trace_layer() -> TraceLayer<HttpMakeClassifier, fn(&Request<Body>) -> tr
 
 fn make_http_span(request: &Request<Body>) -> tracing::Span {
     tracing::info_span!(
-        target: "buzz_relay",
+        target: "crew_relay",
         "http.request",
         otel.kind = "server",
         http.request.method = %request.method(),
@@ -528,7 +528,7 @@ mod tests {
                 |_: axum::http::Request<axum::body::Body>| async {
                     async {}
                         .instrument(tracing::info_span!(
-                            target: "buzz_datastore",
+                            target: "crew_datastore",
                             "SELECT",
                             otel.kind = "client",
                             db.system.name = "postgresql",

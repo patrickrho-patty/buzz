@@ -43,8 +43,8 @@ cleanup() {
     done
     kill -9 "${RELAY_PID}" 2>/dev/null || true
   fi
-  docker exec buzz-redis redis-cli -n "${REDIS_DB}" FLUSHDB >/dev/null 2>&1 || true
-  docker exec buzz-postgres dropdb -U buzz --if-exists "${DB_NAME}" >/dev/null 2>&1 || true
+  docker exec crew-redis redis-cli -n "${REDIS_DB}" FLUSHDB >/dev/null 2>&1 || true
+  docker exec crew-postgres dropdb -U buzz --if-exists "${DB_NAME}" >/dev/null 2>&1 || true
   if [[ "${LOCK_HELD}" == true ]]; then rmdir "${LOCK_DIR}" 2>/dev/null || true; fi
   exit "${status}"
 }
@@ -69,7 +69,7 @@ cd "${ROOT}"
 phase_start="$(date +%s)"
 log "starting backing services"
 docker compose up -d postgres redis minio minio-init
-for container in buzz-postgres buzz-redis buzz-minio; do
+for container in crew-postgres crew-redis crew-minio; do
   for _ in $(seq 1 60); do
     [[ "$(docker inspect --format='{{.State.Health.Status}}' "${container}" 2>/dev/null || true)" == "healthy" ]] && break
     sleep 1
@@ -83,15 +83,15 @@ phase services "${phase_start}"
 
 phase_start="$(date +%s)"
 log "creating isolated database ${DB_NAME}"
-docker exec buzz-postgres createdb -U buzz "${DB_NAME}"
+docker exec crew-postgres createdb -U buzz "${DB_NAME}"
 export PGHOST=localhost PGPORT=5432 PGUSER=buzz PGPASSWORD=crew_dev PGDATABASE="${DB_NAME}"
 export PGSCHEMA_PLAN_HOST=localhost PGSCHEMA_PLAN_PORT=5432 PGSCHEMA_PLAN_DB="${DB_NAME}"
 export PGSCHEMA_PLAN_USER=buzz PGSCHEMA_PLAN_PASSWORD=crew_dev
 ./bin/pgschema apply --file schema/schema.sql --auto-approve
-docker exec -i -e PGPASSWORD=crew_dev buzz-postgres \
+docker exec -i -e PGPASSWORD=crew_dev crew-postgres \
   psql -U buzz -d "${DB_NAME}" -v ON_ERROR_STOP=1 < scripts/attach-schema-partitions.sql
 CREW_DB_NAME="${DB_NAME}" CREW_COMMUNITY_HOST="${COMMUNITY_HOST}" ./scripts/setup-desktop-test-data.sh
-docker exec buzz-redis redis-cli -n "${REDIS_DB}" FLUSHDB >/dev/null
+docker exec crew-redis redis-cli -n "${REDIS_DB}" FLUSHDB >/dev/null
 phase database "${phase_start}"
 
 phase_start="$(date +%s)"

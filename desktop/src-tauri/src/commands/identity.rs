@@ -1,5 +1,5 @@
 use nostr::{
-    Event, EventBuilder, JsonUtil, Keys, Kind, PublicKey, Tag, Timestamp, ToBech32, nips::nip44,
+    nips::nip44, Event, EventBuilder, JsonUtil, Keys, Kind, PublicKey, Tag, Timestamp, ToBech32,
 };
 use tauri::Manager;
 use tauri::State;

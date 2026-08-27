@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# buzz-adopt-prod-agents.sh — copy your installed (production) Buzz agent
+# crew-adopt-prod-agents.sh — copy your installed (production) Buzz agent
 # records + owner identity into the dev app-data store so a dev build boots as
 # the SAME agents and the SAME owner npub as your installed DMG.
 #

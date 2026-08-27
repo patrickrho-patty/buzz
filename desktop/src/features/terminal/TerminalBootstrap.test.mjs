@@ -162,7 +162,7 @@ test("mounted bootstrap passes GUI context and ACKs only after consuming a frame
         ThemeProvider,
         null,
         createElement("div", {
-          className: "buzz-huddle-app-surface",
+          className: "crew-huddle-app-surface",
           tabIndex: -1,
         }),
         createElement(TerminalBootstrap, {
@@ -297,7 +297,7 @@ test("resize during in-flight catch-up keeps the newest viewport ready", async (
       ThemeProvider,
       null,
       createElement("div", {
-        className: "buzz-huddle-app-surface",
+        className: "crew-huddle-app-surface",
         tabIndex: -1,
       }),
       createElement(TerminalBootstrap, {
@@ -354,7 +354,7 @@ test("opening a tab keeps terminal ownership while its attachment is pending", a
       ThemeProvider,
       null,
       createElement("div", {
-        className: "buzz-huddle-app-surface",
+        className: "crew-huddle-app-surface",
         tabIndex: -1,
       }),
       createElement(TerminalBootstrap, {
@@ -519,7 +519,7 @@ test("closing removes the tab before native shutdown resolves", async () => {
       ThemeProvider,
       null,
       createElement("div", {
-        className: "buzz-huddle-app-surface",
+        className: "crew-huddle-app-surface",
         tabIndex: -1,
       }),
       createElement(TerminalBootstrap, {
@@ -571,7 +571,7 @@ test("wheel deltas reach terminal_scroll with the DOM sign intact", async () => 
       ThemeProvider,
       null,
       createElement("div", {
-        className: "buzz-huddle-app-surface",
+        className: "crew-huddle-app-surface",
         tabIndex: -1,
       }),
       createElement(TerminalBootstrap, {

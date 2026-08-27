@@ -637,7 +637,7 @@ mod tests {
     use super::*;
     use uuid::Uuid;
 
-    const TEST_DB_URL: &str = "postgres://buzz:buzz_dev@localhost:5432/buzz";
+    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz";
 
     async fn setup_pool() -> PgPool {
         let database_url = std::env::var("CREW_TEST_DATABASE_URL")

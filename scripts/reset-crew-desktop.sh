@@ -18,7 +18,7 @@
 # Optional flags:
 #   --launch   relaunch the app after reset
 #
-# Usage: scripts/reset-griddle-desktop.sh [--launch]
+# Usage: scripts/reset-crew-desktop.sh [--launch]
 
 set -euo pipefail
 

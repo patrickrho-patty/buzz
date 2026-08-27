@@ -8,7 +8,7 @@ export function CrewMark({ className }: { className?: string }) {
   return (
     <svg
       aria-hidden="true"
-      className={["buzz-mark", className].filter(Boolean).join(" ")}
+      className={["crew-mark", className].filter(Boolean).join(" ")}
       viewBox="0 0 1254 1254"
       fill="currentColor"
     >

@@ -172,7 +172,7 @@ mod tests {
     use super::*;
     use std::collections::BTreeSet;
 
-    const TEST_DB_URL: &str = "postgres://buzz:buzz_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
+    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
 
     #[derive(Debug, Clone, Copy, PartialEq, Eq)]
     enum ConstraintKind {
@@ -940,7 +940,7 @@ mod tests {
         let push_gate = migrations[22].sql.as_str();
         assert!(push_gate.contains("CREATE OR REPLACE FUNCTION enqueue_push_match_job"));
         assert!(push_gate.contains("pg_advisory_xact_lock_shared"));
-        assert!(push_gate.contains("'buzz_push_gate:' || NEW.community_id::text"));
+        assert!(push_gate.contains("'crew_push_gate:' || NEW.community_id::text"));
         assert!(push_gate.contains("endpoint_enabled"));
 
         // T1a repair: the TTL refresh trigger synchronizes on a shared
@@ -951,7 +951,7 @@ mod tests {
         assert!(ttl_shared
             .contains("CREATE OR REPLACE FUNCTION refresh_channel_ttl_after_event_insert"));
         assert!(ttl_shared.contains("pg_advisory_xact_lock_shared"));
-        assert!(ttl_shared.contains("'buzz_channel_ttl:' || NEW.community_id::text"));
+        assert!(ttl_shared.contains("'crew_channel_ttl:' || NEW.community_id::text"));
         // The row read must be a bare SELECT (comments describe the removed
         // FOR UPDATE; the executable body must not reintroduce it).
         assert!(ttl_shared.contains("SELECT ttl_seconds INTO channel_ttl"));
@@ -1059,7 +1059,7 @@ mod tests {
         let roster_fence = migrations[31].sql.as_str();
         assert!(roster_fence.contains("CREATE TRIGGER trg_events_guard_channel_roster_snapshot"));
         assert!(roster_fence.contains("NEW.kind <> 39002"));
-        assert!(roster_fence.contains("'buzz_channel_membership:'"));
+        assert!(roster_fence.contains("'crew_channel_membership:'"));
         assert!(roster_fence.contains("cm.removed_at IS NULL"));
         assert!(roster_fence.contains("cm.role::text"));
         assert!(roster_fence.contains("jsonb_array_length(roster_tag.tag_json) <> 4"));
@@ -1347,7 +1347,7 @@ mod tests {
                     (0, 0, 0),
                     "{} embeds or runs a SQLx migrator outside the schema/destruction \
                      lock contract; route migration execution through \
-                     buzz_db migration::run_migrations",
+                     crew_db migration::run_migrations",
                     path.display()
                 );
             }
@@ -1701,7 +1701,7 @@ mod tests {
         let admin = PgPool::connect(&base_url)
             .await
             .expect("connect admin database");
-        let probe_db = format!("buzz_lock_cancel_{}", uuid::Uuid::new_v4().simple());
+        let probe_db = format!("crew_lock_cancel_{}", uuid::Uuid::new_v4().simple());
         sqlx::query(AssertSqlSafe(format!("CREATE DATABASE {probe_db}")))
             .execute(&admin)
             .await

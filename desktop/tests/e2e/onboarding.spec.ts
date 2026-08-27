@@ -1631,12 +1631,12 @@ test("first-community shows the scenario cards for localhost", async ({
   await expect(
     page
       .getByTestId("welcome-setup")
-      .locator(".buzz-onboarding-transition-line"),
+      .locator(".crew-onboarding-transition-line"),
   ).toHaveAttribute("data-onboarding-direction", "forward");
   await expect(
     page
       .getByTestId("welcome-setup")
-      .locator(".buzz-onboarding-transition-line"),
+      .locator(".crew-onboarding-transition-line"),
   ).toHaveAttribute("data-onboarding-effect", "line-slide");
   const joinBack = page.getByTestId("welcome-join-back");
   await expect(joinBack).toBeVisible();
@@ -1644,7 +1644,7 @@ test("first-community shows the scenario cards for localhost", async ({
   await expect(
     page
       .getByTestId("welcome-setup")
-      .locator(".buzz-onboarding-transition-line"),
+      .locator(".crew-onboarding-transition-line"),
   ).toHaveAttribute("data-onboarding-direction", "backward");
 
   await page.getByTestId("welcome-setup-back").click();
@@ -1768,7 +1768,7 @@ test("community onboarding reuses an existing relay profile", async ({
   await expect(
     page
       .getByTestId("community-onboarding-flow")
-      .locator(".buzz-onboarding-transition-line"),
+      .locator(".crew-onboarding-transition-line"),
   ).toHaveAttribute("data-onboarding-direction", "forward");
   await expect(
     page.getByRole("heading", { name: "Build your profile" }),
@@ -1780,7 +1780,7 @@ test("community onboarding reuses an existing relay profile", async ({
   await expect(
     page
       .getByTestId("community-onboarding-flow")
-      .locator(".buzz-onboarding-transition-line"),
+      .locator(".crew-onboarding-transition-line"),
   ).toHaveAttribute("data-onboarding-direction", "backward");
 });
 
@@ -2248,7 +2248,7 @@ test("connected first-community profile keeps Back bottom-left and balances the 
   await page.getByRole("tab", { name: "Emoji" }).click();
   await selectFirstEmojiFromPicker(page);
   const liveEmoji = page.getByTestId("community-avatar-live-preview-emoji");
-  await expect(liveEmoji).toHaveClass(/buzz-avatar-squish/);
+  await expect(liveEmoji).toHaveClass(/crew-avatar-squish/);
   await expect(
     page.getByTestId("community-avatar-live-preview-panel"),
   ).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
@@ -3646,7 +3646,7 @@ test("same-relay identity replacement rebuilds the community boundary (A→B→A
   // flush polling exceed the default budget.
   test.slow();
   const GENERAL_CHANNEL_ID = "9a1657ac-f7aa-5db0-b632-d8bbeb6dfb50";
-  const DRAFT_STORE_KEY_PREFIX = "buzz-drafts.v2";
+  const DRAFT_STORE_KEY_PREFIX = "crew-drafts.v2";
   // Mirrors the bridge's DEFAULT_RELAY_WS_URL and useDrafts'
   // canonicalizeRelayScope (scheme://host, no trailing slash).
   const relayScope = (process.env.CREW_E2E_RELAY_URL ?? "http://localhost:3000")

@@ -42,7 +42,7 @@ test("pending external metadata reserves the image treatment", () => {
 
 test("pending Buzz entity metadata remains image-less", () => {
   const entityPreview = {
-    kind: "buzz-repository",
+    kind: "crew-repository",
     href: `crew://repo?owner=${"cd".repeat(32)}&d=buzz`,
     provider: "Buzz",
     title: "buzz",
@@ -203,7 +203,7 @@ test("metadata loader coalesces fragment variants and bounds concurrency", async
 
 test("withEntityFallbacks re-adds previews dropped by null metadata", () => {
   const entityPreview = {
-    kind: "buzz-pull-request",
+    kind: "crew-pull-request",
     href: `crew://pr?id=${"ab".repeat(32)}&owner=${"cd".repeat(32)}&d=buzz`,
     provider: "Buzz",
     title: `buzz #${"ab".repeat(4)}`,
@@ -217,14 +217,14 @@ test("withEntityFallbacks re-adds previews dropped by null metadata", () => {
 
 test("withEntityFallbacks keeps resolved previews and preserves order", () => {
   const first = {
-    kind: "buzz-repository",
+    kind: "crew-repository",
     href: `crew://repo?owner=${"cd".repeat(32)}&d=buzz`,
     provider: "Buzz",
     title: "buzz",
     typeLabel: "repo",
   };
   const second = {
-    kind: "buzz-issue",
+    kind: "crew-issue",
     href: `crew://issue?id=${"ef".repeat(32)}&owner=${"cd".repeat(32)}&d=buzz`,
     provider: "Buzz",
     title: `buzz #${"ef".repeat(4)}`,
@@ -246,7 +246,7 @@ test("entity fallback eligibility is kind-scoped", () => {
   assert.equal(
     isBuzzEntityPreview({
       ...preview,
-      kind: "buzz-repository",
+      kind: "crew-repository",
       href: `crew://repo?owner=${"cd".repeat(32)}&d=buzz`,
     }),
     true,

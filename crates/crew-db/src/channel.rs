@@ -1908,7 +1908,7 @@ mod tests {
     use nostr::Keys;
     use sqlx::postgres::PgPoolOptions;
 
-    const TEST_DB_URL: &str = "postgres://buzz:buzz_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1 -- local test-only credentials
+    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1 -- local test-only credentials
 
     async fn setup_pool() -> PgPool {
         PgPool::connect(TEST_DB_URL)

@@ -152,7 +152,7 @@ function fixture(overrides = {}) {
       ThemeProvider,
       null,
       createElement("div", {
-        className: "buzz-huddle-app-surface",
+        className: "crew-huddle-app-surface",
         tabIndex: -1,
       }),
       createElement(TerminalSubstrate, nextProps),
@@ -462,7 +462,7 @@ test("canvas failure atomically restores Buzz ownership", async () => {
       ThemeProvider,
       null,
       createElement("div", {
-        className: "buzz-huddle-app-surface",
+        className: "crew-huddle-app-surface",
         tabIndex: -1,
       }),
       createElement(TerminalSubstrate, {

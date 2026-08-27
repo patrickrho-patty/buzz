@@ -42,7 +42,7 @@ test("buildCompactToolSummary formats Buzz send_message preview", () => {
 test("buildCompactToolSummary treats buzz messages send commands as messages", () => {
   const summary = buildCompactToolSummary(
     makeTool({
-      toolName: "buzz-dev-mcp__shell",
+      toolName: "crew-dev-mcp__shell",
       args: {
         command:
           'buzz --format compact messages send --channel channel-1 --content "@Ned are you working"',
@@ -75,7 +75,7 @@ test("buildCompactToolSummary returns null preview for piped stdin sends", () =>
 test("buildCompactToolSummary formats shell command preview", () => {
   const summary = buildCompactToolSummary(
     makeTool({
-      toolName: "buzz-dev-mcp__shell",
+      toolName: "crew-dev-mcp__shell",
       args: { command: "git status" },
     }),
   );
@@ -91,7 +91,7 @@ test("buildCompactToolSummary formats view_image thumbnail source", () => {
     "https://sprout-oss.stage.blox.sqprod.co/media/ffd1b2721f2d52e19f0ca2be9aa7842cdec5b4e0215aaab2a67c26a2a76a6a83.png";
   const summary = buildCompactToolSummary(
     makeTool({
-      toolName: "buzz-dev-mcp__view_image",
+      toolName: "crew-dev-mcp__view_image",
       args: { source },
     }),
   );

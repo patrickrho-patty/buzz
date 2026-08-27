@@ -105,7 +105,7 @@ export async function expectEmojiMartStylesInstalled(picker: Locator) {
   await expect
     .poll(async () =>
       picker.evaluate((element) =>
-        Boolean(element.shadowRoot?.querySelector("#buzz-emoji-mart-style")),
+        Boolean(element.shadowRoot?.querySelector("#crew-emoji-mart-style")),
       ),
     )
     .toBe(true);

@@ -7,7 +7,7 @@ const SHOTS = "test-results/drafts";
 
 // Mock bridge default pubkey — must match DEFAULT_MOCK_PUBKEY in bridge.ts
 const MOCK_PUBKEY = "deadbeef".repeat(8);
-const DRAFT_STORE_KEY = `buzz-drafts.v1:${MOCK_PUBKEY}`;
+const DRAFT_STORE_KEY = `crew-drafts.v1:${MOCK_PUBKEY}`;
 
 // Channel IDs from the mock bridge seed data
 const GENERAL_CHANNEL_ID = "9a1657ac-f7aa-5db0-b632-d8bbeb6dfb50";

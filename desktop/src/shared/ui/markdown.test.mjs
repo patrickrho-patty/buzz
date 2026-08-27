@@ -629,7 +629,7 @@ test("messageLinkUrlTransform: leaves non-entity crew:// schemes to default", ()
 });
 
 test("crewDeepLinkUrlTransform: preserves crew://pr entity link href", () => {
-  const prLink = `crew://pr?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=buzz-world`;
+  const prLink = `crew://pr?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=crew-world`;
   const html = renderMarkdown(`[My PR](${prLink})`);
   // The href must survive — our transform preserves valid entity links.
   assert.match(html, /href="crew:\/\/pr\?/);
@@ -637,21 +637,21 @@ test("crewDeepLinkUrlTransform: preserves crew://pr entity link href", () => {
 });
 
 test("crewDeepLinkUrlTransform: preserves crew://pr autolink href", () => {
-  const prLink = `crew://pr?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=buzz-world`;
+  const prLink = `crew://pr?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=crew-world`;
   const html = renderMarkdown(`<${prLink}>`);
   assert.match(html, /href="crew:\/\/pr\?/);
   assert.doesNotMatch(html, /href=""/);
 });
 
 test("crewDeepLinkUrlTransform: preserves crew://issue entity link href", () => {
-  const issueLink = `crew://issue?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=buzz-world`;
+  const issueLink = `crew://issue?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=crew-world`;
   const html = renderMarkdown(`[Issue title](${issueLink})`);
   assert.match(html, /href="crew:\/\/issue\?/);
   assert.doesNotMatch(html, /href=""/);
 });
 
 test("crewDeepLinkUrlTransform: preserves crew://repo entity link href", () => {
-  const repoLink = `crew://repo?owner=${OWNER_HEX}&d=buzz-world`;
+  const repoLink = `crew://repo?owner=${OWNER_HEX}&d=crew-world`;
   const html = renderMarkdown(`[My repo](${repoLink})`);
   assert.match(html, /href="crew:\/\/repo\?/);
   assert.doesNotMatch(html, /href=""/);
@@ -667,7 +667,7 @@ test("crewDeepLinkUrlTransform: preserves crew://project autolink href", () => {
 test("crewDeepLinkUrlTransform: strips malformed crew://pr (unknown param)", () => {
   // Strict parser rejects unknown params — transform falls back to default sanitizer.
   const html = renderMarkdown(
-    `[link](crew://pr?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=buzz-world&extra=ignored)`,
+    `[link](crew://pr?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=crew-world&extra=ignored)`,
   );
   assert.match(html, /href=""/);
 });
@@ -741,7 +741,7 @@ test("renderEntityLinkAnchor_noRelayOrigin_cloneUrlReturnsNull", () => {
 
 test("renderEntityLinkAnchor_directEntityLink_returnsAnchorRegardlessOfOrigin", () => {
   // A direct crew://pr link always resolves in-app — it does not require origin.
-  const prLink = `crew://pr?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=buzz-world`;
+  const prLink = `crew://pr?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=crew-world`;
   const el = renderEntityLinkAnchor({
     children: React.createElement("span", null, "My PR"),
     href: prLink,
@@ -1077,9 +1077,9 @@ test("bare Buzz permalinks render cohesive icon-prefixed chips", () => {
     messageLink,
     compatibilityMessageLink,
     channelLink,
-    `crew://pr?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=buzz-world`,
-    `crew://issue?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=buzz-world`,
-    `crew://repo?owner=${OWNER_HEX}&d=buzz-world`,
+    `crew://pr?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=crew-world`,
+    `crew://issue?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=crew-world`,
+    `crew://repo?owner=${OWNER_HEX}&d=crew-world`,
   ];
   const markdown = renderCachedMarkdown({
     components: createMarkdownComponents(true, false),
@@ -1107,7 +1107,7 @@ test("bare Buzz permalinks render cohesive icon-prefixed chips", () => {
   );
 
   const visibleText = html.replace(/<[^>]+>/g, "");
-  assert.equal((html.match(/data-buzz-link=""/g) ?? []).length, 6);
+  assert.equal((html.match(/data-crew-link=""/g) ?? []).length, 6);
   assert.equal(
     (
       html.match(
@@ -1127,7 +1127,7 @@ test("bare Buzz permalinks render cohesive icon-prefixed chips", () => {
   assert.match(html, /inline-chip-icon-repo/);
   // PR, issue, and repository chips all use the stable repository identity;
   // fetched subjects and event hashes never alter their inline width.
-  assert.equal((visibleText.match(/buzz-world/g) ?? []).length, 3);
+  assert.equal((visibleText.match(/crew-world/g) ?? []).length, 3);
   assert.doesNotMatch(visibleText, /c3b589fa/);
 });
 
@@ -1143,10 +1143,10 @@ test("inline issue and pull-request chips show the repository name without the e
     );
 
   const issueHtml = renderEntityChip(
-    `crew://issue?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=buzz-world`,
+    `crew://issue?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=crew-world`,
   );
   const issueText = issueHtml.replace(/<[^>]+>/g, "");
-  assert.equal(issueText, "buzz-world");
+  assert.equal(issueText, "crew-world");
   assert.doesNotMatch(issueText, /c3b589fa/);
   assert.doesNotMatch(issueText, /·/);
   // Identity, icon, and navigation affordances survive the shorter label.
@@ -1154,14 +1154,14 @@ test("inline issue and pull-request chips show the repository name without the e
   assert.match(issueHtml, /inline-chip-icon-issue/);
   assert.match(
     issueHtml,
-    /aria-label="Open issue c3b589fa in repository buzz-world"/,
+    /aria-label="Open issue c3b589fa in repository crew-world"/,
   );
 
   // Pull-request chips follow the same stable inline identity policy.
   const pullRequestText = renderEntityChip(
-    `crew://pr?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=buzz-world`,
+    `crew://pr?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=crew-world`,
   ).replace(/<[^>]+>/g, "");
-  assert.equal(pullRequestText, "buzz-world");
+  assert.equal(pullRequestText, "crew-world");
   assert.doesNotMatch(pullRequestText, /c3b589fa/);
   assert.doesNotMatch(pullRequestText, /·/);
 });
@@ -1234,12 +1234,12 @@ test("authored Buzz permalink labels remain ordinary links", () => {
     `[the message](crew://message?channel=${channelId}&id=${EVENT_HEX})`,
     `[the compatibility message](crew://channel/${channelId}/${EVENT_HEX})`,
     `[**design discussion**](crew://channel/${channelId})`,
-    `[the issue](crew://issue?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=buzz-world)`,
+    `[the issue](crew://issue?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=crew-world)`,
   ];
   const markdown = renderCachedMarkdown({
     components: createMarkdownComponents(true, false),
     content: links.join(" "),
-    variant: "authored-buzz-link-integration-test",
+    variant: "authored-crew-link-integration-test",
   });
   const html = renderToStaticMarkup(
     React.createElement(
@@ -1257,7 +1257,7 @@ test("authored Buzz permalink labels remain ordinary links", () => {
     ),
   );
 
-  assert.equal((html.match(/data-buzz-link=""/g) ?? []).length, 0);
+  assert.equal((html.match(/data-crew-link=""/g) ?? []).length, 0);
   assert.match(html, />the message</);
   assert.match(html, />the compatibility message</);
   assert.match(html, /aria-label="Open message: the compatibility message"/);
@@ -1276,7 +1276,7 @@ test("bare Buzz permalinks shorten unavailable channel identifiers", () => {
       `crew://message?channel=${channelId}&id=${EVENT_HEX}`,
       `crew://channel/${channelId}`,
     ].join(" "),
-    variant: "unknown-channel-buzz-link-integration-test",
+    variant: "unknown-channel-crew-link-integration-test",
   });
   const html = renderToStaticMarkup(
     React.createElement(
@@ -1396,7 +1396,7 @@ test("agent mentions retain the bot treatment instead of the human icon", () => 
 });
 
 test("renderEntityLinkAnchor renders Buzz entity links as chips", () => {
-  const prLink = `crew://pr?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=buzz-world`;
+  const prLink = `crew://pr?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=crew-world`;
   const el = renderEntityLinkAnchor({
     children: "PR · abc123",
     href: prLink,
@@ -1405,29 +1405,29 @@ test("renderEntityLinkAnchor renders Buzz entity links as chips", () => {
     relayOrigin: null,
   });
   const html = renderToStaticMarkup(el);
-  assert.match(html, /data-buzz-link=""/);
+  assert.match(html, /data-crew-link=""/);
   assert.match(html, /<span/);
   assert.match(html, /role="button"/);
   assert.match(html, /tabindex="0"/);
   assert.match(html, /data-crew-link-kind="pr"/);
   assert.match(html, /wrapping-inline-chip/);
-  assert.match(html, /inline-chip-leading-fragment[^>]*>buzz-</);
+  assert.match(html, /inline-chip-leading-fragment[^>]*>crew-</);
   assert.doesNotMatch(html, /\btruncate\b/);
   assert.doesNotMatch(html, /<a/);
   assert.doesNotMatch(html, /<button/);
 });
 
 test("renderEntityLinkAnchor keeps chip styling when interaction is disabled", () => {
-  const repoLink = `crew://repo?owner=${OWNER_HEX}&d=buzz-world`;
+  const repoLink = `crew://repo?owner=${OWNER_HEX}&d=crew-world`;
   const el = renderEntityLinkAnchor({
-    children: "buzz-world",
+    children: "crew-world",
     href: repoLink,
     interactive: false,
     onOpenEntityLink: () => {},
     relayOrigin: null,
   });
   const html = renderToStaticMarkup(el);
-  assert.match(html, /data-buzz-link=""/);
+  assert.match(html, /data-crew-link=""/);
   assert.match(html, /<span/);
   assert.match(html, /class="mention-chip\s/);
   assert.doesNotMatch(html, /<button/);

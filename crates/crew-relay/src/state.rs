@@ -601,7 +601,7 @@ impl ConnectionManager {
                     let count = conn.backpressure_count.fetch_add(1, Ordering::Relaxed) + 1;
                     if count >= conn.grace_limit {
                         tracing::warn!(conn_id = %conn_id, count, "fan-out: sustained backpressure — cancelling slow client");
-                        metrics::counter!("buzz_ws_backpressure_disconnects_total").increment(1);
+                        metrics::counter!("crew_ws_backpressure_disconnects_total").increment(1);
                         conn.cancel.cancel();
                     } else {
                         tracing::warn!(conn_id = %conn_id, count, grace = conn.grace_limit, "fan-out: send buffer full — grace {count}/{}", conn.grace_limit);
@@ -975,10 +975,10 @@ impl AppState {
     ) -> Result<bool, crew_db::DbError> {
         let key = (community_id, channel_id, pubkey.to_vec());
         if let Some(cached) = self.membership_cache.get(&key) {
-            metrics::counter!("buzz_membership_cache_hits_total").increment(1);
+            metrics::counter!("crew_membership_cache_hits_total").increment(1);
             return Ok(cached);
         }
-        metrics::counter!("buzz_membership_cache_misses_total").increment(1);
+        metrics::counter!("crew_membership_cache_misses_total").increment(1);
         let result = self.db.is_member(community_id, channel_id, pubkey).await?;
         self.membership_cache.insert(key, result);
         Ok(result)
@@ -1236,10 +1236,10 @@ impl AppState {
     ) -> Result<Vec<Uuid>, crew_db::DbError> {
         let key = (community_id, pubkey.to_vec());
         if let Some(cached) = self.accessible_channels_cache.get(&key) {
-            metrics::counter!("buzz_accessible_channels_cache_hits_total").increment(1);
+            metrics::counter!("crew_accessible_channels_cache_hits_total").increment(1);
             return Ok(cached);
         }
-        metrics::counter!("buzz_accessible_channels_cache_misses_total").increment(1);
+        metrics::counter!("crew_accessible_channels_cache_misses_total").increment(1);
         let result = self
             .db
             .get_accessible_channel_ids(community_id, pubkey)
@@ -1342,10 +1342,10 @@ impl AuditShutdownHandle {
 async fn log_audit_entry(audit: &crew_audit::AuditService, entry: crew_audit::NewAuditEntry) {
     let t = std::time::Instant::now();
     if let Err(e) = audit.log(entry).await {
-        metrics::counter!("buzz_audit_log_errors_total").increment(1);
+        metrics::counter!("crew_audit_log_errors_total").increment(1);
         tracing::error!("Audit log failed: {e}");
     } else {
-        metrics::histogram!("buzz_audit_log_seconds").record(t.elapsed().as_secs_f64());
+        metrics::histogram!("crew_audit_log_seconds").record(t.elapsed().as_secs_f64());
     }
 }
 

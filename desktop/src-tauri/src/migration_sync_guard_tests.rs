@@ -14,7 +14,9 @@ fn is_dev_data_dir_name_accepts_canonical_dev_identifier() {
 
 #[test]
 fn is_dev_data_dir_name_accepts_worktree_dev_identifier() {
-    assert!(is_dev_data_dir_name("xyz.patty.griddle.app.dev.some-worktree"));
+    assert!(is_dev_data_dir_name(
+        "xyz.patty.griddle.app.dev.some-worktree"
+    ));
 }
 
 /// Prefix-collision guard: an identifier that merely starts with the dev

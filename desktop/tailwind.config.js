@@ -8,9 +8,9 @@ export default {
       // Do NOT reintroduce arbitrary `text-[…rem]` / `text-[…px]` literals;
       // the px-text guard rejects them. Stock scale picks up from xs.
       fontSize: {
-        "2xs": "calc(var(--buzz-type-rem) * 0.6875)", // 11px at 16px type rem
-        "3xs": "calc(var(--buzz-type-rem) * 0.5)", // 8px at 16px type rem
-        badge: "calc(var(--buzz-type-rem) * 0.625)", // 10px at 16px type rem
+        "2xs": "calc(var(--crew-type-rem) * 0.6875)", // 11px at 16px type rem
+        "3xs": "calc(var(--crew-type-rem) * 0.5)", // 8px at 16px type rem
+        badge: "calc(var(--crew-type-rem) * 0.625)", // 10px at 16px type rem
         // Shared channel, DM, thread, and composer type. Variables keep app-wide
         // font size and keyboard zoom consistent without branching components.
         message: [
@@ -23,12 +23,12 @@ export default {
         ],
         // 40px at the 16px type rem — onboarding page titles.
         title: [
-          "calc(var(--buzz-type-rem) * 2.5)",
+          "calc(var(--crew-type-rem) * 2.5)",
           { lineHeight: "1.15", letterSpacing: "-0.02em" },
         ],
         // 36px at the 16px type rem — backup-step private key.
         "nsec-key": [
-          "calc(var(--buzz-type-rem) * 2.25)",
+          "calc(var(--crew-type-rem) * 2.25)",
           { lineHeight: "1.3" },
         ],
       },
@@ -36,12 +36,12 @@ export default {
         // Keep fixed Tailwind line-height utilities in the typography scale so
         // Cmd +/- cannot enlarge glyphs inside an unchanged line box. Single-
         // line surfaces keep their existing truncate/overflow behavior.
-        3: "calc(var(--buzz-type-rem) * 0.75)",
-        4: "var(--buzz-type-rem)",
-        5: "calc(var(--buzz-type-rem) * 1.25)",
-        6: "calc(var(--buzz-type-rem) * 1.5)",
-        7: "calc(var(--buzz-type-rem) * 1.75)",
-        8: "calc(var(--buzz-type-rem) * 2)",
+        3: "calc(var(--crew-type-rem) * 0.75)",
+        4: "var(--crew-type-rem)",
+        5: "calc(var(--crew-type-rem) * 1.25)",
+        6: "calc(var(--crew-type-rem) * 1.5)",
+        7: "calc(var(--crew-type-rem) * 1.75)",
+        8: "calc(var(--crew-type-rem) * 2)",
         "message-author": "var(--conversation-author-line-height)",
       },
       boxShadow: {

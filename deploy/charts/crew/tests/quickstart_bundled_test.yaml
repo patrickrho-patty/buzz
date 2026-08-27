@@ -22,7 +22,7 @@ tests:
       - containsDocument:
           kind: Deployment
           apiVersion: apps/v1
-          name: rel-buzz-minio
+          name: rel-crew-minio
         template: templates/quickstart-minio.yaml
         documentIndex: 0
       # The bucket-init Job is a NORMAL resource (revision-suffixed name), not a
@@ -31,7 +31,7 @@ tests:
       - containsDocument:
           kind: Job
           apiVersion: batch/v1
-          name: rel-buzz-minio-init-1
+          name: rel-crew-minio-init-1
         template: templates/quickstart-minio-init.yaml
       - notExists:
           path: metadata.annotations["helm.sh/hook"]
@@ -51,7 +51,7 @@ tests:
           path: spec.template.spec.containers[0].env
           content:
             name: CREW_S3_ENDPOINT
-            value: "http://rel-buzz-minio.NAMESPACE.svc.cluster.local:9000"
+            value: "http://rel-crew-minio.NAMESPACE.svc.cluster.local:9000"
         template: templates/deployment.yaml
 
   - it: chart Secret composes the bundled MinIO credentials the relay reads

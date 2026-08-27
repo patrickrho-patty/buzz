@@ -622,9 +622,7 @@ pub(crate) fn handle_deep_link_url(app: &tauri::AppHandle, url_str: &str) {
                     .find(|(k, _)| k == "state")
                     .map(|(_, v)| v.to_string());
                 let (Some(code), Some(state)) = (code, state) else {
-                    eprintln!(
-                        "griddle-desktop: auth callback missing code/state: {url_str}"
-                    );
+                    eprintln!("griddle-desktop: auth callback missing code/state: {url_str}");
                     return;
                 };
                 activate_main_window(app);
@@ -655,7 +653,9 @@ pub(crate) fn handle_deep_link_url(app: &tauri::AppHandle, url_str: &str) {
             // the relay's /invite/<code> landing page. The frontend claims the
             // invite against the relay's HTTP API, then adds the workspace.
             let Some(payload) = parse_join_deep_link(&url) else {
-                eprintln!("griddle-desktop: join deep link missing/invalid relay or code: {url_str}");
+                eprintln!(
+                    "griddle-desktop: join deep link missing/invalid relay or code: {url_str}"
+                );
                 return;
             };
             activate_main_window(app);
@@ -667,7 +667,9 @@ pub(crate) fn handle_deep_link_url(app: &tauri::AppHandle, url_str: &str) {
         }
         Some("add-community") => {
             let Some(payload) = parse_add_community_deep_link(&url) else {
-                eprintln!("griddle-desktop: add-community deep link missing/invalid relay: {url_str}");
+                eprintln!(
+                    "griddle-desktop: add-community deep link missing/invalid relay: {url_str}"
+                );
                 return;
             };
             activate_main_window(app);

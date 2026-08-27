@@ -313,7 +313,9 @@ pub fn load_for_app(app: &AppHandle) -> (TtsSettings, Option<String>) {
     match result {
         Ok(settings) => (settings, None),
         Err(error) => {
-            eprintln!("griddle-desktop: {error}; preserving the file and using Mary for this session");
+            eprintln!(
+                "griddle-desktop: {error}; preserving the file and using Mary for this session"
+            );
             (TtsSettings::default(), Some(error))
         }
     }

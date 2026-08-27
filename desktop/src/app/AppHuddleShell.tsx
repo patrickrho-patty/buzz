@@ -68,31 +68,31 @@ export function AppHuddleShell({
       <HuddleShortcutHandler>
         <RemindMeLaterProvider pubkey={currentPubkey}>
           <div
-            className="buzz-huddle-shell relative h-dvh overflow-hidden overscroll-none"
+            className="crew-huddle-shell relative h-dvh overflow-hidden overscroll-none"
             data-huddle-open={isDrawerOpen}
             data-huddle-window={isRoom}
           >
             <div
               aria-hidden="true"
               className={cn(
-                "buzz-huddle-drawer-backdrop",
-                isDrawerOpen && "buzz-huddle-drawer-backdrop-open",
+                "crew-huddle-drawer-backdrop",
+                isDrawerOpen && "crew-huddle-drawer-backdrop-open",
               )}
             />
             <div
               className={cn(
-                "buzz-huddle-app-surface z-10 flex min-h-0 flex-row overflow-hidden bg-background",
+                "crew-huddle-app-surface z-10 flex min-h-0 flex-row overflow-hidden bg-background",
                 isDrawerOpen &&
                   (isRoom
-                    ? "buzz-huddle-app-surface-room-open"
-                    : "buzz-huddle-app-surface-open"),
+                    ? "crew-huddle-app-surface-room-open"
+                    : "crew-huddle-app-surface-open"),
               )}
             >
               <CrewTheme.GradientLayer />
               {children}
             </div>
             {isRoom || !isCompanionOpen ? (
-              <div className="buzz-huddle-drawer-slot absolute inset-x-0 bottom-0 z-[2] h-(--buzz-huddle-drawer-height)">
+              <div className="crew-huddle-drawer-slot absolute inset-x-0 bottom-0 z-[2] h-(--crew-huddle-drawer-height)">
                 <AppHuddleBar
                   mode={isRoom ? "room" : "main"}
                   onOpenHuddleWindow={isRoom ? undefined : onCompanionOpen}

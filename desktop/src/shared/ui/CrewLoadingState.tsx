@@ -18,12 +18,12 @@ export function CrewLoadingState({
         fill ? "min-h-0 flex-1" : "min-h-[calc(100dvh-7rem)]",
         className,
       )}
-      data-testid="buzz-loading-state"
+      data-testid="crew-loading-state"
       role="status"
     >
       <CrewLogoAnimation
         ariaLabel={label}
-        className="buzz-logo--scale-pulse"
+        className="crew-logo--scale-pulse"
         fullScreen={false}
         showBackground={false}
         style={{ width: "2rem" }}

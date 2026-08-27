@@ -236,15 +236,15 @@ test("repository pages show a centered Buzz loader while fetching", async ({
   await installMockBridge(page, { projectRepoSnapshotDelayMs: 750 });
   await openBuzzProject(page);
 
-  const loader = page.getByTestId("buzz-loading-state");
+  const loader = page.getByTestId("crew-loading-state");
   await expect(loader).toBeVisible();
   await expect(
     loader.getByRole("img", { name: "Loading repository" }),
   ).toBeVisible();
-  const animatedMark = loader.locator(".buzz-logo__mark");
+  const animatedMark = loader.locator(".crew-logo__mark");
   await expect(animatedMark).toHaveCSS(
     "animation-name",
-    "buzz-logo-scale-pulse",
+    "crew-logo-scale-pulse",
   );
   await expect(animatedMark).toHaveCSS("opacity", "1");
   await expect(loader).toHaveCSS("justify-content", "center");
@@ -465,7 +465,7 @@ test("projects v3 workspace screenshot states", async ({ page }) => {
   const projectPanelLayout = page.getByTestId("project-panel-layout");
   const projectContentPod = page.getByTestId("project-content-pod");
   const appContentSurface = page
-    .locator("[data-buzz-content-surface]")
+    .locator("[data-crew-content-surface]")
     .filter({ has: projectPanelLayout })
     .first();
   await expect(projectPanelLayout).toHaveAttribute("data-detached", "true");

@@ -27,7 +27,7 @@ let cachedPort: number | null = null;
 let portPromise: Promise<number | null> | null = null;
 
 /**
- * Cached relay origin (e.g. "https://buzz-oss.stage.blox.sqprod.co"),
+ * Cached relay origin (e.g. "https://crew-oss.stage.blox.sqprod.co"),
  * canonicalized via {@link canonicalOrigin} so comparisons are stable.
  */
 let cachedRelayOrigin: string | null = null;
@@ -275,7 +275,7 @@ export function resetMediaCaches(): void {
 }
 
 /**
- * The relay origin (e.g. `https://buzz-oss.stage.blox.sqprod.co`) if it has
+ * The relay origin (e.g. `https://crew-oss.stage.blox.sqprod.co`) if it has
  * been resolved, else `null`. Synchronous best-effort read of the same cache
  * `rewriteRelayUrl` uses. Callers that need a hard SSRF guarantee must still
  * rely on the Rust `validate_download_url` gate; this only drives UX (e.g.

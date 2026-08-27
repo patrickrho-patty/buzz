@@ -1,4 +1,4 @@
-name: buzz-prod
+name: crew-prod
 
 services:
   relay:
@@ -56,7 +56,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - buzz-postgres-data:/var/lib/postgresql/data
+      - crew-postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
@@ -73,7 +73,7 @@ services:
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD:?set REDIS_PASSWORD}
     volumes:
-      - buzz-redis-data:/data
+      - crew-redis-data:/data
     healthcheck:
       test: ["CMD-SHELL", "redis-cli -a \"$${REDIS_PASSWORD}\" ping | grep -q PONG"]
       interval: 5s
@@ -91,7 +91,7 @@ services:
       MINIO_ROOT_USER: ${CREW_S3_ACCESS_KEY:?set CREW_S3_ACCESS_KEY}
       MINIO_ROOT_PASSWORD: ${CREW_S3_SECRET_KEY:?set CREW_S3_SECRET_KEY}
     volumes:
-      - buzz-minio-data:/data
+      - crew-minio-data:/data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:9000/minio/health/live"]
       interval: 5s
@@ -122,13 +122,13 @@ services:
       - buzz-net
 
 volumes:
-  buzz-postgres-data:
+  crew-postgres-data:
     labels:
       com.buzz.volume: postgres
-  buzz-redis-data:
+  crew-redis-data:
     labels:
       com.buzz.volume: redis
-  buzz-minio-data:
+  crew-minio-data:
     labels:
       com.buzz.volume: minio
   buzz-git-data:

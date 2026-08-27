@@ -50,7 +50,7 @@ pub async fn handle_command(
     {
         Ok(true) => {
             metrics::counter!(
-                "buzz_users_created_total",
+                "crew_users_created_total",
                 "community" => tenant.host().to_owned()
             )
             .increment(1);
@@ -433,7 +433,7 @@ async fn handle_dm_open(
     // 5. Side effects if newly created (post-commit, best-effort)
     if was_created {
         metrics::counter!(
-            "buzz_channels_created_total",
+            "crew_channels_created_total",
             "community" => tenant.host().to_owned(),
             "type" => "dm"
         )
@@ -594,7 +594,7 @@ async fn handle_dm_add_member(
     // 7. Cache invalidation + notifications for new DM (post-commit, best-effort)
     if was_created {
         metrics::counter!(
-            "buzz_channels_created_total",
+            "crew_channels_created_total",
             "community" => tenant.host().to_owned(),
             "type" => "dm"
         )
@@ -1446,7 +1446,7 @@ mod tests {
     async fn persistence_test_context() -> (crew_db::Db, TenantContext) {
         let url = std::env::var("CREW_TEST_DATABASE_URL")
             .or_else(|_| std::env::var("DATABASE_URL"))
-            .unwrap_or_else(|_| "postgres://buzz:buzz_dev@localhost:5432/buzz".to_string());
+            .unwrap_or_else(|_| "postgres://buzz:crew_dev@localhost:5432/buzz".to_string());
         let pool = sqlx::PgPool::connect(&url)
             .await
             .expect("connect workflow persistence test database");

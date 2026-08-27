@@ -41,7 +41,7 @@ function projectEvent(repositoryTags, overrides = {}) {
       ["d", "sprout"],
       ["name", "Sprout"],
       ["description", "A multi-repository project"],
-      ["buzz-channel", "11111111-1111-4111-8111-111111111111"],
+      ["crew-channel", "11111111-1111-4111-8111-111111111111"],
       ...repositoryTags,
     ],
     ...overrides,
@@ -262,7 +262,7 @@ test("buildProjectReadModels conforms to the shared NIP-MP fold fixtures", () =>
             ["d", dtag],
             ["name", dtag],
             ...(project.visibility === "unlisted"
-              ? [["buzz-visibility", "unlisted"]]
+              ? [["crew-visibility", "unlisted"]]
               : []),
             ...project.members.map((member) => ["a", member]),
           ],

@@ -333,7 +333,7 @@ export const ComposerMessageLinkNode =
         mergeAttributes(HTMLAttributes, {
           "aria-label": presentation.ariaLabel,
           class: `${MENTION_CHIP_BASE_CLASSES} ${inlineChipIconClasses(presentation.icon)} cursor-text`,
-          "data-buzz-link": "",
+          "data-crew-link": "",
           "data-channel-name": presentation.channelName,
           "data-composer-crew-link": "",
           "data-href": href,

@@ -13,12 +13,12 @@ export const CREW_GRADIENT_STOPS: Record<
   { top: string; bottom: string }
 > = {
   buzz: {
-    top: "var(--buzz-gradient-light-top)",
-    bottom: "var(--buzz-gradient-light-bottom)",
+    top: "var(--crew-gradient-light-top)",
+    bottom: "var(--crew-gradient-light-bottom)",
   },
-  "buzz-dark": {
-    top: "var(--buzz-gradient-dark-top)",
-    bottom: "var(--buzz-gradient-dark-bottom)",
+  "crew-dark": {
+    top: "var(--crew-gradient-dark-top)",
+    bottom: "var(--crew-gradient-dark-bottom)",
   },
 };
 
@@ -258,8 +258,8 @@ function SystemPreferencePreviewSvg({
   const clipDark = `${clipBase}-dark`;
   const clipLight = `${clipBase}-light`;
   const clipOuter = `${clipBase}-outer`;
-  const lightGradientId = `${clipBase}-buzz-light`;
-  const darkGradientId = `${clipBase}-buzz-dark`;
+  const lightGradientId = `${clipBase}-crew-light`;
+  const darkGradientId = `${clipBase}-crew-dark`;
 
   // Dark half colors
   const darkBg = hsl(darkVars, "--background");

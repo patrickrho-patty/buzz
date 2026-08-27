@@ -99,7 +99,7 @@ test("agent-style message with angle-bracket crew:// links renders entity cards 
   await expect(row).toBeVisible();
 
   // The PR card resolves builder metadata from the signed root and repository.
-  const prCard = row.locator('[data-link-preview="buzz-pull-request"]');
+  const prCard = row.locator('[data-link-preview="crew-pull-request"]');
   await expect(prCard).toBeVisible();
   await expect(prCard).toContainText("relay-tools");
   await expect(prCard).toContainText(PR_SUBJECT);
@@ -109,7 +109,7 @@ test("agent-style message with angle-bracket crew:// links renders entity cards 
   await expect(prCard).toHaveAttribute("data-image-state", "none");
   await expect(prCard.locator("[data-link-preview-thumbnail]")).toHaveCount(0);
   await expect(
-    prCard.locator("[data-link-preview-hostname-buzz-mark]"),
+    prCard.locator("[data-link-preview-hostname-crew-mark]"),
   ).toBeVisible();
   await expect(
     prCard.locator("[data-link-preview-hostname-favicon]"),
@@ -132,12 +132,12 @@ test("agent-style message with angle-bracket crew:// links renders entity cards 
   await prChip.hover();
   const prTooltip = page.getByRole("tooltip");
   const prContext = prTooltip.locator(
-    '[data-buzz-tooltip-metadata-content=""]',
+    '[data-crew-tooltip-metadata-content=""]',
   );
   await expect(prContext).toHaveText(PR_SUBJECT);
   await expect(prContext).toHaveClass(/line-clamp-3/);
   await expect(prContext).toHaveCSS("overflow-wrap", "anywhere");
-  const prFooter = prTooltip.locator('[data-buzz-tooltip-metadata-type=""]');
+  const prFooter = prTooltip.locator('[data-crew-tooltip-metadata-type=""]');
   await expect(prFooter).toHaveText("Pull request · relay-tools");
   await expect(prFooter).toHaveCSS("overflow-wrap", "anywhere");
   await expect(prFooter).toHaveCSS("white-space", "normal");
@@ -176,7 +176,7 @@ test("agent-style message with angle-bracket crew:// links renders entity cards 
   await issueChip.hover();
   const issueTooltip = page.getByRole("tooltip");
   const issueContext = issueTooltip.locator(
-    '[data-buzz-tooltip-metadata-content=""]',
+    '[data-crew-tooltip-metadata-content=""]',
   );
   await expect(issueContext).toHaveText(ISSUE_SUBJECT);
   await expect(issueContext).toHaveClass(/line-clamp-3/);
@@ -190,13 +190,13 @@ test("agent-style message with angle-bracket crew:// links renders entity cards 
     )
     .toBe(true);
   await expect(
-    issueTooltip.locator('[data-buzz-tooltip-metadata-type=""]'),
+    issueTooltip.locator('[data-crew-tooltip-metadata-type=""]'),
   ).toHaveText("Issue · relay-tools");
 
   // The repository card uses its signed announcement metadata and remains
   // image-less.
   const repoCard = row
-    .locator('[data-link-preview="buzz-repository"]')
+    .locator('[data-link-preview="crew-repository"]')
     .filter({ hasText: "relay-tools" });
   await expect(repoCard).toBeVisible();
   await expect(repoCard).toContainText("relay-tools");
@@ -209,7 +209,7 @@ test("agent-style message with angle-bracket crew:// links renders entity cards 
     0,
   );
   await expect(
-    repoCard.locator("[data-link-preview-hostname-buzz-mark]"),
+    repoCard.locator("[data-link-preview-hostname-crew-mark]"),
   ).toBeVisible();
   await expect(
     repoCard.locator("[data-link-preview-hostname-favicon]"),
@@ -220,15 +220,15 @@ test("agent-style message with angle-bracket crew:// links renders entity cards 
   await repoChip.hover();
   const repoTooltip = page.getByRole("tooltip");
   await expect(
-    repoTooltip.locator('[data-buzz-tooltip-metadata-content=""]'),
+    repoTooltip.locator('[data-crew-tooltip-metadata-content=""]'),
   ).toContainText("Operator tooling and admin CLI for relay deployments.");
   await expect(
-    repoTooltip.locator('[data-buzz-tooltip-metadata-type=""]'),
+    repoTooltip.locator('[data-crew-tooltip-metadata-type=""]'),
   ).toHaveText("Repository");
   const missingRepoChip = row.getByRole("button", {
     name: "Open repository missing-repo",
   });
-  await expect(missingRepoChip).not.toHaveClass(/buzz-link-unavailable/);
+  await expect(missingRepoChip).not.toHaveClass(/crew-link-unavailable/);
   const missingRepoColors = await missingRepoChip.evaluate((element) => {
     const styles = getComputedStyle(element);
     const probe = document.createElement("span");
@@ -249,10 +249,10 @@ test("agent-style message with angle-bracket crew:// links renders entity cards 
   await missingRepoChip.hover();
   const missingRepoTooltip = page.getByRole("tooltip");
   await expect(
-    missingRepoTooltip.locator('[data-buzz-tooltip-metadata-content=""]'),
+    missingRepoTooltip.locator('[data-crew-tooltip-metadata-content=""]'),
   ).toHaveCount(0);
   const missingRepoFooter = missingRepoTooltip.locator(
-    '[data-buzz-tooltip-metadata-type=""]',
+    '[data-crew-tooltip-metadata-type=""]',
   );
   await expect(missingRepoFooter).toHaveText("Repository");
   await expect(missingRepoFooter).toHaveClass(/text-secondary-foreground\/80/);
@@ -324,7 +324,7 @@ test("issue chip width is metadata-independent while the title loads", async ({
 
   const tooltipContent = page
     .getByRole("tooltip")
-    .locator('[data-buzz-tooltip-metadata-content=""]');
+    .locator('[data-crew-tooltip-metadata-content=""]');
   const widths = new Set<number>();
   const tooltipSamples: string[] = [];
   await expect
@@ -380,7 +380,7 @@ test("entity tooltip uses project context while relay metadata is delayed", asyn
   await expect(
     page
       .getByRole("tooltip")
-      .locator('[data-buzz-tooltip-metadata-content=""]'),
+      .locator('[data-crew-tooltip-metadata-content=""]'),
   ).toHaveText("buzz · The complete Buzz community platform.");
 });
 
@@ -399,7 +399,7 @@ test("desktop composer shows entity card and send is not blocked by missing snap
   // show as done (not stuck "processing") with zero ready snapshots.
   const composerCard = page
     .locator("[data-composer-link-previews]")
-    .locator('[data-link-preview="buzz-repository"]');
+    .locator('[data-link-preview="crew-repository"]');
   await expect(composerCard).toBeVisible();
   await expect(page.locator("[data-composer-link-previews]")).toHaveAttribute(
     "data-ready-snapshot-count",
@@ -415,7 +415,7 @@ test("desktop composer shows entity card and send is not blocked by missing snap
   await page.getByTestId("send-message").click();
 
   const row = page.getByTestId("message-row").last();
-  const repoCard = row.locator('[data-link-preview="buzz-repository"]');
+  const repoCard = row.locator('[data-link-preview="crew-repository"]');
   await expect(repoCard).toBeVisible();
   await expect(repoCard).toContainText("relay-tools");
 
@@ -604,8 +604,8 @@ test("deleted top-level message links identify deletion and fall back to channel
     "data-message-link-state",
     "deleted",
   );
-  await expect(deletedLink).toHaveClass(/buzz-link-deleted/);
-  await expect(deletedLink).not.toHaveClass(/buzz-link-unavailable/);
+  await expect(deletedLink).toHaveClass(/crew-link-deleted/);
+  await expect(deletedLink).not.toHaveClass(/crew-link-unavailable/);
   await deletedLink.hover();
   await expect(page.getByRole("tooltip")).toHaveText("Message deleted");
 

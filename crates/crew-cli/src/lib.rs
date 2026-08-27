@@ -6,12 +6,12 @@ mod links;
 mod validate;
 
 use clap::{Parser, Subcommand};
-use client::BuzzClient;
+use client::CrewClient;
 use error::CliError;
 use nostr::Keys;
 use uuid::Uuid;
 
-/// Run the Buzz CLI from raw arguments (including `argv[0]`).
+/// Run the Crew CLI from raw arguments (including `argv[0]`).
 ///
 /// Returns a process exit code (0 = success).
 ///
@@ -62,10 +62,10 @@ where
 
 #[derive(Parser)]
 #[command(
-    name = "buzz",
-    about = "Buzz CLI — interact with a Buzz relay",
+    name = "crew",
+    about = "Crew CLI — interact with a Buzz relay",
     long_about = "\
-Buzz CLI — interact with a Buzz relay
+Crew CLI — interact with a Buzz relay
 
 Configuration (flags override env vars):
   CREW_RELAY_URL     Relay base URL        [default: http://localhost:3000]
@@ -1168,7 +1168,7 @@ pub enum ReposCmd {
         /// Preferred Nostr relay(s) for repo discovery — can be specified multiple times
         #[arg(long = "nostr-relay")]
         relays: Vec<String>,
-        /// Channel UUID to bind the repo to. The `buzz-channel` tag is the
+        /// Channel UUID to bind the repo to. The `crew-channel` tag is the
         /// git ACL: without it the relay 404s every clone/fetch/push until
         /// the author runs `buzz repos bind` (issue #3527).
         #[arg(long)]
@@ -1194,7 +1194,7 @@ pub enum ReposCmd {
     },
     /// Bind (or rebind) one of your repositories to a channel.
     ///
-    /// The `buzz-channel` tag on the announcement is the git ACL: the relay
+    /// The `crew-channel` tag on the announcement is the git ACL: the relay
     /// authorizes clone/fetch/push by membership in the bound channel. A
     /// repo announced without it (e.g. by a vanilla NIP-34 client) returns
     /// 404 for everyone until its author binds it here.
@@ -2042,7 +2042,7 @@ async fn run(cli: Cli) -> Result<(), CliError> {
         _ => (None, None),
     };
 
-    let client = BuzzClient::new(relay_url, keys, auth_tag, auth_tag_json)?;
+    let client = CrewClient::new(relay_url, keys, auth_tag, auth_tag_json)?;
 
     match cli.command {
         Cmd::Agents(sub) => commands::agents::dispatch(sub, &client).await,

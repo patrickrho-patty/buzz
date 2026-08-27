@@ -813,7 +813,7 @@ pub(crate) fn parse_duration_secs(duration: &str) -> Result<u64, WorkflowError> 
         .map_err(|_| WorkflowError::InvalidDefinition(format!("invalid duration: {duration}")))
 }
 
-// is_private_ip is provided by buzz_core::network::is_private_ip
+// is_private_ip is provided by crew_core::network::is_private_ip
 
 /// Resolve `host` to IP addresses and reject if any are private/reserved.
 ///

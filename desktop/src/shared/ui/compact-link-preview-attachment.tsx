@@ -77,9 +77,9 @@ export function CompactLinkPreviewAttachment({
     preview.imageState === "fallback" || Boolean(imageSrc && !showImage);
   const hostname = getHostname(preview);
   const showCrewMark =
-    preview.kind === "buzz-pull-request" ||
-    preview.kind === "buzz-issue" ||
-    preview.kind === "buzz-repository";
+    preview.kind === "crew-pull-request" ||
+    preview.kind === "crew-issue" ||
+    preview.kind === "crew-repository";
 
   return (
     <div className={cn("relative w-96 max-w-full shrink-0", className)}>
@@ -139,7 +139,7 @@ export function CompactLinkPreviewAttachment({
               <span
                 aria-hidden="true"
                 className="flex size-3 shrink-0 items-center text-foreground/70"
-                data-link-preview-hostname-buzz-mark=""
+                data-link-preview-hostname-crew-mark=""
               >
                 <CrewMark className="h-auto w-full" />
               </span>

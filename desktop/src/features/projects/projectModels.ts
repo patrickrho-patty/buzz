@@ -112,15 +112,24 @@ export function isValidProjectChannelId(value: string): boolean {
 const SINGLETON_METADATA_TAGS = [
   "name",
   "description",
-  "buzz-channel",
-  "buzz-visibility",
+  "crew-channel",
+  "crew-visibility",
 ] as const;
+
+/**
+ * Pre-rename spellings still arrive from older signers; cardinality counts
+ * both so mixing `crew-channel` + legacy `buzz-channel` stays reader-hostile.
+ */
+const LEGACY_TAG_ALIASES: Partial<Record<(typeof SINGLETON_METADATA_TAGS)[number], string>> = {
+  "crew-channel": "buzz-channel",
+  "crew-visibility": "buzz-visibility",
+};
 
 const MAX_METADATA_TAG_BYTES: Record<string, number> = {
   name: 256,
   description: 2_048,
-  "buzz-channel": 256,
-  "buzz-visibility": 256,
+  "crew-channel": 256,
+  "crew-visibility": 256,
 };
 
 /**
@@ -147,10 +156,14 @@ export function validateProjectEventEnvelope(
     throw new Error(`NIP-MP: 'd' tag value exceeds the maximum byte length.`);
   }
 
-  // NIP-MP rule `metadata-cardinality`: at most one each of the singleton tags.
+  // NIP-MP rule `metadata-cardinality`: at most one each of the singleton
+  // tags, counted across legacy pre-rename spellings.
   const encoder = new TextEncoder();
   for (const tagName of SINGLETON_METADATA_TAGS) {
-    const count = tags.filter((tag) => tag[0] === tagName).length;
+    const alias = LEGACY_TAG_ALIASES[tagName];
+    const count = tags.filter(
+      (tag) => tag[0] === tagName || (alias !== undefined && tag[0] === alias),
+    ).length;
     if (count > 1) {
       throw new Error(
         `NIP-MP: duplicate '${tagName}' tag — at most one is permitted.`,
@@ -258,7 +271,7 @@ export function eventToRepository(
 
   const owner = event.pubkey.toLowerCase();
   const setupUsers = getAllTags(event, "auth");
-  const channel = getTag(event, "buzz-channel");
+  const channel = getTag(event, "crew-channel");
   return {
     id: `${owner}:${dtag}`,
     dtag,
@@ -335,10 +348,10 @@ export function eventToExplicitProject(
   const owner = event.pubkey.toLowerCase();
   const projectAddress = `${KIND_PROJECT_ANNOUNCEMENT}:${owner}:${dtag}`;
 
-  const rawVisibility = getTag(event, "buzz-visibility");
+  const rawVisibility = getTag(event, "crew-visibility");
   const visibility =
     rawVisibility === "unlisted" ? ("unlisted" as const) : ("listed" as const);
-  const channel = getTag(event, "buzz-channel");
+  const channel = getTag(event, "crew-channel");
   return {
     id: projectAddress,
     dtag,

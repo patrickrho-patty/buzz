@@ -557,7 +557,7 @@ function deferProfileLookup() {
 
 function ledgerKeys() {
   return [...storage.keys()].filter((key) =>
-    key.startsWith("buzz-community-join-seen.v1"),
+    key.startsWith("crew-community-join-seen.v1"),
   );
 }
 
@@ -646,7 +646,7 @@ describe("useCommunityJoinAlerts — mounted subscription behaviour", () => {
     assert.deepEqual(
       ledgerKeys(),
       [],
-      "no buzz-community-join-seen.v1 key may be created for a plain member",
+      "no crew-community-join-seen.v1 key may be created for a plain member",
     );
 
     await unmount();

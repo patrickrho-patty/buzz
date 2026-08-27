@@ -452,7 +452,9 @@ pub(super) fn retain_cancelled_text(
 }
 
 fn log_cancelled_route(route_id: u64, reason: &str) {
-    eprintln!("griddle-desktop: tts stage=queue status=dropped reason={reason} route_id={route_id}");
+    eprintln!(
+        "griddle-desktop: tts stage=queue status=dropped reason={reason} route_id={route_id}"
+    );
 }
 
 /// Check for cancel or shutdown. Returns `true` if the caller should break/continue.

@@ -23,7 +23,7 @@ const DM_CHANNEL_ID = "f48efb06-0c93-5025-aac9-2e646bb6bfa8";
 
 // Mock bridge default pubkey — must match DEFAULT_MOCK_PUBKEY in bridge.ts.
 const MOCK_PUBKEY = "deadbeef".repeat(8);
-const DRAFT_STORE_KEY = `buzz-drafts.v1:${MOCK_PUBKEY}`;
+const DRAFT_STORE_KEY = `crew-drafts.v1:${MOCK_PUBKEY}`;
 const FONT_SIZE_STORAGE_KEY = "buzz.appearance.fontSize";
 const CONVERSATION_DENSITY_STORAGE_KEY = "buzz.appearance.conversationDensity";
 
@@ -563,7 +563,7 @@ test.describe("inbox refactor screenshots", () => {
         await page.evaluate(() =>
           window
             .getComputedStyle(document.documentElement)
-            .getPropertyValue("--buzz-type-rem")
+            .getPropertyValue("--crew-type-rem")
             .trim(),
         ),
         ...(await readConversationMetrics()),

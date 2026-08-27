@@ -9,10 +9,10 @@ import {
 } from "./entityLink";
 
 export type SupportedLinkPreviewKind =
-  | "buzz-pull-request"
-  | "buzz-issue"
-  | "buzz-repository"
-  | "buzz-project"
+  | "crew-pull-request"
+  | "crew-issue"
+  | "crew-repository"
+  | "crew-project"
   | "github-pull-request"
   | "github-issue"
   | "github-repository"
@@ -317,7 +317,7 @@ function parseBuzzEntityPreview(href: string): SupportedLinkPreview | null {
   const title = crewEntityFallbackTitle(link);
   if (link.type === "pr") {
     return {
-      kind: "buzz-pull-request",
+      kind: "crew-pull-request",
       href: buildPullRequestLink(link),
       provider: "Buzz",
       title,
@@ -326,7 +326,7 @@ function parseBuzzEntityPreview(href: string): SupportedLinkPreview | null {
   }
   if (link.type === "issue") {
     return {
-      kind: "buzz-issue",
+      kind: "crew-issue",
       href: buildIssueLink(link),
       provider: "Buzz",
       title,
@@ -335,7 +335,7 @@ function parseBuzzEntityPreview(href: string): SupportedLinkPreview | null {
   }
   if (link.type === "project") {
     return {
-      kind: "buzz-project",
+      kind: "crew-project",
       href: buildProjectLink(link),
       provider: "Buzz",
       title,
@@ -343,7 +343,7 @@ function parseBuzzEntityPreview(href: string): SupportedLinkPreview | null {
     };
   }
   return {
-    kind: "buzz-repository",
+    kind: "crew-repository",
     href: buildRepoLink(link),
     provider: "Buzz",
     title,
@@ -385,7 +385,7 @@ function parseBuzzGitLink(
   }
 
   return {
-    kind: "buzz-repository",
+    kind: "crew-repository",
     href: buildRepoLink({ owner, dtag: repo }),
     provider: "Buzz",
     title: repo,

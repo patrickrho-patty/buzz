@@ -427,10 +427,10 @@ export function resolveLinkPreview(
 
 export function isBuzzEntityPreview(preview: SupportedLinkPreview): boolean {
   return (
-    preview.kind === "buzz-pull-request" ||
-    preview.kind === "buzz-issue" ||
-    preview.kind === "buzz-repository" ||
-    preview.kind === "buzz-project"
+    preview.kind === "crew-pull-request" ||
+    preview.kind === "crew-issue" ||
+    preview.kind === "crew-repository" ||
+    preview.kind === "crew-project"
   );
 }
 

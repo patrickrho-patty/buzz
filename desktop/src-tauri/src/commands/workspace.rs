@@ -55,7 +55,9 @@ fn migrate_legacy_retention_into(
     ) {
         Ok(0) => {}
         Ok(copied) => {
-            eprintln!("griddle-desktop: adopted {copied} legacy retained event(s) into this community")
+            eprintln!(
+                "griddle-desktop: adopted {copied} legacy retained event(s) into this community"
+            )
         }
         Err(error) => eprintln!("griddle-desktop: legacy retention migration failed: {error}"),
     }

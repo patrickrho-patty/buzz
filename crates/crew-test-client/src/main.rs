@@ -27,7 +27,7 @@
 
 use std::time::Duration;
 
-use crew_test_client::{BuzzTestClient, RelayMessage};
+use crew_test_client::{CrewTestClient, RelayMessage};
 use nostr::{Filter, Keys};
 
 #[tokio::main]
@@ -35,7 +35,7 @@ async fn main() {
     tracing_subscriber::fmt()
         .with_env_filter(
             std::env::var("RUST_LOG")
-                .unwrap_or_else(|_| "buzz_test_client=debug".to_string())
+                .unwrap_or_else(|_| "crew_test_client=debug".to_string())
                 .as_str(),
         )
         .init();
@@ -66,7 +66,7 @@ async fn main() {
 
 async fn run_send(url: &str, keys: &Keys, channel: &str, message: &str, kind: u16) {
     println!("Connecting to {url}...");
-    let mut client = match BuzzTestClient::connect(url, keys).await {
+    let mut client = match CrewTestClient::connect(url, keys).await {
         Ok(c) => c,
         Err(e) => {
             eprintln!("Failed to connect: {e}");
@@ -94,7 +94,7 @@ async fn run_send(url: &str, keys: &Keys, channel: &str, message: &str, kind: u1
 
 async fn run_subscribe(url: &str, keys: &Keys, channel: &str, kind: u16) {
     println!("Connecting to {url}...");
-    let mut client = match BuzzTestClient::connect(url, keys).await {
+    let mut client = match CrewTestClient::connect(url, keys).await {
         Ok(c) => c,
         Err(e) => {
             eprintln!("Failed to connect: {e}");

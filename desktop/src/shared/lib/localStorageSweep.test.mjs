@@ -108,7 +108,7 @@ test("leaves malformed and timestamp-free cache entries untouched", () => {
   const localStorage = makeLocalStorage([
     ["buzz-channel-messages.v1:malformed", "not json"],
     ["buzz-channels.v1:no-timestamp", JSON.stringify({ payload: "cache" })],
-    ["buzz-observed-unread.v1:bad-timestamp", snapshot(Number.NaN)],
+    ["crew-observed-unread.v1:bad-timestamp", snapshot(Number.NaN)],
   ]);
   installWindow(localStorage);
 

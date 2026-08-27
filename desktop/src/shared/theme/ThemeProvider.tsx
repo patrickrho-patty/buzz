@@ -24,7 +24,7 @@ import {
 } from "./theme-loader";
 
 export const THEME_STORAGE_KEY = "buzz-theme";
-const CACHE_KEY = "buzz-theme-cache";
+const CACHE_KEY = "crew-theme-cache";
 export const ACCENT_STORAGE_KEY = "buzz-accent-color";
 export const GLASS_BACKGROUND_STORAGE_KEY = "buzz-glass-background";
 export const GLASS_OPACITY_STORAGE_KEY = "buzz-glass-opacity";
@@ -201,13 +201,13 @@ function applyAccentColor(value: string) {
     const styles = window.getComputedStyle(root);
     const foreground = styles.getPropertyValue("--foreground").trim();
     const background = styles.getPropertyValue("--background").trim();
-    root.style.setProperty("--buzz-selected-accent", foreground);
+    root.style.setProperty("--crew-selected-accent", foreground);
     root.style.setProperty(
-      "--buzz-video-review-accent",
+      "--crew-video-review-accent",
       VIDEO_REVIEW_NEUTRAL_ACCENT,
     );
     root.style.setProperty(
-      "--buzz-video-review-accent-foreground",
+      "--crew-video-review-accent-foreground",
       VIDEO_REVIEW_NEUTRAL_ACCENT,
     );
     root.style.setProperty("--primary", foreground);
@@ -222,10 +222,10 @@ function applyAccentColor(value: string) {
   const hex = value;
   const accentHsl = hexToHsl(hex);
   const fgHsl = hexToHsl(getContrastColor(hex));
-  root.style.setProperty("--buzz-selected-accent", accentHsl);
-  root.style.setProperty("--buzz-video-review-accent", accentHsl);
+  root.style.setProperty("--crew-selected-accent", accentHsl);
+  root.style.setProperty("--crew-video-review-accent", accentHsl);
   root.style.setProperty(
-    "--buzz-video-review-accent-foreground",
+    "--crew-video-review-accent-foreground",
     getReviewAccentForeground(hex),
   );
   root.style.setProperty("--primary", accentHsl);
@@ -244,7 +244,7 @@ function applyAccentColor(value: string) {
  * untouched in storage so it returns when they switch back to another theme.
  */
 export function isBuzzTheme(themeName: string): boolean {
-  return themeName === "buzz" || themeName === "buzz-dark";
+  return themeName === "buzz" || themeName === "crew-dark";
 }
 
 /**

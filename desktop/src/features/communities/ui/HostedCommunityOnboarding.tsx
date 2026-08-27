@@ -41,18 +41,18 @@ import {
 } from "@/shared/ui/dialog";
 
 const FUZZY_SURFACE_CLASS =
-  "relative left-1/2 w-[min(calc(100%+12rem),calc(100vw-2rem))] max-w-[1040px] -translate-x-1/2 px-20 pb-14 pt-20 !text-[rgb(var(--buzz-hosted-community-surface-fg))] [--buzz-card-textured-min-height:224px]";
+  "relative left-1/2 w-[min(calc(100%+12rem),calc(100vw-2rem))] max-w-[1040px] -translate-x-1/2 px-20 pb-14 pt-20 !text-[rgb(var(--crew-hosted-community-surface-fg))] [--crew-card-textured-min-height:224px]";
 const COMMUNITY_LIST_CLASS = "mx-auto w-full max-w-[520px] text-left";
 const COMMUNITY_ROW_CLASS =
   "flex min-h-[5.75rem] items-center justify-between gap-8 py-4 text-sm";
 const COMMUNITY_DIVIDER_CLASS =
-  "border-b-[0.5px] border-[rgb(var(--buzz-hosted-community-divider-border)/0.5)]";
+  "border-b-[0.5px] border-[rgb(var(--crew-hosted-community-divider-border)/0.5)]";
 const COMMUNITY_ACTION_CLASS =
-  "h-[2.375rem] min-w-32 shrink-0 rounded-full bg-[rgb(var(--buzz-hosted-community-action-bg))] px-6 text-sm text-foreground shadow-none hover:bg-[rgb(var(--buzz-hosted-community-action-bg-hover))]";
+  "h-[2.375rem] min-w-32 shrink-0 rounded-full bg-[rgb(var(--crew-hosted-community-action-bg))] px-6 text-sm text-foreground shadow-none hover:bg-[rgb(var(--crew-hosted-community-action-bg-hover))]";
 const PAGE_CTA_CLASS = `${ONBOARDING_PRIMARY_CTA_CLASS} w-36 shadow-none`;
 const PAGE_BACK_CLASS =
   "h-[2.375rem] w-36 rounded-full bg-foreground/10 px-6 shadow-none hover:bg-foreground/15";
-const MODAL_PRIMARY_ACTION_CLASS = `${ONBOARDING_PRIMARY_CTA_CLASS} !text-[rgb(var(--buzz-hosted-community-modal-action-fg))]`;
+const MODAL_PRIMARY_ACTION_CLASS = `${ONBOARDING_PRIMARY_CTA_CLASS} !text-[rgb(var(--crew-hosted-community-modal-action-fg))]`;
 const MODAL_BACK_ACTION_CLASS =
   "h-9 rounded-full bg-foreground/10 px-6 hover:bg-foreground/15";
 
@@ -389,8 +389,8 @@ export function HostedCommunityOnboarding({
       autoComplete="off"
       className={
         inline
-          ? "h-[2.375rem] w-[16.5rem] rounded-full border border-[color:var(--buzz-onboarding-backup-ink)]/25 bg-[rgb(var(--buzz-hosted-community-input-bg)/0.6)] px-6 text-center text-sm shadow-none placeholder:text-foreground/30 focus-visible:ring-1 focus-visible:ring-[color:var(--buzz-onboarding-backup-ink)]/40"
-          : "h-auto min-w-0 flex-none rounded-none border-0 bg-transparent p-0 text-right font-mono !text-[rgb(var(--buzz-hosted-community-surface-fg))] shadow-none placeholder:!text-[rgb(var(--buzz-hosted-community-surface-fg))] placeholder:opacity-20 focus-visible:ring-0"
+          ? "h-[2.375rem] w-[16.5rem] rounded-full border border-[color:var(--crew-onboarding-backup-ink)]/25 bg-[rgb(var(--crew-hosted-community-input-bg)/0.6)] px-6 text-center text-sm shadow-none placeholder:text-foreground/30 focus-visible:ring-1 focus-visible:ring-[color:var(--crew-onboarding-backup-ink)]/40"
+          : "h-auto min-w-0 flex-none rounded-none border-0 bg-transparent p-0 text-right font-mono !text-[rgb(var(--crew-hosted-community-surface-fg))] shadow-none placeholder:!text-[rgb(var(--crew-hosted-community-surface-fg))] placeholder:opacity-20 focus-visible:ring-0"
       }
       disabled={busy || atCommunityLimit}
       id="hosted-community-address"
@@ -431,7 +431,7 @@ export function HostedCommunityOnboarding({
     ) : (
       <Card
         asChild
-        className={`${FUZZY_SURFACE_CLASS} !py-10 [--buzz-card-textured-min-height:176px]`}
+        className={`${FUZZY_SURFACE_CLASS} !py-10 [--crew-card-textured-min-height:176px]`}
         data-testid="hosted-community-create-surface"
         variant="textured"
       >
@@ -443,7 +443,7 @@ export function HostedCommunityOnboarding({
           >
             {creationInput(false)}
             <span
-              className="shrink-0 font-mono !text-[rgb(var(--buzz-hosted-community-surface-fg))]"
+              className="shrink-0 font-mono !text-[rgb(var(--crew-hosted-community-surface-fg))]"
               id="hosted-community-suffix"
               style={{ fontSize: addressFontSize }}
             >
@@ -467,10 +467,10 @@ export function HostedCommunityOnboarding({
       }}
     >
       <DialogContent
-        className="buzz-onboarding-neutral-theme max-w-[560px] text-foreground [&_button]:shadow-none"
+        className="crew-onboarding-neutral-theme max-w-[560px] text-foreground [&_button]:shadow-none"
         closeButtonClassName={ONBOARDING_INK_ICON_CLASS}
         data-system-color-scheme="light"
-        overlayClassName="bg-[rgb(var(--buzz-hosted-community-modal-overlay-bg)/0.25)]"
+        overlayClassName="bg-[rgb(var(--crew-hosted-community-modal-overlay-bg)/0.25)]"
         surface="textured"
       >
         <div className="mx-auto flex w-full max-w-sm flex-col items-center py-2 text-center">
@@ -542,7 +542,7 @@ export function HostedCommunityOnboarding({
                 This account is connected to another Buzz identity. Reconnect
                 this device, or sign out to use a different email.
               </DialogDescription>
-              <p className="mt-4 w-full break-all rounded-xl bg-[rgb(var(--buzz-hosted-community-identity-bg)/0.5)] px-4 py-3 text-left font-mono text-xs text-foreground">
+              <p className="mt-4 w-full break-all rounded-xl bg-[rgb(var(--crew-hosted-community-identity-bg)/0.5)] px-4 py-3 text-left font-mono text-xs text-foreground">
                 Account: {identity.npub ?? boundPubkey}
                 <br />
                 This device: {localNpub ?? localPubkey}
@@ -707,7 +707,7 @@ export function HostedCommunityOnboarding({
                   } ${
                     availability === false || (name && !validName)
                       ? "text-destructive"
-                      : "text-[color:var(--buzz-onboarding-backup-ink)]"
+                      : "text-[color:var(--crew-onboarding-backup-ink)]"
                   }`}
                   id="hosted-community-feedback"
                 >
@@ -724,7 +724,7 @@ export function HostedCommunityOnboarding({
                   } ${
                     availability === false || (name && !validName)
                       ? "text-destructive"
-                      : "text-[color:var(--buzz-onboarding-backup-ink)]"
+                      : "text-[color:var(--crew-onboarding-backup-ink)]"
                   }`}
                   id="hosted-community-feedback"
                 >

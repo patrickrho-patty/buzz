@@ -20,12 +20,12 @@
 # Apply this file in two passes:
 #
 #   # 1. Install the cluster-scoped ClusterIssuer (idempotent):
-#   kubectl apply -f deploy/charts/buzz/examples/ingress-cert-manager.yaml
+#   kubectl apply -f deploy/charts/crew/examples/ingress-cert-manager.yaml
 #
 #   # 2. Install/upgrade the chart with the values fragment:
-#   helm upgrade --install buzz ./deploy/charts/buzz \
+#   helm upgrade --install buzz ./deploy/charts/crew \
 #     -f values-production.yaml \
-#     -f deploy/charts/buzz/examples/ingress-cert-manager.yaml \
+#     -f deploy/charts/crew/examples/ingress-cert-manager.yaml \
 #     --set relayUrl=wss://buzz.example.com
 #
 # Why HTTP-01: works for any public-DNS host without DNS-API credentials.

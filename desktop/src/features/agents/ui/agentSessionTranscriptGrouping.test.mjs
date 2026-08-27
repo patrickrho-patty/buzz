@@ -74,7 +74,7 @@ function toolCall(id, turnId) {
     id,
     type: "tool",
     title: "Shell",
-    toolName: "buzz-dev-mcp__shell",
+    toolName: "crew-dev-mcp__shell",
     crewToolName: null,
     status: "completed",
     args: {},

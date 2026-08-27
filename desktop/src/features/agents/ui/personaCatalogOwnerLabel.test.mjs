@@ -99,7 +99,7 @@ test("agent instruction review renders markdown concealment syntax literally", (
   assert.ok(
     html.includes("![Image label](https://example.com/hidden-image-source)"),
   );
-  assert.ok(!html.includes("buzz-spoiler"));
+  assert.ok(!html.includes("crew-spoiler"));
   assert.ok(!html.includes("<a"));
   assert.ok(!html.includes("<img"));
 });

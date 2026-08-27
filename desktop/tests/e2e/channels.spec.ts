@@ -615,7 +615,7 @@ test("start a new direct message from the sidebar", async ({ page }) => {
     selectedCharlieBox.y + selectedCharlieBox.height / 2,
   );
   await page.mouse.down();
-  await expect(page.locator(".buzz-poof-burst")).toHaveCount(1);
+  await expect(page.locator(".crew-poof-burst")).toHaveCount(1);
   await page.mouse.up();
   await expect(selectedCharlie).not.toBeVisible();
   await page.getByTestId("new-dm-search").fill("charlie");
@@ -3338,7 +3338,7 @@ test("Inbox All never lists drafts and unread-only hides reminders", async ({
     },
     {
       draftStorageKey: draftKey,
-      draftStoreKey: `buzz-drafts.v2:ws://localhost:3000:${MOCK_IDENTITY_PUBKEY}`,
+      draftStoreKey: `crew-drafts.v2:ws://localhost:3000:${MOCK_IDENTITY_PUBKEY}`,
     },
   );
   await page.goto("/");

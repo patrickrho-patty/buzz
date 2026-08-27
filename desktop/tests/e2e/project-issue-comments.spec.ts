@@ -121,7 +121,7 @@ test("issue discussion ignores an author-claimed origin channel", async ({
   await expect(page.getByTestId("chat-title")).toHaveText("general");
   const issueDraftChip = page
     .getByTestId("message-input")
-    .locator('[data-composer-buzz-link=""]', {
+    .locator('[data-composer-crew-link=""]', {
       hasText: "buzz",
     });
   await expect(issueDraftChip).toHaveAttribute(
@@ -130,7 +130,7 @@ test("issue discussion ignores an author-claimed origin channel", async ({
   );
   await page.getByTestId("channel-random").click();
   await expect(
-    page.getByTestId("message-input").locator('[data-composer-buzz-link=""]'),
+    page.getByTestId("message-input").locator('[data-composer-crew-link=""]'),
   ).toHaveCount(0);
 });
 

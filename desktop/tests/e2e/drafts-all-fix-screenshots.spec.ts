@@ -41,7 +41,7 @@ test("Inbox All hides drafts while the Drafts filter keeps them", async ({
     {
       channelId: GENERAL_CHANNEL_ID,
       draftStorageKey: draftKey,
-      draftStoreKey: `buzz-drafts.v2:ws://localhost:3000:${MOCK_IDENTITY_PUBKEY}`,
+      draftStoreKey: `crew-drafts.v2:ws://localhost:3000:${MOCK_IDENTITY_PUBKEY}`,
     },
   );
   await installMockBridge(page);

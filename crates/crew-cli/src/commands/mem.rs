@@ -25,12 +25,12 @@ use crew_core::engram::{
 use crew_core::kind::KIND_AGENT_ENGRAM;
 use nostr::PublicKey;
 
-use crate::client::BuzzClient;
+use crate::client::CrewClient;
 use crate::error::CliError;
 
 /// Resolve the agent's owner pubkey: explicit `--owner` flag wins, otherwise
 /// fall back to the NIP-OA `auth_tag` (which carries owner pubkey in slot 1).
-fn resolve_owner(client: &BuzzClient, owner_flag: Option<&str>) -> Result<PublicKey, CliError> {
+fn resolve_owner(client: &CrewClient, owner_flag: Option<&str>) -> Result<PublicKey, CliError> {
     if let Some(s) = owner_flag {
         return PublicKey::from_hex(s)
             .map_err(|e| CliError::Usage(format!("--owner must be a 64-hex pubkey: {e}")));
@@ -52,7 +52,7 @@ fn resolve_owner(client: &BuzzClient, owner_flag: Option<&str>) -> Result<Public
 /// `--agent <pubkey>`; the CLI identity is then the owner and the supplied
 /// pubkey is the agent author to query/decrypt.
 fn resolve_reader(
-    client: &BuzzClient,
+    client: &CrewClient,
     owner_flag: Option<&str>,
     agent_flag: Option<&str>,
 ) -> Result<(PublicKey, PublicKey, PublicKey), CliError> {
@@ -90,7 +90,7 @@ fn now_secs() -> u64 {
 /// `message` field starts with `"duplicate:"` when the write was rejected
 /// as already-superseded by a later head (NIP-33 LWW). In that case we
 /// surface a `Conflict` so callers don't lie about success.
-async fn submit_engram(client: &BuzzClient, event: nostr::Event) -> Result<(), CliError> {
+async fn submit_engram(client: &CrewClient, event: nostr::Event) -> Result<(), CliError> {
     let raw = client.submit_event(event).await?;
     let parsed: serde_json::Value = serde_json::from_str(&raw)
         .map_err(|e| CliError::Other(format!("relay response is not JSON: {e} ({raw})")))?;
@@ -134,7 +134,7 @@ fn parse_events(json: &str) -> Result<Vec<nostr::Event>, CliError> {
 
 /// Fetch the head event for `slug`, returning `(Option<Event>, Option<Body>)`.
 async fn fetch_head(
-    client: &BuzzClient,
+    client: &CrewClient,
     agent: &PublicKey,
     owner: &PublicKey,
     slug: &str,
@@ -187,7 +187,7 @@ async fn fetch_head(
 
 /// `buzz mem ls` — list non-tombstoned memory entries.
 pub async fn cmd_ls(
-    client: &BuzzClient,
+    client: &CrewClient,
     owner_flag: Option<&str>,
     agent_flag: Option<&str>,
     json: bool,
@@ -275,7 +275,7 @@ pub async fn cmd_ls(
 ///
 /// Exit codes: 0 on found, 1 on absent or tombstoned.
 pub async fn cmd_get(
-    client: &BuzzClient,
+    client: &CrewClient,
     raw_slug: &str,
     owner_flag: Option<&str>,
     agent_flag: Option<&str>,
@@ -312,7 +312,7 @@ pub async fn cmd_get(
 /// otherwise commit an empty value — silently destroying the slug.
 /// A literal `""` positional argument is still accepted (explicit intent).
 pub async fn cmd_set(
-    client: &BuzzClient,
+    client: &CrewClient,
     raw_slug: &str,
     raw_value: &str,
     owner_flag: Option<&str>,
@@ -482,7 +482,7 @@ fn verify_hunks_at_declared_position(
 /// Used by `mem hash` and `mem patch` — they both need "the value or fail".
 /// Returns `(head_event, value)` so the caller can preserve monotonic ordering.
 async fn fetch_value(
-    client: &BuzzClient,
+    client: &CrewClient,
     agent: &PublicKey,
     owner: &PublicKey,
     slug: &str,
@@ -506,7 +506,7 @@ async fn fetch_value(
 /// then pass it to `buzz mem patch --base-hash <hex>` to make the edit
 /// safe against concurrent writes.
 pub async fn cmd_hash(
-    client: &BuzzClient,
+    client: &CrewClient,
     raw_slug: &str,
     owner_flag: Option<&str>,
     agent_flag: Option<&str>,
@@ -536,7 +536,7 @@ pub async fn cmd_hash(
 ///   can chain edits.
 #[allow(clippy::too_many_arguments)]
 pub async fn cmd_patch(
-    client: &BuzzClient,
+    client: &CrewClient,
     raw_slug: &str,
     patch_path: Option<&str>,
     base_hash: Option<&str>,
@@ -704,7 +704,7 @@ pub async fn cmd_patch(
 /// memory entries). We refuse it and tell the operator to overwrite `core`
 /// with an empty profile instead.
 pub async fn cmd_rm(
-    client: &BuzzClient,
+    client: &CrewClient,
     raw_slug: &str,
     owner_flag: Option<&str>,
 ) -> Result<(), CliError> {
@@ -734,7 +734,7 @@ pub async fn cmd_rm(
     Ok(())
 }
 
-pub async fn dispatch(cmd: crate::MemCmd, client: &BuzzClient) -> Result<(), CliError> {
+pub async fn dispatch(cmd: crate::MemCmd, client: &CrewClient) -> Result<(), CliError> {
     use crate::MemCmd;
     match cmd {
         MemCmd::Ls { owner, agent, json } => {
@@ -785,8 +785,8 @@ mod tests {
     // verify base-hash from the shell. Hard-coded vectors from the NIST and
     // common quick-check inputs.
 
-    fn test_client(keys: nostr::Keys) -> BuzzClient {
-        BuzzClient::new("http://127.0.0.1:9".into(), keys, None, None).unwrap()
+    fn test_client(keys: nostr::Keys) -> CrewClient {
+        CrewClient::new("http://127.0.0.1:9".into(), keys, None, None).unwrap()
     }
 
     #[test]

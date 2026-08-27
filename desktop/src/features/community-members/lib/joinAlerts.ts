@@ -25,7 +25,7 @@
 
 import { setLocalStorageItemWithRecovery } from "@/shared/lib/localStorageQuota";
 
-const JOIN_ALERT_STORAGE_PREFIX = "buzz-community-join-seen.v1";
+const JOIN_ALERT_STORAGE_PREFIX = "crew-community-join-seen.v1";
 
 /**
  * Cap on *departed* pubkeys retained per community.

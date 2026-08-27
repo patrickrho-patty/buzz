@@ -38,7 +38,7 @@ pub struct UserSearchProfile {
 ///
 /// Returns `true` if a new row was inserted, `false` if the user already existed.
 /// The `true` case is the reliable signal for "user was just registered" — used
-/// by callers to increment `buzz_users_created_total`.
+/// by callers to increment `crew_users_created_total`.
 pub async fn ensure_user(pool: &PgPool, community_id: CommunityId, pubkey: &[u8]) -> Result<bool> {
     let result = sqlx::query(
         r#"
@@ -404,7 +404,7 @@ mod tests {
     use crate::Db;
     use nostr::Keys;
 
-    const TEST_DB_URL: &str = "postgres://buzz:buzz_dev@localhost:5432/buzz";
+    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz";
 
     async fn setup_db() -> Db {
         let pool = PgPool::connect(TEST_DB_URL)

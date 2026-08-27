@@ -141,7 +141,11 @@ String buildMessageLink({
 /// parameters and fragments are rejected so malformed or ambiguous links never
 /// become navigation targets.
 ChannelDeepLink? parseChannelDeepLink(Uri uri) {
-  if (!(uri.scheme == 'crew' || uri.scheme == 'buzz') || uri.host != 'channel') return null;
+  final schemeAccepted =
+      uri.scheme == 'crew' || uri.scheme == 'buzz';
+  if (!schemeAccepted || uri.host != 'channel') {
+    return null;
+  }
   if (uri.hasQuery ||
       uri.hasFragment ||
       uri.userInfo.isNotEmpty ||
@@ -167,7 +171,11 @@ ChannelDeepLink? parseChannelDeepLink(Uri uri) {
 /// shape: no path, fragment, credentials, duplicate or unknown parameters; a
 /// UUID channel; and 64-character hexadecimal message/thread event IDs.
 MessageDeepLink? parseMessageDeepLink(Uri uri) {
-  if (!(uri.scheme == 'crew' || uri.scheme == 'buzz') || uri.host != 'message') return null;
+  final schemeAccepted =
+      uri.scheme == 'crew' || uri.scheme == 'buzz';
+  if (!schemeAccepted || uri.host != 'message') {
+    return null;
+  }
   if (uri.path.isNotEmpty ||
       uri.hasFragment ||
       uri.userInfo.isNotEmpty ||
@@ -306,7 +314,8 @@ class EntityDeepLink extends CrewDeepLink {
 
 /// Parse canonical `crew://repo|pr|issue` permalinks for inline presentation.
 EntityDeepLink? parseEntityDeepLink(Uri uri) {
-  if (!(uri.scheme == 'crew' || uri.scheme == 'buzz') || !{'repo', 'pr', 'issue'}.contains(uri.host)) {
+  if (!(uri.scheme == 'crew' || uri.scheme == 'buzz') ||
+      !{'repo', 'pr', 'issue'}.contains(uri.host)) {
     return null;
   }
   if (uri.path.isNotEmpty ||

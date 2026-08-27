@@ -443,7 +443,9 @@ fn tts_worker(
         Ok(s) => s,
         Err(e) => {
             let error = format!("TTS voice style initialization failed: {e}");
-            eprintln!("griddle-desktop: tts stage=startup status=failed reason=fallback_voice_style");
+            eprintln!(
+                "griddle-desktop: tts stage=startup status=failed reason=fallback_voice_style"
+            );
             let _ = startup_tx.send(Err(error));
             return;
         }

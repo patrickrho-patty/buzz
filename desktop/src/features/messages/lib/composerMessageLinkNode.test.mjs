@@ -18,11 +18,11 @@ const CHANNEL_HREF = `crew://channel/${CHANNEL_ID}`;
 const CHANNEL_MESSAGE_ID = "a".repeat(64);
 const CHANNEL_MESSAGE_HREF = `crew://channel/${CHANNEL_ID}/${CHANNEL_MESSAGE_ID}`;
 const OWNER = "a".repeat(64);
-const REPO_HREF = `crew://repo?owner=${OWNER}&d=buzz-world`;
+const REPO_HREF = `crew://repo?owner=${OWNER}&d=crew-world`;
 const ISSUE_ID = "b".repeat(64);
-const ISSUE_HREF = `crew://issue?id=${ISSUE_ID}&owner=${OWNER}&d=buzz-world`;
+const ISSUE_HREF = `crew://issue?id=${ISSUE_ID}&owner=${OWNER}&d=crew-world`;
 const PR_ID = "c".repeat(64);
-const PR_HREF = `crew://pr?id=${PR_ID}&owner=${OWNER}&d=buzz-world`;
+const PR_HREF = `crew://pr?id=${PR_ID}&owner=${OWNER}&d=crew-world`;
 
 test("resolves a composer preview and canonicalizes the underlying href", () => {
   assert.deepEqual(
@@ -135,7 +135,7 @@ test("real markdown-it parsing materializes mixed Buzz permalink chips", () => {
   const html = md.renderInline(`${HREF} ${CHANNEL_HREF} ${REPO_HREF}`);
   assert.equal((html.match(/data-composer-crew-link=""/g) ?? []).length, 3);
   assert.match(html, /data-href="crew:\/\/channel\/9a1657ac/);
-  assert.match(html, /data-href="crew:\/\/repo\?owner=a{64}&amp;d=buzz-world/);
+  assert.match(html, /data-href="crew:\/\/repo\?owner=a{64}&amp;d=crew-world/);
 });
 
 test("real markdown-it parsing preserves underscores in restored entity links", () => {
@@ -206,7 +206,7 @@ test("composer node uses the sent-message chip presentation", () => {
   assert.match(rendered[1].class, /mention-chip/);
   assert.match(rendered[1].class, /inline-chip-with-icon/);
   assert.match(rendered[1].class, /inline-chip-icon-message/);
-  assert.equal(rendered[1]["data-buzz-link"], "");
+  assert.equal(rendered[1]["data-crew-link"], "");
   // Channel label only — no event hash, so the chip does not change width when
   // the draft is sent and the rendered chip resolves its metadata.
   assert.equal(rendered[2], "general");
@@ -232,19 +232,19 @@ test("composer node renders channel and entity chip presentations", () => {
   const repo = render(REPO_HREF);
   assert.equal(repo[1]["data-crew-link-kind"], "repo");
   assert.match(repo[1].class, /inline-chip-icon-repo/);
-  assert.equal(repo[2], "buzz-world");
+  assert.equal(repo[2], "crew-world");
 
   const issue = render(ISSUE_HREF);
   assert.equal(issue[1]["data-crew-link-kind"], "issue");
   assert.match(issue[1].class, /inline-chip-icon-issue/);
   // Repository name only — the rendered chip never widens into the issue
   // title, so the composer must not widen into the event hash either.
-  assert.equal(issue[2], "buzz-world");
+  assert.equal(issue[2], "crew-world");
 
   const pullRequest = render(PR_HREF);
   assert.equal(pullRequest[1]["data-crew-link-kind"], "pr");
   assert.match(pullRequest[1].class, /inline-chip-icon-pr/);
-  assert.equal(pullRequest[2], "buzz-world");
+  assert.equal(pullRequest[2], "crew-world");
 });
 
 test("markdown rendering stores identity in attributes, not visible id text", () => {

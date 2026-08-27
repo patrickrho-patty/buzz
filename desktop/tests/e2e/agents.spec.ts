@@ -1374,7 +1374,7 @@ test("custom personas share with people and keep export separate", async ({
     `persona-share-recipient-chip-${TEST_IDENTITIES.bob.pubkey}`,
   );
   await expect(bobChip).toBeVisible();
-  await expect(bobChip).not.toHaveClass(/buzz-poof-trigger/);
+  await expect(bobChip).not.toHaveClass(/crew-poof-trigger/);
   await waitForAnimations(page);
   const bobChipBox = await bobChip.boundingBox();
   expect(bobChipBox).not.toBeNull();
@@ -1385,7 +1385,7 @@ test("custom personas share with people and keep export separate", async ({
   };
   await page.mouse.move(removePointer.x, removePointer.y);
   await page.mouse.down();
-  await expect(page.locator(".buzz-poof-burst")).toHaveCount(0);
+  await expect(page.locator(".crew-poof-burst")).toHaveCount(0);
   await page.mouse.up();
   await expect(bobChip).toHaveCount(0);
 

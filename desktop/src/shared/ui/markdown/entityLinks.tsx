@@ -106,14 +106,14 @@ function EntityMetadataTooltip({
           {context ? (
             <span
               className="line-clamp-3 [overflow-wrap:anywhere] whitespace-normal"
-              data-buzz-tooltip-metadata-content=""
+              data-crew-tooltip-metadata-content=""
             >
               {context}
             </span>
           ) : null}
           <span
             className={`${context ? "mt-1 " : ""}line-clamp-2 max-w-full [overflow-wrap:anywhere] whitespace-normal text-2xs text-secondary-foreground/80`}
-            data-buzz-tooltip-metadata-type=""
+            data-crew-tooltip-metadata-type=""
           >
             {footer}
           </span>

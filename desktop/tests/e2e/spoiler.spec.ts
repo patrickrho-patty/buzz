@@ -79,7 +79,7 @@ test("no-selection spoiler applies to every composer paragraph", async ({
       input.evaluate(() =>
         Array.from(
           document.querySelectorAll(
-            '[data-testid="message-input"] .buzz-spoiler[data-spoiler]',
+            '[data-testid="message-input"] .crew-spoiler[data-spoiler]',
           ),
           (node) => node.textContent,
         ),
@@ -111,7 +111,7 @@ test("image attachments can be marked and sent as hidden spoilers", async ({
   await page.getByTestId("send-message").click();
 
   const lastMessage = page.getByTestId("message-row").last();
-  const spoilerBlock = lastMessage.locator(".buzz-spoiler--block");
+  const spoilerBlock = lastMessage.locator(".crew-spoiler--block");
   await expect(spoilerBlock).toBeVisible();
   await expect(spoilerBlock).toHaveAttribute("data-revealed", "false");
   await expect(spoilerBlock.locator("[data-block-media] img")).toHaveAttribute(
@@ -150,7 +150,7 @@ test("text spoiler stays usable while attachment upload is pending", async ({
   // enabled and works while the upload is still in flight.
   await expect(spoilerButton).toBeEnabled();
   await spoilerButton.click();
-  await expect(input.locator(".buzz-spoiler[data-spoiler]")).toContainText(
+  await expect(input.locator(".crew-spoiler[data-spoiler]")).toContainText(
     "pending secret",
   );
 
@@ -173,7 +173,7 @@ test("hidden spoiler links reveal without opening on the first click", async ({
   await page.getByTestId("send-message").click();
 
   const lastMessage = page.getByTestId("message-row").last();
-  const spoiler = lastMessage.locator(".buzz-spoiler").first();
+  const spoiler = lastMessage.locator(".crew-spoiler").first();
   await expect(spoiler).toHaveAttribute("data-revealed", "false");
 
   // The freshly sent row can still be settling layout; a forced click
@@ -223,9 +223,9 @@ test("hidden spoilers stay masked on hover and focus until reveal", async ({
   await page.getByTestId("send-message").click();
 
   const lastMessage = page.getByTestId("message-row").last();
-  const spoiler = lastMessage.locator(".buzz-spoiler").first();
-  const content = spoiler.locator(".buzz-spoiler__content");
-  const particles = spoiler.locator(".buzz-spoiler__particles");
+  const spoiler = lastMessage.locator(".crew-spoiler").first();
+  const content = spoiler.locator(".crew-spoiler__content");
+  const particles = spoiler.locator(".crew-spoiler__particles");
 
   await expect(spoiler).toHaveAttribute("data-revealed", "false");
   await expect(content).toHaveCSS("opacity", "0");
@@ -264,7 +264,7 @@ test("masked link inside a hidden spoiler does not leak its URL until revealed",
   await page.getByTestId("send-message").click();
 
   const lastMessage = page.getByTestId("message-row").last();
-  const spoiler = lastMessage.locator(".buzz-spoiler").first();
+  const spoiler = lastMessage.locator(".crew-spoiler").first();
   await expect(spoiler).toHaveAttribute("data-revealed", "false");
 
   const secretLink = spoiler.getByRole("link", { name: "secret" });
@@ -354,7 +354,7 @@ test("non-interactive inbox preview spoilers let row clicks pass through", async
   const item = page.getByTestId("home-inbox-item-mock-feed-spoiler-preview");
   await expect(item).toContainText("Preview contains");
 
-  const spoiler = item.locator(".buzz-spoiler").first();
+  const spoiler = item.locator(".crew-spoiler").first();
   await expect(spoiler).toBeVisible();
   await expect(spoiler).not.toHaveAttribute("role", "button");
   await expect(spoiler).not.toHaveAttribute("tabindex", "0");

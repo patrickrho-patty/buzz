@@ -5,7 +5,7 @@ import { getPublicKey } from "nostr-tools/pure";
 import { installRelayBridge } from "../helpers/bridge";
 
 /**
- * SCROLL-BACK latency profile for one channel (#buzz-bugs) against a LIVE
+ * SCROLL-BACK latency profile for one channel (#crew-bugs) against a LIVE
  * relay, post-PR #1500 read-model.
  *
  * Mechanics under test (source: useLoadOlderOnScroll.ts, pageOlderMessages.ts,
@@ -35,7 +35,7 @@ const RELAY_HTTP =
   process.env.CREW_E2E_RELAY_URL ?? "https://sprout-oss.stage.blox.sqprod.co";
 const NSEC = process.env.CREW_PERF_NSEC ?? "";
 const COMMUNITY_HOST = process.env.CREW_COMMUNITY_HOST ?? "";
-const TARGET_CHANNEL = process.env.CREW_PERF_CHANNEL ?? "buzz-bugs";
+const TARGET_CHANNEL = process.env.CREW_PERF_CHANNEL ?? "crew-bugs";
 const PAGES = Number(process.env.CREW_PERF_PAGES ?? 10);
 
 const IDENTITY_OVERRIDE_KEY = "buzz:e2e-identity-override.v1";

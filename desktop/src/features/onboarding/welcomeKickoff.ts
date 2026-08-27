@@ -33,10 +33,10 @@ import type { Channel, ManagedAgent, RelayEvent } from "@/shared/api/types";
 import { normalizePubkey } from "@/shared/lib/pubkey";
 import { useQueryClient } from "@tanstack/react-query";
 
-export const WELCOME_KICKOFF_OPENER_MARKER = "buzz-welcome-kickoff.opener.v1";
-export const WELCOME_KICKOFF_CLOSER_MARKER = "buzz-welcome-kickoff.closer.v1";
+export const WELCOME_KICKOFF_OPENER_MARKER = "crew-welcome-kickoff.opener.v1";
+export const WELCOME_KICKOFF_CLOSER_MARKER = "crew-welcome-kickoff.closer.v1";
 export const WELCOME_KICKOFF_PROVIDER_MARKER =
-  "buzz-welcome-kickoff.provider-required.v1";
+  "crew-welcome-kickoff.provider-required.v1";
 
 const openerMarker = welcomeKickoffMarker(WELCOME_KICKOFF_OPENER_MARKER);
 const closerMarker = welcomeKickoffMarker(WELCOME_KICKOFF_CLOSER_MARKER);

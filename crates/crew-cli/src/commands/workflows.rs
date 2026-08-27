@@ -2,7 +2,7 @@ use sha2::{Digest, Sha256};
 
 use crate::client::{
     extract_d_tag, extract_relay_response_field, normalize_write_response, print_create_response,
-    BuzzClient,
+    CrewClient,
 };
 use crate::error::CliError;
 use crate::validate::{parse_uuid, read_or_stdin, sdk_err, validate_uuid};
@@ -10,7 +10,7 @@ use crate::validate::{parse_uuid, read_or_stdin, sdk_err, validate_uuid};
 // TODO(phase-4): Replace raw nostr::EventBuilder usage with crew-sdk builder functions
 
 /// List workflows in a channel — query kind:30620 workflow definition events.
-pub async fn cmd_list_workflows(client: &BuzzClient, channel_id: &str) -> Result<(), CliError> {
+pub async fn cmd_list_workflows(client: &CrewClient, channel_id: &str) -> Result<(), CliError> {
     validate_uuid(channel_id)?;
     let filter = serde_json::json!({
         "kinds": [30620],
@@ -35,7 +35,7 @@ pub async fn cmd_list_workflows(client: &BuzzClient, channel_id: &str) -> Result
 }
 
 /// Get a single workflow definition.
-pub async fn cmd_get_workflow(client: &BuzzClient, workflow_id: &str) -> Result<(), CliError> {
+pub async fn cmd_get_workflow(client: &CrewClient, workflow_id: &str) -> Result<(), CliError> {
     validate_uuid(workflow_id)?;
     let filter = serde_json::json!({
         "kinds": [30620],
@@ -64,7 +64,7 @@ pub async fn cmd_get_workflow(client: &BuzzClient, workflow_id: &str) -> Result<
 /// This command will return an empty array until the relay adds event emission
 /// or a dedicated REST endpoint for run history.
 pub async fn cmd_get_workflow_runs(
-    client: &BuzzClient,
+    client: &CrewClient,
     workflow_id: &str,
     limit: Option<u32>,
 ) -> Result<(), CliError> {
@@ -96,7 +96,7 @@ pub async fn cmd_get_workflow_runs(
 
 /// Create a workflow — sign and submit a kind:30620 event.
 pub async fn cmd_create_workflow(
-    client: &BuzzClient,
+    client: &CrewClient,
     channel_id: &str,
     yaml: &str,
 ) -> Result<(), CliError> {
@@ -117,7 +117,7 @@ pub async fn cmd_create_workflow(
 
 /// Update a workflow — sign and submit an updated kind:30620 event with same d-tag.
 pub async fn cmd_update_workflow(
-    client: &BuzzClient,
+    client: &CrewClient,
     channel_id: &str,
     workflow_id: &str,
     yaml: &str,
@@ -149,7 +149,7 @@ pub async fn cmd_update_workflow(
 }
 
 /// Delete a workflow — sign and submit a kind:5 deletion event.
-pub async fn cmd_delete_workflow(client: &BuzzClient, workflow_id: &str) -> Result<(), CliError> {
+pub async fn cmd_delete_workflow(client: &CrewClient, workflow_id: &str) -> Result<(), CliError> {
     let wf_uuid = parse_uuid(workflow_id)?;
     let keys = client.keys();
 
@@ -167,7 +167,7 @@ pub async fn cmd_delete_workflow(client: &BuzzClient, workflow_id: &str) -> Resu
 /// When `inputs` is provided, it is parsed as a JSON object and used as the
 /// event content (MCP parity). When omitted, the event content is `{}`.
 pub async fn cmd_trigger_workflow(
-    client: &BuzzClient,
+    client: &CrewClient,
     workflow_id: &str,
     inputs: Option<&str>,
 ) -> Result<(), CliError> {
@@ -204,7 +204,7 @@ pub async fn cmd_trigger_workflow(
 
 /// Approve or deny a workflow step — sign and submit a kind:46030 (grant) or 46031 (deny) event.
 pub async fn cmd_approve_step(
-    client: &BuzzClient,
+    client: &CrewClient,
     approval_token: &str,
     approved: bool,
     note: Option<&str>,
@@ -224,7 +224,7 @@ pub async fn cmd_approve_step(
     Ok(())
 }
 
-pub async fn dispatch(cmd: crate::WorkflowsCmd, client: &BuzzClient) -> Result<(), CliError> {
+pub async fn dispatch(cmd: crate::WorkflowsCmd, client: &CrewClient) -> Result<(), CliError> {
     use crate::WorkflowsCmd;
     match cmd {
         WorkflowsCmd::List { channel } => cmd_list_workflows(client, &channel).await,

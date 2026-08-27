@@ -919,6 +919,8 @@ pub async fn speak_agent_message(
     .await
     .inspect(|_| eprintln!("griddle-desktop: tts stage=queue status=accepted route_id={route_id}"))
     .inspect_err(|_| {
-        eprintln!("griddle-desktop: tts stage=queue status=failed reason=closed route_id={route_id}")
+        eprintln!(
+            "griddle-desktop: tts stage=queue status=failed reason=closed route_id={route_id}"
+        )
     })
 }

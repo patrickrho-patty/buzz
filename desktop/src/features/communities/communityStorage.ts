@@ -5,8 +5,8 @@ import { getStorageItem, removeStorageItem } from "@/shared/lib/safeStorage";
 
 const COMMUNITIES_KEY = "buzz-communities";
 const ACTIVE_COMMUNITY_KEY = "buzz-active-community-id";
-const LEGACY_WORKSPACES_KEY = "buzz-workspaces";
-const LEGACY_ACTIVE_WORKSPACE_KEY = "buzz-active-workspace-id";
+const LEGACY_WORKSPACES_KEY = "crew-workspaces";
+const LEGACY_ACTIVE_WORKSPACE_KEY = "crew-active-workspace-id";
 const COMMUNITY_DISCOVERY_AFTER_LEAVE_KEY =
   "buzz-community-discovery-after-leave";
 
@@ -195,7 +195,7 @@ export function deriveCommunityName(relayUrl: string): string {
       return "Local Dev";
     }
     const parts = host.split(".");
-    // Detect staging environments (e.g. buzz-oss.stage.blox.sqprod.co)
+    // Detect staging environments (e.g. crew-oss.stage.blox.sqprod.co)
     if (parts.some((p) => p === "stage" || p === "staging")) {
       return "Buzz (staging)";
     }

@@ -41,7 +41,7 @@ export type NostrBindDeepLinkPayload = {
   verificationCode: string;
   audience: "buzz:nostr-identity";
   action: "bind_nostr_identity";
-  protocol: "buzz-nostr-identity";
+  protocol: "crew-nostr-identity";
   version: "1";
   origin: string;
   expiresAt: string;

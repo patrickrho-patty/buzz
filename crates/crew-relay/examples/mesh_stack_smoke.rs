@@ -28,7 +28,7 @@ use std::process::{Command, Stdio};
 const MODEL: &str = "jc-builds/SmolLM2-135M-Instruct-Q4_K_M-GGUF:Q4_K_M";
 
 const TOKIO_DEFAULT_STACK: usize = 2 * 1024 * 1024;
-/// Must match `buzz_lib::mesh_llm::MESH_WORKER_STACK_SIZE` (desktop crate is
+/// Must match `crew_lib::mesh_llm::MESH_WORKER_STACK_SIZE` (desktop crate is
 /// not a dependency of crew-relay, so the value is duplicated here).
 const FIXED_STACK: usize = 8 * 1024 * 1024;
 

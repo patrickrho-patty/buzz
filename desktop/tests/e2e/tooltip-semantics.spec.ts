@@ -41,7 +41,7 @@ async function expectMutedSupportingText(
   const footer = trigger
     .page()
     .getByRole("tooltip")
-    .locator('[data-buzz-tooltip-metadata-type=""]');
+    .locator('[data-crew-tooltip-metadata-type=""]');
   await expect(footer).toHaveText(expectedText);
   await expect(footer).toHaveClass(/text-secondary-foreground\/80/);
   await expect(footer).not.toHaveClass(/text-primary-foreground/);
@@ -119,7 +119,7 @@ for (const theme of THEMES) {
     const links = [
       `crew://channel/${channelId}`,
       `crew://message?channel=${channelId}&id=mock-general-welcome`,
-      `crew://issue?id=${issueId}&owner=${owner}&d=buzz-world`,
+      `crew://issue?id=${issueId}&owner=${owner}&d=crew-world`,
     ].join(" ");
     const composer = page.getByTestId("message-input");
     await composer.evaluate((element, text) => {
@@ -134,7 +134,7 @@ for (const theme of THEMES) {
       );
     }, links);
 
-    const composerChips = composer.locator('[data-composer-buzz-link=""]');
+    const composerChips = composer.locator('[data-composer-crew-link=""]');
     await expect(composerChips).toHaveCount(3);
     await page.getByTestId("send-message").click();
 
@@ -152,9 +152,9 @@ for (const theme of THEMES) {
     await page.mouse.move(0, 0);
     await expectMutedSupportingText(
       row.getByRole("button", {
-        name: /Open issue .* in repository buzz-world/,
+        name: /Open issue .* in repository crew-world/,
       }),
-      "Issue · buzz-world",
+      "Issue · crew-world",
     );
   });
 }

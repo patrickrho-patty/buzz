@@ -663,7 +663,7 @@ test("Back preserves incomplete defaults draft without writing", async ({
   await expect(
     page
       .getByTestId("onboarding-page-config")
-      .locator(".buzz-onboarding-transition-line"),
+      .locator(".crew-onboarding-transition-line"),
   ).toHaveAttribute("data-onboarding-direction", "forward");
 
   const harness = page.getByTestId("global-agent-default-harness");
@@ -680,7 +680,7 @@ test("Back preserves incomplete defaults draft without writing", async ({
   await expect(
     page
       .getByTestId("onboarding-page-2")
-      .locator(".buzz-onboarding-transition-line"),
+      .locator(".crew-onboarding-transition-line"),
   ).toHaveAttribute("data-onboarding-direction", "backward");
   expect(await readSavedRuntime(page)).toBeNull();
   expect(await readGlobalConfigSetterCallCount(page)).toBe(0);
@@ -689,7 +689,7 @@ test("Back preserves incomplete defaults draft without writing", async ({
   await expect(
     page
       .getByTestId("onboarding-page-config")
-      .locator(".buzz-onboarding-transition-line"),
+      .locator(".crew-onboarding-transition-line"),
   ).toHaveAttribute("data-onboarding-direction", "forward");
   await expect(harness).toHaveText("Buzz");
   await expect(page.getByTestId("global-agent-provider")).toHaveText(

@@ -3,7 +3,7 @@
 //!
 //! See `PLANS/S3_STORAGE_METRICS_PLAN.md` (Rev 3) "Sweep architecture" for
 //! the full design; this module implements the relay-side half (the
-//! classifier + pure fold live in `buzz_media::bucket_index`). Summary:
+//! classifier + pure fold live in `crew_media::bucket_index`). Summary:
 //!
 //! - The usage tick never awaits the sweep. [`maybe_spawn_sweep`] harvests
 //!   any finished in-flight attempt into the cache, then spawns at most one
@@ -120,11 +120,11 @@ impl StorageEmittedKey {
     fn set(&self, value: f64) {
         match self {
             Self::Bytes(host) => {
-                metrics::gauge!("buzz_community_storage_bytes", "community" => host.clone())
+                metrics::gauge!("crew_community_storage_bytes", "community" => host.clone())
                     .set(value);
             }
             Self::Objects(host) => {
-                metrics::gauge!("buzz_community_storage_objects", "community" => host.clone())
+                metrics::gauge!("crew_community_storage_objects", "community" => host.clone())
                     .set(value);
             }
         }
@@ -267,7 +267,7 @@ pub async fn maybe_spawn_sweep<Fut>(
 /// community series; `allows` gates those series the same way
 /// `EmissionScope` gates the DB-derived ones. A bound community UUID absent
 /// from `host_map` is "unmapped" (sidecar references a community with no DB
-/// row) and rolls into `buzz_storage_unmapped_community_bytes` instead of a
+/// row) and rolls into `crew_storage_unmapped_community_bytes` instead of a
 /// per-community series.
 ///
 /// Per-community series whose community disappears from the current snapshot
@@ -275,7 +275,7 @@ pub async fn maybe_spawn_sweep<Fut>(
 /// same pattern as `emit_in_memory_usage_metrics`. Without this, a series
 /// would linger at its last nonzero value until the recorder's idle eviction
 /// fires (≥3 ticks), producing a transient double-count against the
-/// `buzz_storage_unmapped_community_bytes` gauge.
+/// `crew_storage_unmapped_community_bytes` gauge.
 pub async fn emit_storage_metrics(
     state: &Mutex<StorageSweepState>,
     host_map: &HashMap<Uuid, String>,
@@ -284,13 +284,13 @@ pub async fn emit_storage_metrics(
     let mut state = state.lock().await;
 
     let ok = state.last_attempt.is_some_and(|a| a.ok);
-    metrics::gauge!("buzz_storage_sweep_ok").set(if ok { 1.0 } else { 0.0 });
+    metrics::gauge!("crew_storage_sweep_ok").set(if ok { 1.0 } else { 0.0 });
     // Process-local gauge: resets/jumps on leader failover — not a global counter.
     // Named without _total suffix to avoid confusing tools that infer counter
     // semantics from the _total convention (e.g. rate() in PromQL).
-    metrics::gauge!("buzz_storage_sweep_failures").set(state.failures_total as f64);
+    metrics::gauge!("crew_storage_sweep_failures").set(state.failures_total as f64);
     if let Some(attempt) = state.last_attempt {
-        metrics::gauge!("buzz_storage_sweep_duration_seconds").set(attempt.duration.as_secs_f64());
+        metrics::gauge!("crew_storage_sweep_duration_seconds").set(attempt.duration.as_secs_f64());
     }
 
     // Cold cache + failure (F5): no storage-family/per-community gauges yet.
@@ -302,26 +302,26 @@ pub async fn emit_storage_metrics(
         }
         return;
     };
-    metrics::gauge!("buzz_storage_sweep_age_seconds")
+    metrics::gauge!("crew_storage_sweep_age_seconds")
         .set(cached.completed_at.elapsed().as_secs_f64());
 
     let snapshot = &cached.data;
-    metrics::gauge!("buzz_total_storage_bytes", "kind" => "physical")
+    metrics::gauge!("crew_total_storage_bytes", "kind" => "physical")
         .set(snapshot.physical_bytes as f64);
-    metrics::gauge!("buzz_total_storage_objects", "kind" => "physical")
+    metrics::gauge!("crew_total_storage_objects", "kind" => "physical")
         .set(snapshot.physical_objects as f64);
-    metrics::gauge!("buzz_total_storage_bytes", "kind" => "logical")
+    metrics::gauge!("crew_total_storage_bytes", "kind" => "logical")
         .set(snapshot.logical_bytes as f64);
-    metrics::gauge!("buzz_total_storage_objects", "kind" => "logical")
+    metrics::gauge!("crew_total_storage_objects", "kind" => "logical")
         .set(snapshot.logical_objects as f64);
 
-    metrics::gauge!("buzz_storage_orphan_blob_bytes").set(snapshot.orphan_blob_bytes as f64);
-    metrics::gauge!("buzz_storage_orphan_blobs").set(snapshot.orphan_blob_count as f64);
-    metrics::gauge!("buzz_storage_orphan_sidecars").set(snapshot.orphan_sidecar_count as f64);
-    metrics::gauge!("buzz_storage_multi_variant_shas").set(snapshot.multi_variant_shas as f64);
-    metrics::gauge!("buzz_storage_multi_variant_bytes").set(snapshot.multi_variant_bytes as f64);
-    metrics::gauge!("buzz_storage_unknown_key_bytes").set(snapshot.unknown_key_bytes as f64);
-    metrics::gauge!("buzz_storage_unknown_key_objects").set(snapshot.unknown_key_objects as f64);
+    metrics::gauge!("crew_storage_orphan_blob_bytes").set(snapshot.orphan_blob_bytes as f64);
+    metrics::gauge!("crew_storage_orphan_blobs").set(snapshot.orphan_blob_count as f64);
+    metrics::gauge!("crew_storage_orphan_sidecars").set(snapshot.orphan_sidecar_count as f64);
+    metrics::gauge!("crew_storage_multi_variant_shas").set(snapshot.multi_variant_shas as f64);
+    metrics::gauge!("crew_storage_multi_variant_bytes").set(snapshot.multi_variant_bytes as f64);
+    metrics::gauge!("crew_storage_unknown_key_bytes").set(snapshot.unknown_key_bytes as f64);
+    metrics::gauge!("crew_storage_unknown_key_objects").set(snapshot.unknown_key_objects as f64);
 
     let mut current = HashSet::new();
     let mut unmapped_bytes = 0u64;
@@ -333,14 +333,14 @@ pub async fn emit_storage_metrics(
         if !allows(community_id) {
             continue;
         }
-        metrics::gauge!("buzz_community_storage_bytes", "community" => host.clone())
+        metrics::gauge!("crew_community_storage_bytes", "community" => host.clone())
             .set(storage.bytes as f64);
-        metrics::gauge!("buzz_community_storage_objects", "community" => host.clone())
+        metrics::gauge!("crew_community_storage_objects", "community" => host.clone())
             .set(storage.objects as f64);
         current.insert(StorageEmittedKey::Bytes(host.clone()));
         current.insert(StorageEmittedKey::Objects(host.clone()));
     }
-    metrics::gauge!("buzz_storage_unmapped_community_bytes").set(unmapped_bytes as f64);
+    metrics::gauge!("crew_storage_unmapped_community_bytes").set(unmapped_bytes as f64);
 
     // Zero series for communities that were emitted last tick but are no longer
     // present in the current snapshot (community removed, host renamed, or
@@ -688,7 +688,7 @@ mod tests {
     // `emit_storage_metrics` — so a sweep that finishes after demotion sits
     // in `in_flight` forever un-harvested and its data is never published.
     // That leader-transition itself lives behind a real Postgres advisory
-    // lock (`buzz_db::UsageMetricsLeader`, see `crates/crew-db/src/lib.rs`)
+    // lock (`crew_db::UsageMetricsLeader`, see `crates/crew-db/src/lib.rs`)
     // and has no fixture-free construction, so it can't be driven from this
     // module; the property this module DOES own — a completed-but-
     // unharvested attempt emits nothing — is what's covered below.
@@ -716,13 +716,13 @@ mod tests {
 
         let values = gauge_snapshot(&recorder);
         assert_eq!(
-            values.get("buzz_storage_sweep_ok"),
+            values.get("crew_storage_sweep_ok"),
             Some(&0.0),
             "unharvested attempt must not register as a success"
         );
-        assert!(!values.contains_key("buzz_total_storage_bytes"));
-        assert!(!values.contains_key("buzz_community_storage_bytes"));
-        assert!(!values.contains_key("buzz_storage_sweep_age_seconds"));
+        assert!(!values.contains_key("crew_total_storage_bytes"));
+        assert!(!values.contains_key("crew_community_storage_bytes"));
+        assert!(!values.contains_key("crew_storage_sweep_age_seconds"));
     }
 
     #[tokio::test(start_paused = true)]
@@ -767,8 +767,8 @@ mod tests {
                 futures::executor::block_on(emit_storage_metrics(&state, &host_map, |_| true));
             });
             let values = gauge_snapshot(&recorder);
-            assert_eq!(values.get("buzz_storage_sweep_ok"), Some(&0.0));
-            assert!(!values.contains_key("buzz_total_storage_bytes"));
+            assert_eq!(values.get("crew_storage_sweep_ok"), Some(&0.0));
+            assert!(!values.contains_key("crew_total_storage_bytes"));
         }
 
         // Let the stalled sweep complete; the next tick harvests it.
@@ -788,8 +788,8 @@ mod tests {
             futures::executor::block_on(emit_storage_metrics(&state, &host_map, |_| true));
         });
         let values = gauge_snapshot(&recorder);
-        assert_eq!(values.get("buzz_storage_sweep_ok"), Some(&1.0));
-        assert_eq!(values.get("buzz_total_storage_bytes"), Some(&500.0));
+        assert_eq!(values.get("crew_storage_sweep_ok"), Some(&1.0));
+        assert_eq!(values.get("crew_total_storage_bytes"), Some(&500.0));
     }
 
     // --- emit_storage_metrics ---
@@ -818,10 +818,10 @@ mod tests {
         });
 
         let values = gauge_snapshot(&recorder);
-        assert_eq!(values.get("buzz_storage_sweep_ok"), Some(&0.0));
-        assert_eq!(values.get("buzz_storage_sweep_failures"), Some(&0.0));
-        assert!(!values.contains_key("buzz_total_storage_bytes"));
-        assert!(!values.contains_key("buzz_storage_sweep_age_seconds"));
+        assert_eq!(values.get("crew_storage_sweep_ok"), Some(&0.0));
+        assert_eq!(values.get("crew_storage_sweep_failures"), Some(&0.0));
+        assert!(!values.contains_key("crew_total_storage_bytes"));
+        assert!(!values.contains_key("crew_storage_sweep_age_seconds"));
     }
 
     #[tokio::test]
@@ -884,13 +884,13 @@ mod tests {
         });
 
         let values = gauge_snapshot(&recorder);
-        assert_eq!(values.get("buzz_storage_sweep_ok"), Some(&1.0));
-        assert_eq!(values.get("buzz_total_storage_bytes"), Some(&137.0));
+        assert_eq!(values.get("crew_storage_sweep_ok"), Some(&1.0));
+        assert_eq!(values.get("crew_total_storage_bytes"), Some(&137.0));
         assert_eq!(
-            values.get("buzz_storage_unmapped_community_bytes"),
+            values.get("crew_storage_unmapped_community_bytes"),
             Some(&30.0)
         );
-        assert_eq!(values.get("buzz_community_storage_bytes"), Some(&100.0));
+        assert_eq!(values.get("crew_community_storage_bytes"), Some(&100.0));
     }
 
     // --- F-EXT1 regression: stale per-community series are zeroed ---
@@ -995,7 +995,7 @@ mod tests {
             let labeled = labeled_community_gauges(&recorder);
             assert_eq!(
                 labeled.get(&(
-                    "buzz_community_storage_bytes".to_string(),
+                    "crew_community_storage_bytes".to_string(),
                     "host.a".to_string()
                 )),
                 Some(&10.0),
@@ -1003,7 +1003,7 @@ mod tests {
             );
             assert_eq!(
                 labeled.get(&(
-                    "buzz_community_storage_bytes".to_string(),
+                    "crew_community_storage_bytes".to_string(),
                     "host.old".to_string()
                 )),
                 Some(&20.0),
@@ -1036,7 +1036,7 @@ mod tests {
         // (a) community_a disappeared — old host.a series must be zeroed
         assert_eq!(
             labeled.get(&(
-                "buzz_community_storage_bytes".to_string(),
+                "crew_community_storage_bytes".to_string(),
                 "host.a".to_string()
             )),
             Some(&0.0),
@@ -1044,7 +1044,7 @@ mod tests {
         );
         assert_eq!(
             labeled.get(&(
-                "buzz_community_storage_objects".to_string(),
+                "crew_community_storage_objects".to_string(),
                 "host.a".to_string()
             )),
             Some(&0.0),
@@ -1054,7 +1054,7 @@ mod tests {
         // (b) community_b renamed host.old → host.new — old series must be zeroed
         assert_eq!(
             labeled.get(&(
-                "buzz_community_storage_bytes".to_string(),
+                "crew_community_storage_bytes".to_string(),
                 "host.old".to_string()
             )),
             Some(&0.0),
@@ -1062,7 +1062,7 @@ mod tests {
         );
         assert_eq!(
             labeled.get(&(
-                "buzz_community_storage_bytes".to_string(),
+                "crew_community_storage_bytes".to_string(),
                 "host.new".to_string()
             )),
             Some(&20.0),
@@ -1072,7 +1072,7 @@ mod tests {
         // (c) community_c scope-excluded — host.c series must be zeroed
         assert_eq!(
             labeled.get(&(
-                "buzz_community_storage_bytes".to_string(),
+                "crew_community_storage_bytes".to_string(),
                 "host.c".to_string()
             )),
             Some(&0.0),
@@ -1080,7 +1080,7 @@ mod tests {
         );
         assert_eq!(
             labeled.get(&(
-                "buzz_community_storage_objects".to_string(),
+                "crew_community_storage_objects".to_string(),
                 "host.c".to_string()
             )),
             Some(&0.0),

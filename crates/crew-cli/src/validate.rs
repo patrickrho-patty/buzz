@@ -392,7 +392,7 @@ mod tests {
     }
 
     // Note: `extract_at_names`, `extract_at_mentions_with_known`, `merge_mentions`,
-    // and `normalize_mention_pubkeys` live in `buzz_sdk::mentions` and are tested there.
+    // and `normalize_mention_pubkeys` live in `crew_sdk::mentions` and are tested there.
 
     // --- parse_event_id ---
 

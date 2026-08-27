@@ -566,7 +566,7 @@ const REAL_CREW_BUGS_IMAGE_TAG = [
   "filename image.png",
 ] as string[];
 
-test("reserves real buzz-bugs imeta image height before image loads", async ({
+test("reserves real crew-bugs imeta image height before image loads", async ({
   page,
 }) => {
   await page.route("**/media/**", () => new Promise(() => {}));

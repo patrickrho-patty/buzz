@@ -20,7 +20,7 @@
 //! ## Routing (pinned — Wren contract review, 2026-07-07)
 //! 9040–9044 are **community-global direct commands**, exactly like the
 //! relay-admin 9030-series: route via
-//! [`buzz_core::kind::is_moderation_command_kind`], list them in
+//! [`crew_core::kind::is_moderation_command_kind`], list them in
 //! `is_global_only_kind` so a stray `h` tag can never channel-scope them
 //! (no channel membership/archive gates apply), require a fresh timestamp,
 //! never store them, and reject channel-scoped API tokens.

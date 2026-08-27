@@ -220,7 +220,7 @@ export function markCommunityOnboardingComplete(
   storage: Storage = localStorage,
 ): void {
   storage.setItem(
-    `buzz-community-onboarding-complete.v1:${encodeURIComponent(relayUrl)}:${pubkey}`,
+    `crew-community-onboarding-complete.v1:${encodeURIComponent(relayUrl)}:${pubkey}`,
     "true",
   );
   // The legacy gate is identity-scoped. Marking it here prevents the old profile

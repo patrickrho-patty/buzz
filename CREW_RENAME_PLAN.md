@@ -48,11 +48,29 @@ emoji JSON and two test-fixture display strings ("Product crew",
 
 | Surface | Why deferred | Follow-up |
 |---|---|---|
-| ECR repo `…amazonaws.com/griddle` | TF stack owns repo creation; switching now breaks staging deploy | squareup/block-coder-tf-stacks creates `/crew`, then flip deploy refs |
+| ECR repo `…amazonaws.com/griddle` | TF stack owns repo creation; switching now breaks staging deploy | squareup/block-coder-tf-stacks creates `/crew`, then flip deploy refs (`ecr-build.yml`, eks values) |
 | GitHub org/repo `block/buzz`, `squareup/*` | external identity; redirects break on rename | post-merge admin action |
-| GHCR image names `block/buzz*` | pushes create new repos but existing pullers/dependabot lag | after relay images published under crew |
+| GHCR image names `block/buzz*` | pushes create new repos but existing pullers/dependabot lag; merge ordering vs first publish race | after relay images published under crew |
 | `~/.buzz*` state dirs | mid-session resume breakage; needs marker-file migration per consumer | dedicated follow-up PR |
-| App store bundle ids already shipped (iOS prod profiles `buzz-ios-*`) | persisted push-profile data; see tier 2 dual-read | retained alongside new crew ids |
+| Desktop localStorage keys `buzz-…` (81 distinct keys) | opaque user-data keys (drafts, read-state, mutes); renaming silently drops user data — needs key-migration table | dedicated follow-up PR |
+| APNS app profiles `buzz-ios-*` / Apple `TEAMID.xyz.buzz` / `push.buzz.xyz` domain | tied to shipped app bundles & prod DNS | alongside store re-release |
+
+## Intentional legacy allowances (in-tree)
+
+- `crew-core::env_alias` (+ local twins in git-sign-nostr/git-credential-nostr,
+  desktop build.rs): reads prefer `CREW_*`, fall back to documented
+  `BUZZ_RELAY_URL`/`BUZZ_PRIVATE_KEY`/`BUZZ_AUTH_TAG`.
+- Deep-link parsers (desktop `messageLink.ts`, entity/composer links, CLI
+  `links.rs`, iOS URL schemes list) accept legacy `buzz://`; emitters are
+  crew-only. OS scheme registration keeps `buzz`+`griddle` during window.
+- Project NIP-MP tags: emit `crew-channel`/`crew-visibility`; validators count
+  cardinality across both spellings (relay ingest, TS `projectModels.ts`,
+  conformance fixture `…_across_legacy_spelling`).
+- Mesh status: emit `crew-mesh-*`, readers match both forever (persisted events).
+- `xyz.patty.griddle.app` retained in `legacy_storage.rs` only as the legacy
+  identifier prefix for migrating pre-rename installs.
+- Per-shot hashtext lock salts renamed atomically with migration 0033
+  (single-writer deploy model; see migration header for the argument).
 
 ## Invariants honored
 

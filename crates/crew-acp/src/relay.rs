@@ -13,7 +13,7 @@
 //!
 //! A background tokio task owns the WebSocket stream. It:
 //! - Responds to Ping frames with Pong (preventing relay disconnect on long turns)
-//! - Forwards `BuzzEvent`s through an `mpsc` channel
+//! - Forwards `CrewEvent`s through an `mpsc` channel
 //! - Handles reconnection with `since` filters to avoid event loss
 //! - Responds to mid-session AUTH challenges
 //! - Publishes ephemeral events (typing indicators) via `PublishEvent` commands
@@ -456,7 +456,7 @@ impl RestClient {
 
 /// Events the harness cares about.
 #[derive(Debug, Clone)]
-pub struct BuzzEvent {
+pub struct CrewEvent {
     /// Which channel this event belongs to.
     pub channel_id: Uuid,
     /// The underlying Nostr event.
@@ -564,7 +564,7 @@ type WsStream = WebSocketStream<MaybeTlsStream<tokio::net::TcpStream>>;
 /// Ping frames, preventing disconnection during long agent turns.
 pub struct HarnessRelay {
     /// Receiver for events forwarded by the background task.
-    event_rx: mpsc::Receiver<Option<BuzzEvent>>,
+    event_rx: mpsc::Receiver<Option<CrewEvent>>,
     /// Receiver for encrypted observer control events addressed to this agent.
     observer_control_rx: Option<mpsc::Receiver<Event>>,
     /// Sender for commands to the background task.
@@ -638,7 +638,7 @@ impl HarnessRelay {
         let (ws, handshake_buffer) =
             retry_initial_connect(|| do_connect(relay_url, keys, auth_tag.as_ref())).await?;
 
-        let (event_tx, event_rx) = mpsc::channel::<Option<BuzzEvent>>(event_channel_capacity());
+        let (event_tx, event_rx) = mpsc::channel::<Option<CrewEvent>>(event_channel_capacity());
         let (observer_control_tx, observer_control_rx) =
             mpsc::channel::<Event>(event_channel_capacity());
         let (cmd_tx, cmd_rx) = mpsc::channel::<RelayCommand>(CMD_CHANNEL_CAPACITY);
@@ -839,7 +839,7 @@ impl HarnessRelay {
     ///
     /// Reads from the background task's event channel. Returns `None` on
     /// connection loss — the caller should call [`reconnect`](Self::reconnect).
-    pub async fn next_event(&mut self) -> Option<BuzzEvent> {
+    pub async fn next_event(&mut self) -> Option<CrewEvent> {
         // The background task sends `None` to signal connection loss.
         self.event_rx.recv().await.flatten()
     }
@@ -1565,7 +1565,7 @@ async fn execute_connected_command(
 async fn run_background_task(
     mut ws: WsStream,
     initial_handshake_buffer: std::collections::VecDeque<RelayMessage>,
-    event_tx: mpsc::Sender<Option<BuzzEvent>>,
+    event_tx: mpsc::Sender<Option<CrewEvent>>,
     observer_control_tx: mpsc::Sender<Event>,
     mut cmd_rx: mpsc::Receiver<RelayCommand>,
     keys: Keys,
@@ -2074,7 +2074,7 @@ async fn run_background_task(
 async fn handle_ws_message(
     msg: Message,
     ws: &mut WsStream,
-    event_tx: &mpsc::Sender<Option<BuzzEvent>>,
+    event_tx: &mpsc::Sender<Option<CrewEvent>>,
     observer_control_tx: &mpsc::Sender<Event>,
     state: &mut BgState,
     keys: &Keys,
@@ -2130,7 +2130,7 @@ async fn handle_ws_message(
                             return true;
                         }
                         let ts = event.created_at.as_secs();
-                        let crew_event = BuzzEvent {
+                        let crew_event = CrewEvent {
                             channel_id: channel_uuid,
                             event: *event,
                         };
@@ -2171,7 +2171,7 @@ async fn handle_ws_message(
                         let ts = event.created_at.as_secs();
                         let event_id_hex = event.id.to_hex();
                         if state.record_event(channel_id, &event) {
-                            let crew_event = BuzzEvent {
+                            let crew_event = CrewEvent {
                                 channel_id,
                                 event: *event,
                             };
@@ -2424,7 +2424,7 @@ async fn handle_ws_message(
 async fn process_handshake_buffer(
     ws: &mut WsStream,
     buffer: std::collections::VecDeque<RelayMessage>,
-    event_tx: &mpsc::Sender<Option<BuzzEvent>>,
+    event_tx: &mpsc::Sender<Option<CrewEvent>>,
     observer_control_tx: &mpsc::Sender<Event>,
     state: &mut BgState,
     keys: &Keys,
@@ -2928,7 +2928,7 @@ async fn try_autonomous_reconnect(
     keys: &Keys,
     relay_url: &str,
     agent_pubkey_hex: &str,
-    event_tx: &mpsc::Sender<Option<BuzzEvent>>,
+    event_tx: &mpsc::Sender<Option<CrewEvent>>,
     observer_control_tx: &mpsc::Sender<Event>,
     auth_tag: Option<&nostr::Tag>,
 ) -> ReconnectOutcome {
@@ -3057,7 +3057,7 @@ async fn wait_for_reconnect(
     keys: &Keys,
     relay_url: &str,
     agent_pubkey_hex: &str,
-    event_tx: &mpsc::Sender<Option<BuzzEvent>>,
+    event_tx: &mpsc::Sender<Option<CrewEvent>>,
     observer_control_tx: &mpsc::Sender<Event>,
     skip_drain: bool,
     auth_tag: Option<&nostr::Tag>,

@@ -1,5 +1,5 @@
 apiVersion: v2
-name: buzz
+name: crew
 description: |
   Buzz — a Nostr-based messaging platform for human–agent collaboration.
 

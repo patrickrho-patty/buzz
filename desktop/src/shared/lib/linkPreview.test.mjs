@@ -91,21 +91,21 @@ test("parseSupportedLinkPreview parses Buzz relay git clone URLs", () => {
   // Must pass the active relay origin for host validation.
   assert.deepEqual(
     parseSupportedLinkPreview(
-      `https://buzz.block.builderlab.xyz/git/${CREW_OWNER}/buzz-world-galaxy`,
+      `https://buzz.block.builderlab.xyz/git/${CREW_OWNER}/crew-world-galaxy`,
       "https://buzz.block.builderlab.xyz",
     ),
     {
-      kind: "buzz-repository",
-      href: `crew://repo?owner=${CREW_OWNER}&d=buzz-world-galaxy`,
+      kind: "crew-repository",
+      href: `crew://repo?owner=${CREW_OWNER}&d=crew-world-galaxy`,
       provider: "Buzz",
-      title: "buzz-world-galaxy",
+      title: "crew-world-galaxy",
       typeLabel: "repo",
     },
   );
   // Same URL without a matching origin stays an ordinary external preview.
   assert.equal(
     parseSupportedLinkPreview(
-      `https://buzz.block.builderlab.xyz/git/${CREW_OWNER}/buzz-world-galaxy`,
+      `https://buzz.block.builderlab.xyz/git/${CREW_OWNER}/crew-world-galaxy`,
     )?.kind,
     "generic-link",
   );
@@ -114,14 +114,14 @@ test("parseSupportedLinkPreview parses Buzz relay git clone URLs", () => {
 test("parseSupportedLinkPreview strips .git suffix from clone URLs", () => {
   assert.deepEqual(
     parseSupportedLinkPreview(
-      `http://localhost:3000/git/${CREW_OWNER}/buzz-world.git`,
+      `http://localhost:3000/git/${CREW_OWNER}/crew-world.git`,
       "http://localhost:3000",
     ),
     {
-      kind: "buzz-repository",
-      href: `crew://repo?owner=${CREW_OWNER}&d=buzz-world`,
+      kind: "crew-repository",
+      href: `crew://repo?owner=${CREW_OWNER}&d=crew-world`,
       provider: "Buzz",
-      title: "buzz-world",
+      title: "crew-world",
       typeLabel: "repo",
     },
   );
@@ -168,7 +168,7 @@ test("parseSupportedLinkPreview rejects clone URLs from non-relay hosts", () => 
   // No relay origin provided — stays external.
   assert.equal(
     parseSupportedLinkPreview(
-      `https://buzz.block.builderlab.xyz/git/${CREW_OWNER}/buzz-world`,
+      `https://buzz.block.builderlab.xyz/git/${CREW_OWNER}/crew-world`,
       null,
     )?.kind,
     "generic-link",
@@ -181,29 +181,29 @@ const CREW_EVENT_ID =
 test("parseSupportedLinkPreview parses crew:// PR and issue deep links", () => {
   assert.deepEqual(
     parseSupportedLinkPreview(
-      `crew://pr?id=${CREW_EVENT_ID}&owner=${CREW_OWNER}&d=buzz-world`,
+      `crew://pr?id=${CREW_EVENT_ID}&owner=${CREW_OWNER}&d=crew-world`,
     ),
     {
-      kind: "buzz-pull-request",
-      href: `crew://pr?id=${CREW_EVENT_ID}&owner=${CREW_OWNER}&d=buzz-world`,
+      kind: "crew-pull-request",
+      href: `crew://pr?id=${CREW_EVENT_ID}&owner=${CREW_OWNER}&d=crew-world`,
       provider: "Buzz",
-      title: "buzz-world #c3b589fa",
+      title: "crew-world #c3b589fa",
       typeLabel: "Review",
     },
   );
   assert.deepEqual(
     parseSupportedLinkPreview(
-      `crew://issue?id=${CREW_EVENT_ID}&owner=${CREW_OWNER}&d=buzz-world`,
+      `crew://issue?id=${CREW_EVENT_ID}&owner=${CREW_OWNER}&d=crew-world`,
     )?.typeLabel,
     "Task",
   );
   assert.deepEqual(
-    parseSupportedLinkPreview(`crew://repo?owner=${CREW_OWNER}&d=buzz-world`),
+    parseSupportedLinkPreview(`crew://repo?owner=${CREW_OWNER}&d=crew-world`),
     {
-      kind: "buzz-repository",
-      href: `crew://repo?owner=${CREW_OWNER}&d=buzz-world`,
+      kind: "crew-repository",
+      href: `crew://repo?owner=${CREW_OWNER}&d=crew-world`,
       provider: "Buzz",
-      title: "buzz-world",
+      title: "crew-world",
       typeLabel: "repo",
     },
   );
@@ -212,13 +212,13 @@ test("parseSupportedLinkPreview parses crew:// PR and issue deep links", () => {
 test("parseSupportedLinkPreview parses crew:// project deep links", () => {
   assert.deepEqual(
     parseSupportedLinkPreview(
-      `crew://project?owner=${CREW_OWNER}&d=buzz-world`,
+      `crew://project?owner=${CREW_OWNER}&d=crew-world`,
     ),
     {
-      kind: "buzz-project",
-      href: `crew://project?owner=${CREW_OWNER}&d=buzz-world`,
+      kind: "crew-project",
+      href: `crew://project?owner=${CREW_OWNER}&d=crew-world`,
       provider: "Buzz",
-      title: "buzz-world",
+      title: "crew-world",
       typeLabel: "project",
     },
   );
@@ -226,9 +226,9 @@ test("parseSupportedLinkPreview parses crew:// project deep links", () => {
 
 test("parseSupportedLinkPreview rejects malformed crew:// entity links", () => {
   for (const href of [
-    `crew://pr?owner=${CREW_OWNER}&d=buzz-world`,
-    `crew://pr?id=short&owner=${CREW_OWNER}&d=buzz-world`,
-    `crew://issue?id=${CREW_EVENT_ID}&owner=nope&d=buzz-world`,
+    `crew://pr?owner=${CREW_OWNER}&d=crew-world`,
+    `crew://pr?id=short&owner=${CREW_OWNER}&d=crew-world`,
+    `crew://issue?id=${CREW_EVENT_ID}&owner=nope&d=crew-world`,
     `crew://repo?owner=${CREW_OWNER}&d=.hidden`,
     `crew://project?owner=${CREW_OWNER}&d=.hidden`,
   ]) {
@@ -239,25 +239,25 @@ test("parseSupportedLinkPreview rejects malformed crew:// entity links", () => {
 test("extractSupportedLinkPreviews picks up crew:// project links in prose", () => {
   assert.deepEqual(
     extractSupportedLinkPreviews(
-      `tracking here: crew://project?owner=${CREW_OWNER}&d=buzz-world`,
+      `tracking here: crew://project?owner=${CREW_OWNER}&d=crew-world`,
     ).map((preview) => [preview.kind, preview.typeLabel, preview.title]),
-    [["buzz-project", "project", "buzz-world"]],
+    [["crew-project", "project", "crew-world"]],
   );
 });
 
 test("extractSupportedLinkPreviews picks up crew:// links in prose", () => {
   assert.deepEqual(
     extractSupportedLinkPreviews(
-      `PR is up: crew://pr?id=${CREW_EVENT_ID}&owner=${CREW_OWNER}&d=buzz-world — review please.`,
+      `PR is up: crew://pr?id=${CREW_EVENT_ID}&owner=${CREW_OWNER}&d=crew-world — review please.`,
     ).map((preview) => [preview.kind, preview.title]),
-    [["buzz-pull-request", "buzz-world #c3b589fa"]],
+    [["crew-pull-request", "crew-world #c3b589fa"]],
   );
 });
 
 test("extractSupportedLinkPreviews uses markdown labels for crew:// links", () => {
   assert.deepEqual(
     extractSupportedLinkPreviews(
-      `[Add header links](crew://pr?id=${CREW_EVENT_ID}&owner=${CREW_OWNER}&d=buzz-world)`,
+      `[Add header links](crew://pr?id=${CREW_EVENT_ID}&owner=${CREW_OWNER}&d=crew-world)`,
     ).map((preview) => preview.title),
     ["Add header links"],
   );
@@ -327,15 +327,15 @@ test("extractSupportedLinkPreviews returns unique supported links in order", () 
 test("extractSupportedLinkPreviews picks up bare Buzz clone URLs in prose", () => {
   assert.deepEqual(
     extractSupportedLinkPreviews(
-      `master pushed; clone: https://buzz.block.builderlab.xyz/git/${CREW_OWNER}/buzz-world-galaxy and review please.`,
+      `master pushed; clone: https://buzz.block.builderlab.xyz/git/${CREW_OWNER}/crew-world-galaxy and review please.`,
       "https://buzz.block.builderlab.xyz",
     ),
     [
       {
-        kind: "buzz-repository",
-        href: `crew://repo?owner=${CREW_OWNER}&d=buzz-world-galaxy`,
+        kind: "crew-repository",
+        href: `crew://repo?owner=${CREW_OWNER}&d=crew-world-galaxy`,
         provider: "Buzz",
-        title: "buzz-world-galaxy",
+        title: "crew-world-galaxy",
         typeLabel: "repo",
       },
     ],
@@ -343,7 +343,7 @@ test("extractSupportedLinkPreviews picks up bare Buzz clone URLs in prose", () =
   // Without a relay origin the URL is treated as an ordinary external link.
   assert.deepEqual(
     extractSupportedLinkPreviews(
-      `clone: https://buzz.block.builderlab.xyz/git/${CREW_OWNER}/buzz-world-galaxy`,
+      `clone: https://buzz.block.builderlab.xyz/git/${CREW_OWNER}/crew-world-galaxy`,
     ).map((preview) => preview.kind),
     ["generic-link"],
   );
@@ -352,7 +352,7 @@ test("extractSupportedLinkPreviews picks up bare Buzz clone URLs in prose", () =
 test("extractSupportedLinkPreviews uses markdown labels for Buzz repo links", () => {
   assert.deepEqual(
     extractSupportedLinkPreviews(
-      `[Buzz World](https://relay.example/git/${CREW_OWNER}/buzz-world-galaxy)`,
+      `[Buzz World](https://relay.example/git/${CREW_OWNER}/crew-world-galaxy)`,
       "https://relay.example",
     ).map((preview) => preview.title),
     ["Buzz World"],
@@ -363,12 +363,12 @@ test("extractSupportedLinkPreviews dedupes clone URL variants of one repo", () =
   assert.deepEqual(
     extractSupportedLinkPreviews(
       [
-        `https://relay.example/git/${CREW_OWNER}/buzz-world-galaxy`,
-        `https://relay.example/git/${CREW_OWNER}/buzz-world-galaxy.git`,
+        `https://relay.example/git/${CREW_OWNER}/crew-world-galaxy`,
+        `https://relay.example/git/${CREW_OWNER}/crew-world-galaxy.git`,
       ].join(" "),
       "https://relay.example",
     ).map((preview) => preview.href),
-    [`crew://repo?owner=${CREW_OWNER}&d=buzz-world-galaxy`],
+    [`crew://repo?owner=${CREW_OWNER}&d=crew-world-galaxy`],
   );
 });
 
@@ -376,12 +376,12 @@ test("clone URLs and crew://repo links for the same repo dedupe to one card", ()
   assert.deepEqual(
     extractSupportedLinkPreviews(
       [
-        `https://relay.example/git/${CREW_OWNER}/buzz-world-galaxy`,
-        `crew://repo?owner=${CREW_OWNER}&d=buzz-world-galaxy`,
+        `https://relay.example/git/${CREW_OWNER}/crew-world-galaxy`,
+        `crew://repo?owner=${CREW_OWNER}&d=crew-world-galaxy`,
       ].join(" "),
       "https://relay.example",
     ).map((preview) => preview.href),
-    [`crew://repo?owner=${CREW_OWNER}&d=buzz-world-galaxy`],
+    [`crew://repo?owner=${CREW_OWNER}&d=crew-world-galaxy`],
   );
 });
 

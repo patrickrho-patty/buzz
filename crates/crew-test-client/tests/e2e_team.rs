@@ -20,7 +20,7 @@
 
 use std::time::Duration;
 
-use crew_test_client::BuzzTestClient;
+use crew_test_client::CrewTestClient;
 use nostr::{Alphabet, EventBuilder, Filter, Keys, Kind, SingleLetterTag, Tag, Timestamp};
 
 const TEAM_KIND: u16 = 30176;
@@ -75,7 +75,7 @@ async fn test_team_publish_and_query() {
     })
     .to_string();
 
-    let mut client = BuzzTestClient::connect(&url, &keys).await.expect("connect");
+    let mut client = CrewTestClient::connect(&url, &keys).await.expect("connect");
 
     let event = team_event(&keys, &d_tag, &content);
     let ok = client.send_event(event).await.expect("send team");
@@ -113,7 +113,7 @@ async fn test_team_nip33_replacement_newer_wins() {
     let keys = Keys::generate();
     let d_tag = format!("team-replace-{}", &uuid::Uuid::new_v4().to_string()[..8]);
 
-    let mut client = BuzzTestClient::connect(&url, &keys).await.expect("connect");
+    let mut client = CrewTestClient::connect(&url, &keys).await.expect("connect");
 
     let now = Timestamp::now().as_secs();
     let old_content = r#"{"name":"Old Team","persona_ids":["p1"]}"#;
@@ -164,7 +164,7 @@ async fn test_team_tombstone_deletes_coordinate() {
 
     let content = r#"{"name":"Doomed Team","persona_ids":["p1"]}"#;
 
-    let mut client = BuzzTestClient::connect(&url, &keys).await.expect("connect");
+    let mut client = CrewTestClient::connect(&url, &keys).await.expect("connect");
 
     let event = team_event(&keys, &d_tag, content);
     let ok = client.send_event(event).await.expect("send team");

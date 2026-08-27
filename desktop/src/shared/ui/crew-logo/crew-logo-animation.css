@@ -1,16 +1,16 @@
-.buzz-logo {
+.crew-logo {
   display: grid;
   place-items: center;
   inline-size: fit-content;
 }
 
-.buzz-logo--screen {
+.crew-logo--screen {
   min-block-size: 100vh;
   inline-size: 100%;
   overflow: hidden;
 }
 
-.buzz-logo--background {
+.crew-logo--background {
   background-color: #d7d72e;
   background-image: radial-gradient(
     circle,
@@ -21,28 +21,28 @@
   background-size: 37px 37px;
 }
 
-.buzz-logo__mark {
+.crew-logo__mark {
   display: block;
   inline-size: min(466px, calc(100vw - 32px));
   block-size: auto;
   overflow: visible;
 }
 
-.buzz-logo--compact {
+.crew-logo--compact {
   inline-size: 1.5rem;
 }
 
-.buzz-logo--compact .buzz-logo__mark {
+.crew-logo--compact .crew-logo__mark {
   inline-size: 100%;
   block-size: auto;
   max-inline-size: 100%;
 }
 
-.buzz-logo__ink {
+.crew-logo__ink {
   fill: currentColor;
 }
 
-@keyframes buzz-logo-pulse {
+@keyframes crew-logo-pulse {
   0%,
   100% {
     opacity: 0.55;
@@ -52,11 +52,11 @@
   }
 }
 
-.buzz-logo--pulse .buzz-logo__mark {
-  animation: buzz-logo-pulse 1.8s ease-in-out infinite;
+.crew-logo--pulse .crew-logo__mark {
+  animation: crew-logo-pulse 1.8s ease-in-out infinite;
 }
 
-@keyframes buzz-logo-scale-pulse {
+@keyframes crew-logo-scale-pulse {
   0%,
   100% {
     transform: scale(0.94);
@@ -66,22 +66,22 @@
   }
 }
 
-.buzz-logo--scale-pulse .buzz-logo__mark {
-  animation: buzz-logo-scale-pulse 1.8s ease-in-out infinite;
+.crew-logo--scale-pulse .crew-logo__mark {
+  animation: crew-logo-scale-pulse 1.8s ease-in-out infinite;
   transform-origin: center;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .buzz-logo animate {
+  .crew-logo animate {
     display: none;
   }
 
-  .buzz-logo--pulse .buzz-logo__mark {
+  .crew-logo--pulse .crew-logo__mark {
     animation: none;
     opacity: 0.8;
   }
 
-  .buzz-logo--scale-pulse .buzz-logo__mark {
+  .crew-logo--scale-pulse .crew-logo__mark {
     animation: none;
     transform: none;
   }

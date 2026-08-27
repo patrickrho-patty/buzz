@@ -334,7 +334,9 @@ async fn restart_local_agent_on_config_change(
     let runtime_keys = match stop_result {
         Ok(Ok(runtime_keys)) => runtime_keys,
         Ok(Err(e)) => {
-            eprintln!("griddle-desktop: set_global_agent_config: skipping restart of {pubkey}: {e}");
+            eprintln!(
+                "griddle-desktop: set_global_agent_config: skipping restart of {pubkey}: {e}"
+            );
             return RestartOutcome::Skipped;
         }
         Err(e) => {

@@ -139,7 +139,7 @@ async function getForcedUnreadSources(page: Page): Promise<string[]> {
   return page.evaluate(
     ({ channelId, pubkey }) => {
       const raw = window.localStorage.getItem(
-        `buzz-forced-unread.v1:${pubkey}`,
+        `crew-forced-unread.v1:${pubkey}`,
       );
       if (!raw) return [];
       const entry = JSON.parse(raw)?.[channelId];

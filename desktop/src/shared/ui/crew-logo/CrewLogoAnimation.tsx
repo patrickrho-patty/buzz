@@ -553,7 +553,7 @@ function InkShapes({
   return (
     <>
       <circle
-        className="buzz-logo__ink"
+        className="crew-logo__ink"
         cx="233"
         cy="154.5"
         r="91.7"
@@ -562,7 +562,7 @@ function InkShapes({
         {animationsFor(config.leftSide, duration, repeatCount)}
       </circle>
       <circle
-        className="buzz-logo__ink"
+        className="crew-logo__ink"
         cx="233"
         cy="154.5"
         r="91.7"
@@ -572,7 +572,7 @@ function InkShapes({
       </circle>
 
       <rect
-        className="buzz-logo__ink"
+        className="crew-logo__ink"
         x="186"
         y="108"
         width="93"
@@ -652,14 +652,14 @@ export default function CrewLogoAnimation({
       : baseConfig;
   const animatedConfig = reverse ? reverseVariant(config) : config;
   const repeatCount = loop ? LOOP : "1";
-  const maskId = `buzz-logo-cutouts-${idSuffix}`;
-  const textureId = `buzz-logo-texture-${idSuffix}`;
+  const maskId = `crew-logo-cutouts-${idSuffix}`;
+  const textureId = `crew-logo-texture-${idSuffix}`;
   const texture = TEXTURES[config.texture ?? "soft"] ?? TEXTURES.soft;
   const classes = [
-    "buzz-logo",
-    fullScreen && "buzz-logo--screen",
-    !fullScreen && "buzz-logo--compact",
-    showBackground && "buzz-logo--background",
+    "crew-logo",
+    fullScreen && "crew-logo--screen",
+    !fullScreen && "crew-logo--compact",
+    showBackground && "crew-logo--background",
     className,
   ]
     .filter(Boolean)
@@ -685,7 +685,7 @@ export default function CrewLogoAnimation({
     <div className={classes} style={style} role="img" aria-label={ariaLabel}>
       <svg
         ref={markRef}
-        className="buzz-logo__mark"
+        className="crew-logo__mark"
         viewBox="0 0 466 309"
         width="466"
         height="309"

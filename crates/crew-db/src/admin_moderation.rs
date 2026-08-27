@@ -1,7 +1,7 @@
 //! Explicit deployment-global reads for the private deployment-admin plane.
 //!
 //! This module is the only moderation repository allowed to omit a
-//! [`CommunityId`](buzz_core::CommunityId). Keep ordinary moderation reads in
+//! [`CommunityId`](crew_core::CommunityId). Keep ordinary moderation reads in
 //! [`crate::moderation`] tenant-fenced.
 
 use chrono::{DateTime, Utc};
@@ -288,7 +288,7 @@ fn row_to_feedback(row: sqlx::postgres::PgRow) -> Result<AdminFeedback> {
 mod tests {
     use super::*;
 
-    const TEST_DB_URL: &str = "postgres://buzz:buzz_dev@localhost:5432/buzz";
+    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz";
 
     async fn setup_pool() -> PgPool {
         let database_url = std::env::var("CREW_TEST_DATABASE_URL")

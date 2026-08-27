@@ -45,7 +45,7 @@
     color: hsl(var(--muted-foreground));
     display: flex;
     font: inherit;
-    font-size: calc(var(--buzz-type-rem) * 0.75);
+    font-size: calc(var(--crew-type-rem) * 0.75);
     font-weight: 500;
     gap: 6px;
     height: 30px;
@@ -130,7 +130,7 @@
   .crew-terminal-designator {
     align-items: center;
     display: inline-flex;
-    font-size: calc(var(--buzz-type-rem) * 0.75);
+    font-size: calc(var(--crew-type-rem) * 0.75);
     gap: 2px;
     letter-spacing: 0;
   }
@@ -237,7 +237,7 @@
       flex-basis 180ms ease;
   }
 
-  .buzz-content-primary {
+  .crew-content-primary {
     transition:
       flex-grow 180ms ease,
       flex-basis 180ms ease;
@@ -247,7 +247,7 @@
     flex: 1 1 auto;
   }
 
-  .buzz-content-primary:has(
+  .crew-content-primary:has(
     + .crew-terminal-dock-host [data-terminal-mode="maximized"]
   ) {
     flex: 0 1 0%;
@@ -318,7 +318,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .buzz-content-primary,
+    .crew-content-primary,
     .crew-terminal-dock-host:has(.crew-terminal-substrate),
     .crew-terminal-substrate {
       transition: none;

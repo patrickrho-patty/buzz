@@ -39,14 +39,14 @@ pub(crate) async fn enforce_http_admission(
     {
         Ok(()) => Ok(()),
         Err(crate::admission::AdmissionError::Exceeded { reset_in_secs }) => {
-            metrics::counter!("buzz_admission_rejections_total", "transport" => "http", "reason" => "quota").increment(1);
+            metrics::counter!("crew_admission_rejections_total", "transport" => "http", "reason" => "quota").increment(1);
             Err(api_error(
                 StatusCode::TOO_MANY_REQUESTS,
                 &format!("rate-limited: quota exceeded; retry in {reset_in_secs}s"),
             ))
         }
         Err(crate::admission::AdmissionError::Unavailable) => {
-            metrics::counter!("buzz_admission_rejections_total", "transport" => "http", "reason" => "unavailable").increment(1);
+            metrics::counter!("crew_admission_rejections_total", "transport" => "http", "reason" => "unavailable").increment(1);
             Err(api_error(
                 StatusCode::SERVICE_UNAVAILABLE,
                 "rate-limited: shared admission unavailable",
@@ -1578,7 +1578,7 @@ async fn count_events_authed(
                 {
                     Ok(stored_events) => {
                         if crate::handlers::req::count_fallback_exceeded(stored_events.len()) {
-                            metrics::counter!("buzz_count_fallback_rejections_total").increment(1);
+                            metrics::counter!("crew_count_fallback_rejections_total").increment(1);
                             return Err(api_error(
                                 StatusCode::BAD_REQUEST,
                                 "count filter requires narrower constraints",
@@ -1648,7 +1648,7 @@ async fn count_events_authed(
                 {
                     Ok(stored_events) => {
                         if crate::handlers::req::count_fallback_exceeded(stored_events.len()) {
-                            metrics::counter!("buzz_count_fallback_rejections_total").increment(1);
+                            metrics::counter!("crew_count_fallback_rejections_total").increment(1);
                             return Err(api_error(
                                 StatusCode::BAD_REQUEST,
                                 "count filter requires narrower constraints",
@@ -3400,7 +3400,7 @@ mod tests {
     //
     // These tests drive real HTTP requests through the axum router to prove
     // that the bridge code path (not just the shared helper) actually
-    // increments buzz_events_rejected_total{transport="http"}.  They are
+    // increments crew_events_rejected_total{transport="http"}.  They are
     // discriminating: removing either bridge call site causes the corresponding
     // test to fail.
     //
@@ -3433,7 +3433,7 @@ mod tests {
         }
     }
 
-    const TEST_DB_URL: &str = "postgres://buzz:buzz_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
+    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
 
     /// Build an AppState suitable for handler-level bridge tests.
     ///
@@ -3517,7 +3517,7 @@ mod tests {
             .status()
     }
 
-    /// Collect buzz_events_rejected_total with (transport, reason) labels from
+    /// Collect crew_events_rejected_total with (transport, reason) labels from
     /// a DebuggingRecorder snapshot.
     fn http_reject_counts(
         snapshotter: &metrics_util::debugging::Snapshotter,
@@ -3526,10 +3526,10 @@ mod tests {
             .snapshot()
             .into_vec()
             .into_iter()
-            .filter(|(key, ..)| key.key().name() == "buzz_events_rejected_total")
+            .filter(|(key, ..)| key.key().name() == "crew_events_rejected_total")
             .map(|(key, _, _, value)| {
                 let metrics_util::debugging::DebugValue::Counter(n) = value else {
-                    panic!("buzz_events_rejected_total must be a counter");
+                    panic!("crew_events_rejected_total must be a counter");
                 };
                 let labels: Vec<_> = key.key().labels().collect();
                 let transport = labels
@@ -3548,7 +3548,7 @@ mod tests {
     }
 
     /// T2a — pre-parse 400 arm: a POST /events with an invalid JSON body must
-    /// increment buzz_events_rejected_total{transport="http",reason="invalid"}.
+    /// increment crew_events_rejected_total{transport="http",reason="invalid"}.
     ///
     /// Discriminating: if the `reject_with_transport` call in bridge.rs's
     /// `serde_json::from_slice` map_err closure is removed, this test fails.
@@ -3601,7 +3601,7 @@ mod tests {
 
     /// T2b — post-parse IngestError::Rejected arm: a POST /events with a
     /// valid but relay-only-kind event (kind 13534 = membership snapshot) must
-    /// increment buzz_events_rejected_total{transport="http",reason="invalid"}.
+    /// increment crew_events_rejected_total{transport="http",reason="invalid"}.
     ///
     /// Kind 13534 is rejected in ingest_event before signature verification,
     /// so any properly signed Nostr event of this kind triggers the arm.

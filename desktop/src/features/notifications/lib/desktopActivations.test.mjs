@@ -46,7 +46,7 @@ globalThis.document = new EventTarget();
 globalThis.isTauri = true;
 Object.defineProperty(globalThis, "navigator", {
   configurable: true,
-  value: { platform: "MacIntel", userAgent: "buzz-test" },
+  value: { platform: "MacIntel", userAgent: "crew-test" },
 });
 
 const { listenForDesktopNotificationActions, revealDesktopAppWindow } =

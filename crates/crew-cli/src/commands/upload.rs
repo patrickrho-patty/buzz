@@ -1,7 +1,7 @@
-use crate::client::BuzzClient;
+use crate::client::CrewClient;
 use crate::error::CliError;
 
-pub async fn dispatch(cmd: crate::UploadCmd, client: &BuzzClient) -> Result<(), CliError> {
+pub async fn dispatch(cmd: crate::UploadCmd, client: &CrewClient) -> Result<(), CliError> {
     match cmd {
         crate::UploadCmd::File { file } => {
             let desc = client.upload_file(&file).await?;
@@ -14,7 +14,7 @@ pub async fn dispatch(cmd: crate::UploadCmd, client: &BuzzClient) -> Result<(), 
     }
 }
 
-pub async fn dispatch_media(cmd: crate::MediaCmd, client: &BuzzClient) -> Result<(), CliError> {
+pub async fn dispatch_media(cmd: crate::MediaCmd, client: &CrewClient) -> Result<(), CliError> {
     match cmd {
         crate::MediaCmd::Get { input, output } => {
             let bytes = client.download_media(&input).await?;

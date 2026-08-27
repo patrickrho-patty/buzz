@@ -411,7 +411,7 @@ fn acquire_git_permit(
         .try_acquire_owned()
         .map_err(|_| {
             metrics::counter!(
-                "buzz_git_semaphore_rejections_total",
+                "crew_git_semaphore_rejections_total",
                 "operation" => operation
             )
             .increment(1);
@@ -454,12 +454,12 @@ fn hydrate_error_to_response(owner: &str, repo: &str, err: HydrateError) -> Resp
 /// 1. current live kind:30617 by `(community, owner pubkey from the URL,
 ///    d = canonical repo name)` — soft-deleted/replaced announcements do not
 ///    resolve;
-/// 2. its `buzz-channel` tag → channel UUID;
+/// 2. its `crew-channel` tag → channel UUID;
 /// 3. [`crew_db::Db::get_member_role`] for the caller — a read is allowed
 ///    only on `Ok(Some(role))` with a role the relay recognizes.
 ///
 /// Fail-closed: missing/deleted announcement, invalid owner, missing or
-/// malformed `buzz-channel` binding, non-member, unknown role, and every DB
+/// malformed `crew-channel` binding, non-member, unknown role, and every DB
 /// error all deny. There is deliberately **no repo-owner bypass**: an owner
 /// removed from the bound channel loses read access, which is the exact
 /// exploit shape this gate closes. Every denial is the same generic 404 as a
@@ -467,7 +467,7 @@ fn hydrate_error_to_response(owner: &str, repo: &str, err: HydrateError) -> Resp
 /// — with exactly one carve-out: a **never-bound** repo read by its own
 /// **announcement author** returns a 404 whose body tells the author how to
 /// bind it (issue #3527: a vanilla NIP-34 client can announce without a
-/// `buzz-channel` tag, and the repo then 404s forever with no explanation
+/// `crew-channel` tag, and the repo then 404s forever with no explanation
 /// for anyone). The author already knows the repo exists — they announced it
 /// — so the remediation body leaks nothing, and only the author can rebind
 /// (kind:30617 is keyed by `(author, d)`). A *broken* binding stays generic
@@ -1605,7 +1605,7 @@ where
         }
         if self.deadline.as_mut().poll(cx).is_ready() {
             self.finished = true;
-            metrics::counter!("buzz_git_upload_pack_timeouts_total").increment(1);
+            metrics::counter!("crew_git_upload_pack_timeouts_total").increment(1);
             warn!("git upload-pack stream timed out");
             return std::task::Poll::Ready(Some(Err(std::io::Error::new(
                 std::io::ErrorKind::TimedOut,
@@ -1630,9 +1630,9 @@ where
 
 impl<S> Drop for TimedByteStream<S> {
     fn drop(&mut self) {
-        metrics::histogram!("buzz_git_upload_pack_stream_seconds")
+        metrics::histogram!("crew_git_upload_pack_stream_seconds")
             .record(self.started_at.elapsed().as_secs_f64());
-        metrics::histogram!("buzz_git_upload_pack_stream_bytes").record(self.streamed_bytes as f64);
+        metrics::histogram!("crew_git_upload_pack_stream_bytes").record(self.streamed_bytes as f64);
     }
 }
 
@@ -2276,7 +2276,7 @@ mod track_c_tests {
     }
 
     async fn finalize_test_state() -> (Arc<AppState>, sqlx::PgPool) {
-        const TEST_DB_URL: &str = "postgres://buzz:buzz_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
+        const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
         let mut config = crate::config::Config::from_env().expect("default config loads");
         config.require_relay_membership = false;
         config.redis_url = "redis://127.0.0.1:1".to_string();
@@ -3198,7 +3198,7 @@ mod sec005_read_gate_tests {
 
     // ── authorize_git_read matrix (requires Postgres) ────────────────────
 
-    const TEST_DB_URL: &str = "postgres://buzz:buzz_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
+    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
 
     async fn setup_db() -> crew_db::Db {
         let url = std::env::var("CREW_TEST_DATABASE_URL")
@@ -3210,13 +3210,13 @@ mod sec005_read_gate_tests {
 
     /// How the fixture's kind:30617 binds (or fails to bind) a channel.
     enum Binding {
-        /// `buzz-channel` tag carrying the fixture channel's UUID.
+        /// `crew-channel` tag carrying the fixture channel's UUID.
         Channel,
-        /// No `buzz-channel` tag at all.
+        /// No `crew-channel` tag at all.
         Missing,
-        /// `buzz-channel` tag whose value is not a UUID.
+        /// `crew-channel` tag whose value is not a UUID.
         Malformed,
-        /// `buzz-channel` tag carrying a well-formed UUID that names no
+        /// `crew-channel` tag carrying a well-formed UUID that names no
         /// channel. The resolver reports `Bound`; the membership lookup
         /// (whose SQL joins `channels … deleted_at IS NULL`) then returns
         /// no role — the deliberate phase-1 posture for dead bindings.
@@ -3280,14 +3280,14 @@ mod sec005_read_gate_tests {
         let mut tags = vec![Tag::parse(["d", &repo]).unwrap()];
         match binding {
             Binding::Channel => {
-                tags.push(Tag::parse(["buzz-channel", &channel.to_string()]).unwrap());
+                tags.push(Tag::parse(["crew-channel", &channel.to_string()]).unwrap());
             }
             Binding::Missing => {}
             Binding::Malformed => {
-                tags.push(Tag::parse(["buzz-channel", "not-a-uuid"]).unwrap());
+                tags.push(Tag::parse(["crew-channel", "not-a-uuid"]).unwrap());
             }
             Binding::UnknownChannel => {
-                tags.push(Tag::parse(["buzz-channel", &uuid::Uuid::new_v4().to_string()]).unwrap());
+                tags.push(Tag::parse(["crew-channel", &uuid::Uuid::new_v4().to_string()]).unwrap());
             }
         }
         let event = announcement(&owner_keys, tags);

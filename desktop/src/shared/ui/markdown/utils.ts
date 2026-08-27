@@ -144,8 +144,8 @@ export function imageReserveStyle(args: {
   if (hiddenSpoilerMediaSize) {
     const ratio = `${hiddenSpoilerMediaSize.width} / ${hiddenSpoilerMediaSize.height}`;
     return {
-      "--buzz-spoiler-media-aspect-ratio": ratio,
-      "--buzz-spoiler-media-width": `${hiddenSpoilerMediaSize.width}px`,
+      "--crew-spoiler-media-aspect-ratio": ratio,
+      "--crew-spoiler-media-width": `${hiddenSpoilerMediaSize.width}px`,
       aspectRatio: ratio,
       height: "auto",
       width: `${hiddenSpoilerMediaSize.width}px`,
@@ -162,7 +162,7 @@ export function imageReserveStyle(args: {
 
 export function isInsideHiddenSpoiler(element: Element): boolean {
   return (
-    element.closest('.buzz-spoiler[data-spoiler][data-revealed="false"]') !==
+    element.closest('.crew-spoiler[data-spoiler][data-revealed="false"]') !==
     null
   );
 }

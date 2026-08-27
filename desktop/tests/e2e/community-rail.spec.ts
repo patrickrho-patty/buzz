@@ -29,8 +29,8 @@ async function expectContentSurfaceHorizontalGutters(
   expectedLeftGutter = 1,
 ) {
   const [mainInsetBox, contentBox] = await Promise.all([
-    page.locator("[data-buzz-glass-inset]").boundingBox(),
-    page.locator("[data-buzz-content-surface]").first().boundingBox(),
+    page.locator("[data-crew-glass-inset]").boundingBox(),
+    page.locator("[data-crew-content-surface]").first().boundingBox(),
   ]);
   expect(mainInsetBox).not.toBeNull();
   expect(contentBox).not.toBeNull();
@@ -1259,7 +1259,7 @@ test.describe("community rail", () => {
 
   test("hides the rail with a single community", async ({ page }) => {
     await page.addInitScript((themeStorageKey) => {
-      window.localStorage.setItem(themeStorageKey, "buzz-dark");
+      window.localStorage.setItem(themeStorageKey, "crew-dark");
     }, THEME_STORAGE_KEY);
     await installMockBridge(page, undefined, { skipCommunitySeed: true });
     await seedCommunities(page, [COMMUNITY_A], COMMUNITY_A.id);
@@ -1281,7 +1281,7 @@ test.describe("community rail", () => {
       "8px",
     );
     const sidebarBackground = await page
-      .locator("[data-buzz-glass-inset]")
+      .locator("[data-crew-glass-inset]")
       .evaluate((element) => getComputedStyle(element).backgroundColor);
     await expect(page.locator("[data-collapsed-content-gutter]")).toHaveCSS(
       "background-color",
@@ -1345,10 +1345,10 @@ test.describe("community rail", () => {
     const railBox = await page.getByTestId("community-rail").boundingBox();
     const searchBox = await page.getByTestId("open-search").boundingBox();
     const appSurfaceBox = await page
-      .locator(".buzz-huddle-app-surface")
+      .locator(".crew-huddle-app-surface")
       .boundingBox();
     const contentBox = await page
-      .locator("[data-buzz-content-surface]")
+      .locator("[data-crew-content-surface]")
       .first()
       .boundingBox();
     expect(buttonBox).not.toBeNull();

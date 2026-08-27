@@ -518,7 +518,7 @@ fn advance_query_cursor(
     Ok(())
 }
 
-pub struct BuzzClient {
+pub struct CrewClient {
     http: reqwest::Client,
     relay_url: String, // base URL, no trailing slash, e.g. "https://relay.buzz.place"
     keys: Keys,
@@ -528,7 +528,7 @@ pub struct BuzzClient {
     auth_tag_json: Option<String>,
 }
 
-impl BuzzClient {
+impl CrewClient {
     /// Create a new client pointing at `relay_url`.
     ///
     /// Timeout defaults are tuned for degraded WAN links and can be overridden
@@ -1076,7 +1076,7 @@ impl BuzzClient {
         let ws_url = to_ws_url(&self.relay_url);
         // Hard cap — inner wait ceilings sum to 70 s; connect time and network RTT are
         // additional overhead absorbed by this budget.
-        // See buzz_ws_client::{AUTH_CHALLENGE_TIMEOUT_SECS, AUTH_OK_TIMEOUT_SECS,
+        // See crew_ws_client::{AUTH_CHALLENGE_TIMEOUT_SECS, AUTH_OK_TIMEOUT_SECS,
         // PUBLISH_OK_TIMEOUT_SECS} for the inner ceilings.
         let ok =
             crew_ws_client::publish_event(&ws_url, event, &self.keys, self.auth_tag.as_ref(), 75)
@@ -1586,7 +1586,7 @@ mod retry_tests {
 /// Integration tests for the kind-aware retry policy and body-boundary coverage.
 ///
 /// These tests spin up a local HTTP server using axum and issue real HTTP requests
-/// through `BuzzClient` to verify behavioural properties — not implementation details.
+/// through `CrewClient` to verify behavioural properties — not implementation details.
 #[cfg(test)]
 mod retry_policy_tests {
     use std::net::SocketAddr;
@@ -1602,7 +1602,7 @@ mod retry_policy_tests {
     use tokio::net::TcpListener;
 
     use super::super::error::CliError;
-    use super::BuzzClient;
+    use super::CrewClient;
 
     /// Spawn a one-shot axum server on a random port.  The handler `f` receives the
     /// attempt counter (incremented before every call) and returns a `(StatusCode,
@@ -1643,9 +1643,9 @@ mod retry_policy_tests {
         (format!("http://{addr}"), counter)
     }
 
-    fn test_client(base_url: &str) -> BuzzClient {
+    fn test_client(base_url: &str) -> CrewClient {
         let keys = Keys::generate();
-        BuzzClient::new(base_url.to_string(), keys, None, None).unwrap()
+        CrewClient::new(base_url.to_string(), keys, None, None).unwrap()
     }
 
     fn make_moderation_event(keys: &Keys, kind: u16) -> nostr::Event {
@@ -2306,7 +2306,7 @@ mod retry_policy_tests {
 mod tests {
     use super::{
         advance_query_cursor, create_response_with_id_if_accepted, extract_relay_response_field,
-        BuzzClient,
+        CrewClient,
     };
     use nostr::{EventBuilder, Keys, Kind, Tag};
 
@@ -2398,7 +2398,7 @@ mod tests {
     fn sign_event_unchecked_does_not_inject_ambient_auth_tag() {
         let keys = Keys::generate();
         let (auth_tag, auth_json) = make_auth_tag();
-        let client = BuzzClient::new(
+        let client = CrewClient::new(
             "https://test.relay".into(),
             keys,
             Some(auth_tag),
@@ -2426,7 +2426,7 @@ mod tests {
     fn sign_event_unchecked_preserves_callers_content_auth_tag() {
         let keys = Keys::generate();
         let (auth_tag, auth_json) = make_auth_tag();
-        let client = BuzzClient::new(
+        let client = CrewClient::new(
             "https://test.relay".into(),
             keys,
             Some(auth_tag),
@@ -2463,7 +2463,7 @@ mod tests {
     fn with_auth_tag_sets_header_when_configured() {
         let keys = Keys::generate();
         let (auth_tag, auth_json) = make_auth_tag();
-        let client = BuzzClient::new(
+        let client = CrewClient::new(
             "https://test.relay".into(),
             keys,
             Some(auth_tag),
@@ -2488,7 +2488,7 @@ mod tests {
     #[test]
     fn with_auth_tag_omits_header_when_not_configured() {
         let keys = Keys::generate();
-        let client = BuzzClient::new("https://test.relay".into(), keys, None, None).unwrap();
+        let client = CrewClient::new("https://test.relay".into(), keys, None, None).unwrap();
 
         let req = client.http.post("https://test.relay/events");
         let req = client.with_auth_tag(req);

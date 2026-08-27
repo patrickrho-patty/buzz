@@ -41,7 +41,7 @@ tests:
           value: 65
       - equal:
           path: spec.metrics[1].pods.metric.name
-          value: buzz_ws_connections_active
+          value: crew_ws_connections_active
       - equal:
           path: spec.metrics[1].pods.target.averageValue
           value: "5000"

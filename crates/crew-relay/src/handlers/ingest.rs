@@ -205,7 +205,7 @@ fn emit_product_feedback_success(
 /// "error") — bounded, no cardinality risk.
 pub fn reject_with_transport(transport: &'static str, reason: &'static str) {
     metrics::counter!(
-        "buzz_events_rejected_total",
+        "crew_events_rejected_total",
         "transport" => transport,
         "reason" => reason
     )
@@ -1453,8 +1453,14 @@ const PROJECT_METADATA_TAG_MAX_LEN: usize = 256;
 ///
 /// Duplicates would make the effective value reader-dependent — one client
 /// taking the first, another the last.
-const PROJECT_SINGLETON_METADATA_TAGS: [&str; 4] =
-    ["name", "description", "buzz-channel", "buzz-visibility"];
+/// Tag names pair as `(current, legacy)` so pre-rename events keep
+/// validating while new events emit the crew spellings.
+const PROJECT_SINGLETON_METADATA_TAGS: [(&str, &str); 4] = [
+    ("name", "name"),
+    ("description", "description"),
+    ("crew-channel", "buzz-channel"),
+    ("crew-visibility", "buzz-visibility"),
+];
 
 /// The kind segment every project member coordinate must carry: a project groups
 /// repository *announcements*, so a coordinate naming any other kind (notably
@@ -1535,14 +1541,14 @@ fn validate_project_envelope(event: &Event) -> Result<(), ProjectRejection> {
             _ => {
                 if let Some(i) = PROJECT_SINGLETON_METADATA_TAGS
                     .iter()
-                    .position(|k| *k == tag_name)
+                    .position(|(current, legacy)| *current == tag_name || *legacy == tag_name)
                 {
                     singleton_counts[i] += 1;
                     match tag_name {
                         "name" => name = Some(value),
                         "description" => description = Some(value),
-                        "buzz-channel" => crew_channel = Some(value),
-                        "buzz-visibility" => crew_visibility = Some(value),
+                        "crew-channel" | "buzz-channel" => crew_channel = Some(value),
+                        "crew-visibility" | "buzz-visibility" => crew_visibility = Some(value),
                         _ => {}
                     }
                 }
@@ -1615,7 +1621,7 @@ fn validate_project_envelope(event: &Event) -> Result<(), ProjectRejection> {
                 "metadata-cardinality",
                 format!(
                     "project event must have at most one `{}` tag (got {count})",
-                    PROJECT_SINGLETON_METADATA_TAGS[i]
+                    PROJECT_SINGLETON_METADATA_TAGS[i].0
                 ),
             ));
         }
@@ -2029,14 +2035,14 @@ pub async fn ingest_event(
     let result = ingest_event_inner(state, &tracer, tenant, event, auth).await;
 
     // Fleet-wide stored counter: kind + author_type only, no community tag
-    // (see the cardinality rationale on buzz_events_received_total —
+    // (see the cardinality rationale on crew_events_received_total —
     // author_type is a 2-value label so it merely doubles the kind series).
     // Emitted here rather than per-transport so HTTP bridge ingests count too.
     if let Ok(r) = &result {
         if r.accepted {
             let author_type = author_type_label(state, tenant, author_pubkey_bytes).await;
             metrics::counter!(
-                "buzz_events_stored_total",
+                "crew_events_stored_total",
                 "kind" => kind_label,
                 "author_type" => author_type
             )
@@ -2791,7 +2797,7 @@ async fn ingest_event_inner(
             }
             pre_created_channel = Some(client_uuid);
             metrics::counter!(
-                "buzz_channels_created_total",
+                "crew_channels_created_total",
                 "community" => tenant.host().to_owned(),
                 "type" => channel_type.to_string()
             )
@@ -3376,7 +3382,7 @@ mod tests {
 
         let url = std::env::var("CREW_TEST_DATABASE_URL")
             .or_else(|_| std::env::var("DATABASE_URL"))
-            .unwrap_or_else(|_| "postgres://buzz:buzz_dev@localhost:5432/buzz".to_string()); // sadscan:disable np.postgres.1
+            .unwrap_or_else(|_| "postgres://buzz:crew_dev@localhost:5432/buzz".to_string()); // sadscan:disable np.postgres.1
         let pool = sqlx::PgPool::connect(&url).await.expect("connect test DB");
         let db = crew_db::Db::from_pool(pool);
         db.migrate().await.expect("migrate test DB");
@@ -5072,15 +5078,31 @@ mod tests {
     fn project_envelope_rejects_duplicate_metadata_tags() {
         // Every singleton metadata tag is bounded: a duplicate would make the
         // effective value reader-dependent.
-        for tag_name in PROJECT_SINGLETON_METADATA_TAGS {
-            let ev = make_project(&[&["d", "platform"], &[tag_name, "x"], &[tag_name, "y"]]);
+        for (current, legacy) in PROJECT_SINGLETON_METADATA_TAGS {
+            let ev = make_project(&[&["d", "platform"], &[current, "x"], &[current, "y"]]);
             let err = validate_project_envelope(&ev).unwrap_err();
             assert!(
                 err.to_string()
-                    .contains(&format!("at most one `{tag_name}` tag")),
-                "duplicate `{tag_name}` must be rejected, got: {err}"
+                    .contains(&format!("at most one `{current}` tag")),
+                "duplicate `{current}` must be rejected, got: {err}"
             );
         }
+    }
+
+    #[test]
+    fn project_envelope_rejects_duplicates_across_legacy_spelling() {
+        // One crew-channel plus one legacy buzz-channel is still
+        // reader-dependent: cardinality must count both spellings.
+        let ev = make_project(&[
+            &["d", "platform"],
+            &["crew-channel", "x"],
+            &["buzz-channel", "y"],
+        ]);
+        let err = validate_project_envelope(&ev).unwrap_err();
+        assert!(
+            err.rule == "metadata-cardinality",
+            "expected metadata-cardinality, got: {err}"
+        );
     }
 
     #[test]
@@ -5343,10 +5365,10 @@ mod tests {
             .snapshot()
             .into_vec()
             .into_iter()
-            .filter(|(key, ..)| key.key().name() == "buzz_events_rejected_total")
+            .filter(|(key, ..)| key.key().name() == "crew_events_rejected_total")
             .map(|(key, _, _, value)| {
                 let metrics_util::debugging::DebugValue::Counter(n) = value else {
-                    panic!("buzz_events_rejected_total must be a counter");
+                    panic!("crew_events_rejected_total must be a counter");
                 };
                 let labels: Vec<_> = key.key().labels().collect();
                 let transport = labels

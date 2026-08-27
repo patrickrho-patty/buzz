@@ -218,13 +218,13 @@ impl FromRequestParts<Arc<AppState>> for AuthenticatedUpload {
         .map_err(|_| MediaError::RelayMembershipRequired)?;
 
         if upload_rate_limited(state, tenant.community(), &auth_event.pubkey) {
-            metrics::counter!("buzz_media_upload_rejections_total", "reason" => "rate_limit")
+            metrics::counter!("crew_media_upload_rejections_total", "reason" => "rate_limit")
                 .increment(1);
             return Err(MediaError::UploadRateLimitExceeded);
         }
         let upload_permit = acquire_upload_permit(state, tenant.community(), &auth_event.pubkey)
             .inspect_err(|_| {
-                metrics::counter!("buzz_media_upload_rejections_total", "reason" => "concurrency")
+                metrics::counter!("crew_media_upload_rejections_total", "reason" => "concurrency")
                     .increment(1);
             })?;
 
@@ -329,7 +329,7 @@ pub async fn upload_blob(
             .map_err(serving_write_error)?;
 
     if auth.route_mode == UploadRouteMode::LegacyMedia {
-        metrics::counter!("buzz_media_legacy_upload_route_total").increment(1);
+        metrics::counter!("crew_media_legacy_upload_route_total").increment(1);
     }
 
     // Probe actual bytes without trusting Content-Type. Keep the chunks used
@@ -448,7 +448,7 @@ pub async fn upload_blob(
         _ => "other",
     };
     metrics::counter!(
-        "buzz_media_uploads_total",
+        "crew_media_uploads_total",
         "mime" => mime_label.to_owned(),
         "community" => auth.tenant.host().to_owned()
     )
@@ -472,7 +472,7 @@ pub async fn upload_blob(
             .await
         {
             tracing::error!("Media audit channel closed — entry lost: {e}");
-            metrics::counter!("buzz_audit_send_errors_total").increment(1);
+            metrics::counter!("crew_audit_send_errors_total").increment(1);
         }
     }
 

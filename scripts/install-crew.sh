@@ -2,8 +2,8 @@
 # Reinstall Griddle.app from the local build output over the existing
 # /Applications/Griddle.app, in place — no DMG drag-install needed.
 #
-# Usage: just scripts/install-griddle.sh
-#   Optional: scripts/install-griddle.sh /custom/install/path
+# Usage: just scripts/install-crew.sh
+#   Optional: scripts/install-crew.sh /custom/install/path
 set -euo pipefail
 BUNDLE_DIR="$(cd "$(dirname "$0")/../desktop/src-tauri/target/release/bundle/macos" 2>/dev/null && pwd)"
 DEST="${1:-/Applications}"

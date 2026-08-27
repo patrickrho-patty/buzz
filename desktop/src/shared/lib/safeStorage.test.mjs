@@ -87,8 +87,8 @@ test("setStorageItem returns true on a healthy write", () => {
   const storage = createThrowingStorage();
   const restore = patchLocalStorage(storage);
   try {
-    assert.equal(setStorageItem("buzz-theme", "buzz-dark"), true);
-    assert.equal(storage.values.get("buzz-theme"), "buzz-dark");
+    assert.equal(setStorageItem("buzz-theme", "crew-dark"), true);
+    assert.equal(storage.values.get("buzz-theme"), "crew-dark");
   } finally {
     restore();
   }

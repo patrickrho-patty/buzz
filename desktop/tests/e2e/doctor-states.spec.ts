@@ -1006,7 +1006,7 @@ test.describe("Doctor panel state screenshots", () => {
             exit_code: 1,
           },
         ],
-        log_path: "/tmp/buzz-install-codex.log",
+        log_path: "/tmp/crew-install-codex.log",
       },
     });
 
@@ -1043,7 +1043,7 @@ test.describe("Doctor panel state screenshots", () => {
 
     // The failure points at the log holding bounded output for every attempt.
     await expect(installError).toContainText("npm ERR! code E404");
-    await expect(installError).toContainText("/tmp/buzz-install-codex.log");
+    await expect(installError).toContainText("/tmp/crew-install-codex.log");
 
     await row.scrollIntoViewIfNeeded();
     await waitForAnimations(page);

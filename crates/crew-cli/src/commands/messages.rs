@@ -2,7 +2,7 @@ use crew_sdk::{DeleteMessageOptions, DiffMeta, ThreadRef, VoteDirection};
 use nostr::PublicKey;
 use uuid::Uuid;
 
-use crate::client::{normalize_events, normalize_write_response, BuzzClient};
+use crate::client::{normalize_events, normalize_write_response, CrewClient};
 use crate::error::CliError;
 use crate::validate::{
     infer_language, parse_event_id, parse_uuid, read_or_stdin, truncate_diff,
@@ -63,7 +63,7 @@ fn thread_ref_from_parent_tags(
 /// - Nested reply: `root` is the parent's own root marker; `parent` is unchanged.
 ///
 /// Ensures CLI-sent replies thread correctly using the same NIP-10 logic.
-async fn fetch_event(client: &BuzzClient, event_id: &str) -> Result<serde_json::Value, CliError> {
+async fn fetch_event(client: &CrewClient, event_id: &str) -> Result<serde_json::Value, CliError> {
     let filter = serde_json::json!({ "ids": [event_id], "limit": 1 });
     let raw = client.query(&filter).await?;
     let events: serde_json::Value = serde_json::from_str(&raw)
@@ -76,7 +76,7 @@ async fn fetch_event(client: &BuzzClient, event_id: &str) -> Result<serde_json::
 }
 
 async fn resolve_thread_ref(
-    client: &BuzzClient,
+    client: &CrewClient,
     parent_event_id: &str,
 ) -> Result<ThreadRef, CliError> {
     let event = fetch_event(client, parent_event_id).await?;
@@ -116,7 +116,7 @@ fn channel_id_from_event(event_id: &str, event: &serde_json::Value) -> Result<Uu
         })
 }
 
-async fn resolve_channel_id(client: &BuzzClient, event_id: &str) -> Result<Uuid, CliError> {
+async fn resolve_channel_id(client: &CrewClient, event_id: &str) -> Result<Uuid, CliError> {
     let event = fetch_event(client, event_id).await?;
     channel_id_from_event(event_id, &event)
 }
@@ -158,7 +158,7 @@ fn resolve_names_to_pubkeys(
 /// Lookup failures are fatal when mention processing is requested: publishing
 /// visible mention text without its intended `p` tag is worse than not sending.
 async fn resolve_content_mentions(
-    client: &BuzzClient,
+    client: &CrewClient,
     channel_id: &str,
     content: &str,
     has_explicit_mentions: bool,
@@ -294,7 +294,7 @@ fn event_mention_pubkeys(event: &nostr::Event) -> Vec<String> {
 /// Fetch raw events for `filter` via the relay's `/query` endpoint.
 /// Returns `None` on any I/O or parse failure.
 async fn fetch_events(
-    client: &BuzzClient,
+    client: &CrewClient,
     filter: &serde_json::Value,
 ) -> Option<Vec<serde_json::Value>> {
     let raw = client.query(filter).await.ok()?;
@@ -304,7 +304,7 @@ async fn fetch_events(
 
 /// Extract member pubkeys (the `p` tag values) from a single 39002 event.
 async fn fetch_member_pubkeys(
-    client: &BuzzClient,
+    client: &CrewClient,
     filter: &serde_json::Value,
 ) -> Option<Vec<String>> {
     let events = fetch_events(client, filter).await?;
@@ -354,7 +354,7 @@ fn format_events(normalized: &str, format: &crate::OutputFormat) -> String {
 }
 
 pub async fn cmd_get_messages(
-    client: &BuzzClient,
+    client: &CrewClient,
     channel_id: &str,
     limit: Option<u32>,
     before: Option<i64>,
@@ -418,7 +418,7 @@ pub fn resolve_thread_target(
 }
 
 pub async fn cmd_get_thread(
-    client: &BuzzClient,
+    client: &CrewClient,
     channel_id: &str,
     event_id: &str,
     expected_root_id: Option<&str>,
@@ -465,7 +465,7 @@ pub async fn cmd_get_thread(
 }
 
 pub async fn cmd_search(
-    client: &BuzzClient,
+    client: &CrewClient,
     query: Option<&str>,
     author: Option<&str>,
     since: Option<i64>,
@@ -518,7 +518,7 @@ pub async fn cmd_search(
 /// must match exactly one user (case-insensitive, on `display_name` or
 /// `name`) — ambiguity is an error listing the candidates rather than a
 /// silent mix of authors.
-async fn resolve_author(client: &BuzzClient, author: &str) -> Result<String, CliError> {
+async fn resolve_author(client: &CrewClient, author: &str) -> Result<String, CliError> {
     let author = author.trim();
     if author.len() == 64 && author.chars().all(|c| c.is_ascii_hexdigit()) {
         return Ok(author.to_ascii_lowercase());
@@ -609,7 +609,7 @@ pub struct SendMessageParams {
 }
 
 pub async fn cmd_send_message(
-    client: &BuzzClient,
+    client: &CrewClient,
     mut p: SendMessageParams,
 ) -> Result<(), CliError> {
     // Allow '-' to read content from stdin. This keeps callers from having to
@@ -744,7 +744,7 @@ pub struct SendDiffParams {
     pub reply_to: Option<String>,
 }
 
-pub async fn cmd_send_diff_message(client: &BuzzClient, p: SendDiffParams) -> Result<(), CliError> {
+pub async fn cmd_send_diff_message(client: &CrewClient, p: SendDiffParams) -> Result<(), CliError> {
     if let Some(r) = &p.reply_to {
         validate_hex64(r)?;
     }
@@ -818,7 +818,7 @@ pub async fn cmd_send_diff_message(client: &BuzzClient, p: SendDiffParams) -> Re
 }
 
 pub async fn cmd_delete_message(
-    client: &BuzzClient,
+    client: &CrewClient,
     event_id: &str,
     action_id: Option<Uuid>,
     reason_code: Option<&str>,
@@ -850,7 +850,7 @@ pub async fn cmd_delete_message(
 
 /// Edit a message you previously sent.
 pub async fn cmd_edit_message(
-    client: &BuzzClient,
+    client: &CrewClient,
     event_id: &str,
     content: &str,
 ) -> Result<(), CliError> {
@@ -873,7 +873,7 @@ pub async fn cmd_edit_message(
 
 /// Vote on a forum post or comment.
 pub async fn cmd_vote_on_post(
-    client: &BuzzClient,
+    client: &CrewClient,
     event_id: &str,
     direction: &str,
 ) -> Result<(), CliError> {
@@ -904,7 +904,7 @@ pub async fn cmd_vote_on_post(
 
 pub async fn dispatch(
     cmd: crate::MessagesCmd,
-    client: &BuzzClient,
+    client: &CrewClient,
     format: &crate::OutputFormat,
 ) -> Result<(), CliError> {
     use crate::MessagesCmd;
@@ -1059,8 +1059,8 @@ mod tests {
         channel_id_from_event, cmd_get_thread, event_mention_pubkeys, find_root_from_tags,
         match_profiles_by_name, merge_message_mentions, missing_members,
         normalize_explicit_mentions, parse_member_pubkeys, resolve_names_to_pubkeys,
-        resolve_thread_target, thread_ref_from_event, thread_ref_from_parent_tags, BuzzClient,
-        CliError, Uuid,
+        resolve_thread_target, thread_ref_from_event, thread_ref_from_parent_tags, CliError,
+        CrewClient, Uuid,
     };
     use crew_sdk::mentions::{
         extract_at_mentions_with_known, extract_at_names, match_names_to_profiles, MentionProfile,
@@ -1081,7 +1081,7 @@ mod tests {
     #[tokio::test]
     async fn malformed_channel_is_rejected_before_thread_fetch() {
         let client =
-            BuzzClient::new("http://127.0.0.1:1".into(), Keys::generate(), None, None).unwrap();
+            CrewClient::new("http://127.0.0.1:1".into(), Keys::generate(), None, None).unwrap();
         let error = cmd_get_thread(
             &client,
             "not-a-uuid",

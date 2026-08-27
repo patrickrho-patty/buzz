@@ -151,7 +151,7 @@ export function ProjectsView() {
     React.useState<ProjectsRepositoryScope>(() => {
       const storedScope = readStoredRepositoryScope();
       return filter === "projects" &&
-        (storedScope === "buzz" || storedScope === "linked")
+        (storedScope === "crew" || storedScope === "linked")
         ? "all"
         : storedScope;
     });
@@ -301,7 +301,7 @@ export function ProjectsView() {
           return isProjectMine(project, currentPubkey);
         if (repositoryScope === "local")
           return hasLocalCheckout(project, localRepoNames);
-        if (repositoryScope === "buzz")
+        if (repositoryScope === "crew")
           return (
             projectRepoHostForProject(project, relayOrigin).kind === "crew"
           );
@@ -379,10 +379,10 @@ export function ProjectsView() {
         if (repositoryScope === "local") {
           return hasLocalRepositoryCheckout(repository, localRepoNames);
         }
-        if (repositoryScope === "buzz") {
+        if (repositoryScope === "crew") {
           return (
             projectRepoHostForRepository(repository, relayOrigin).kind ===
-            "buzz"
+            "crew"
           );
         }
         if (repositoryScope === "linked") {
@@ -483,7 +483,7 @@ export function ProjectsView() {
     (nextFilter: ProjectsFilter) => {
       if (
         nextFilter === "projects" &&
-        (repositoryScope === "buzz" || repositoryScope === "linked")
+        (repositoryScope === "crew" || repositoryScope === "linked")
       ) {
         setRepositoryScope("all");
         writeStoredRepositoryScope("all");
@@ -817,7 +817,7 @@ export function ProjectsView() {
                 ref={scrollIndicatorRef}
               />
               <div
-                className="buzz-content-scrollbar h-full min-h-0 min-w-0 overflow-x-hidden overflow-y-scroll"
+                className="crew-content-scrollbar h-full min-h-0 min-w-0 overflow-x-hidden overflow-y-scroll"
                 onScroll={handleContentScroll}
               >
                 <div className="px-4 pb-4">

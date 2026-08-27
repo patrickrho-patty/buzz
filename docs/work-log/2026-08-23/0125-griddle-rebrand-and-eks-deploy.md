@@ -27,7 +27,7 @@ Multi-hour session. Captured the whole arc end-to-end so nothing is lost at hand
 - `web/public/favicon.png` (new — web had no favicon) + `<link>` added.
 - `desktop/public/buzz.svg` → SVG wrapping the traced logo (initially a base64 wrapper; later replaced with a real vector).
 - `BuzzMark.tsx` geometry replaced via potrace path data: `brew install potrace`, threshold grayscale, trace to SVG, extract path, bake into component with `viewBox="0 0 1254 1254"` `fill="currentColor"`. Kept API (`{ className }`) unchanged.
-- Wordmark assets exported: `web/src/assets/griddle-logo-wide.png`, `desktop/public/griddle-logo.png`.
+- Wordmark assets exported: `web/src/assets/griddle-logo-wide.png`, `desktop/public/crew-logo.png`.
 
 ## CI workflow
 - `.github/workflows/ecr-build.yml` (workflow_dispatch) — builds linux/amd64 from Dockerfile, pushes to ECR `361645878435.dkr.ecr.ap-apron64.amazonaws.com/griddle:v0.1.0`. Auth via AWS creds stored as `gh secret set AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` (fork's repo secrets).
@@ -76,18 +76,18 @@ Multi-hour session. Captured the whole arc end-to-end so nothing is lost at hand
 - **`desktop/src-tauri/Info.plist`**: `CFBundleDisplayName: "Buzz"` → `"Griddle"`; `CFBundleName: "Buzz"` → `"Griddle"`. (productName alone in tauri.conf.json didn't update macOS display name.)
 - **`desktop/src-tauri/src/app_state_keyring.rs`**: keychain service `"buzz-desktop"` → `"griddle-desktop"`. env var `CREW_DEV_KEYRING_SERVICE` → `CREW_DEV_KEYRING_SERVICE`. Touched dozens of `.rs` files to update service name + lockfile path (`/tmp/buzz-keychain-` → `/tmp/griddle-keychain-`).
 - **Bundle identifier**: `xyz.block.buzz.app` → `xyz.patty.griddle.app` (and `.dev` variant). Affects keychain layout + macOS app-data dir paths.
-- **`desktop/index.html`** (caught late — separate frontend build): `<title></title>` → `<title>Griddle</title>`; `/buzz.svg` → `/griddle.svg`. File renamed.
+- **`desktop/index.html`** (caught late — separate frontend build): `<title></title>` → `<title>Griddle</title>`; `/buzz.svg` → `/crew.svg`. File renamed.
 - **`desktop/public/landing/buzz-wordmark.png`** (caught late — public asset dir, file path): replaced PNG, updated `MachineOnboardingFlow.tsx` `alt` + `src`. The new wordmark is `griddle_logo_1.png` (the icon mark) at 280×280 centered on 777x326 canvas. Initially I used `griddle_logo_2.png` (the "Griddle by Patty" lockup) which looked awful — cropped the speech-bubble tail; re-did with `griddle_logo_1.png` clean.
 - **Page background tone**: `--buzz-welcome-chartreuse: #d7d72e` (chartreuse yellow) → `#f5f0e6` (warm cream) in `desktop/src/shared/styles/globals/components.css`. Drives welcome page background, gradient bottom, CTA accent borders.
 - **Landing bees** in `LandingBees.tsx`: YELLOW `#E9E94F` (then `#F0EDE5`) → `#d8c9a8` (warm tan) for visibility against new cream.
-- **Wordmark transparency**: stripped white background from `griddle-wordmark.png` so it blends with the cream.
+- **Wordmark transparency**: stripped white background from `crew-wordmark.png` so it blends with the cream.
 
 ## Onboarding screenshot ground-truth (vital: I couldn't see images early)
 - **Critical failure I should own**: I claimed I couldn't view screenshots and kept thrashing on color/asset guesses. I was wrong — I am multimodal and *can* see images. Once I looked at the screenshots directly, fixes were immediate.
 - The "Buzz" wordmark on first launch was `desktop/public/landing/buzz-wordmark.png` — a raster asset I'd never opened. Pattern: my searches targeted "Buzz" in code text only; missed "buzz" in filenames in public/.
 
 ## Final tooling saved
-- `scripts/install-griddle.sh` — one-command reinstall from build output over `/Applications/Griddle.app`. Stops running process, replaces app, ad-hoc re-signs. DMG version preserves notarization ticket; in-place install does not.
+- `scripts/install-crew.sh` — one-command reinstall from build output over `/Applications/Griddle.app`. Stops running process, replaces app, ad-hoc re-signs. DMG version preserves notarization ticket; in-place install does not.
 - `~/griddle-backups/`:
   - `griddle-identity-key.txt` — relay CREW_RELAY_PRIVATE_KEY
   - `griddle-owner-key.pem` + `griddle-owner-privkey-hex.txt` — owner Nostr keypair
@@ -180,7 +180,7 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 ## 05:35 KST — Fixes: InvalidAlgorithm, manual buttons, keychain prompts
 1. **id_token InvalidAlgorithm**: validation now picks the JWKS key by the token header's `kid` and derives the algorithm from the header itself (was hardcoded first-RS256-key + fixed alg list). Realm signs RS256 but header-driven matching is future-proof (PS256/ES256).
 2. **Manual key buttons still visible**: they were kept as secondary options by design in v0.2.0 — user wants them out. Now collapsed behind a quiet "Advanced: use a key manually" footnote; "Sign in with Patty" is the sole primary CTA.
-3. **Keychain prompt on every reinstall**: root cause = ad-hoc re-signing gives each install a NEW code signature, orphaning the keychain ACL entry. Fix: install-griddle.sh now re-signs with the stable Developer ID (Patty Co.,LTD S37644C7R8). macOS will still prompt ONCE per keychain item (by design — can't be bypassed without weakening security), but "Always Allow" now persists across reinstalls.
+3. **Keychain prompt on every reinstall**: root cause = ad-hoc re-signing gives each install a NEW code signature, orphaning the keychain ACL entry. Fix: install-crew.sh now re-signs with the stable Developer ID (Patty Co.,LTD S37644C7R8). macOS will still prompt ONCE per keychain item (by design — can't be bypassed without weakening security), but "Always Allow" now persists across reinstalls.
 - Relay v0.2.1 deployed (kid-matching fix live, verified start/complete endpoints + sync loop).
 - Desktop rebuilt, installed with Developer ID signing (verified TeamIdentifier=S37644C7R8).
 
@@ -226,10 +226,10 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 - DB check: relay_members has ONLY the owner row — Patrick's earlier SSO login never persisted an oidc membership (Keycloak attrs empty too). So the "worked" login earlier was client-side only; complete() likely raced before relay-side admission? NOTE: verify on next login — if no oidc row appears in relay_members after fresh SSO, the complete endpoint's add_relay_member isn't committing (investigate tenant binding).
 - Lesson (user-requested): after UI changes, reset the tester's onboarding state automatically instead of leaving stale screens.
 
-## 07:50 KST — scripts/reset-griddle-desktop.sh (reusable, committed)
+## 07:50 KST — scripts/reset-crew-desktop.sh (reusable, committed)
 - Encapsulates the fresh-onboarding reset: quit app → keychain identity → app-data (localStorage/onboarding/SSO stash) → legacy buzz WebKit data. `--launch` relaunches after.
 - Keeps relay membership + Keycloak attrs (SSO re-admits/recovers).
-- Companion to scripts/install-griddle.sh; use after any onboarding change before testing.
+- Companion to scripts/install-crew.sh; use after any onboarding change before testing.
 
 ## 08:35 KST — ROOT CAUSE of missing username: Keycloak dropped attribute writes
 - Keycloak user-profile `unmanagedAttributePolicy` was unset (=DROP): set_nostr_attrs got HTTP 200 but attributes never persisted → keypair re-minted every login, no oidc membership, no email to client.
@@ -255,7 +255,7 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 ## 11:05 KST — Diagnosis: stale local transaction ≠ broken code
 - Patrick still saw blank-username profile screen: his app had a CACHED onboarding transaction + identity from pre-restructure logins (relay logs show ZERO oidc hits in 2h — the complete endpoint was never called on his latest launches; the app just resumed stale localStorage state).
 - Also found: patrick's Keycloak profile had been wiped AGAIN (email: None) — almost certainly collateral from one of my earlier partial-PUTs or the broker. Restored (patrick@patty.io / Patrick Rho / verified).
-- Action: quit app, reset-griddle-desktop.sh (fresh state), relaunched. His NEXT login will: mint fresh key → persist to Keycloak (policy now fixed) → membership row → relay returns email → profile screen prefilled+locked.
+- Action: quit app, reset-crew-desktop.sh (fresh state), relaunched. His NEXT login will: mint fresh key → persist to Keycloak (policy now fixed) → membership row → relay returns email → profile screen prefilled+locked.
 - The reset requirement is legitimate here: localStorage carried the pre-restructure onboarding transaction. Future builds won't need resets for this (the transaction is only written on login).
 
 ## 11:45 KST — ROOT CAUSE FOUND for patrick's blank username: Google broker wiped his profile

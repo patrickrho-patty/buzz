@@ -68,7 +68,7 @@ test("effectiveCloneUrls returns empty when no default can be derived", () => {
 
 test("projectRepoHost recognizes a canonical repository on the relay", () => {
   assert.deepEqual(projectRepoHost(`${ORIGIN}/git/${OWNER}/buzz`, ORIGIN), {
-    kind: "buzz",
+    kind: "crew",
   });
 });
 
@@ -102,7 +102,7 @@ test("projectRepoHostForProject recognizes an implicit relay repository", () => 
       { cloneUrls: [], dtag: "buzz", owner: OWNER },
       ORIGIN,
     ),
-    { kind: "buzz" },
+    { kind: "crew" },
   );
 });
 

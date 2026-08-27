@@ -432,7 +432,7 @@ async fn connect_member_services() -> Result<(Db, Arc<PubSubManager>, Keys)> {
 
 async fn connect_db() -> Result<Db> {
     let db_url = std::env::var("DATABASE_URL")
-        .unwrap_or_else(|_| "postgres://buzz:buzz_dev@localhost:5432/buzz".to_string());
+        .unwrap_or_else(|_| "postgres://buzz:crew_dev@localhost:5432/buzz".to_string());
     let db = Db::new(&DbConfig {
         database_url: db_url,
         ..DbConfig::default()
@@ -453,7 +453,7 @@ async fn resolve_admin_tenant(db: &Db) -> Result<TenantContext> {
     let relay_url =
         std::env::var("RELAY_URL").unwrap_or_else(|_| "ws://localhost:3000".to_string());
     // Derive the authority the *same* way startup seeding and live request
-    // resolution do (`buzz_core::tenant::relay_url_authority`): host plus an
+    // resolution do (`crew_core::tenant::relay_url_authority`): host plus an
     // explicit non-default port, IPv6 brackets preserved. A plain
     // `Url::host_str()` drops the port/brackets, so for `ws://localhost:3000`
     // the admin would look up `localhost` while startup seeded `localhost:3000`

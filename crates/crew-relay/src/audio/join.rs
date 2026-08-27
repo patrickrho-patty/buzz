@@ -28,7 +28,7 @@
 //! ## `HuddleControl` payload schema (owned here)
 //!
 //! The mesh wire layer carries huddle-control bytes opaquely in
-//! [`MeshStreamFrame::Data`](buzz_relay_mesh::MeshStreamFrame). Their layout is
+//! [`MeshStreamFrame::Data`](crew_relay_mesh::MeshStreamFrame). Their layout is
 //! [`HuddleControlMsg`], postcard-encoded. Non-owner → owner:
 //! [`HuddleControlMsg::RegisterPeer`] / [`HuddleControlMsg::UnregisterPeer`].
 //! Owner → non-owner: [`HuddleControlMsg::PeerRegistered`] (assigned index) or

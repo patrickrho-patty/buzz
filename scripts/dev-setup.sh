@@ -86,7 +86,7 @@ fail_if_local_redis_blocks_compose() {
   if ! command -v lsof >/dev/null 2>&1; then
     return
   fi
-  if docker ps --format '{{.Names}}' | grep -qx 'buzz-redis'; then
+  if docker ps --format '{{.Names}}' | grep -qx 'crew-redis'; then
     return
   fi
   local redis_pids
@@ -99,7 +99,7 @@ fail_if_local_redis_blocks_compose() {
 }
 
 postgres_accepting_connections() {
-  docker exec buzz-postgres \
+  docker exec crew-postgres \
     pg_isready -h localhost -p 5432 -U "${PGUSER}" -d "${PGDATABASE}" \
     >/dev/null 2>&1
 }

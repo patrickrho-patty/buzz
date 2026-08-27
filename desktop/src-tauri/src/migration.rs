@@ -378,7 +378,9 @@ pub(crate) fn migrate_dev_repos_dir_at(home: &Path, dev_nest: &Path) {
             "griddle-desktop: dev-nest-migration: migrated .repos-dir to {}",
             dst.display()
         ),
-        Err(e) => eprintln!("griddle-desktop: dev-nest-migration: failed to migrate .repos-dir: {e}"),
+        Err(e) => {
+            eprintln!("griddle-desktop: dev-nest-migration: failed to migrate .repos-dir: {e}")
+        }
     }
 }
 
@@ -776,7 +778,9 @@ pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
         .and_then(|k| k.parse::<nostr::Keys>().ok())
         .is_some();
     if !has_valid_key {
-        eprintln!("griddle-desktop: shared-agent-sync: CREW_PRIVATE_KEY missing or invalid, skipping");
+        eprintln!(
+            "griddle-desktop: shared-agent-sync: CREW_PRIVATE_KEY missing or invalid, skipping"
+        );
         return;
     }
 
@@ -808,7 +812,9 @@ pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
     let canonical_dir = match canonical_dev_data_dir(&current_dir) {
         Some(dir) => dir,
         None => {
-            eprintln!("griddle-desktop: shared-agent-sync: cannot compute canonical dir (no parent)");
+            eprintln!(
+                "griddle-desktop: shared-agent-sync: cannot compute canonical dir (no parent)"
+            );
             return;
         }
     };
@@ -1284,7 +1290,9 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
                 .collect();
             for key in stale_keys {
                 env_vars.remove(key.as_str());
-                eprintln!("griddle-desktop: databricks-v1-to-v2: removed stale env_vars[\"{key}\"]",);
+                eprintln!(
+                    "griddle-desktop: databricks-v1-to-v2: removed stale env_vars[\"{key}\"]",
+                );
                 changed = true;
             }
         }

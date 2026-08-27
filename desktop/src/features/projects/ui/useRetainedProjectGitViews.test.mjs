@@ -16,12 +16,12 @@ import { buildProjectDetailCrumbs } from "./useProjectDetailCrumbs.ts";
 registerHooks({
   resolve(specifier, context, nextResolve) {
     if (specifier === "@/features/forum/ui/ForumComposer") {
-      return { shortCircuit: true, url: "buzz-pr-panel-stub:ForumComposer" };
+      return { shortCircuit: true, url: "crew-pr-panel-stub:ForumComposer" };
     }
     return nextResolve(specifier, context);
   },
   load(url, context, nextLoad) {
-    if (url === "buzz-pr-panel-stub:ForumComposer") {
+    if (url === "crew-pr-panel-stub:ForumComposer") {
       return {
         format: "module",
         shortCircuit: true,

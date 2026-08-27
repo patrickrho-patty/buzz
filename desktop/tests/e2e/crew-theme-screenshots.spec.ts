@@ -70,7 +70,7 @@ async function expectBuzzSidebarPalette(page: Page, mode: "light" | "dark") {
     mode === "light" ? "rgba(0, 0, 0, 0.5)" : "rgba(255, 255, 255, 0.5)";
   const search = page.getByTestId("open-search");
   const pinnedHeader = page.getByTestId("sidebar-pinned-header");
-  const sidebarScroller = page.locator(".buzz-sidebar-scrollbar");
+  const sidebarScroller = page.locator(".crew-sidebar-scrollbar");
   const scrollContent = page.getByTestId("sidebar-scroll-content");
   const primaryMenu = page.getByTestId("sidebar-primary-menu");
   const sectionLabel = page
@@ -142,7 +142,7 @@ async function expectBuzzSidebarPalette(page: Page, mode: "light" | "dark") {
     const rowRightSpacing = scrollContentBox.right - (rowBox.x + rowBox.width);
     expect(Math.abs(rowLeftSpacing - rowRightSpacing)).toBeLessThanOrEqual(0.5);
   }
-  await expect(page.locator("[data-buzz-sidebar-secondary]").first()).toHaveCSS(
+  await expect(page.locator("[data-crew-sidebar-secondary]").first()).toHaveCSS(
     "color",
     mutedColor,
   );
@@ -242,10 +242,10 @@ async function expectIconlessSectionTitleAligned(
 
 async function expectBuzzContentShadow(page: Page, mode: "light" | "dark") {
   const effects = await page.evaluate(() => {
-    const shell = document.querySelector(".buzz-huddle-shell");
-    const content = document.querySelector("[data-buzz-content-surface]");
+    const shell = document.querySelector(".crew-huddle-shell");
+    const content = document.querySelector("[data-crew-content-surface]");
     const shadowViewport = document.querySelector(
-      "[data-buzz-shadow-viewport]",
+      "[data-crew-shadow-viewport]",
     );
     return {
       appStroke: shell ? getComputedStyle(shell, "::before").boxShadow : "",
@@ -274,9 +274,9 @@ async function expectBuzzGradientPaint(
 ): Promise<string> {
   const paint = await page.evaluate(() => {
     const root = document.documentElement;
-    const appSurface = document.querySelector(".buzz-huddle-app-surface");
-    const lightLayer = document.querySelector('[data-buzz-gradient="light"]');
-    const darkLayer = document.querySelector('[data-buzz-gradient="dark"]');
+    const appSurface = document.querySelector(".crew-huddle-app-surface");
+    const lightLayer = document.querySelector('[data-crew-gradient="light"]');
+    const darkLayer = document.querySelector('[data-crew-gradient="dark"]');
     const sidebarRoot = document.querySelector(
       '[data-testid="app-sidebar"], [data-testid="settings-sidebar"]',
     );
@@ -299,7 +299,7 @@ async function expectBuzzGradientPaint(
     };
   });
 
-  expect(paint.theme).toBe(mode === "light" ? "buzz" : "buzz-dark");
+  expect(paint.theme).toBe(mode === "light" ? "buzz" : "crew-dark");
   expect(paint.isDark).toBe(mode === "dark");
   expect(paint.surfaceImage).toBe("none");
   expect(paint.lightImage).not.toBe("");
@@ -337,10 +337,10 @@ async function expectBuzzSettingsPalette(page: Page, mode: "light" | "dark") {
 
 async function expectAppliedBuzzTheme(
   page: Page,
-  themeName: "buzz" | "buzz-dark",
-  storedTheme: "buzz" | "buzz-dark" = themeName,
+  themeName: "buzz" | "crew-dark",
+  storedTheme: "buzz" | "crew-dark" = themeName,
 ) {
-  const isDark = themeName === "buzz-dark";
+  const isDark = themeName === "crew-dark";
   await expect
     .poll(() =>
       page.evaluate((storageKey) => {
@@ -350,9 +350,9 @@ async function expectAppliedBuzzTheme(
           storedTheme: window.localStorage.getItem(storageKey),
           isDark: root.classList.contains("dark"),
           crewTheme: root.getAttribute("data-buzz-theme"),
-          gradientTop: styles.getPropertyValue("--buzz-gradient-top").trim(),
+          gradientTop: styles.getPropertyValue("--crew-gradient-top").trim(),
           gradientBottom: styles
-            .getPropertyValue("--buzz-gradient-bottom")
+            .getPropertyValue("--crew-gradient-bottom")
             .trim(),
         };
       }, THEME_STORAGE_KEY),
@@ -397,11 +397,11 @@ test("buzz light sidebar gradient", async ({ page }) => {
   await waitForAnimations(page);
   await page
     .getByTestId("app-sidebar")
-    .screenshot({ path: `${SHOTS}/01-buzz-light-sidebar.png` });
+    .screenshot({ path: `${SHOTS}/01-crew-light-sidebar.png` });
 });
 
 test("buzz dark sidebar gradient", async ({ page }) => {
-  await seedTheme(page, "buzz-dark");
+  await seedTheme(page, "crew-dark");
   await installMockBridge(page);
   await openChannel(page);
   await expectBuzzGradientPaint(page, "dark");
@@ -409,14 +409,14 @@ test("buzz dark sidebar gradient", async ({ page }) => {
   await expectBuzzContentShadow(page, "dark");
   await expectIconlessSectionTitleAligned(page, "stream-list");
   await expectIconlessSectionTitleAligned(page, "dm-list");
-  await expect(page.locator("[data-buzz-content-surface]")).toHaveCSS(
+  await expect(page.locator("[data-crew-content-surface]")).toHaveCSS(
     "background-color",
     "rgb(26, 26, 26)",
   );
   await waitForAnimations(page);
   await page
     .getByTestId("app-sidebar")
-    .screenshot({ path: `${SHOTS}/02-buzz-dark-sidebar.png` });
+    .screenshot({ path: `${SHOTS}/02-crew-dark-sidebar.png` });
 });
 
 test("custom section icon and name align with channel columns", async ({
@@ -1162,7 +1162,7 @@ test("appearance picker — light tab (Buzz)", async ({ page }) => {
 });
 
 test("appearance picker — dark tab (Buzz Dark)", async ({ page }) => {
-  await seedTheme(page, "buzz-dark");
+  await seedTheme(page, "crew-dark");
   await installMockBridge(page);
   const panel = await openAppearance(page, "dark");
   await panel.screenshot({ path: `${SHOTS}/05-picker-dark.png` });
@@ -1200,7 +1200,7 @@ test("settings nav uses Buzz active pill + hover (light)", async ({ page }) => {
 });
 
 test("settings nav uses Buzz active pill + hover (dark)", async ({ page }) => {
-  await seedTheme(page, "buzz-dark");
+  await seedTheme(page, "crew-dark");
   await installMockBridge(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await page.getByTestId("open-settings").click();
@@ -1330,7 +1330,7 @@ for (const { activeSurface, hoverSurface, mode, theme } of [
     activeSurface: "rgba(255, 255, 255, 0.16)",
     hoverSurface: "rgba(255, 255, 255, 0.04)",
     mode: "dark" as const,
-    theme: "buzz-dark",
+    theme: "crew-dark",
   },
 ]) {
   test(`non-prominent ${theme} selection matches production`, async ({
@@ -1545,7 +1545,7 @@ test("glass background keeps the content panel solid", async ({ page }) => {
     .toBeNull();
   await expect(opacitySlider).toHaveCount(0);
   await expect(root).not.toHaveAttribute("data-glass-background", "");
-  await expect(page.locator(".buzz-theme-gradient-underlay")).not.toHaveCSS(
+  await expect(page.locator(".crew-theme-gradient-underlay")).not.toHaveCSS(
     "background-image",
     "none",
   );
@@ -1553,7 +1553,7 @@ test("glass background keeps the content panel solid", async ({ page }) => {
   await toggle.click();
   await expect(toggle).toBeChecked();
   await expect(opacitySlider).toBeVisible();
-  await expect(opacitySlider).toHaveClass(/buzz-avatar-framing-slider/);
+  await expect(opacitySlider).toHaveClass(/crew-avatar-framing-slider/);
   await expect(opacitySlider).toHaveAttribute("aria-valuenow", "65");
   await expect(opacitySlider).toHaveCSS("height", "32px");
   const matchingRadiusControls = [
@@ -1574,7 +1574,7 @@ test("glass background keeps the content panel solid", async ({ page }) => {
   }
   await expect(page.getByTestId("glass-opacity-value")).toHaveCount(0);
   await expect(
-    opacitySlider.locator(".buzz-avatar-framing-slider-handle"),
+    opacitySlider.locator(".crew-avatar-framing-slider-handle"),
   ).toHaveCSS("opacity", "1");
   await expect(root).toHaveAttribute("data-glass-background", "");
   const crewSettingOrder = await page
@@ -1590,7 +1590,7 @@ test("glass background keeps the content panel solid", async ({ page }) => {
     "glass-opacity-row",
     "prominent-active-tab-row",
   ]);
-  await expect(page.locator(".buzz-theme-gradient-underlay")).toHaveCSS(
+  await expect(page.locator(".crew-theme-gradient-underlay")).toHaveCSS(
     "background-image",
     "none",
   );
@@ -1710,12 +1710,12 @@ test("non-Buzz glass preserves the selected theme sidebar tint", async ({
   await openAppearance(page, "light");
 
   const root = page.locator("html");
-  await expect(root).not.toHaveAttribute("data-buzz-sidebar", "");
+  await expect(root).not.toHaveAttribute("data-crew-sidebar", "");
   await page.getByTestId("glass-background-toggle").click();
   await expect(root).toHaveAttribute("data-glass-background", "");
 
   const tint = await page
-    .locator(".buzz-theme-gradient-layer")
+    .locator(".crew-theme-gradient-layer")
     .evaluate((element) => {
       const rootStyles = getComputedStyle(document.documentElement);
       const sidebar = rootStyles
@@ -1829,7 +1829,7 @@ test("Buzz light and dark modes apply live without a reload", async ({
   const lightGradient = await expectBuzzGradientPaint(page, "light");
 
   await page.getByTestId("appearance-mode-dark").click();
-  await expectAppliedBuzzTheme(page, "buzz-dark");
+  await expectAppliedBuzzTheme(page, "crew-dark");
   const darkGradient = await expectBuzzGradientPaint(page, "dark");
   expect(darkGradient).not.toBe(lightGradient);
 
@@ -1854,7 +1854,7 @@ test("Buzz follows native system theme changes without a reload", async ({
   await openAppearance(page, "system");
 
   await emitNativeThemeChange(page, "dark");
-  await expectAppliedBuzzTheme(page, "buzz-dark", "buzz");
+  await expectAppliedBuzzTheme(page, "crew-dark", "buzz");
   await expectBuzzGradientPaint(page, "dark");
 
   await emitNativeThemeChange(page, "light");

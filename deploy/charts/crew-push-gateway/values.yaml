@@ -14,7 +14,7 @@ migration:
   databaseUrlKey: DATABASE_URL
   # Existing LOGIN role used by runtime DATABASE_URL. Migrations grant it only
   # CONNECT plus DML on the six gateway tables in this dedicated database.
-  runtimeDatabaseRole: buzz_push_gateway_runtime
+  runtimeDatabaseRole: crew_push_gateway_runtime
   resources:
     requests: {cpu: 50m, memory: 64Mi}
     limits: {cpu: 250m, memory: 128Mi}

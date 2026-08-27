@@ -24,13 +24,13 @@ if command -v psql >/dev/null 2>&1; then
     PGPASSWORD="${PGPASSWORD}" psql -h "${PGHOST}" -p "${PGPORT}" \
       -U "${PGUSER}" -d "${PGDATABASE}" "$@"
   }
-elif docker exec buzz-postgres psql --version >/dev/null 2>&1; then
+elif docker exec crew-postgres psql --version >/dev/null 2>&1; then
   run_psql() {
-    docker exec -i -e PGPASSWORD="${PGPASSWORD}" buzz-postgres \
+    docker exec -i -e PGPASSWORD="${PGPASSWORD}" crew-postgres \
       psql -U "${PGUSER}" -d "${PGDATABASE}" "$@"
   }
 else
-  echo "error: neither psql nor buzz-postgres docker psql is available" >&2
+  echo "error: neither psql nor crew-postgres docker psql is available" >&2
   exit 1
 fi
 
@@ -69,9 +69,9 @@ upload_fixture() {
   size="$(fixture_size "${path}")"
   sidecar="$(printf '{"dim":"%s","blurhash":"","thumb_url":"","ext":"%s","mime_type":"%s","size":%s,"uploaded_at":0}' \
     "${dimensions}" "${extension}" "${mime}" "${size}")"
-  docker exec -i buzz-minio mc pipe --quiet --attr "Content-Type=${mime}" \
+  docker exec -i crew-minio mc pipe --quiet --attr "Content-Type=${mime}" \
     "local/${CREW_S3_BUCKET:-crew-media}/${hash}.${extension}" < "${path}"
-  printf '%s' "${sidecar}" | docker exec -i buzz-minio mc pipe --quiet \
+  printf '%s' "${sidecar}" | docker exec -i crew-minio mc pipe --quiet \
     --attr "Content-Type=application/json" \
     "local/${CREW_S3_BUCKET:-crew-media}/_meta/${community_id}/${hash}.json"
 }
@@ -96,7 +96,7 @@ quality_image_hash="$(fixture_hash "${quality_image}")"
 composer_diagnostics_hash="$(fixture_hash "${composer_diagnostics}")"
 workspace_diagnostics_hash="$(fixture_hash "${workspace_diagnostics}")"
 
-if ! docker exec buzz-minio mc alias set local http://localhost:9000 \
+if ! docker exec crew-minio mc alias set local http://localhost:9000 \
   "${CREW_S3_ACCESS_KEY:-crew_dev}" "${CREW_S3_SECRET_KEY:-crew_dev_secret}" >/dev/null; then
   echo "error: local MinIO is unavailable; run just setup first" >&2
   exit 1

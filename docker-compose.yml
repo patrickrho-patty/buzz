@@ -3,7 +3,7 @@ name: buzz
 services:
   postgres:
     image: postgres:17-alpine
-    container_name: buzz-postgres
+    container_name: crew-postgres
     environment:
       POSTGRES_USER: buzz
       POSTGRES_PASSWORD: buzz_dev
@@ -32,7 +32,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: buzz-redis
+    container_name: crew-redis
     ports:
       - "127.0.0.1:6379:6379"
     networks:
@@ -102,7 +102,7 @@ services:
 
   minio:
     image: minio/minio:latest
-    container_name: buzz-minio
+    container_name: crew-minio
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: buzz_dev
@@ -131,7 +131,7 @@ services:
 
   minio-init:
     image: minio/mc:latest
-    container_name: buzz-minio-init
+    container_name: crew-minio-init
     depends_on:
       minio:
         condition: service_healthy
@@ -171,11 +171,11 @@ services:
 
 volumes:
   postgres-data:
-    name: buzz-postgres-data
+    name: crew-postgres-data
     labels:
       com.buzz.volume: "postgres"
   minio-data:
-    name: buzz-minio-data
+    name: crew-minio-data
     labels:
       com.buzz.volume: "minio"
   prometheus-data:

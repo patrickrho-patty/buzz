@@ -38,8 +38,8 @@ test("startup recovery removes disposable caches but preserves user state", () =
   install(ls);
   ls.store.set("buzz-channel-messages.v1:relay:chan", "big");
   ls.store.set("buzz-channels.v1:relay", "big");
-  ls.store.set("buzz-timeline-skeleton-shape.v1:chan", "small");
-  ls.store.set("buzz-sidebar-skeleton-shape.v1:community:user", "small");
+  ls.store.set("crew-timeline-skeleton-shape.v1:chan", "small");
+  ls.store.set("crew-sidebar-skeleton-shape.v1:community:user", "small");
   ls.store.set("buzz-user-labels.v1:relay", "small");
   ls.store.set("buzz-communities", "keep");
 
@@ -47,14 +47,14 @@ test("startup recovery removes disposable caches but preserves user state", () =
 
   assert.equal(ls.getItem("buzz-channel-messages.v1:relay:chan"), null);
   assert.equal(ls.getItem("buzz-channels.v1:relay"), null);
-  assert.equal(ls.getItem("buzz-timeline-skeleton-shape.v1:chan"), null);
+  assert.equal(ls.getItem("crew-timeline-skeleton-shape.v1:chan"), null);
   assert.equal(
-    ls.getItem("buzz-sidebar-skeleton-shape.v1:community:user"),
+    ls.getItem("crew-sidebar-skeleton-shape.v1:community:user"),
     null,
   );
   assert.equal(ls.getItem("buzz-user-labels.v1:relay"), null);
   assert.equal(ls.getItem("buzz-communities"), "keep");
-  assert.equal(ls.getItem("buzz-local-storage-quota-recovery.v1"), "1");
+  assert.equal(ls.getItem("crew-local-storage-quota-recovery.v1"), "1");
 });
 
 test("healthy startup preserves disposable caches", () => {
@@ -65,20 +65,20 @@ test("healthy startup preserves disposable caches", () => {
   recoverLocalStorageQuotaOnStartup();
 
   assert.equal(ls.getItem("buzz-channel-messages.v1:relay:new"), "snapshot");
-  assert.equal(ls.getItem("buzz-local-storage-quota-recovery.v1"), "1");
+  assert.equal(ls.getItem("crew-local-storage-quota-recovery.v1"), "1");
 });
 
 test("startup recovery does not remove namespace near misses", () => {
   const ls = makeQuotaLocalStorage({ maxEntries: 2 });
   install(ls);
-  ls.store.set("buzz-channels.v10:durable", "keep");
-  ls.store.set("buzz-channel-messages.v1-durable", "keep");
+  ls.store.set("crew-channels.v10:durable", "keep");
+  ls.store.set("crew-channel-messages.v1-durable", "keep");
 
   recoverLocalStorageQuotaOnStartup();
 
-  assert.equal(ls.getItem("buzz-channels.v10:durable"), "keep");
-  assert.equal(ls.getItem("buzz-channel-messages.v1-durable"), "keep");
-  assert.equal(ls.getItem("buzz-local-storage-quota-recovery.v1"), null);
+  assert.equal(ls.getItem("crew-channels.v10:durable"), "keep");
+  assert.equal(ls.getItem("crew-channel-messages.v1-durable"), "keep");
+  assert.equal(ls.getItem("crew-local-storage-quota-recovery.v1"), null);
 });
 
 test("startup recovery runs only once", () => {
@@ -101,14 +101,14 @@ test("startup recovery retries after marker write fails", () => {
   ls.store.set("buzz-communities", "keep");
 
   recoverLocalStorageQuotaOnStartup();
-  assert.equal(ls.getItem("buzz-local-storage-quota-recovery.v1"), null);
+  assert.equal(ls.getItem("crew-local-storage-quota-recovery.v1"), null);
 
   ls.store.delete("buzz-communities");
   ls.store.set("buzz-channel-messages.v1:relay:chan", "big");
   recoverLocalStorageQuotaOnStartup();
 
   assert.equal(ls.getItem("buzz-channel-messages.v1:relay:chan"), null);
-  assert.equal(ls.getItem("buzz-local-storage-quota-recovery.v1"), "1");
+  assert.equal(ls.getItem("crew-local-storage-quota-recovery.v1"), "1");
 });
 
 test("global cache byte budget evicts only oldest entries needed", () => {
@@ -195,16 +195,16 @@ test("evicts pure caches and retries on quota failure", () => {
 test("returns false when eviction frees nothing", () => {
   const ls = makeQuotaLocalStorage({ maxEntries: 2 });
   install(ls);
-  ls.store.set("buzz-workspaces", "keep");
-  ls.store.set("buzz-active-workspace-id", "keep");
+  ls.store.set("crew-workspaces", "keep");
+  ls.store.set("crew-active-workspace-id", "keep");
 
   assert.equal(setLocalStorageItemWithRecovery("k", "v"), false);
   assert.equal(ls.getItem("k"), null);
-  assert.equal(ls.getItem("buzz-workspaces"), "keep");
+  assert.equal(ls.getItem("crew-workspaces"), "keep");
 });
 
-test("buzz-observed-unread.v1: prefix participates in LRU eviction and durable state survives", () => {
-  // Sentinel: fails if buzz-observed-unread.v1: is removed from PURE_CACHE_KEY_PREFIXES —
+test("crew-observed-unread.v1: prefix participates in LRU eviction and durable state survives", () => {
+  // Sentinel: fails if crew-observed-unread.v1: is removed from PURE_CACHE_KEY_PREFIXES —
   // the bucket becomes invisible to LRU and the wrong entry is evicted instead.
   const ls = makeQuotaLocalStorage({ maxEntries: 20 });
   install(ls);
@@ -212,7 +212,7 @@ test("buzz-observed-unread.v1: prefix participates in LRU eviction and durable s
 
   const snapshot = (updatedAt) =>
     JSON.stringify({ updatedAt, payload: "x".repeat(400_000) });
-  const observedKey = "buzz-observed-unread.v1:wss://relay.example.com:pk1";
+  const observedKey = "crew-observed-unread.v1:wss://relay.example.com:pk1";
   const olderKey = "buzz-channel-messages.v1:relay:older";
   const newestKey = "buzz-channel-messages.v1:relay:newest";
 

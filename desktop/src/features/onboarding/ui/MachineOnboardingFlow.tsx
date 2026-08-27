@@ -280,11 +280,11 @@ export function MachineOnboardingFlow({
 
   return (
     <div
-      className={`buzz-onboarding-neutral-theme buzz-startup-shell flex max-h-dvh items-start justify-center overflow-x-hidden overflow-y-auto px-4 text-foreground ${
-        isSecuritySubview ? "buzz-onboarding-security-theme" : ""
+      className={`crew-onboarding-neutral-theme crew-startup-shell flex max-h-dvh items-start justify-center overflow-x-hidden overflow-y-auto px-4 text-foreground ${
+        isSecuritySubview ? "crew-onboarding-security-theme" : ""
       } ${
         page === "identity"
-          ? "buzz-onboarding-welcome py-8"
+          ? "crew-onboarding-welcome py-8"
           : "pb-28 pt-[106px]"
       }`}
       data-testid="machine-onboarding-gate"
@@ -299,7 +299,7 @@ export function MachineOnboardingFlow({
       <OnboardingFooterProvider backAction={chromeBackAction}>
         <div
           className={`relative flex w-full max-w-[1040px] flex-col items-center text-center ${
-            page === "identity" ? "my-auto" : "buzz-onboarding-step-frame"
+            page === "identity" ? "my-auto" : "crew-onboarding-step-frame"
           }`}
         >
           {page === "identity" ? (
@@ -427,7 +427,7 @@ export function MachineOnboardingFlow({
                   )}
                 </div>
               </motion.div>
-              <div className="buzz-onboarding-key-import-position w-full">
+              <div className="crew-onboarding-key-import-position w-full">
                 <div className="flex flex-col items-center">
                   <NostrKeyImportForm
                     key={keyImportFormKey}
@@ -459,7 +459,7 @@ export function MachineOnboardingFlow({
                 open={keyImportDialog === "backup"}
               >
                 <DialogContent
-                  className="buzz-onboarding-neutral-theme max-w-[47.5rem] -translate-y-5"
+                  className="crew-onboarding-neutral-theme max-w-[47.5rem] -translate-y-5"
                   closeButtonClassName={ONBOARDING_INK_ICON_CLASS}
                   data-system-color-scheme="light"
                   data-testid="backup-recovery-dialog"
@@ -490,7 +490,7 @@ export function MachineOnboardingFlow({
                 open={keyImportDialog === "phone"}
               >
                 <DialogContent
-                  className="buzz-onboarding-neutral-theme max-h-[calc(100dvh-2rem)] max-w-[47.5rem] -translate-y-5 overflow-y-auto"
+                  className="crew-onboarding-neutral-theme max-h-[calc(100dvh-2rem)] max-w-[47.5rem] -translate-y-5 overflow-y-auto"
                   closeButtonClassName={ONBOARDING_INK_ICON_CLASS}
                   data-system-color-scheme="light"
                   data-testid="phone-recovery-dialog"

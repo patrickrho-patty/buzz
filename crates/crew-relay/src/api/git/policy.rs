@@ -8,7 +8,7 @@
 //! 3. Grants owner authority to the repo key or its verified managed-agent owner
 //! 4. Otherwise resolves the pusher's channel role via buzz-channel binding
 //! 5. Promotes Bot → Member (bots in a channel push as members)
-//! 6. Calls `buzz_core::git_perms::evaluate_push()`
+//! 6. Calls `crew_core::git_perms::evaluate_push()`
 //! 7. Returns 200 (allow) or 403 (deny with reasons)
 //!
 //! # Bot Role Model
@@ -822,7 +822,7 @@ printf '%s' "$HMAC_INPUT" | openssl dgst -sha256 -hmac "{secret}" -hex 2>/dev/nu
 
     // ── hook_policy_check binding gate (requires Postgres) ──────────────
 
-    const TEST_DB_URL: &str = "postgres://buzz:buzz_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
+    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
 
     async fn policy_test_state() -> Arc<AppState> {
         let mut config = crate::config::Config::from_env().expect("default config loads");
@@ -949,8 +949,8 @@ printf '%s' "$HMAC_INPUT" | openssl dgst -sha256 -hmac "{secret}" -hex 2>/dev/nu
             &keys,
             &format!("repo-{}", uuid::Uuid::new_v4().simple()),
             vec![
-                Tag::parse(["buzz-channel", "not-a-uuid"]).unwrap(),
-                Tag::parse(["buzz-channel", &uuid::Uuid::new_v4().to_string()]).unwrap(),
+                Tag::parse(["crew-channel", "not-a-uuid"]).unwrap(),
+                Tag::parse(["crew-channel", &uuid::Uuid::new_v4().to_string()]).unwrap(),
             ],
         )
         .await;

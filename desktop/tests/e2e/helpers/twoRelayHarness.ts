@@ -33,7 +33,7 @@ export class TwoRelayHarness {
 
   static async create(relays: readonly RelaySpec[]) {
     return new TwoRelayHarness(
-      await mkdtemp(join(tmpdir(), "buzz-ae-e2e-")),
+      await mkdtemp(join(tmpdir(), "crew-ae-e2e-")),
       relays,
     );
   }

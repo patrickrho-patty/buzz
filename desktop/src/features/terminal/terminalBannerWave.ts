@@ -178,7 +178,7 @@ const wrap01 = (value: number) => value - Math.floor(value);
  * is stop 2, and those two ends are as far apart as the palette gets. Feeding
  * it a wrapping phase means that every cycle, somewhere on screen, adjacent
  * cells straddle the 1 -> 0 wrap and jump the entire width of the palette. On
- * buzz-dark that seam measured 182.5 in sRGB distance (#3dcf55 against
+ * crew-dark that seam measured 182.5 in sRGB distance (#3dcf55 against
  * #7bb7ff) — a hard colour edge sweeping across the lattice once per period,
  * which is not "slow waves of the theme colours", it is a glitch.
  *
@@ -353,7 +353,7 @@ export function phaseAt(seconds: number): { field: number; wordmark: number } {
 /**
  * Phase-INDEPENDENT colour table. This is what makes the animation affordable.
  *
- * Measured on this box, buzz-dark, median of 7: calling `bannerColor` per cell
+ * Measured on this box, crew-dark, median of 7: calling `bannerColor` per cell
  * costs 42.7ms for a 112x46 banner (256% of a 60Hz frame) and 203ms at 228x90
  * (1218%). Per-cell-per-frame is not a micro-optimisation problem, it is dead
  * on arrival by 2.6-12x. The cost is concentrated: the field's `atRatio` pin is

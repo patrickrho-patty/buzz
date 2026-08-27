@@ -108,7 +108,7 @@ async function installFakeHuddleMicrophone(
 
 test("keeps the drawer open until the huddle is expanded", async ({ page }) => {
   await page.addInitScript(() => {
-    window.localStorage.setItem("buzz-theme", "buzz-dark");
+    window.localStorage.setItem("buzz-theme", "crew-dark");
   });
   await installMockBridge(page, {
     huddle: {
@@ -124,7 +124,7 @@ test("keeps the drawer open until the huddle is expanded", async ({ page }) => {
 
   await page.goto("/");
 
-  const gradientUnderlay = page.locator(".buzz-theme-gradient-underlay");
+  const gradientUnderlay = page.locator(".crew-theme-gradient-underlay");
   const openGradient = await gradientUnderlay.evaluate(
     (element) => getComputedStyle(element).backgroundImage,
   );
@@ -134,16 +134,16 @@ test("keeps the drawer open until the huddle is expanded", async ({ page }) => {
     name: "Stop transcript",
   });
   await expect(transcriptButton).toBeVisible();
-  const huddleShell = page.locator(".buzz-huddle-shell");
+  const huddleShell = page.locator(".crew-huddle-shell");
   await expect(huddleShell).toHaveAttribute("data-huddle-open", "true");
-  const huddleBackdrop = page.locator(".buzz-huddle-drawer-backdrop");
-  await expect(huddleBackdrop).toHaveClass(/buzz-huddle-drawer-backdrop-open/);
+  const huddleBackdrop = page.locator(".crew-huddle-drawer-backdrop");
+  await expect(huddleBackdrop).toHaveClass(/crew-huddle-drawer-backdrop-open/);
   const [huddleBackdropColor, huddleDrawerColor] = await Promise.all([
     huddleBackdrop.evaluate(
       (element) => getComputedStyle(element).backgroundColor,
     ),
     page
-      .locator(".buzz-huddle-drawer")
+      .locator(".crew-huddle-drawer")
       .first()
       .evaluate((element) => getComputedStyle(element).backgroundColor),
   ]);
@@ -152,7 +152,7 @@ test("keeps the drawer open until the huddle is expanded", async ({ page }) => {
     .poll(() =>
       huddleBackdrop.evaluate((element) => {
         const shell = element.parentElement;
-        const appSurface = shell?.querySelector(".buzz-huddle-app-surface");
+        const appSurface = shell?.querySelector(".crew-huddle-app-surface");
         if (!appSurface) return false;
         const backdropStyle = getComputedStyle(element);
         const appStyle = getComputedStyle(appSurface);
@@ -192,7 +192,7 @@ test("keeps the drawer open until the huddle is expanded", async ({ page }) => {
   const huddleControl = page.getByTestId("profile-huddle-control");
   await expect(huddleControl).toBeVisible();
   const mainContentSurface = page.locator(
-    "[data-buzz-content-surface]:not([data-buzz-content-unframed])",
+    "[data-crew-content-surface]:not([data-crew-content-unframed])",
   );
   await expect(mainContentSurface).toBeVisible();
   const [mainContentColor, huddleCardColor] = await Promise.all([
@@ -254,7 +254,7 @@ test("keeps the drawer open until the huddle is expanded", async ({ page }) => {
       ),
     )
     .toBe(1);
-  await expect(page.locator(".buzz-huddle-shell")).toHaveAttribute(
+  await expect(page.locator(".crew-huddle-shell")).toHaveAttribute(
     "data-huddle-open",
     "false",
   );
@@ -268,7 +268,7 @@ test("floats the in-app huddle tray over the glass background", async ({
   page,
 }) => {
   await page.addInitScript(() => {
-    window.localStorage.setItem("buzz-theme", "buzz-dark");
+    window.localStorage.setItem("buzz-theme", "crew-dark");
     window.localStorage.setItem("buzz-glass-background", "true");
     (window as typeof window & { isTauri?: boolean }).isTauri = true;
     Object.defineProperty(navigator, "platform", {
@@ -291,10 +291,10 @@ test("floats the in-app huddle tray over the glass background", async ({
   await page.goto("/");
 
   const root = page.locator("html");
-  const shell = page.locator('.buzz-huddle-shell[data-huddle-window="false"]');
-  const slot = shell.locator(".buzz-huddle-drawer-slot");
-  const drawer = slot.locator(":scope > .buzz-huddle-drawer");
-  const backdrop = shell.locator(".buzz-huddle-drawer-backdrop");
+  const shell = page.locator('.crew-huddle-shell[data-huddle-window="false"]');
+  const slot = shell.locator(".crew-huddle-drawer-slot");
+  const drawer = slot.locator(":scope > .crew-huddle-drawer");
+  const backdrop = shell.locator(".crew-huddle-drawer-backdrop");
   const transcriptButton = drawer.getByRole("button", {
     name: "Stop transcript",
   });
@@ -339,7 +339,7 @@ test("keeps the popped-out huddle dock full-width over glass", async ({
   page,
 }) => {
   await page.addInitScript(() => {
-    window.localStorage.setItem("buzz-theme", "buzz-dark");
+    window.localStorage.setItem("buzz-theme", "crew-dark");
     window.localStorage.setItem("buzz-glass-background", "true");
     (window as typeof window & { isTauri?: boolean }).isTauri = true;
     Object.defineProperty(navigator, "platform", {
@@ -363,9 +363,9 @@ test("keeps the popped-out huddle dock full-width over glass", async ({
   await page.goto("/");
 
   const root = page.locator("html");
-  const shell = page.locator('.buzz-huddle-shell[data-huddle-window="true"]');
-  const slot = shell.locator(".buzz-huddle-drawer-slot");
-  const drawer = slot.locator(":scope > .buzz-huddle-drawer");
+  const shell = page.locator('.crew-huddle-shell[data-huddle-window="true"]');
+  const slot = shell.locator(".crew-huddle-drawer-slot");
+  const drawer = slot.locator(":scope > .crew-huddle-drawer");
 
   await expect(root).toHaveAttribute("data-glass-background", "");
   await expect(shell).toHaveAttribute("data-huddle-open", "true");
@@ -641,7 +641,7 @@ test("animates the responding agent with the shared speaker ring", async ({
 
   const agentAvatar = page
     .getByTestId("huddle-participant-strip")
-    .locator(".buzz-huddle-speaking-avatar")
+    .locator(".crew-huddle-speaking-avatar")
     .nth(1);
   await expect(agentAvatar).toBeVisible();
   await page.evaluate(async (pubkey) => {
@@ -653,7 +653,7 @@ test("animates the responding agent with the shared speaker ring", async ({
   await expect
     .poll(() =>
       agentAvatar.evaluate((element) =>
-        element.style.getPropertyValue("--buzz-huddle-speaker-opacity"),
+        element.style.getPropertyValue("--crew-huddle-speaker-opacity"),
       ),
     )
     .toBe("0.890");
@@ -667,7 +667,7 @@ test("animates the responding agent with the shared speaker ring", async ({
   await expect
     .poll(() =>
       agentAvatar.evaluate((element) =>
-        element.style.getPropertyValue("--buzz-huddle-speaker-opacity"),
+        element.style.getPropertyValue("--crew-huddle-speaker-opacity"),
       ),
     )
     .toBe("0");
@@ -709,7 +709,7 @@ test("stops the speaking agent from the huddle controls", async ({ page }) => {
     .nth(1);
   const agentAvatar = page
     .getByTestId("huddle-participant-strip")
-    .locator(".buzz-huddle-speaking-avatar")
+    .locator(".crew-huddle-speaking-avatar")
     .nth(1);
   const labelSlots = page.getByTestId("huddle-participant-label-slot");
   await expect(agentAvatar).toBeVisible();
@@ -731,7 +731,7 @@ test("stops the speaking agent from the huddle controls", async ({ page }) => {
   await expect
     .poll(() =>
       agentAvatar.evaluate((element) =>
-        element.style.getPropertyValue("--buzz-huddle-speaker-opacity"),
+        element.style.getPropertyValue("--crew-huddle-speaker-opacity"),
       ),
     )
     .toBe("0.890");
@@ -984,7 +984,7 @@ test("returns the companion transcript to the same channel in the main app", asy
   });
   await page.goto("/");
 
-  await expect(page.locator(".buzz-huddle-shell")).toHaveAttribute(
+  await expect(page.locator(".crew-huddle-shell")).toHaveAttribute(
     "data-huddle-open",
     "true",
   );
@@ -1005,7 +1005,7 @@ test("returns the companion transcript to the same channel in the main app", asy
   await page
     .getByRole("button", { name: "Open huddle in a new window" })
     .click();
-  await expect(page.locator(".buzz-huddle-shell")).toHaveAttribute(
+  await expect(page.locator(".crew-huddle-shell")).toHaveAttribute(
     "data-huddle-open",
     "false",
   );
@@ -1051,7 +1051,7 @@ test("returns to the parent channel when leaving a huddle channel in view", asyn
   });
   await page.goto("/");
 
-  await expect(page.locator(".buzz-huddle-shell")).toHaveAttribute(
+  await expect(page.locator(".crew-huddle-shell")).toHaveAttribute(
     "data-huddle-open",
     "true",
   );
@@ -1234,7 +1234,7 @@ test("keeps a starting huddle in the drawer after its companion closes", async (
     await window.__CREW_E2E_INVOKE_MOCK_COMMAND__?.("close_huddle_companion");
   });
 
-  await expect(page.locator(".buzz-huddle-shell")).toHaveAttribute(
+  await expect(page.locator(".crew-huddle-shell")).toHaveAttribute(
     "data-huddle-open",
     "true",
   );
@@ -1261,7 +1261,7 @@ test("keeps a starting huddle in the drawer after its companion closes", async (
       ),
     )
     .toBe(1);
-  await expect(page.locator(".buzz-huddle-shell")).toHaveAttribute(
+  await expect(page.locator(".crew-huddle-shell")).toHaveAttribute(
     "data-huddle-open",
     "true",
   );
@@ -1521,7 +1521,7 @@ test("starts an agent DM huddle and hides its backing channel after it ends", as
   await expect(
     page.locator(`[data-channel-id="${pendingEphemeralChannelId}"]`),
   ).toHaveCount(0);
-  await expect(page.locator(".buzz-huddle-shell")).toHaveAttribute(
+  await expect(page.locator(".crew-huddle-shell")).toHaveAttribute(
     "data-huddle-open",
     "false",
   );
@@ -1536,7 +1536,7 @@ test("starts an agent DM huddle and hides its backing channel after it ends", as
     )
     .toBe(1);
   await expect(page.getByTestId("profile-huddle-control")).toBeVisible();
-  await expect(page.locator(".buzz-huddle-shell")).toHaveAttribute(
+  await expect(page.locator(".crew-huddle-shell")).toHaveAttribute(
     "data-huddle-open",
     "false",
   );
@@ -1554,7 +1554,7 @@ test("starts an agent DM huddle and hides its backing channel after it ends", as
   await page.evaluate(async () => {
     await window.__CREW_E2E_INVOKE_MOCK_COMMAND__?.("close_huddle_companion");
   });
-  await expect(page.locator(".buzz-huddle-shell")).toHaveAttribute(
+  await expect(page.locator(".crew-huddle-shell")).toHaveAttribute(
     "data-huddle-open",
     "true",
   );
@@ -1568,7 +1568,7 @@ test("starts an agent DM huddle and hides its backing channel after it ends", as
     .getByRole("button", { name: "Open huddle in a new window" })
     .click();
   await expect(huddleSidebarChannel).toHaveCount(0);
-  await expect(page.locator(".buzz-huddle-shell")).toHaveAttribute(
+  await expect(page.locator(".crew-huddle-shell")).toHaveAttribute(
     "data-huddle-open",
     "false",
   );
@@ -1576,7 +1576,7 @@ test("starts an agent DM huddle and hides its backing channel after it ends", as
 
   await page.getByRole("button", { name: "Leave huddle" }).click();
   await expect(huddleSidebarChannel).toHaveCount(0);
-  await expect(page.locator(".buzz-huddle-shell")).toHaveAttribute(
+  await expect(page.locator(".crew-huddle-shell")).toHaveAttribute(
     "data-huddle-open",
     "false",
   );

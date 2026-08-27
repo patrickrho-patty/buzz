@@ -22,7 +22,7 @@ const VALID_REQUEST: NostrBindPayload = {
   expiresAt: "2099-01-01T00:00:00Z",
   nonce: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi01234567",
   origin: "https://admin.example.com",
-  protocol: "buzz-nostr-identity",
+  protocol: "crew-nostr-identity",
   returnMode: "clipboard",
   verificationCode: "123456",
   version: "1",

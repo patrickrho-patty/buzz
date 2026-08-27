@@ -33,7 +33,7 @@ export const CREW_THEME_NAME = "crew";
  * combined "Buzz" tile under System mode (follow-OS) plus a single "Buzz" tile
  * under Light and a "Buzz Dark" tile under Dark.
  */
-export const CREW_DARK_THEME_NAME = "buzz-dark";
+export const CREW_DARK_THEME_NAME = "crew-dark";
 
 /** The Shiki bundle Buzz borrows its base palette from. */
 export const CREW_BASE_THEME: SyntaxThemeName = "github-light";
@@ -44,7 +44,7 @@ export const CREW_DARK_BASE_THEME: SyntaxThemeName = "github-dark";
 /**
  * Resolve a theme name to the real Shiki bundled theme it maps to.
  *
- * Most themes map to themselves, but the Buzz aliases (`buzz` / `buzz-dark`)
+ * Most themes map to themselves, but the Buzz aliases (`buzz` / `crew-dark`)
  * are not bundled Shiki themes — they reuse the GitHub Light / GitHub Dark
  * palettes. The Shiki highlighter engine (used for fenced code blocks in
  * `CodeBlock.tsx`) only understands bundled names, so callers that hand a
@@ -63,7 +63,7 @@ export function resolveShikiThemeName(name: string): SyntaxThemeName {
 // bundled syntax themes, alphabetically sorted.
 export const SYNTAX_THEMES = [
   "buzz",
-  "buzz-dark",
+  "crew-dark",
   "andromeeda",
   "aurora-x",
   "ayu-dark",
@@ -160,7 +160,7 @@ const themeImports: Record<
   // Buzz reuses the github-light palette; its gradient is applied separately.
   buzz: () => import("shiki/themes/github-light.mjs"),
   // Buzz Dark reuses the github-dark palette; dark gradient applied separately.
-  "buzz-dark": () => import("shiki/themes/github-dark.mjs"),
+  "crew-dark": () => import("shiki/themes/github-dark.mjs"),
   andromeeda: () => import("shiki/themes/andromeeda.mjs"),
   "aurora-x": () => import("shiki/themes/aurora-x.mjs"),
   "ayu-dark": () => import("shiki/themes/ayu-dark.mjs"),
@@ -240,7 +240,7 @@ export const THEME_PAIRS: ReadonlyMap<SyntaxThemeName, SyntaxThemeName> =
   new Map([
     // Light → Dark
     // Buzz is the first-party pair; keep it first so it leads every category.
-    ["buzz", "buzz-dark"],
+    ["buzz", "crew-dark"],
     ["catppuccin-latte", "catppuccin-mocha"],
     ["everforest-light", "everforest-dark"],
     ["github-light", "github-dark"],
@@ -259,7 +259,7 @@ export const THEME_PAIRS: ReadonlyMap<SyntaxThemeName, SyntaxThemeName> =
     ["solarized-light", "solarized-dark"],
     ["vitesse-light", "vitesse-dark"],
     // Dark → Light (reverse mappings)
-    ["buzz-dark", "buzz"],
+    ["crew-dark", "buzz"],
     ["catppuccin-mocha", "catppuccin-latte"],
     ["everforest-dark", "everforest-light"],
     ["github-dark", "github-light"],

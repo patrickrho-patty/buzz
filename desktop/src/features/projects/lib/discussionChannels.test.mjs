@@ -19,8 +19,8 @@ const BOB = "d".repeat(64);
 test("query builders emit the tokens FTS needs, nothing else", () => {
   assert.equal(entityDiscussionQuery(EVENT_ID), EVENT_ID);
   assert.equal(
-    repositoryDiscussionQuery({ owner: OWNER, dtag: "buzz-world" }),
-    `${OWNER} buzz-world`,
+    repositoryDiscussionQuery({ owner: OWNER, dtag: "crew-world" }),
+    `${OWNER} crew-world`,
   );
 });
 

@@ -106,7 +106,7 @@ ok "Schema applied"
 # the channel/member seed. It keys everything off a fixed COMMUNITY_ID and an
 # overridable host — point that host at OUR relay so the tenant binding matches,
 # and point its DB env at OUR isolated postgres. (psql is on PATH, so it uses
-# CREW_DB_HOST/PORT rather than the shared `buzz-postgres` container.)
+# CREW_DB_HOST/PORT rather than the shared `crew-postgres` container.)
 log "Seeding community (host=${COMMUNITY_HOST}), channels, and members..."
 CREW_COMMUNITY_HOST="${COMMUNITY_HOST}" \
   CREW_DB_HOST=localhost CREW_DB_PORT=${PG_PORT} CREW_DB_USER=buzz \

@@ -25,7 +25,7 @@
 
 use std::time::Duration;
 
-use crew_test_client::BuzzTestClient;
+use crew_test_client::CrewTestClient;
 use nostr::{Alphabet, EventBuilder, Filter, Keys, Kind, SingleLetterTag, Tag, Timestamp};
 
 const PROJECT_KIND: u16 = 30621;
@@ -113,7 +113,7 @@ fn addressable_filter(kind: u16, author: &Keys, d_tag: &str) -> Filter {
 }
 
 /// Subscribe with `filter` and drain to EOSE.
-async fn query(client: &mut BuzzTestClient, name: &str, filter: Filter) -> Vec<nostr::Event> {
+async fn query(client: &mut CrewTestClient, name: &str, filter: Filter) -> Vec<nostr::Event> {
     let sid = sub_id(name);
     client
         .subscribe(&sid, vec![filter])
@@ -138,7 +138,7 @@ async fn test_project_publish_and_query_returns_cross_owner_members() {
         member_coord(&other, "buzz-infra"),
     ];
 
-    let mut client = BuzzTestClient::connect(&url, &owner)
+    let mut client = CrewTestClient::connect(&url, &owner)
         .await
         .expect("connect");
 
@@ -178,7 +178,7 @@ async fn test_project_replacement_keeps_only_newest_for_same_author_and_d() {
     let d_tag = unique("project-replace");
     let now = Timestamp::now().as_secs();
 
-    let mut client = BuzzTestClient::connect(&url, &owner)
+    let mut client = CrewTestClient::connect(&url, &owner)
         .await
         .expect("connect");
 
@@ -228,7 +228,7 @@ async fn test_project_same_d_under_two_authors_are_independent() {
     let bob = Keys::generate();
     let d_tag = unique("project-shared-d");
 
-    let mut alice_client = BuzzTestClient::connect(&url, &alice)
+    let mut alice_client = CrewTestClient::connect(&url, &alice)
         .await
         .expect("connect");
     let ok = alice_client
@@ -241,7 +241,7 @@ async fn test_project_same_d_under_two_authors_are_independent() {
         ok.message
     );
 
-    let mut bob_client = BuzzTestClient::connect(&url, &bob).await.expect("connect");
+    let mut bob_client = CrewTestClient::connect(&url, &bob).await.expect("connect");
     let ok = bob_client
         .send_event(project_event(&bob, &d_tag, "Bob", &[], None))
         .await
@@ -287,7 +287,7 @@ async fn test_project_tombstone_deletes_coordinate_and_spares_members() {
     let repo_d = unique("repo");
     let project_d = unique("project-tombstone");
 
-    let mut client = BuzzTestClient::connect(&url, &owner)
+    let mut client = CrewTestClient::connect(&url, &owner)
         .await
         .expect("connect");
 
@@ -359,7 +359,7 @@ async fn test_stale_tombstone_between_versions_leaves_newer_project_live() {
     let project_d = unique("project-stale-tombstone");
     let now = Timestamp::now().as_secs();
 
-    let mut client = BuzzTestClient::connect(&url, &owner)
+    let mut client = CrewTestClient::connect(&url, &owner)
         .await
         .expect("connect");
 
@@ -430,7 +430,7 @@ async fn test_stale_tombstone_between_versions_leaves_newer_project_live() {
 async fn test_project_malformed_envelope_rejected_by_relay() {
     let url = relay_url();
     let owner = Keys::generate();
-    let mut client = BuzzTestClient::connect(&url, &owner)
+    let mut client = CrewTestClient::connect(&url, &owner)
         .await
         .expect("connect");
 

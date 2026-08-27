@@ -68,7 +68,7 @@
 - Refine the mobile emoji picker ([#5853](https://github.com/block/buzz/pull/5853)) ([`359fe646758d253ee94bf054a87904efd1dce7d1`](https://github.com/block/buzz/commit/359fe646758d253ee94bf054a87904efd1dce7d1))
 - Polish mobile message actions ([#5873](https://github.com/block/buzz/pull/5873)) ([`78267b0c3a75840d035ff0cc9ad1984def773886`](https://github.com/block/buzz/commit/78267b0c3a75840d035ff0cc9ad1984def773886))
 - Refine mobile pairing confirmation ([#6018](https://github.com/block/buzz/pull/6018)) ([`40f1dac6913d04c87d72610a69ed53bd12377b84`](https://github.com/block/buzz/commit/40f1dac6913d04c87d72610a69ed53bd12377b84))
-- chore(scripts): add buzz-adopt-prod-agents.sh ([#6250](https://github.com/block/buzz/pull/6250)) ([`4f9727a4b3d76389f862faa15241e16e2dd36108`](https://github.com/block/buzz/commit/4f9727a4b3d76389f862faa15241e16e2dd36108))
+- chore(scripts): add crew-adopt-prod-agents.sh ([#6250](https://github.com/block/buzz/pull/6250)) ([`4f9727a4b3d76389f862faa15241e16e2dd36108`](https://github.com/block/buzz/commit/4f9727a4b3d76389f862faa15241e16e2dd36108))
 - chore(hooks): keep mobile analysis out of pre-commit ([#6236](https://github.com/block/buzz/pull/6236)) ([`b74700daafa823e56c60b4e6470740ab28330888`](https://github.com/block/buzz/commit/b74700daafa823e56c60b4e6470740ab28330888))
 - Polish mobile timeline navigation ([#5874](https://github.com/block/buzz/pull/5874)) ([`417eea2230c1864e8c77f6440dbcfa109bfb63f6`](https://github.com/block/buzz/commit/417eea2230c1864e8c77f6440dbcfa109bfb63f6))
 - fix(prompt): simplify pickup follow-through ([#6186](https://github.com/block/buzz/pull/6186)) ([`d2cfd377e27dab8fdef0236dd8e92c89efbae829`](https://github.com/block/buzz/commit/d2cfd377e27dab8fdef0236dd8e92c89efbae829))

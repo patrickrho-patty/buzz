@@ -27,8 +27,7 @@ fn main() {
         println!("cargo:rustc-env=CREW_DESKTOP_BUILD_AGENT_ACCESS_OWNER_ONLY=1");
     }
 
-    let relay_url = std::env::var("CREW_RELAY_URL")
-        .or_else(|_| std::env::var("BUZZ_RELAY_URL"));
+    let relay_url = std::env::var("CREW_RELAY_URL").or_else(|_| std::env::var("BUZZ_RELAY_URL"));
     if let Ok(relay_url) = relay_url {
         println!("cargo:rustc-env=CREW_DESKTOP_BUILD_RELAY_URL={relay_url}");
     }

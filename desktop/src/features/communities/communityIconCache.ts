@@ -4,7 +4,7 @@
  * data-URLs (or http URLs) from the relay's NIP-11 `icon` field.
  */
 
-const ICON_CACHE_KEY = "buzz-community-icons";
+const ICON_CACHE_KEY = "crew-community-icons";
 export const MAX_CACHED_COMMUNITY_ICONS = 32;
 // Keep aligned with MAX_WORKSPACE_ICON_DATA_URL_LEN in
 // crates/crew-relay/src/handlers/relay_admin.rs.

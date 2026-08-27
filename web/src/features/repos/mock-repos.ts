@@ -17,11 +17,11 @@ const people = {
 /** Local-only data for previewing the populated repositories state. */
 export const mockRepos: Repo[] = [
   {
-    id: "buzz-desktop",
-    name: "buzz-desktop",
+    id: "crew-desktop",
+    name: "crew-desktop",
     description:
       "The desktop client for collaborating with people and agents across Buzz communities.",
-    cloneUrls: ["https://example.com/buzz-desktop.git"],
+    cloneUrls: ["https://example.com/crew-desktop.git"],
     webUrl: null,
     channelId: null,
     owner: people.ada,

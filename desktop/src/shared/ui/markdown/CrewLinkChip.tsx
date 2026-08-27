@@ -42,7 +42,7 @@ function useBuzzLinkContextMenu({
   const contextMenu =
     position && href ? (
       <MediaContextMenu
-        dataAttributes={["data-buzz-link-context-menu"]}
+        dataAttributes={["data-crew-link-context-menu"]}
         items={[
           {
             label: "Open link",
@@ -143,7 +143,7 @@ export function CrewLinkChip({
     return (
       <InlineChip
         {...props}
-        data-buzz-link=""
+        data-crew-link=""
         className={chipClassName}
         icon={Icon}
       >
@@ -156,7 +156,7 @@ export function CrewLinkChip({
     <>
       <InlineChip
         {...props}
-        data-buzz-link=""
+        data-crew-link=""
         className={chipClassName}
         icon={Icon}
         interactive

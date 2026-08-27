@@ -273,7 +273,7 @@ test("persistent agents restore through the native inline mention UI", async ({
   await expect(input.locator(".agent-mention-highlight")).toHaveCount(1);
 });
 
-for (const theme of ["buzz", "buzz-dark"]) {
+for (const theme of ["buzz", "crew-dark"]) {
   test(`captures native persistent mentions in ${theme}`, async ({ page }) => {
     await seedAudience(page, [AGENT_A, AGENT_B], theme);
     await installAudienceFixtures(page);

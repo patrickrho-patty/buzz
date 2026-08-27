@@ -19,8 +19,8 @@
 //! attacker who knows a future event id of a victim DoS the legitimate event.
 //!
 //! ```ignore
-//! let pubkey = buzz_auth::verify_nip98_event(json, url, method, body)?;
-//! if !replay.try_mark(&ctx, &event_id, buzz_auth::DEFAULT_REPLAY_TTL_SECS).await? {
+//! let pubkey = crew_auth::verify_nip98_event(json, url, method, body)?;
+//! if !replay.try_mark(&ctx, &event_id, crew_auth::DEFAULT_REPLAY_TTL_SECS).await? {
 //!     return Err(AuthError::Nip98Replay);
 //! }
 //! // safe to honor the request as `pubkey`

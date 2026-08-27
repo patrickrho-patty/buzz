@@ -98,7 +98,7 @@ async function expectTextRemSize(
     .poll(() =>
       page.evaluate(() =>
         getComputedStyle(document.documentElement)
-          .getPropertyValue("--buzz-type-rem")
+          .getPropertyValue("--crew-type-rem")
           .trim(),
       ),
     )

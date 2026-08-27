@@ -48,21 +48,21 @@
     --sidebar-border: 225 13.56% 76.86%;
     --sidebar-ring: 225 13.56% 76.86%;
     /* Exact Buzz palette tokens; components consume these semantically. */
-    --buzz-gradient-light-top: #e6e6b6;
-    --buzz-gradient-light-bottom: #c4d0da;
-    --buzz-gradient-dark-top: #4a4616;
-    --buzz-gradient-dark-bottom: #0a1423;
-    --buzz-content-dark: 0 0% 10.1960784314%;
+    --crew-gradient-light-top: #e6e6b6;
+    --crew-gradient-light-bottom: #c4d0da;
+    --crew-gradient-dark-top: #4a4616;
+    --crew-gradient-dark-bottom: #0a1423;
+    --crew-content-dark: 0 0% 10.1960784314%;
     /* Hosted-community onboarding intentionally keeps this light palette in
        both app themes; semantic tokens keep component code color-agnostic. */
-    --buzz-hosted-community-surface-fg: 23 23 23;
-    --buzz-hosted-community-divider-border: 150 150 10;
-    --buzz-hosted-community-action-bg: 240 240 205;
-    --buzz-hosted-community-action-bg-hover: 232 232 188;
-    --buzz-hosted-community-input-bg: 255 255 255;
-    --buzz-hosted-community-modal-action-fg: 255 255 255;
-    --buzz-hosted-community-modal-overlay-bg: 0 0 0;
-    --buzz-hosted-community-identity-bg: 255 255 255;
+    --crew-hosted-community-surface-fg: 23 23 23;
+    --crew-hosted-community-divider-border: 150 150 10;
+    --crew-hosted-community-action-bg: 240 240 205;
+    --crew-hosted-community-action-bg-hover: 232 232 188;
+    --crew-hosted-community-input-bg: 255 255 255;
+    --crew-hosted-community-modal-action-fg: 255 255 255;
+    --crew-hosted-community-modal-overlay-bg: 0 0 0;
+    --crew-hosted-community-identity-bg: 255 255 255;
   }
 
   .dark {
@@ -229,18 +229,18 @@
  * same hover/selection hierarchy.
  */
 :root[data-crew-sidebar] {
-  --buzz-gradient-top: var(--buzz-gradient-light-top);
-  --buzz-gradient-bottom: var(--buzz-gradient-light-bottom);
-  --buzz-muted-foreground: rgb(0 0 0 / 40%);
+  --crew-gradient-top: var(--crew-gradient-light-top);
+  --crew-gradient-bottom: var(--crew-gradient-light-bottom);
+  --crew-muted-foreground: rgb(0 0 0 / 40%);
   --crew-search-surface: rgb(0 0 0 / 4%);
-  --buzz-chrome-foreground: rgb(0 0 0 / 50%);
-  --buzz-channel-fg: inherit;
-  --buzz-dm-fg: inherit;
-  --buzz-nav-fg: inherit;
-  --buzz-hover-surface: rgb(0 0 0 / 4%);
-  --buzz-sidebar-scrollbar-thumb: var(--buzz-hover-surface);
-  --buzz-active-fill: 0 0% 0%;
-  --buzz-active-foreground: var(--foreground);
+  --crew-chrome-foreground: rgb(0 0 0 / 50%);
+  --crew-channel-fg: inherit;
+  --crew-dm-fg: inherit;
+  --crew-nav-fg: inherit;
+  --crew-hover-surface: rgb(0 0 0 / 4%);
+  --crew-sidebar-scrollbar-thumb: var(--crew-hover-surface);
+  --crew-active-fill: 0 0% 0%;
+  --crew-active-foreground: var(--foreground);
 }
 
 /*
@@ -250,33 +250,33 @@
  * class is set on the document root whenever a dark theme is active.
  */
 :root[data-crew-sidebar].dark {
-  --buzz-gradient-top: var(--buzz-gradient-dark-top);
-  --buzz-gradient-bottom: var(--buzz-gradient-dark-bottom);
-  --buzz-muted-foreground: rgb(255 255 255 / 40%);
+  --crew-gradient-top: var(--crew-gradient-dark-top);
+  --crew-gradient-bottom: var(--crew-gradient-dark-bottom);
+  --crew-muted-foreground: rgb(255 255 255 / 40%);
   --crew-search-surface: rgb(255 255 255 / 4%);
-  --buzz-chrome-foreground: rgb(255 255 255 / 50%);
-  --buzz-hover-surface: rgb(255 255 255 / 4%);
-  --buzz-active-fill: 0 0% 100%;
-  --buzz-active-foreground: 0 0% 100%;
+  --crew-chrome-foreground: rgb(255 255 255 / 50%);
+  --crew-hover-surface: rgb(255 255 255 / 4%);
+  --crew-active-fill: 0 0% 100%;
+  --crew-active-foreground: 0 0% 100%;
 }
 
 /*
  * Use the Buzz primary color for the floating selection-formatting tray.
  * Other themes retain the standard popover treatment.
  */
-:root[data-crew-sidebar] [data-buzz-selection-formatting-tray] {
+:root[data-crew-sidebar] [data-crew-selection-formatting-tray] {
   border-color: hsl(var(--primary-foreground) / 0.18);
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
 }
 
-:root[data-crew-sidebar] [data-buzz-selection-formatting-tray] button {
+:root[data-crew-sidebar] [data-crew-selection-formatting-tray] button {
   color: hsl(var(--primary-foreground));
 }
 
-:root[data-crew-sidebar] [data-buzz-selection-formatting-tray] button:hover,
+:root[data-crew-sidebar] [data-crew-selection-formatting-tray] button:hover,
 :root[data-crew-sidebar]
-  [data-buzz-selection-formatting-tray]
+  [data-crew-selection-formatting-tray]
   button[aria-pressed="true"] {
   background-color: hsl(var(--primary-foreground) / 0.16);
   color: hsl(var(--primary-foreground));
@@ -284,14 +284,14 @@
 
 /* Keep the subtle content-card lift in Buzz Light only. */
 :root[data-crew-sidebar]:not(.dark)
-  [data-buzz-content-surface]:not([data-buzz-content-unframed]) {
+  [data-crew-content-surface]:not([data-crew-content-unframed]) {
   box-shadow:
     -1px -1px 0 0 hsl(var(--sidebar-border) / 0.45),
     0 0 4px 0 rgb(0 0 0 / 7%);
 }
 
 /* Let the content card's shadow feather into the surrounding gradient. */
-:root[data-crew-sidebar]:not(.dark) [data-buzz-shadow-viewport] {
+:root[data-crew-sidebar]:not(.dark) [data-crew-shadow-viewport] {
   overflow: visible;
 }
 
@@ -300,12 +300,12 @@
  * Override `--background` locally as well as the surface fill so descendant
  * headers and panes using `bg-background` remain visually continuous.
  */
-:root[data-crew-sidebar].dark [data-buzz-content-surface] {
-  --background: var(--buzz-content-dark);
+:root[data-crew-sidebar].dark [data-crew-content-surface] {
+  --background: var(--crew-content-dark);
   background-color: hsl(var(--background));
 }
 
-:root[data-crew-sidebar] .buzz-huddle-app-surface {
+:root[data-crew-sidebar] .crew-huddle-app-surface {
   background-color: transparent;
   background-image: none;
   isolation: isolate;
@@ -314,11 +314,11 @@
 /* The Buzz theme uses a translucent color wash. Back it with an opaque copy
  * of the same gradient by default so its color remains stable over every app
  * surface, including a lifted huddle. */
-:root[data-crew-sidebar] .buzz-theme-gradient-underlay {
+:root[data-crew-sidebar] .crew-theme-gradient-underlay {
   background-image: linear-gradient(
     to bottom,
-    var(--buzz-gradient-top),
-    var(--buzz-gradient-bottom)
+    var(--crew-gradient-top),
+    var(--crew-gradient-bottom)
   );
   background-repeat: no-repeat;
   background-size: 100vw 100vh;
@@ -330,28 +330,28 @@
  * a translucent surface. The center content already follows `.dark`, so using
  * that same state for layer visibility keeps both surfaces in lockstep.
  */
-:root[data-crew-sidebar] .buzz-theme-gradient-layer-light {
+:root[data-crew-sidebar] .crew-theme-gradient-layer-light {
   background-image: linear-gradient(
     to bottom,
-    var(--buzz-gradient-light-top),
-    var(--buzz-gradient-light-bottom)
+    var(--crew-gradient-light-top),
+    var(--crew-gradient-light-bottom)
   );
   background-size: 100vw 100vh;
   background-repeat: no-repeat;
 }
 
-:root[data-crew-sidebar] .buzz-theme-gradient-layer-dark {
+:root[data-crew-sidebar] .crew-theme-gradient-layer-dark {
   background-image: linear-gradient(
     to bottom,
-    var(--buzz-gradient-dark-top),
-    var(--buzz-gradient-dark-bottom)
+    var(--crew-gradient-dark-top),
+    var(--crew-gradient-dark-bottom)
   );
   background-size: 100vw 100vh;
   background-repeat: no-repeat;
 }
 
-:root[data-crew-sidebar]:not(.dark) .buzz-theme-gradient-layer-light,
-:root[data-crew-sidebar].dark .buzz-theme-gradient-layer-dark {
+:root[data-crew-sidebar]:not(.dark) .crew-theme-gradient-layer-light,
+:root[data-crew-sidebar].dark .crew-theme-gradient-layer-dark {
   opacity: 1;
 }
 
@@ -361,8 +361,8 @@
   background-color: transparent;
   background-image: linear-gradient(
     to bottom,
-    var(--buzz-gradient-light-top),
-    var(--buzz-gradient-light-bottom)
+    var(--crew-gradient-light-top),
+    var(--crew-gradient-light-bottom)
   );
   background-size: 100vw 100vh;
   background-repeat: no-repeat;
@@ -373,8 +373,8 @@
   background-color: transparent;
   background-image: linear-gradient(
     to bottom,
-    var(--buzz-gradient-dark-top),
-    var(--buzz-gradient-dark-bottom)
+    var(--crew-gradient-dark-top),
+    var(--crew-gradient-dark-bottom)
   );
   background-size: 100vw 100vh;
   background-repeat: no-repeat;
@@ -383,8 +383,8 @@
 /* All in-shell chrome reveals the single gradient painted above. */
 :root[data-crew-sidebar] .group\/sidebar-wrapper,
 :root[data-crew-sidebar] [data-testid="app-sidebar"],
-:root[data-crew-sidebar] [data-buzz-glass-inset],
-:root[data-crew-sidebar] [data-buzz-glass-footer-wrap],
+:root[data-crew-sidebar] [data-crew-glass-inset],
+:root[data-crew-sidebar] [data-crew-glass-footer-wrap],
 :root[data-crew-sidebar]
   .group\/sidebar-wrapper
   .bg-sidebar:not([data-crew-flat]),
@@ -425,8 +425,8 @@
  */
 :root[data-crew-sidebar] [data-testid="app-sidebar"],
 :root[data-crew-sidebar] [data-testid="settings-sidebar"] {
-  --sidebar-active: var(--buzz-active-fill);
-  --sidebar-active-foreground: var(--buzz-active-foreground);
+  --sidebar-active: var(--crew-active-fill);
+  --sidebar-active-foreground: var(--crew-active-foreground);
 }
 
 /*
@@ -435,8 +435,8 @@
  */
 :root[data-crew-sidebar].dark [data-testid="app-sidebar"],
 :root[data-crew-sidebar].dark [data-testid="settings-sidebar"] {
-  --sidebar-active: var(--buzz-active-fill);
-  --sidebar-active-foreground: var(--buzz-active-foreground);
+  --sidebar-active: var(--crew-active-fill);
+  --sidebar-active-foreground: var(--crew-active-foreground);
 }
 
 /*
@@ -478,7 +478,7 @@
 :root[data-crew-sidebar]
   [data-testid="settings-sidebar"]
   [data-sidebar="menu-sub-button"]:not([data-active="true"]):hover {
-  background-color: var(--buzz-hover-surface);
+  background-color: var(--crew-hover-surface);
 }
 
 /*
@@ -491,7 +491,7 @@
   [data-testid="app-sidebar"]
   :where([data-sidebar="menu-item"]:hover)
   > [data-sidebar="menu-button"]:not([data-active="true"]) {
-  background-color: var(--buzz-hover-surface);
+  background-color: var(--crew-hover-surface);
 }
 
 /*
@@ -520,21 +520,21 @@
   [data-testid="app-sidebar"]
   [data-testid="open-search"]:focus-visible {
   background-color: var(--crew-search-surface);
-  color: var(--buzz-muted-foreground);
+  color: var(--crew-muted-foreground);
 }
 
 :root[data-crew-sidebar]
   [data-testid="app-sidebar"]
   [data-testid="open-search"]
   > * {
-  color: var(--buzz-muted-foreground);
+  color: var(--crew-muted-foreground);
 }
 
 /* Match the hover treatment used by inactive channel rows. */
 :root[data-crew-sidebar]
   [data-testid="app-sidebar"]
   [data-testid="sidebar-profile-card"]:hover {
-  background-color: var(--buzz-hover-surface);
+  background-color: var(--crew-hover-surface);
 }
 
 /*
@@ -553,7 +553,7 @@
 :root[data-crew-sidebar]
   [data-testid="settings-sidebar"]
   [data-crew-sidebar-secondary] {
-  color: var(--buzz-muted-foreground);
+  color: var(--crew-muted-foreground);
 }
 
 /* Sidebar toggle plus back/forward navigation controls in the top chrome. */
@@ -564,13 +564,13 @@
     [data-testid="global-back"],
     [data-testid="global-forward"]
   ) {
-  color: var(--buzz-chrome-foreground);
+  color: var(--crew-chrome-foreground);
 }
 
 /*
  * Section action buttons (the "+" and "..." at the right edge of each sidebar
  * section header): match the same translucent white fill (see
- * `--buzz-hover-surface`) on hover/focus instead of the grey
+ * `--crew-hover-surface`) on hover/focus instead of the grey
  * `bg-sidebar-border/35` fill. Unlayered + `[data-crew-sidebar]` prefix beats
  * the Tailwind utility so it only applies under the Buzz theme.
  */
@@ -580,7 +580,7 @@
 :root[data-crew-sidebar]
   [data-testid="app-sidebar"]
   .sidebar-section-action:focus-visible {
-  background-color: var(--buzz-hover-surface);
+  background-color: var(--crew-hover-surface);
 }
 
 /*
@@ -612,7 +612,7 @@
   [data-testid="app-sidebar"]
   [data-testid="starred-list"]
   [data-sidebar="menu-sub-button"]:not([data-active="true"]) {
-  color: var(--buzz-channel-fg);
+  color: var(--crew-channel-fg);
 }
 
 /* Direct messages: rows live inside the `dm-list` menu. */
@@ -624,7 +624,7 @@
   [data-testid="app-sidebar"]
   [data-testid="dm-list"]
   [data-sidebar="menu-sub-button"]:not([data-active="true"]) {
-  color: var(--buzz-dm-fg);
+  color: var(--crew-dm-fg);
 }
 
 /*
@@ -636,7 +636,7 @@
   [data-testid="app-sidebar"]
   [data-testid="sidebar-primary-menu"]
   [data-sidebar="menu-button"]:not([data-active="true"]) {
-  color: var(--buzz-nav-fg);
+  color: var(--crew-nav-fg);
 }
 
 /* Follow Buzz's selected appearance, independent of the OS color scheme. */
@@ -657,38 +657,38 @@
     var(--sidebar-background) /
     var(--glass-background-opacity, 65%)
   );
-  --buzz-translucency-gradient-alpha: var(--glass-background-opacity, 65%);
-  --buzz-translucency-wash-alpha: 2.4%;
+  --crew-translucency-gradient-alpha: var(--glass-background-opacity, 65%);
+  --crew-translucency-wash-alpha: 2.4%;
 }
 
 /* The regular Buzz theme keeps an opaque copy of the gradient beneath its
  * color layers. Remove that backing while glass is enabled so the translucent
  * wash can reveal the native macOS vibrancy view. */
-:root[data-glass-background] .buzz-theme-gradient-underlay {
+:root[data-glass-background] .crew-theme-gradient-underlay {
   background: transparent;
 }
 
 /* Non-Buzz themes use their existing sidebar color as the glass tint. */
 :root[data-glass-background]:not([data-crew-sidebar])
-  .buzz-theme-gradient-layer {
+  .crew-theme-gradient-layer {
   background-color: var(--glass-sidebar-surface);
 }
 
-:root[data-glass-background] .buzz-theme-gradient-layer-light {
+:root[data-glass-background] .crew-theme-gradient-layer-light {
   /* Buzz color wash above a neutral frost wash. */
   background-image:
     linear-gradient(
       to bottom,
       color-mix(
         in srgb,
-        var(--buzz-gradient-light-top)
-          var(--buzz-translucency-gradient-alpha, 70%),
+        var(--crew-gradient-light-top)
+          var(--crew-translucency-gradient-alpha, 70%),
         transparent
       ),
       color-mix(
         in srgb,
-        var(--buzz-gradient-light-bottom)
-          var(--buzz-translucency-gradient-alpha, 70%),
+        var(--crew-gradient-light-bottom)
+          var(--crew-translucency-gradient-alpha, 70%),
         transparent
       )
     ),
@@ -696,12 +696,12 @@
       to bottom,
       color-mix(
         in srgb,
-        #ffffff var(--buzz-translucency-wash-alpha, 2.4%),
+        #ffffff var(--crew-translucency-wash-alpha, 2.4%),
         transparent
       ),
       color-mix(
         in srgb,
-        #ffffff var(--buzz-translucency-wash-alpha, 2.4%),
+        #ffffff var(--crew-translucency-wash-alpha, 2.4%),
         transparent
       )
     );
@@ -711,20 +711,20 @@
   background-repeat: no-repeat, no-repeat;
 }
 
-:root[data-glass-background] .buzz-theme-gradient-layer-dark {
+:root[data-glass-background] .crew-theme-gradient-layer-dark {
   background-image:
     linear-gradient(
       to bottom,
       color-mix(
         in srgb,
-        var(--buzz-gradient-dark-top)
-          var(--buzz-translucency-gradient-alpha, 70%),
+        var(--crew-gradient-dark-top)
+          var(--crew-translucency-gradient-alpha, 70%),
         transparent
       ),
       color-mix(
         in srgb,
-        var(--buzz-gradient-dark-bottom)
-          var(--buzz-translucency-gradient-alpha, 70%),
+        var(--crew-gradient-dark-bottom)
+          var(--crew-translucency-gradient-alpha, 70%),
         transparent
       )
     ),
@@ -732,12 +732,12 @@
       to bottom,
       color-mix(
         in srgb,
-        #12161d var(--buzz-translucency-wash-alpha, 2.4%),
+        #12161d var(--crew-translucency-wash-alpha, 2.4%),
         transparent
       ),
       color-mix(
         in srgb,
-        #12161d var(--buzz-translucency-wash-alpha, 2.4%),
+        #12161d var(--crew-translucency-wash-alpha, 2.4%),
         transparent
       )
     );
@@ -755,14 +755,14 @@
       to bottom,
       color-mix(
         in srgb,
-        var(--buzz-gradient-light-top)
-          var(--buzz-translucency-gradient-alpha, 70%),
+        var(--crew-gradient-light-top)
+          var(--crew-translucency-gradient-alpha, 70%),
         transparent
       ),
       color-mix(
         in srgb,
-        var(--buzz-gradient-light-bottom)
-          var(--buzz-translucency-gradient-alpha, 70%),
+        var(--crew-gradient-light-bottom)
+          var(--crew-translucency-gradient-alpha, 70%),
         transparent
       )
     ),
@@ -770,12 +770,12 @@
       to bottom,
       color-mix(
         in srgb,
-        #ffffff var(--buzz-translucency-wash-alpha, 2.4%),
+        #ffffff var(--crew-translucency-wash-alpha, 2.4%),
         transparent
       ),
       color-mix(
         in srgb,
-        #ffffff var(--buzz-translucency-wash-alpha, 2.4%),
+        #ffffff var(--crew-translucency-wash-alpha, 2.4%),
         transparent
       )
     );
@@ -793,14 +793,14 @@
       to bottom,
       color-mix(
         in srgb,
-        var(--buzz-gradient-dark-top)
-          var(--buzz-translucency-gradient-alpha, 70%),
+        var(--crew-gradient-dark-top)
+          var(--crew-translucency-gradient-alpha, 70%),
         transparent
       ),
       color-mix(
         in srgb,
-        var(--buzz-gradient-dark-bottom)
-          var(--buzz-translucency-gradient-alpha, 70%),
+        var(--crew-gradient-dark-bottom)
+          var(--crew-translucency-gradient-alpha, 70%),
         transparent
       )
     ),
@@ -808,12 +808,12 @@
       to bottom,
       color-mix(
         in srgb,
-        #12161d var(--buzz-translucency-wash-alpha, 2.4%),
+        #12161d var(--crew-translucency-wash-alpha, 2.4%),
         transparent
       ),
       color-mix(
         in srgb,
-        #12161d var(--buzz-translucency-wash-alpha, 2.4%),
+        #12161d var(--crew-translucency-wash-alpha, 2.4%),
         transparent
       )
     );
@@ -832,8 +832,8 @@
 :root[data-glass-background] .group\/sidebar-wrapper,
 :root[data-glass-background] [data-testid="app-sidebar"],
 :root[data-glass-background] [data-testid="settings-sidebar"],
-:root[data-glass-background] [data-buzz-glass-inset],
-:root[data-glass-background] [data-buzz-glass-footer-wrap],
+:root[data-glass-background] [data-crew-glass-inset],
+:root[data-glass-background] [data-crew-glass-footer-wrap],
 :root[data-glass-background]
   .group\/sidebar-wrapper
   .bg-sidebar:not([data-crew-flat]),
@@ -858,10 +858,10 @@
 :root[data-glass-background]
   [data-testid="app-sidebar"]
   [data-testid="sidebar-pinned-header"],
-:root[data-glass-background] [data-buzz-glass-inset],
+:root[data-glass-background] [data-crew-glass-inset],
 :root[data-glass-background]
   [data-testid="app-sidebar"]
-  [data-buzz-glass-footer-wrap],
+  [data-crew-glass-footer-wrap],
 :root[data-glass-background]
   [data-testid="app-sidebar"]
   [data-sidebar="footer"] {
@@ -887,36 +887,36 @@
 }
 
 /* The outer shell stays clear; the app surface owns the translucent tint. */
-:root[data-glass-background] .buzz-huddle-shell {
+:root[data-glass-background] .crew-huddle-shell {
   background: transparent;
 }
 
-:root[data-glass-background] .buzz-huddle-app-surface {
+:root[data-glass-background] .crew-huddle-app-surface {
   background-color: transparent;
   background-image: none;
   isolation: isolate;
 }
 
-:root[data-glass-background] .buzz-huddle-app-surface::after {
+:root[data-glass-background] .crew-huddle-app-surface::after {
   background: transparent;
 }
 
 :root[data-glass-background]
-  .buzz-huddle-shell[data-huddle-window="true"]
-  .buzz-huddle-app-surface-open::after {
-  background: hsl(var(--buzz-huddle-drawer-surface));
+  .crew-huddle-shell[data-huddle-window="true"]
+  .crew-huddle-app-surface-open::after {
+  background: hsl(var(--crew-huddle-drawer-surface));
 }
 
 /* Keep the Buzz gradient in the lifted app surface. The shell beneath it is
  * strictly the huddle drawer, so its dark surface is revealed at the rounded
  * lower corners instead of the theme gradient bleeding through there. */
-:root[data-crew-sidebar] .buzz-huddle-shell[data-huddle-open="true"] {
-  background-color: hsl(var(--buzz-huddle-drawer-surface));
+:root[data-crew-sidebar] .crew-huddle-shell[data-huddle-open="true"] {
+  background-color: hsl(var(--crew-huddle-drawer-surface));
   background-image: none;
 }
 
 :root[data-crew-sidebar][data-glass-background]
-  .buzz-huddle-shell[data-huddle-window="false"][data-huddle-open="true"] {
+  .crew-huddle-shell[data-huddle-window="false"][data-huddle-open="true"] {
   background-color: transparent;
   background-image: none;
 }
@@ -924,8 +924,8 @@
 /* Keep an explicit black base at z-0 while the lifted app surface (and its
  * two gradient layers) sits above it. This prevents the default gradient
  * backing from ever replacing the huddle drawer at the exposed corners. */
-:root[data-crew-sidebar] .buzz-huddle-shell[data-huddle-open="true"]::before {
-  background: hsl(var(--buzz-huddle-drawer-surface));
+:root[data-crew-sidebar] .crew-huddle-shell[data-huddle-open="true"]::before {
+  background: hsl(var(--crew-huddle-drawer-surface));
   content: "";
   inset: 0;
   pointer-events: none;
@@ -937,31 +937,31 @@
  * and present the tray as an inset four-corner surface. The dedicated Huddle
  * window keeps the full-width dark control dock above. */
 :root[data-glass-background]
-  .buzz-huddle-shell[data-huddle-window="false"]
-  .buzz-huddle-drawer-backdrop {
+  .crew-huddle-shell[data-huddle-window="false"]
+  .crew-huddle-drawer-backdrop {
   background: transparent;
 }
 
 :root[data-crew-sidebar][data-glass-background]
-  .buzz-huddle-shell[data-huddle-window="false"][data-huddle-open="true"]::before {
+  .crew-huddle-shell[data-huddle-window="false"][data-huddle-open="true"]::before {
   content: none;
 }
 
 :root[data-glass-background]
-  .buzz-huddle-shell[data-huddle-window="false"]
-  .buzz-huddle-drawer-slot {
-  padding: var(--buzz-huddle-drawer-inset);
+  .crew-huddle-shell[data-huddle-window="false"]
+  .crew-huddle-drawer-slot {
+  padding: var(--crew-huddle-drawer-inset);
 }
 
 :root[data-glass-background]
-  .buzz-huddle-shell[data-huddle-window="false"]
-  .buzz-huddle-drawer-slot
-  > .buzz-huddle-drawer {
+  .crew-huddle-shell[data-huddle-window="false"]
+  .crew-huddle-drawer-slot
+  > .crew-huddle-drawer {
   border-radius: calc(
-    var(--buzz-huddle-drawer-radius) -
-    var(--buzz-huddle-drawer-inset)
+    var(--crew-huddle-drawer-radius) -
+    var(--crew-huddle-drawer-inset)
   );
   height: 100%;
-  padding-block: var(--buzz-huddle-drawer-inset);
-  padding-inline: var(--buzz-huddle-drawer-inset);
+  padding-block: var(--crew-huddle-drawer-inset);
+  padding-inline: var(--crew-huddle-drawer-inset);
 }

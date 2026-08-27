@@ -1,6 +1,6 @@
 import { copyTextToSystemClipboard } from "@/shared/api/tauriMedia";
 
-const CREW_CODE_BLOCK_ATTRIBUTE = "data-buzz-code-block";
+const CREW_CODE_BLOCK_ATTRIBUTE = "data-crew-code-block";
 
 function escapeHtml(value: string) {
   return value

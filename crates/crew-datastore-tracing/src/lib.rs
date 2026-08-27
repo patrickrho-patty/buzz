@@ -67,7 +67,7 @@ impl Parse for DatastoreArgs {
 
 /// Instruments an async logical datastore operation according to Buzz policy.
 ///
-/// PostgreSQL spans always omit function arguments, use the `buzz_datastore`
+/// PostgreSQL spans always omit function arguments, use the `crew_datastore`
 /// target, and expose only canonical semantic fields plus explicitly supplied
 /// safe fields. An `Err` sets `otel.status_code` without inspecting the error.
 #[proc_macro_attribute]
@@ -96,7 +96,7 @@ pub fn datastore_span(args: TokenStream, item: TokenStream) -> TokenStream {
     let extra_fields = args.fields.map(|tokens| quote!(, #tokens));
     function.attrs.push(syn::parse_quote!(
         #[::tracing::instrument(
-            target = "buzz_datastore",
+            target = "crew_datastore",
             name = #name,
             skip_all,
             fields(

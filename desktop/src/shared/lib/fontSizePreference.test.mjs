@@ -29,12 +29,12 @@ const preference = await import("./fontSizePreference.ts");
 
 test("scales fixed line-height utilities with the typography rem", () => {
   assert.deepEqual(config.theme.extend.lineHeight, {
-    3: "calc(var(--buzz-type-rem) * 0.75)",
-    4: "var(--buzz-type-rem)",
-    5: "calc(var(--buzz-type-rem) * 1.25)",
-    6: "calc(var(--buzz-type-rem) * 1.5)",
-    7: "calc(var(--buzz-type-rem) * 1.75)",
-    8: "calc(var(--buzz-type-rem) * 2)",
+    3: "calc(var(--crew-type-rem) * 0.75)",
+    4: "var(--crew-type-rem)",
+    5: "calc(var(--crew-type-rem) * 1.25)",
+    6: "calc(var(--crew-type-rem) * 1.5)",
+    7: "calc(var(--crew-type-rem) * 1.75)",
+    8: "calc(var(--crew-type-rem) * 2)",
     "message-author": "var(--conversation-author-line-height)",
   });
 });
@@ -53,7 +53,7 @@ test("persists and applies the selected font size across the app", () => {
   assert.equal(preference.getFontSize(), "smaller");
   assert.equal(values.get(preference.FONT_SIZE_STORAGE_KEY), "smaller");
   assert.equal(attributes.get("data-font-size"), "smaller");
-  assert.equal(styleValues.get("--buzz-type-rem"), "14.857143px");
+  assert.equal(styleValues.get("--crew-type-rem"), "14.857143px");
 });
 
 test("previews a font size without changing the saved preference", () => {
@@ -63,11 +63,11 @@ test("previews a font size without changing the saved preference", () => {
   assert.equal(preference.getFontSize(), "smaller");
   assert.equal(values.get(preference.FONT_SIZE_STORAGE_KEY), "smaller");
   assert.equal(attributes.get("data-font-size"), "larger");
-  assert.equal(styleValues.get("--buzz-type-rem"), "18.857143px");
+  assert.equal(styleValues.get("--crew-type-rem"), "18.857143px");
 
   preference.previewFontSize(null);
   assert.equal(attributes.get("data-font-size"), "smaller");
-  assert.equal(styleValues.get("--buzz-type-rem"), "16.342857px");
+  assert.equal(styleValues.get("--crew-type-rem"), "16.342857px");
 });
 
 test("initializes from the stored font size", () => {
@@ -76,7 +76,7 @@ test("initializes from the stored font size", () => {
   preference.initializeFontSizePreference();
   assert.equal(preference.getFontSize(), "larger");
   assert.equal(attributes.get("data-font-size"), "larger");
-  assert.equal(styleValues.get("--buzz-type-rem"), "17.142857px");
+  assert.equal(styleValues.get("--crew-type-rem"), "17.142857px");
 });
 
 test("applies font size changes from another window", () => {
@@ -84,7 +84,7 @@ test("applies font size changes from another window", () => {
   windowListeners.get("storage")({ key: preference.FONT_SIZE_STORAGE_KEY });
   assert.equal(preference.getFontSize(), "smaller");
   assert.equal(attributes.get("data-font-size"), "smaller");
-  assert.equal(styleValues.get("--buzz-type-rem"), "14.857143px");
+  assert.equal(styleValues.get("--crew-type-rem"), "14.857143px");
 });
 
 test("returns to the default when another window clears storage", () => {
@@ -93,5 +93,5 @@ test("returns to the default when another window clears storage", () => {
   windowListeners.get("storage")({ key: null });
   assert.equal(preference.getFontSize(), "default");
   assert.equal(attributes.get("data-font-size"), "default");
-  assert.equal(styleValues.get("--buzz-type-rem"), "16px");
+  assert.equal(styleValues.get("--crew-type-rem"), "16px");
 });

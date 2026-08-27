@@ -5,32 +5,32 @@
      * token while the browser root remains 16px, so text scales without also
      * resizing rem-based widths, gaps, radii, and controls.
      */
-    --buzz-type-rem: 1rem;
-    --text-xs: calc(var(--buzz-type-rem) * 0.75);
-    --text-sm: calc(var(--buzz-type-rem) * 0.875);
-    --text-base: var(--buzz-type-rem);
-    --text-lg: calc(var(--buzz-type-rem) * 1.125);
-    --text-xl: calc(var(--buzz-type-rem) * 1.25);
-    --text-2xl: calc(var(--buzz-type-rem) * 1.5);
-    --text-3xl: calc(var(--buzz-type-rem) * 1.875);
-    --text-4xl: calc(var(--buzz-type-rem) * 2.25);
-    --text-5xl: calc(var(--buzz-type-rem) * 3);
-    --text-6xl: calc(var(--buzz-type-rem) * 3.75);
+    --crew-type-rem: 1rem;
+    --text-xs: calc(var(--crew-type-rem) * 0.75);
+    --text-sm: calc(var(--crew-type-rem) * 0.875);
+    --text-base: var(--crew-type-rem);
+    --text-lg: calc(var(--crew-type-rem) * 1.125);
+    --text-xl: calc(var(--crew-type-rem) * 1.25);
+    --text-2xl: calc(var(--crew-type-rem) * 1.5);
+    --text-3xl: calc(var(--crew-type-rem) * 1.875);
+    --text-4xl: calc(var(--crew-type-rem) * 2.25);
+    --text-5xl: calc(var(--crew-type-rem) * 3);
+    --text-6xl: calc(var(--crew-type-rem) * 3.75);
 
     /*
      * Default conversation type and comfy spacing for channels, DMs, threads,
      * Inbox, and the composer. Font size changes the type tokens only;
      * Conversation density overrides only spacing.
      */
-    --conversation-message-font-size: calc(var(--buzz-type-rem) * 0.875);
-    --conversation-message-line-height: calc(var(--buzz-type-rem) * 1.25);
-    --conversation-author-line-height: var(--buzz-type-rem);
+    --conversation-message-font-size: calc(var(--crew-type-rem) * 0.875);
+    --conversation-message-line-height: calc(var(--crew-type-rem) * 1.25);
+    --conversation-author-line-height: var(--crew-type-rem);
     --conversation-body-gap: 0.125rem;
     --conversation-row-padding-block: 0.25rem;
     --conversation-paragraph-gap: 0.5rem;
     --conversation-list-item-gap: 0.375rem;
-    --conversation-timestamp-font-size: calc(var(--buzz-type-rem) * 0.75);
-    --conversation-timestamp-line-height: var(--buzz-type-rem);
+    --conversation-timestamp-font-size: calc(var(--crew-type-rem) * 0.75);
+    --conversation-timestamp-line-height: var(--crew-type-rem);
   }
 
   :root[data-conversation-density="compact"] {

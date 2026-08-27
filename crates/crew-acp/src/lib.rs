@@ -1921,7 +1921,7 @@ async fn tokio_main() -> Result<()> {
 
     tracing_subscriber::fmt()
         .with_env_filter(
-            EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("buzz_acp=info")),
+            EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("crew_acp=info")),
         )
         .compact()
         .init();
@@ -2888,7 +2888,7 @@ async fn tokio_main() -> Result<()> {
                                 }
                             };
                             // Capture author pubkey before queue.push() moves
-                            // buzz_event.event (needed for mode gate below).
+                            // crew_event.event (needed for mode gate below).
                             let author_hex = crew_event.event.pubkey.to_hex();
                             let event_id_hex = crew_event.event.id.to_hex();
                             // Clone for the non-cancelling steer fork, which

@@ -1072,7 +1072,7 @@ function ImageBlock({ alt, dim, resolvedSrc, src, thumbSrc }: ImageBlockProps) {
 
     updateHiddenState();
 
-    const spoiler = trigger.closest(".buzz-spoiler[data-spoiler]");
+    const spoiler = trigger.closest(".crew-spoiler[data-spoiler]");
     if (!spoiler) return;
 
     const observer = new MutationObserver(updateHiddenState);

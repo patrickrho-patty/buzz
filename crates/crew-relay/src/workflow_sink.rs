@@ -288,7 +288,7 @@ impl ActionSink for RelayActionSink {
             // NIP-10 e-tags for the thread. Marked `root`/`reply` so clients and
             // the ingest resolver read the ancestry the same way. A direct reply
             // (parent == root) emits a single `reply` tag; a nested reply emits
-            // the `root` + `reply` pair — matching `buzz_sdk::builders::thread_tags`
+            // the `root` + `reply` pair — matching `crew_sdk::builders::thread_tags`
             // so every writer produces one wire shape per reply kind.
             if let Some(ancestry) = &reply_ancestry {
                 let root_hex = ancestry.root_hex();
