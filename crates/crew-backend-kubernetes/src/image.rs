@@ -138,7 +138,7 @@ mod tests {
             "ghcr.io/block/buzz-sprig:v1.2.3",
             "ghcr.io/block/buzz-sprig:sha-abc1234",
             "ghcr.io/block/buzz-sprig",
-            "localhost:5000/buzz-sprig",
+            "localhost:5000/crew-sprig",
         ] {
             let err = parse(bad).unwrap_err();
             assert!(err.contains("digest-pinned"), "for {bad:?} got: {err}");

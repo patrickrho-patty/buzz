@@ -209,7 +209,7 @@ mod tests {
 
     fn provider_config() -> ProviderConfig {
         config::parse(&serde_json::json!({
-            "namespace": "buzz-agents-test",
+            "namespace": "crew-agents-test",
             "image": format!("ghcr.io/block/buzz-sprig@sha256:{}", "a".repeat(64)),
         }))
         .unwrap()

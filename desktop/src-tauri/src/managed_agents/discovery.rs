@@ -200,7 +200,7 @@ const KNOWN_ACP_RUNTIMES: &[KnownAcpRuntime] = &[
         adapter_install_commands: &[],
         cli_install_instructions_url: "https://github.com/block/buzz",
         adapter_install_instructions_url: "https://github.com/block/buzz",
-        cli_install_hint: "Ships with the Buzz desktop app.",
+        cli_install_hint: "Ships with the Crew desktop app.",
         adapter_install_hint: "",
         skill_dir: None,
         supports_acp_model_switching: true,
