@@ -14,7 +14,7 @@ import {
   type UserProfileLookup,
 } from "@/features/profile/lib/identity";
 import { cn } from "@/shared/lib/cn";
-import { BuzzLoadingState } from "@/shared/ui/BuzzLoadingState";
+import { CrewLoadingState } from "@/shared/ui/CrewLoadingState";
 import { Card } from "@/shared/ui/card";
 import { DropdownMenuItem } from "@/shared/ui/dropdown-menu";
 import { CopyShareLinkMenuItem } from "./CopyShareLinkMenuItem";
@@ -186,7 +186,7 @@ export function ProjectsIssuesList({
   viewMode,
 }: ProjectsIssuesListProps) {
   if (isLoading) {
-    return <BuzzLoadingState label="Loading tasks" />;
+    return <CrewLoadingState label="Loading tasks" />;
   }
 
   const loadNotice = (

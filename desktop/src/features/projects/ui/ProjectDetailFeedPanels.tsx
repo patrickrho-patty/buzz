@@ -17,7 +17,7 @@ import { commitShareLink } from "@/features/projects/lib/projectShareLinks";
 import { relativeTime } from "@/features/projects/lib/projectsViewHelpers";
 import type { ProjectRepoCommit } from "@/shared/api/types";
 import { truncatePubkey } from "@/shared/lib/pubkey";
-import { BuzzLoadingState } from "@/shared/ui/BuzzLoadingState";
+import { CrewLoadingState } from "@/shared/ui/CrewLoadingState";
 import {
   resolveUserLabel,
   type UserProfileLookup,
@@ -283,7 +283,7 @@ export function ActivityPanel({
   });
 
   if (isLoading) {
-    return <BuzzLoadingState label="Loading activity" />;
+    return <CrewLoadingState label="Loading activity" />;
   }
 
   if (commits.length === 0) {

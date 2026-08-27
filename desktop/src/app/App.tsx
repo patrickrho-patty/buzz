@@ -71,9 +71,9 @@ import {
   listenForDeepLinks,
 } from "@/shared/deep-link";
 import { cn } from "@/shared/lib/cn";
-import { BuzzMark } from "@/shared/ui/buzz-logo/BuzzMark";
-import { FlappingBee } from "@/shared/ui/buzz-logo/FlappingBee";
-import { FuzzyLogo } from "@/shared/ui/buzz-logo/FuzzyLogo";
+import { CrewMark } from "@/shared/ui/crew-logo/CrewMark";
+import { FlappingBee } from "@/shared/ui/crew-logo/FlappingBee";
+import { FuzzyLogo } from "@/shared/ui/crew-logo/FuzzyLogo";
 import { StartupWindowDragRegion } from "@/shared/ui/StartupWindowDragRegion";
 
 const LOADING_TEXT = "Setting up your community...";
@@ -137,7 +137,7 @@ function useBootSplashHold(): BootSplashPhase {
   return phase;
 }
 
-// Animated Buzz mark for the loading gates. The static BuzzMark renders in
+// Animated Buzz mark for the loading gates. The static CrewMark renders in
 // normal flow and sizes the box — it's plain SVG (no JS/SMIL), so it paints on
 // the very first frame even before scripting starts, avoiding a blank flash on
 // hard reload. The animated FuzzyLogo is layered on top and takes over once it
@@ -153,7 +153,7 @@ function BeeLoader({
 }) {
   return (
     <div className={cn("relative", tintClassName, className)}>
-      <BuzzMark className="block h-auto w-full" />
+      <CrewMark className="block h-auto w-full" />
       <FuzzyLogo
         ariaLabel={ariaLabel}
         className="absolute inset-0 h-full! w-full! [&>svg]:h-full [&>svg]:w-full [&>svg]:max-w-full"
@@ -755,7 +755,7 @@ function MachineBootstrap({ sharedIdentity }: { sharedIdentity: boolean }) {
         initialPage={machineInitialPage}
         onSsoWorkspace={(result) => {
           // Workforce SSO: the relay already admitted this pubkey — join the
-          // company workspace directly (same path as buzz://connect) and
+          // company workspace directly (same path as crew://connect) and
           // finish machine onboarding without the harness/provider pages.
           // Stash the SSO email so the profile step can prefill + lock the
           // username to the Google Workspace email prefix (workforce policy).

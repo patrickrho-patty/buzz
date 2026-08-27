@@ -37,7 +37,7 @@ fn record_max_tokens_overrides_global_env_with_secondary() {
 
     let field = surface.normalized.max_output_tokens.unwrap();
     assert_eq!(field.value.as_deref(), Some("8192"));
-    assert_eq!(field.origin, ConfigOrigin::BuzzExplicit);
+    assert_eq!(field.origin, ConfigOrigin::CrewExplicit);
     // Global value is the overridden secondary.
     assert_eq!(field.overridden_value.as_deref(), Some("16384"));
     assert_eq!(field.overridden_origin, Some(ConfigOrigin::GlobalDefault));
@@ -144,7 +144,7 @@ fn post_sanitization_empty_global_env_falls_through_to_persona_tier() {
 // definition-less record with both structured and env prompt — env wins.
 
 /// Pass-3 clarification: record.system_prompt = A + record env
-/// CREW_ACP_SYSTEM_PROMPT = B → B wins as BuzzExplicit.
+/// CREW_ACP_SYSTEM_PROMPT = B → B wins as CrewExplicit.
 /// The env block sits above the struct block per v3 candidate-preparation
 /// contract; current reader semantics (struct before env) would be wrong.
 #[test]
@@ -161,10 +161,10 @@ fn record_env_prompt_wins_over_record_struct_prompt_as_buzz_explicit() {
 
     let prompt = surface.normalized.system_prompt.unwrap();
     assert_eq!(prompt.value.as_deref(), Some("env-prompt-B"));
-    assert_eq!(prompt.origin, ConfigOrigin::BuzzExplicit);
+    assert_eq!(prompt.origin, ConfigOrigin::CrewExplicit);
     // Struct prompt is the secondary.
     assert_eq!(prompt.overridden_value.as_deref(), Some("struct-prompt-A"));
-    assert_eq!(prompt.overridden_origin, Some(ConfigOrigin::BuzzExplicit));
+    assert_eq!(prompt.overridden_origin, Some(ConfigOrigin::CrewExplicit));
 }
 
 // ── Definition env tier tests (Layer 2b) ─────────────────────────────────────
@@ -261,10 +261,10 @@ fn reserved_key_absent_from_definition_env_falls_through() {
 //
 // record.effort_level is the Buzz-canonical seeded value (the effort a spawn
 // applies at next session start via `apply_effort_env`). It must surface as
-// BuzzExplicit and take precedence over the config-file tier, but not over a
+// CrewExplicit and take precedence over the config-file tier, but not over a
 // record env var override.
 
-/// B4: record.effort_level surfaces as BuzzExplicit when no env var is set.
+/// B4: record.effort_level surfaces as CrewExplicit when no env var is set.
 #[test]
 fn b4_canonical_effort_level_surfaces_as_buzz_explicit() {
     let mut record = test_record();
@@ -276,7 +276,7 @@ fn b4_canonical_effort_level_surfaces_as_buzz_explicit() {
         .thinking_effort
         .expect("effort must surface from canonical record tier");
     assert_eq!(effort.value.as_deref(), Some("high"));
-    assert_eq!(effort.origin, ConfigOrigin::BuzzExplicit);
+    assert_eq!(effort.origin, ConfigOrigin::CrewExplicit);
 }
 
 /// B4: record.effort_level shadows the config-file tier.
@@ -292,7 +292,7 @@ fn b4_canonical_effort_level_shadows_file_tier() {
         .thinking_effort
         .expect("canonical effort must shadow file tier");
     assert_eq!(effort.value.as_deref(), Some("medium"));
-    assert_eq!(effort.origin, ConfigOrigin::BuzzExplicit);
+    assert_eq!(effort.origin, ConfigOrigin::CrewExplicit);
 }
 
 /// B4: a record env var override still wins over record.effort_level, which
@@ -311,7 +311,7 @@ fn b4_record_env_var_wins_over_canonical_effort_level() {
         .thinking_effort
         .expect("env var must win over canonical effort");
     assert_eq!(effort.value.as_deref(), Some("high"));
-    assert_eq!(effort.origin, ConfigOrigin::BuzzExplicit);
+    assert_eq!(effort.origin, ConfigOrigin::CrewExplicit);
     assert_eq!(effort.overridden_value.as_deref(), Some("low"));
 }
 
@@ -430,7 +430,7 @@ fn effort_option_selected_by_category_drives_all_facts() {
         .thinking_effort
         .expect("effort must surface with both configured and running facts");
     assert_eq!(effort.value.as_deref(), Some("high"));
-    assert_eq!(effort.origin, ConfigOrigin::BuzzExplicit);
+    assert_eq!(effort.origin, ConfigOrigin::CrewExplicit);
     assert_eq!(effort.overridden_value.as_deref(), Some("default"));
     assert_eq!(
         effort.overridden_origin,

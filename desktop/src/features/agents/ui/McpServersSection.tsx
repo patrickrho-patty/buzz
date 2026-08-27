@@ -7,7 +7,7 @@ type McpServersSectionProps = {
   runtimeId: string | null;
   mcpConfigFilePath?: string | null;
   variant?: "compact" | "profile";
-  buzzAgentSlot?: React.ReactNode;
+  crewAgentSlot?: React.ReactNode;
 };
 
 export function shouldRenderMcpServers(
@@ -30,7 +30,7 @@ export function mcpConfigFileCaption(
 }
 
 export function McpServersSection({
-  buzzAgentSlot,
+  crewAgentSlot,
   extensions,
   mcpConfigFilePath,
   runtimeId,
@@ -56,7 +56,7 @@ export function McpServersSection({
         <p className="py-2 text-xs font-medium text-foreground">MCP servers</p>
       ) : null}
 
-      {isBuzzAgent && buzzAgentSlot ? buzzAgentSlot : null}
+      {isBuzzAgent && crewAgentSlot ? crewAgentSlot : null}
 
       {extensions.length > 0 ? (
         <div className="divide-y divide-border/55">

@@ -11,7 +11,7 @@ import {
   XCircle,
 } from "lucide-react";
 
-import type { BuzzToolInfo, ToolStatus } from "./agentSessionTypes";
+import type { CrewToolInfo, ToolStatus } from "./agentSessionTypes";
 
 export function normalizeToolStatus(status: string): ToolStatus {
   const normalized = status.toLowerCase();
@@ -136,7 +136,7 @@ const CREW_TOOL_TITLE_ALIASES: Array<[RegExp, string]> = [
   [/\bremoving reaction\b/, "remove_reaction"],
 ];
 
-export function getBuzzToolInfo(title: string): BuzzToolInfo | null {
+export function getBuzzToolInfo(title: string): CrewToolInfo | null {
   const name = normalizeToolName(title);
   const isRead = CREW_READ_TOOLS.has(name);
   const isWrite = CREW_WRITE_TOOLS.has(name);

@@ -19,7 +19,7 @@ import {
   TooltipTrigger,
 } from "@/shared/ui/tooltip";
 
-import { BuzzInlineLink, BuzzLinkChip } from "./BuzzLinkChip";
+import { CrewInlineLink, CrewLinkChip } from "./CrewLinkChip";
 import { MessageLinkPill } from "./MessageLinkPill";
 import { useMarkdownRuntime } from "./runtimeContext";
 import { useInlineTooltipPosition } from "./useInlineTooltipPosition";
@@ -121,7 +121,7 @@ function ChannelPermalinkChipContents({
 }) {
   return (
     <ChannelMetadataTooltip channel={channel}>
-      <BuzzLinkChip
+      <CrewLinkChip
         data-channel-deep-link={dataChannelDeepLink}
         href={href}
         icon="channel"
@@ -134,7 +134,7 @@ function ChannelPermalinkChipContents({
         wrapping
       >
         {label}
-      </BuzzLinkChip>
+      </CrewLinkChip>
     </ChannelMetadataTooltip>
   );
 }
@@ -185,7 +185,7 @@ function ResolvedAuthoredDeepLink({
     );
   }
   return (
-    <BuzzInlineLink
+    <CrewInlineLink
       href={href}
       title={href}
       aria-label={`${messageLink ? "Open message" : "Open channel"}: ${label}`}
@@ -195,16 +195,16 @@ function ResolvedAuthoredDeepLink({
       }
     >
       {children}
-    </BuzzInlineLink>
+    </CrewInlineLink>
   );
 }
 
 /**
- * Renders an intentionally-labeled `buzz://channel|message` deep link through
+ * Renders an intentionally-labeled `crew://channel|message` deep link through
  * the shared visibility gate. Known channels are interactive immediately;
  * unknown ids without a runtime resolver stay inert; otherwise a bounded
  * per-id lookup decides openability. Both parser families
- * (`buzz://channel/...` and `buzz://message?...`) share this decision so a
+ * (`crew://channel/...` and `crew://message?...`) share this decision so a
  * private destination can never render clickable via a custom label.
  */
 export function AuthoredDeepLinkAnchor({
@@ -232,7 +232,7 @@ export function AuthoredDeepLinkAnchor({
   const knownChannel = channels?.find((c) => c.id === channelId);
   if (knownChannel) {
     return (
-      <BuzzInlineLink
+      <CrewInlineLink
         href={href}
         title={href}
         aria-label={`${messageLink ? "Open message" : "Open channel"}: ${label}`}
@@ -240,7 +240,7 @@ export function AuthoredDeepLinkAnchor({
         onOpenLink={openLink}
       >
         {children}
-      </BuzzInlineLink>
+      </CrewInlineLink>
     );
   }
   if (!resolveChannelReferences) {
@@ -408,7 +408,7 @@ function ChannelReferenceChip({
 }: ChannelReferenceChipProps) {
   return (
     <ChannelMetadataTooltip channel={channel}>
-      <BuzzLinkChip
+      <CrewLinkChip
         data-channel-link=""
         href={channel ? buildChannelLink(channel.id) : undefined}
         icon="channel"
@@ -422,7 +422,7 @@ function ChannelReferenceChip({
         wrapping
       >
         {channelName}
-      </BuzzLinkChip>
+      </CrewLinkChip>
     </ChannelMetadataTooltip>
   );
 }

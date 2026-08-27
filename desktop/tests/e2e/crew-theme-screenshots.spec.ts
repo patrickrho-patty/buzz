@@ -349,7 +349,7 @@ async function expectAppliedBuzzTheme(
         return {
           storedTheme: window.localStorage.getItem(storageKey),
           isDark: root.classList.contains("dark"),
-          buzzTheme: root.getAttribute("data-buzz-theme"),
+          crewTheme: root.getAttribute("data-buzz-theme"),
           gradientTop: styles.getPropertyValue("--buzz-gradient-top").trim(),
           gradientBottom: styles
             .getPropertyValue("--buzz-gradient-bottom")
@@ -360,7 +360,7 @@ async function expectAppliedBuzzTheme(
     .toEqual({
       storedTheme,
       isDark,
-      buzzTheme: themeName,
+      crewTheme: themeName,
       gradientTop: isDark ? "#4a4616" : "#e6e6b6",
       gradientBottom: isDark ? "#0a1423" : "#c4d0da",
     });
@@ -1577,13 +1577,13 @@ test("glass background keeps the content panel solid", async ({ page }) => {
     opacitySlider.locator(".buzz-avatar-framing-slider-handle"),
   ).toHaveCSS("opacity", "1");
   await expect(root).toHaveAttribute("data-glass-background", "");
-  const buzzSettingOrder = await page
+  const crewSettingOrder = await page
     .getByTestId("appearance-theme-card")
     .locator(
       '[data-testid="appearance-color-mode-row"], [data-testid="theme-style-row"], [data-testid="glass-background-row"], [data-testid="glass-opacity-row"], [data-testid="prominent-active-tab-row"]',
     )
     .evaluateAll((rows) => rows.map((row) => row.getAttribute("data-testid")));
-  expect(buzzSettingOrder).toEqual([
+  expect(crewSettingOrder).toEqual([
     "appearance-color-mode-row",
     "theme-style-row",
     "glass-background-row",

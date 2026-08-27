@@ -1,6 +1,6 @@
 import { useId, useLayoutEffect, useRef } from "react";
 import type { CSSProperties } from "react";
-import "./buzz-logo-animation.css";
+import "./crew-logo-animation.css";
 
 const LOOP = "indefinite";
 const EASE = ".16 1 .3 1";
@@ -30,7 +30,7 @@ type TextureConfig = {
   seedValues: string;
 };
 
-export type BuzzLogoAnimationProps = {
+export type CrewLogoAnimationProps = {
   ariaLabel?: string;
   className?: string;
   fullScreen?: boolean;
@@ -621,7 +621,7 @@ function RestWindowFade({
   );
 }
 
-export default function BuzzLogoAnimation({
+export default function CrewLogoAnimation({
   ariaLabel = "Buzz logo animation",
   className = "",
   fullScreen = true,
@@ -632,7 +632,7 @@ export default function BuzzLogoAnimation({
   style,
   textured = true,
   variant = "v8",
-}: BuzzLogoAnimationProps) {
+}: CrewLogoAnimationProps) {
   const markRef = useRef<SVGSVGElement>(null);
   const idSuffix = idPart(useId());
   const baseConfig = VARIANTS[variant] ?? VARIANTS.v8;

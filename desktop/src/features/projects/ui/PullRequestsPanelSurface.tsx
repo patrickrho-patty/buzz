@@ -1,6 +1,6 @@
 import type * as React from "react";
 
-import { BuzzLoadingState } from "@/shared/ui/BuzzLoadingState";
+import { CrewLoadingState } from "@/shared/ui/CrewLoadingState";
 
 /** Which center pane `PullRequestsPanel` should show. A retained selected
  * review wins over an empty list so refetching does not flash "No reviews yet." */
@@ -41,7 +41,7 @@ export function PullRequestsPanelSurface({
     selectedPullRequest,
   });
   if (kind === "loading") {
-    return <BuzzLoadingState label="Loading reviews" />;
+    return <CrewLoadingState label="Loading reviews" />;
   }
   if (kind === "detail") {
     return detail;

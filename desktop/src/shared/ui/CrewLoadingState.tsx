@@ -1,8 +1,8 @@
 import { cn } from "@/shared/lib/cn";
-import BuzzLogoAnimation from "@/shared/ui/buzz-logo/BuzzLogoAnimation";
+import CrewLogoAnimation from "@/shared/ui/crew-logo/CrewLogoAnimation";
 
 /** Centered, low-emphasis loading state for page and panel fetches. */
-export function BuzzLoadingState({
+export function CrewLoadingState({
   className,
   fill = false,
   label = "Loading",
@@ -21,7 +21,7 @@ export function BuzzLoadingState({
       data-testid="buzz-loading-state"
       role="status"
     >
-      <BuzzLogoAnimation
+      <CrewLogoAnimation
         ariaLabel={label}
         className="buzz-logo--scale-pulse"
         fullScreen={false}

@@ -5,10 +5,10 @@ import { installMockBridge, TEST_IDENTITIES } from "../helpers/bridge";
 
 const SHOTS = "test-results/entity-link-recipient-cards";
 
-// Regression coverage for buzz:// entity links posted WITHOUT sender
+// Regression coverage for crew:// entity links posted WITHOUT sender
 // snapshot tags (CLI / agent senders): #3818 moved external-link previews to
 // sender-authored snapshots, which silently killed the recipient-side
-// buzz://pr|issue|repo cards from #4695. These cards resolve their titles
+// crew://pr|issue|repo cards from #4695. These cards resolve their titles
 // from the active relay itself, so they must render for recipients even when
 // the message carries no link-preview tags.
 
@@ -21,7 +21,7 @@ const ISSUE_ID = `f0${"1a2b".repeat(15)}ee`; // 64-hex event id
 const ISSUE_SUBJECT =
   "Smoke test: issue tracking on relay-tools with a deliberately long title";
 
-test("agent-style message with angle-bracket buzz:// links renders entity cards without snapshot tags", async ({
+test("agent-style message with angle-bracket crew:// links renders entity cards without snapshot tags", async ({
   page,
 }) => {
   await page.addInitScript(
@@ -73,7 +73,7 @@ test("agent-style message with angle-bracket buzz:// links renders entity cards 
   );
 
   // Simulate an agent/CLI sender: plain kind-9 message with angle-bracket
-  // buzz:// URLs in a Markdown list and NO link-preview snapshot tags.
+  // crew:// URLs in a Markdown list and NO link-preview snapshot tags.
   await page.evaluate(
     ({ prId, issueId, alicePubkey }) => {
       window.__CREW_E2E_EMIT_MOCK_MESSAGE__?.({
@@ -82,10 +82,10 @@ test("agent-style message with angle-bracket buzz:// links renders entity cards 
         content: [
           "PR is up — review when you can:",
           "",
-          `- Pull request with enough leading context to wrap: <buzz://pr?id=${prId}&owner=${alicePubkey}&d=relay-tools>`,
-          `- Issue: <buzz://issue?id=${issueId}&owner=${alicePubkey}&d=relay-tools>`,
-          `- Repository: <buzz://repo?owner=${alicePubkey}&d=relay-tools>`,
-          `- Missing repo: <buzz://repo?owner=${alicePubkey}&d=missing-repo>`,
+          `- Pull request with enough leading context to wrap: <crew://pr?id=${prId}&owner=${alicePubkey}&d=relay-tools>`,
+          `- Issue: <crew://issue?id=${issueId}&owner=${alicePubkey}&d=relay-tools>`,
+          `- Repository: <crew://repo?owner=${alicePubkey}&d=relay-tools>`,
+          `- Missing repo: <crew://repo?owner=${alicePubkey}&d=missing-repo>`,
         ].join("\n"),
       });
     },
@@ -310,7 +310,7 @@ test("issue chip width is metadata-independent while the title loads", async ({
       window.__CREW_E2E_EMIT_MOCK_MESSAGE__?.({
         channelName: "general",
         pubkey: alicePubkey,
-        content: `Issue link: buzz://issue?id=${issueId}&owner=${alicePubkey}&d=relay-tools`,
+        content: `Issue link: crew://issue?id=${issueId}&owner=${alicePubkey}&d=relay-tools`,
       });
     },
     { issueId: ISSUE_ID, alicePubkey: ALICE_PUBKEY },
@@ -367,7 +367,7 @@ test("entity tooltip uses project context while relay metadata is delayed", asyn
     ({ issueId, owner }) => {
       window.__CREW_E2E_EMIT_MOCK_MESSAGE__?.({
         channelName: "general",
-        content: `Delayed issue: buzz://issue?id=${issueId}&owner=${owner}&d=buzz`,
+        content: `Delayed issue: crew://issue?id=${issueId}&owner=${owner}&d=buzz`,
       });
     },
     { issueId: ISSUE_ID, owner: DEFAULT_MOCK_PUBKEY },
@@ -392,10 +392,10 @@ test("desktop composer shows entity card and send is not blocked by missing snap
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await page.getByTestId("channel-general").click();
 
-  const repoLink = `buzz://repo?owner=${ALICE_PUBKEY}&d=relay-tools`;
+  const repoLink = `crew://repo?owner=${ALICE_PUBKEY}&d=relay-tools`;
   await page.getByTestId("message-input").fill(`Check out ${repoLink}`);
 
-  // buzz:// links never produce snapshot tags, so the composer card must
+  // crew:// links never produce snapshot tags, so the composer card must
   // show as done (not stuck "processing") with zero ready snapshots.
   const composerCard = page
     .locator("[data-composer-link-previews]")
@@ -472,9 +472,9 @@ test("reopening the same entity link reapplies its workspace state", async ({
   await installMockBridge(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("open-projects-view")).toBeVisible();
-  const repoLink = `buzz://repo?owner=${DEFAULT_MOCK_PUBKEY}&d=buzz&tab=prs`;
-  const prLink = `buzz://pr?id=${PR_ID}&owner=${DEFAULT_MOCK_PUBKEY}&d=buzz`;
-  const issueLink = `buzz://issue?id=${ISSUE_ID}&owner=${DEFAULT_MOCK_PUBKEY}&d=buzz`;
+  const repoLink = `crew://repo?owner=${DEFAULT_MOCK_PUBKEY}&d=buzz&tab=prs`;
+  const prLink = `crew://pr?id=${PR_ID}&owner=${DEFAULT_MOCK_PUBKEY}&d=buzz`;
+  const issueLink = `crew://issue?id=${ISSUE_ID}&owner=${DEFAULT_MOCK_PUBKEY}&d=buzz`;
   const emitEntityLink = async (link: string) => {
     await page.waitForFunction(
       () => typeof window.__TAURI_INTERNALS__?.invoke === "function",
@@ -542,7 +542,7 @@ test("deleted reply links identify deletion and fall back to their thread root",
   const deletedReplyId = "c".repeat(64);
   const threadRootId = "b".repeat(64);
   const channelId = "9dae0116-799b-5071-a0a8-fdd30a91a35d";
-  const link = `buzz://message?channel=${channelId}&id=${deletedReplyId}&thread=${threadRootId}`;
+  const link = `crew://message?channel=${channelId}&id=${deletedReplyId}&thread=${threadRootId}`;
   await installMockBridge(page, { deletedEventIds: [deletedReplyId] });
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await page.waitForFunction(
@@ -585,7 +585,7 @@ test("deleted top-level message links identify deletion and fall back to channel
 }) => {
   const missingMessageId = "d".repeat(64);
   const channelId = "9dae0116-799b-5071-a0a8-fdd30a91a35d";
-  const link = `buzz://message?channel=${channelId}&id=${missingMessageId}`;
+  const link = `crew://message?channel=${channelId}&id=${missingMessageId}`;
   await installMockBridge(page, { deletedEventIds: [missingMessageId] });
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await page.getByTestId("channel-general").click();
@@ -617,7 +617,7 @@ test("deleted top-level message links identify deletion and fall back to channel
 test("cold-start entity links drain after the React listener mounts", async ({
   page,
 }) => {
-  const href = `buzz://repo?owner=${DEFAULT_MOCK_PUBKEY}&d=buzz&tab=prs`;
+  const href = `crew://repo?owner=${DEFAULT_MOCK_PUBKEY}&d=buzz&tab=prs`;
   await installMockBridge(page, {
     pendingEntityDeepLinks: [{ id: "cold-start-project", href }],
   });

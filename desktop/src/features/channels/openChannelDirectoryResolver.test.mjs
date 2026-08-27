@@ -508,7 +508,7 @@ async function mountMarkdownReference(client, content, variant) {
 test("markdown message links resolve private destinations without a directory scan", async () => {
   const channelId = "private-markdown-channel";
   const messageId = "e".repeat(64);
-  const link = `buzz://message?channel=${channelId}&id=${messageId}`;
+  const link = `crew://message?channel=${channelId}&id=${messageId}`;
   const renderPaths = [
     ["CommonMark autolink", `<${link}>`],
     ["bare message-link node", link],
@@ -547,18 +547,18 @@ test("markdown message links resolve private destinations without a directory sc
 test("authored-label channel and message links respect the private-destination gate", async () => {
   // Authored-label deep links must route through the same bounded detail
   // lookup + openable gate as the pill paths, regardless of parser family:
-  //   - buzz://channel/<uuid> and buzz://channel/<uuid>/<event-id> reach the
+  //   - crew://channel/<uuid> and crew://channel/<uuid>/<event-id> reach the
   //     gate via ChannelDeepLinkAnchor's authored branch, and
-  //   - the canonical buzz://message?channel=&id= form (produced by
+  //   - the canonical crew://message?channel=&id= form (produced by
   //     buildMessageLink) reaches it via resolveMessageLinkRenderTarget's
   //     "label" branch.
   // A private channel must render inert on every route regardless of the
   // display text.
   const channelId = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
   const messageId = "b".repeat(64);
-  const channelLink = `buzz://channel/${channelId}`;
-  const channelMessageLink = `buzz://channel/${channelId}/${messageId}`;
-  const canonicalMessageLink = `buzz://message?channel=${channelId}&id=${messageId}`;
+  const channelLink = `crew://channel/${channelId}`;
+  const channelMessageLink = `crew://channel/${channelId}/${messageId}`;
+  const canonicalMessageLink = `crew://message?channel=${channelId}&id=${messageId}`;
   const renderPaths = [
     ["channel variant", `[private channel](${channelLink})`],
     [

@@ -2661,10 +2661,10 @@ test("repository rows identify their git host", async ({ page }) => {
   await page.getByRole("button", { name: "Repositories", exact: true }).click();
   await page.getByRole("button", { name: "List layout" }).click();
 
-  const buzzHostIcon = page
+  const crewHostIcon = page
     .getByTestId("repository-row-buzz")
     .getByTestId("repository-host-icon");
-  await expect(buzzHostIcon).toHaveAttribute(
+  await expect(crewHostIcon).toHaveAttribute(
     "aria-label",
     "Buzz-hosted repository",
   );

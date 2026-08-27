@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { useBakedBuildEnvQuery } from "../hooks";
 import { useGlobalAgentConfig } from "../useGlobalAgentConfig";
-import { CREW_AGENT_THINKING_EFFORT } from "./buzzAgentConfig";
+import { CREW_AGENT_THINKING_EFFORT } from "./crewAgentConfig";
 import { getInheritedAgentDefaults } from "./bakedEnvHelpers";
 
 export function useAgentDialogDefaults({

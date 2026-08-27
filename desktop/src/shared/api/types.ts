@@ -588,7 +588,7 @@ export type AgentModelInfo = {
 
 // ── Config bridge types ──────────────────────────────────────────────────────
 export type ConfigOrigin =
-  | "buzzExplicit"
+  | "crewExplicit"
   | "acpNativeRead"
   | "acpConfigOption"
   | "envVar"

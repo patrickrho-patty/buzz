@@ -1,4 +1,4 @@
-//! Canonical `buzz://` deep links for Buzz entities.
+//! Canonical `crew://` deep links for Buzz entities.
 //!
 //! Buzz Desktop renders these links as rich preview cards in chat and
 //! navigates in-app when they are clicked. The desktop parser lives in
@@ -17,7 +17,7 @@
 
 use crate::error::CliError;
 
-/// A validated `buzz://message` deep link.
+/// A validated `crew://message` deep link.
 #[derive(Debug, PartialEq, Eq)]
 pub struct MessageLink {
     pub channel_id: String,
@@ -25,7 +25,7 @@ pub struct MessageLink {
     pub thread_root_id: Option<String>,
 }
 
-/// Parse a `buzz://message?channel=<uuid>&id=<event>[&thread=<root>]` link.
+/// Parse a `crew://message?channel=<uuid>&id=<event>[&thread=<root>]` link.
 ///
 /// The link chooses only the channel and event within the relay already
 /// configured for this CLI process. It cannot override the relay or identity.
@@ -33,7 +33,9 @@ pub fn parse_message_link(input: &str) -> Result<MessageLink, CliError> {
     let url = url::Url::parse(input.trim())
         .map_err(|_| CliError::Usage("invalid Buzz message link".into()))?;
 
-    if url.scheme() != "buzz"
+    // crew:// is canonical; legacy buzz:// links from pre-rename tooling are
+    // still accepted during the rename window.
+    if !matches!(url.scheme(), "crew" | "buzz")
         || url.host_str() != Some("message")
         || !matches!(url.path(), "" | "/")
         || !url.username().is_empty()
@@ -41,7 +43,7 @@ pub fn parse_message_link(input: &str) -> Result<MessageLink, CliError> {
         || url.fragment().is_some()
     {
         return Err(CliError::Usage(
-            "expected a buzz://message link without credentials or a fragment".into(),
+            "expected a crew://message link without credentials or a fragment".into(),
         ));
     }
 
@@ -103,7 +105,7 @@ fn canonical_event_id(value: &str, parameter: &str) -> Result<String, CliError> 
     Ok(value.to_ascii_lowercase())
 }
 
-/// Whether a d-tag can be expressed in a `buzz://` link.
+/// Whether a d-tag can be expressed in a `crew://` link.
 ///
 /// Project slugs accept up to 1024 bytes of arbitrary UTF-8, but the link
 /// format is restricted to `[a-zA-Z0-9._-]{1,64}` (no leading dot, no `..`)
@@ -121,24 +123,24 @@ pub fn is_linkable_dtag(dtag: &str) -> bool {
             .all(|c| c.is_ascii_alphanumeric() || c == '.' || c == '_' || c == '-')
 }
 
-/// Build a `buzz://repo` link for a repository announcement (kind 30617).
+/// Build a `crew://repo` link for a repository announcement (kind 30617).
 pub fn repo_link(owner: &str, repo_id: &str) -> String {
-    format!("buzz://repo?owner={owner}&d={repo_id}")
+    format!("crew://repo?owner={owner}&d={repo_id}")
 }
 
-/// Build a `buzz://project` link for a project announcement (kind 30621).
+/// Build a `crew://project` link for a project announcement (kind 30621).
 pub fn project_link(owner: &str, project_id: &str) -> String {
-    format!("buzz://project?owner={owner}&d={project_id}")
+    format!("crew://project?owner={owner}&d={project_id}")
 }
 
-/// Build a `buzz://pr` link for a pull request event (kind 1618).
+/// Build a `crew://pr` link for a pull request event (kind 1618).
 pub fn pull_request_link(event_id: &str, owner: &str, repo_id: &str) -> String {
-    format!("buzz://pr?id={event_id}&owner={owner}&d={repo_id}")
+    format!("crew://pr?id={event_id}&owner={owner}&d={repo_id}")
 }
 
-/// Build a `buzz://issue` link for an issue event (kind 1621).
+/// Build a `crew://issue` link for an issue event (kind 1621).
 pub fn issue_link(event_id: &str, owner: &str, repo_id: &str) -> String {
-    format!("buzz://issue?id={event_id}&owner={owner}&d={repo_id}")
+    format!("crew://issue?id={event_id}&owner={owner}&d={repo_id}")
 }
 
 #[cfg(test)]
@@ -197,7 +199,7 @@ mod tests {
     #[test]
     fn parses_message_link_with_thread_root() {
         let parsed = parse_message_link(&format!(
-            "buzz://message?channel={CHANNEL}&id={MESSAGE}&thread={THREAD}"
+            "crew://message?channel={CHANNEL}&id={MESSAGE}&thread={THREAD}"
         ))
         .unwrap();
 
@@ -214,14 +216,14 @@ mod tests {
     #[test]
     fn parses_message_link_without_thread_root() {
         let parsed =
-            parse_message_link(&format!("buzz://message?channel={CHANNEL}&id={MESSAGE}")).unwrap();
+            parse_message_link(&format!("crew://message?channel={CHANNEL}&id={MESSAGE}")).unwrap();
         assert_eq!(parsed.thread_root_id, None);
     }
 
     #[test]
     fn normalizes_message_link_identifiers() {
         let parsed = parse_message_link(&format!(
-            "buzz://message?channel={}&id={}",
+            "crew://message?channel={}&id={}",
             CHANNEL.to_ascii_uppercase(),
             MESSAGE.to_ascii_uppercase()
         ))
@@ -234,9 +236,9 @@ mod tests {
     #[test]
     fn rejects_message_link_that_could_change_connection_context() {
         for link in [
-            format!("buzz://message?channel={CHANNEL}&id={MESSAGE}&relay=other"),
-            format!("buzz://user:secret@message?channel={CHANNEL}&id={MESSAGE}"),
-            format!("buzz://message?channel={CHANNEL}&id={MESSAGE}#fragment"),
+            format!("crew://message?channel={CHANNEL}&id={MESSAGE}&relay=other"),
+            format!("crew://user:secret@message?channel={CHANNEL}&id={MESSAGE}"),
+            format!("crew://message?channel={CHANNEL}&id={MESSAGE}#fragment"),
         ] {
             assert!(parse_message_link(&link).is_err(), "accepted {link}");
         }
@@ -245,10 +247,10 @@ mod tests {
     #[test]
     fn rejects_duplicate_or_malformed_message_link_identifiers() {
         for link in [
-            format!("buzz://message?channel={CHANNEL}&channel={CHANNEL}&id={MESSAGE}"),
-            format!("buzz://message?channel=not-a-uuid&id={MESSAGE}"),
-            format!("buzz://message?channel={CHANNEL}&id=not-an-event"),
-            format!("buzz://message?channel={CHANNEL}&id={MESSAGE}&thread="),
+            format!("crew://message?channel={CHANNEL}&channel={CHANNEL}&id={MESSAGE}"),
+            format!("crew://message?channel=not-a-uuid&id={MESSAGE}"),
+            format!("crew://message?channel={CHANNEL}&id=not-an-event"),
+            format!("crew://message?channel={CHANNEL}&id={MESSAGE}&thread="),
         ] {
             assert!(parse_message_link(&link).is_err(), "accepted {link}");
         }

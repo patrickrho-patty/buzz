@@ -25,7 +25,7 @@ import {
   TooltipTrigger,
 } from "@/shared/ui/tooltip";
 
-import { BuzzInlineLink, BuzzLinkChip } from "./BuzzLinkChip";
+import { CrewInlineLink, CrewLinkChip } from "./CrewLinkChip";
 import { useInlineTooltipPosition } from "./useInlineTooltipPosition";
 
 function EntityMetadataTooltip({
@@ -163,7 +163,7 @@ function entityLinkPresentation(link: ParsedEntityLink) {
 }
 
 /**
- * Navigate to the project detail view for a `buzz://pr|issue|repo` link.
+ * Navigate to the project detail view for a `crew://pr|issue|repo` link.
  * The link's (owner, d) coordinate is exactly the `/projects/$projectId`
  * route id, so no read-model resolution is needed.
  */
@@ -194,7 +194,7 @@ export function useOpenEntityLink(): (link: ParsedEntityLink) => void {
 }
 
 /**
- * In-app open handlers for `buzz://` entity preview cards, keyed by href.
+ * In-app open handlers for `crew://` entity preview cards, keyed by href.
  * External cards get no handler and keep their OS-opened anchor.
  */
 export function useEntityCardOpenHandlers(
@@ -215,9 +215,9 @@ export function useEntityCardOpenHandlers(
 }
 
 /**
- * Resolve an anchor href to a canonical `buzz://` entity link, accepting
+ * Resolve an anchor href to a canonical `crew://` entity link, accepting
  * both the deep-link scheme directly and HTTPS relay clone URLs (which the
- * preview parser normalizes onto `buzz://repo` only when the URL origin
+ * preview parser normalizes onto `crew://repo` only when the URL origin
  * matches the active relay origin).
  */
 function resolveEntityHref(
@@ -232,7 +232,7 @@ function resolveEntityHref(
 }
 
 /**
- * Render an inline anchor for a Buzz entity link (`buzz://pr|issue|repo` or
+ * Render an inline anchor for a Buzz entity link (`crew://pr|issue|repo` or
  * an HTTPS relay clone URL whose origin matches the active relay) that
  * navigates in-app instead of handing the URL to the OS. Returns null when
  * the href is not a valid entity link so the caller can fall through to its
@@ -298,7 +298,7 @@ export function renderEntityLinkAnchor({
 
   if (!asChip) {
     return (
-      <BuzzInlineLink
+      <CrewInlineLink
         href={href}
         title={href}
         aria-label={presentation.ariaLabel}
@@ -306,7 +306,7 @@ export function renderEntityLinkAnchor({
         onOpenLink={() => onOpenEntityLink(parsed.value)}
       >
         {children}
-      </BuzzInlineLink>
+      </CrewInlineLink>
     );
   }
 
@@ -325,8 +325,8 @@ export function renderEntityLinkAnchor({
         ? `${presentation.ariaLabel}: ${parsed.value.dtag} · ${resolvedContext}`
         : presentation.ariaLabel;
     return (
-      <BuzzLinkChip
-        data-buzz-link-kind={parsed.value.type}
+      <CrewLinkChip
+        data-crew-link-kind={parsed.value.type}
         href={href}
         icon={presentation.icon}
         aria-label={ariaLabel}
@@ -335,7 +335,7 @@ export function renderEntityLinkAnchor({
         wrapping
       >
         {chipLabel}
-      </BuzzLinkChip>
+      </CrewLinkChip>
     );
   };
   return interactive ? (

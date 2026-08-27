@@ -1352,7 +1352,7 @@ export function createMarkdownComponents(
       // Malformed message deep links fall through to external handling.
     }
 
-    // `buzz://pr|issue|repo?…` entity links navigate in-app; malformed ones
+    // `crew://pr|issue|repo?…` entity links navigate in-app; malformed ones
     // fall through to the default anchor.
     const entityAnchor = renderEntityLinkAnchor({
       children,

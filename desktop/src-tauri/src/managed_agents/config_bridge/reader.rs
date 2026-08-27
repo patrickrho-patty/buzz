@@ -151,7 +151,7 @@ pub(crate) fn read_config_surface(
             key: k.clone(),
             label: k.clone(),
             value: Some(v.clone()),
-            origin: ConfigOrigin::BuzzExplicit,
+            origin: ConfigOrigin::CrewExplicit,
             schema_type: ConfigFieldType::String,
             write_via: ConfigWriteMechanism::RespawnWithEnvVar { env_key: k.clone() },
         });
@@ -312,11 +312,11 @@ fn build_model_field(
     // The file entry is always last; everything before it is a "configured" candidate
     // that gates whether ACP participates as a fallback (see any_configured below).
     let configured: &[(Option<&str>, ConfigOrigin)] = &[
-        (rec_env, ConfigOrigin::BuzzExplicit),
+        (rec_env, ConfigOrigin::CrewExplicit),
         (pers_env, ConfigOrigin::PersonaDefault),
         (glob_env, ConfigOrigin::GlobalDefault),
         (def_env, ConfigOrigin::HarnessDefault),
-        (struct_record, ConfigOrigin::BuzzExplicit),
+        (struct_record, ConfigOrigin::CrewExplicit),
         (struct_persona, ConfigOrigin::PersonaDefault),
         (struct_global, ConfigOrigin::GlobalDefault),
         (file_model.as_deref(), ConfigOrigin::ConfigFile),
@@ -464,11 +464,11 @@ fn build_provider_field(
     let struct_record = record.provider.as_deref();
 
     let tiers_list: &[(Option<&str>, ConfigOrigin)] = &[
-        (rec_env, ConfigOrigin::BuzzExplicit),
+        (rec_env, ConfigOrigin::CrewExplicit),
         (pers_env, ConfigOrigin::PersonaDefault),
         (glob_env, ConfigOrigin::GlobalDefault),
         (def_env, ConfigOrigin::HarnessDefault),
-        (struct_record, ConfigOrigin::BuzzExplicit),
+        (struct_record, ConfigOrigin::CrewExplicit),
         (
             tiers.persona_provider.as_deref(),
             ConfigOrigin::PersonaDefault,
@@ -569,8 +569,8 @@ fn build_thinking_field(
     let canonical_effort = record.effort_level.as_deref();
 
     let tiers_list: &[(Option<&str>, ConfigOrigin)] = &[
-        (rec_env, ConfigOrigin::BuzzExplicit),
-        (canonical_effort, ConfigOrigin::BuzzExplicit),
+        (rec_env, ConfigOrigin::CrewExplicit),
+        (canonical_effort, ConfigOrigin::CrewExplicit),
         (acp_effort.as_deref(), ConfigOrigin::AcpConfigOption),
         (pers_env, ConfigOrigin::PersonaDefault),
         (glob_env, ConfigOrigin::GlobalDefault),
@@ -620,7 +620,7 @@ fn build_numeric_env_field(
         .unwrap_or([None, None, None, None]);
 
     let tiers_list: &[(Option<&str>, ConfigOrigin)] = &[
-        (rec_env, ConfigOrigin::BuzzExplicit),
+        (rec_env, ConfigOrigin::CrewExplicit),
         (pers_env, ConfigOrigin::PersonaDefault),
         (glob_env, ConfigOrigin::GlobalDefault),
         (def_env, ConfigOrigin::HarnessDefault),
@@ -676,11 +676,11 @@ fn build_system_prompt_field(
     let struct_record = record.system_prompt.as_deref();
 
     let tiers_list: &[(Option<&str>, ConfigOrigin)] = &[
-        (rec_env, ConfigOrigin::BuzzExplicit),       // record env
+        (rec_env, ConfigOrigin::CrewExplicit),       // record env
         (pers_env, ConfigOrigin::PersonaDefault),    // persona env
         (glob_env, ConfigOrigin::GlobalDefault),     // global env
         (def_env, ConfigOrigin::HarnessDefault),     // definition env
-        (struct_record, ConfigOrigin::BuzzExplicit), // struct record
+        (struct_record, ConfigOrigin::CrewExplicit), // struct record
         (
             tiers.persona_prompt.as_deref(),
             ConfigOrigin::PersonaDefault,

@@ -7,7 +7,7 @@ import type { IdentityStorage } from "@/shared/api/types";
 import { cn } from "@/shared/lib/cn";
 import { writeTextToClipboard } from "@/shared/lib/clipboard";
 import { Button } from "@/shared/ui/button";
-import { FuzzyLogo } from "@/shared/ui/buzz-logo/FuzzyLogo";
+import { FuzzyLogo } from "@/shared/ui/crew-logo/FuzzyLogo";
 import { Card } from "@/shared/ui/card";
 import { Spinner } from "@/shared/ui/spinner";
 import {

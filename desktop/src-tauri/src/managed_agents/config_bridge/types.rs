@@ -42,7 +42,7 @@ pub struct InheritedConfigTiers {
 #[serde(rename_all = "camelCase")]
 pub enum ConfigOrigin {
     /// Explicitly set in Buzz UI / ManagedAgentRecord (highest precedence).
-    BuzzExplicit,
+    CrewExplicit,
     /// Returned by ACP `_goose/unstable/config/read` (tier 1a).
     AcpNativeRead,
     /// Returned by ACP `session/new` configOptions (tier 1b).

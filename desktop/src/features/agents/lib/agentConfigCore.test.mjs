@@ -6,7 +6,7 @@ import {
   deriveNumericDescriptors,
   structuredEnvKeys,
 } from "./agentConfigCore.ts";
-import { NUMERIC_KIND_MIN } from "../ui/buzzAgentModelTuningFields.tsx";
+import { NUMERIC_KIND_MIN } from "../ui/crewAgentModelTuningFields.tsx";
 
 const config = {
   env_vars: { CREW_AGENT_THINKING_EFFORT: "high" },
@@ -61,7 +61,7 @@ test("Buzz Agent exposes provider, model, and Buzz-owned effort", () => {
     model.fields.map((item) => item.kind),
     ["provider", "model", "effort"],
   );
-  assert.equal(field(model, "effort").optionSource, "buzzAgentCatalog");
+  assert.equal(field(model, "effort").optionSource, "crewAgentCatalog");
   assert.deepEqual(field(model, "effort").targetApplication, {
     kind: "envVar",
     key: "CREW_AGENT_THINKING_EFFORT",
@@ -341,7 +341,7 @@ test("numeric descriptor value is null when env var is absent", () => {
 
 test("structuredEnvKeys_global_includes_effort_key_and_numeric_keys", () => {
   // Global surface renders effort + all numeric descriptors.
-  const buzzAgentModel = deriveAgentConfigFieldModel({
+  const crewAgentModel = deriveAgentConfigFieldModel({
     config,
     runtime: runtime("crew-agent", {
       modelEnvVar: "CREW_AGENT_MODEL",
@@ -355,7 +355,7 @@ test("structuredEnvKeys_global_includes_effort_key_and_numeric_keys", () => {
   });
 
   // Global renders all renderable descriptors.
-  const renderedDescriptors = buzzAgentModel.fields.filter(
+  const renderedDescriptors = crewAgentModel.fields.filter(
     (f) => f.render === "control",
   );
   const keys = structuredEnvKeys(renderedDescriptors);
@@ -380,7 +380,7 @@ test("structuredEnvKeys_global_includes_effort_key_and_numeric_keys", () => {
 
 test("structuredEnvKeys_per_agent_buzz_agent_includes_effort_and_numeric_keys", () => {
   // Per-agent crew-agent renders effort + all 3 numeric descriptors.
-  const buzzAgentModel = deriveAgentConfigFieldModel({
+  const crewAgentModel = deriveAgentConfigFieldModel({
     config,
     runtime: runtime("crew-agent", {
       thinkingEnvVar: "CREW_AGENT_THINKING_EFFORT",
@@ -391,7 +391,7 @@ test("structuredEnvKeys_per_agent_buzz_agent_includes_effort_and_numeric_keys", 
     scope: "definition",
   });
 
-  const renderedDescriptors = buzzAgentModel.fields.filter(
+  const renderedDescriptors = crewAgentModel.fields.filter(
     (f) => f.render === "control",
   );
   const keys = structuredEnvKeys(renderedDescriptors);

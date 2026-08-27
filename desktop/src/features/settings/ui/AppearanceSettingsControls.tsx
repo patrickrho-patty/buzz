@@ -275,7 +275,7 @@ const LINK_PREVIEW_SAMPLE_BASE: Omit<ResolvedLinkPreview, "imageDataUrl"> = {
  * are read from the live stylesheet and baked in per render — if the Buzz
  * gradient ever changes in `theme.css`, this preview follows automatically.
  */
-function buzzGradientSampleImage(isDark: boolean): string {
+function crewGradientSampleImage(isDark: boolean): string {
   const styles = globalThis.document
     ? getComputedStyle(document.documentElement)
     : null;
@@ -308,7 +308,7 @@ function LinkPreviewSample({ style }: { style: LinkPreviewStyle }) {
   const preview = React.useMemo<ResolvedLinkPreview>(
     () => ({
       ...LINK_PREVIEW_SAMPLE_BASE,
-      imageDataUrl: buzzGradientSampleImage(isDark),
+      imageDataUrl: crewGradientSampleImage(isDark),
     }),
     [isDark],
   );

@@ -11,7 +11,7 @@ function makeTool(overrides = {}) {
     type: "tool",
     title: "Tool call",
     toolName: "shell",
-    buzzToolName: null,
+    crewToolName: null,
     status: "completed",
     args: {},
     result: "",
@@ -27,7 +27,7 @@ test("buildCompactToolSummary formats Buzz send_message preview", () => {
   const summary = buildCompactToolSummary(
     makeTool({
       toolName: "send_message",
-      buzzToolName: "send_message",
+      crewToolName: "send_message",
       title: "Send Message",
       args: { content: "Hello team" },
     }),
@@ -236,7 +236,7 @@ test("buildCompactToolSummary derives structured actions for native Buzz MCP too
   const summary = buildCompactToolSummary(
     makeTool({
       toolName: "get_channel",
-      buzzToolName: "get_channel",
+      crewToolName: "get_channel",
       args: {
         channel_id: "channel-1",
       },

@@ -127,7 +127,7 @@ test("classifyTool promotes load_skill to skill-read descriptors", () => {
   const descriptor = classifyTool({
     title: "load_skill",
     toolName: "load_skill",
-    buzzToolName: null,
+    crewToolName: null,
     args: { name: "block-safe-github" },
     result: "# Safe GitHub usage at Block\n",
     isError: false,
@@ -147,7 +147,7 @@ test("classifyTool promotes supporting-file load_skill to skill-read file descri
   const descriptor = classifyTool({
     title: "load_skill",
     toolName: "load_skill",
-    buzzToolName: null,
+    crewToolName: null,
     args: { name: "block-safe-github/references/foo.md" },
     result: "# Reference\n",
     isError: false,
@@ -162,7 +162,7 @@ test("classifyTool promotes buzz CLI shell commands to relay operations", () => 
   const descriptor = classifyTool({
     title: "Shell",
     toolName: "dev__shell",
-    buzzToolName: null,
+    crewToolName: null,
     args: { command: "buzz channels get --channel crew-agent-observability" },
     result: "{}",
     isError: false,
@@ -178,7 +178,7 @@ test("classifyTool falls back once to a generic descriptor", () => {
   const descriptor = classifyTool({
     title: "Mystery",
     toolName: "mcp__mystery",
-    buzzToolName: null,
+    crewToolName: null,
     args: { path: "notes.md" },
     result: "",
     isError: false,

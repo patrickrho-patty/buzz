@@ -31,12 +31,12 @@ export type ComposerMessageLinkAttributes = {
 };
 
 const BARE_CREW_LINK_AT_START =
-  /^buzz:\/\/(?:message\?|channel\/|(?:pr|issue|repo|project)\?)[^\s<>"')\]}*]+/i;
+  /^crew:\/\/(?:message\?|channel\/|(?:pr|issue|repo|project)\?)[^\s<>"')\]}*]+/i;
 const CREW_LINK_SUFFIX_AT_START =
   /^:\/\/(?:message\?|channel\/|(?:pr|issue|repo|project)\?)[^\s<>"')\]}*]+/i;
 const TRAILING_PUNCTUATION = /[.,;:!?]+$/;
 
-function trimBareBuzzLink(value: string): string {
+function trimBareCrewLink(value: string): string {
   let trimmed = value.replace(TRAILING_PUNCTUATION, "");
   while (/[)\]]$/.test(trimmed)) {
     const closing = trimmed.at(-1) ?? "";
@@ -137,16 +137,16 @@ export function createComposerLinkPasteHandler(
 ) {
   return (view: EditorView, event: ClipboardEvent): boolean => {
     const text = event.clipboardData?.getData("text/plain") ?? "";
-    const buzzHref = unwrapExactBuzzLink(text);
-    const buzzLinkType =
+    const crewHref = unwrapExactBuzzLink(text);
+    const crewLinkType =
       view.state.schema.nodes[COMPOSER_MESSAGE_LINK_NODE_NAME];
-    if (buzzHref && buzzLinkType) {
+    if (crewHref && crewLinkType) {
       const attrs = resolveComposerMessageLinkAttributes(
-        buzzHref,
+        crewHref,
         resolveChannelName,
       );
       if (attrs) {
-        replaceSelectionWithNode(view, buzzLinkType.create(attrs));
+        replaceSelectionWithNode(view, crewLinkType.create(attrs));
         event.preventDefault();
         return true;
       }
@@ -169,8 +169,8 @@ export function registerComposerMessageLinkMarkdownIt(
   md: any,
   options: ComposerMessageLinkNodeOptions,
 ): void {
-  const ruleName = "buzz_composer_message_link";
-  const tokenType = "buzz_composer_message_link";
+  const ruleName = "crew_composer_message_link";
+  const tokenType = "crew_composer_message_link";
   if (md.renderer.rules[tokenType]) return;
 
   // biome-ignore lint/suspicious/noExplicitAny: markdown-it state/silent
@@ -179,11 +179,11 @@ export function registerComposerMessageLinkMarkdownIt(
     const fullMatch = BARE_CREW_LINK_AT_START.exec(remaining);
     const suffixMatch = CREW_LINK_SUFFIX_AT_START.exec(remaining);
     const resumesTextToken =
-      !fullMatch && suffixMatch && /buzz$/i.test(state.pending ?? "");
+      !fullMatch && suffixMatch && /crew$/i.test(state.pending ?? "");
     const rawHref =
-      fullMatch?.[0] ?? (resumesTextToken ? `buzz${suffixMatch[0]}` : null);
+      fullMatch?.[0] ?? (resumesTextToken ? `crew${suffixMatch[0]}` : null);
     if (!rawHref) return false;
-    const href = trimBareBuzzLink(rawHref);
+    const href = trimBareCrewLink(rawHref);
     const attrs = resolveComposerMessageLinkAttributes(
       href,
       options.resolveChannelName,
@@ -203,7 +203,7 @@ export function registerComposerMessageLinkMarkdownIt(
   md.renderer.rules[tokenType] = (tokens: any[], index: number): string => {
     const attrs = tokens[index].meta as ComposerMessageLinkAttributes;
     const escapeHtml = md.utils.escapeHtml;
-    return `<span data-composer-buzz-link="" data-channel-name="${escapeHtml(attrs.channelName)}" data-href="${escapeHtml(attrs.href)}"></span>`;
+    return `<span data-composer-crew-link="" data-channel-name="${escapeHtml(attrs.channelName)}" data-href="${escapeHtml(attrs.href)}"></span>`;
   };
 }
 
@@ -276,7 +276,7 @@ function composerLinkPresentation(
           ? `Open project ${entity.value.dtag}`
           : `Open ${entity.value.type === "pr" ? "pull request" : "issue"} ${shortId} in repository ${entity.value.dtag}`,
     channelName: "",
-    dataAttributes: { "data-buzz-link-kind": entity.value.type },
+    dataAttributes: { "data-crew-link-kind": entity.value.type },
     icon: entity.value.type,
     // Entity chips use only stable link-derived identity. Fetched metadata is
     // reserved for sent-message tooltips/cards, so every composer chip keeps the
@@ -316,7 +316,7 @@ export const ComposerMessageLinkNode =
 
     parseHTML() {
       return [
-        { tag: "span[data-composer-buzz-link]" },
+        { tag: "span[data-composer-crew-link]" },
         { tag: "span[data-composer-message-link]" },
       ];
     },
@@ -335,7 +335,7 @@ export const ComposerMessageLinkNode =
           class: `${MENTION_CHIP_BASE_CLASSES} ${inlineChipIconClasses(presentation.icon)} cursor-text`,
           "data-buzz-link": "",
           "data-channel-name": presentation.channelName,
-          "data-composer-buzz-link": "",
+          "data-composer-crew-link": "",
           "data-href": href,
           ...presentation.dataAttributes,
           title: presentation.ariaLabel,

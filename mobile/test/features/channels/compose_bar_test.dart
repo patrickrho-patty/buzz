@@ -3063,11 +3063,11 @@ void main() {
       final id = 'cd' * 32;
       const channelId = '580ca78b-9dae-46f3-8854-bd671853ba32';
       final urls = [
-        'buzz://message?channel=$channelId&id=$id',
-        'buzz://channel/$channelId',
-        'buzz://repo?owner=$owner&d=buzz',
-        'buzz://pr?id=$id&owner=$owner&d=buzz',
-        'buzz://issue?id=$id&owner=$owner&d=buzz',
+        'crew://message?channel=$channelId&id=$id',
+        'crew://channel/$channelId',
+        'crew://repo?owner=$owner&d=buzz',
+        'crew://pr?id=$id&owner=$owner&d=buzz',
+        'crew://issue?id=$id&owner=$owner&d=buzz',
       ];
       await tester.pumpWidget(
         _buildComposeBar(
@@ -3131,7 +3131,7 @@ void main() {
       tester,
     ) async {
       final owner = 'ab' * 32;
-      final url = 'buzz://repo?owner=$owner&d=my_repo';
+      final url = 'crew://repo?owner=$owner&d=my_repo';
       final source = '**$url**';
       await tester.pumpWidget(
         _buildComposeBar(

@@ -389,11 +389,11 @@ test("mixed Buzz permalinks render as chips in the composer", async ({
   const pullRequestId = "c".repeat(64);
   const issueId = "b".repeat(64);
   const links = [
-    `buzz://message?channel=${channelId}&id=mock-general-welcome`,
-    `buzz://channel/${channelId}`,
-    `buzz://repo?owner=${owner}&d=buzz-world`,
-    `buzz://pr?id=${pullRequestId}&owner=${owner}&d=buzz-world`,
-    `buzz://issue?id=${issueId}&owner=${owner}&d=buzz-world`,
+    `crew://message?channel=${channelId}&id=mock-general-welcome`,
+    `crew://channel/${channelId}`,
+    `crew://repo?owner=${owner}&d=buzz-world`,
+    `crew://pr?id=${pullRequestId}&owner=${owner}&d=buzz-world`,
+    `crew://issue?id=${issueId}&owner=${owner}&d=buzz-world`,
   ].join(" ");
   const composerInput = page.getByTestId("message-input");
   await composerInput.evaluate((element, text) => {
@@ -430,7 +430,7 @@ test("mixed Buzz permalinks render as chips in the composer", async ({
       );
     expect(iconMask).toContain("data:image/svg+xml");
   }
-  await expect(composerInput).not.toContainText("buzz://");
+  await expect(composerInput).not.toContainText("crew://");
 });
 
 test("message links to visible root messages open the thread panel", async ({
@@ -449,7 +449,7 @@ test("message links to visible root messages open the thread panel", async ({
   });
 
   const link =
-    "buzz://message?channel=9a1657ac-f7aa-5db0-b632-d8bbeb6dfb50&id=mock-general-welcome";
+    "crew://message?channel=9a1657ac-f7aa-5db0-b632-d8bbeb6dfb50&id=mock-general-welcome";
   const composerInput = page.getByTestId("message-input");
   await composerInput.fill("Root link repro #random ");
   await composerInput.focus();
@@ -470,7 +470,7 @@ test("message links to visible root messages open the thread panel", async ({
   await expect(composerLink).toHaveClass(/inline-chip-icon-message/);
   await expect(composerLink).toHaveAttribute("data-buzz-link", "");
   await expect(composerLink).toHaveAttribute("title", "Thread in #general");
-  await expect(composerInput).not.toContainText("buzz://message");
+  await expect(composerInput).not.toContainText("crew://message");
   await page.getByTestId("send-message").click();
 
   const linkMessage = page
@@ -655,7 +655,7 @@ test("direct-message tooltip metadata stays on one physical line", async ({
   await page.getByTestId("channel-general").click();
   await page
     .getByTestId("message-input")
-    .fill(`DM link buzz://message?channel=${dmChannelId}&id=${dmMessageId}`);
+    .fill(`DM link crew://message?channel=${dmChannelId}&id=${dmMessageId}`);
   await page.getByTestId("send-message").click();
 
   const dmLink = page
@@ -698,7 +698,7 @@ test("message links explain when preview metadata is unavailable", async ({
   await page
     .getByTestId("message-input")
     .fill(
-      `Missing preview buzz://message?channel=9a1657ac-f7aa-5db0-b632-d8bbeb6dfb50&id=${missingMessageId}`,
+      `Missing preview crew://message?channel=9a1657ac-f7aa-5db0-b632-d8bbeb6dfb50&id=${missingMessageId}`,
     );
   await page.getByTestId("send-message").click();
 
@@ -748,7 +748,7 @@ test("message links reopen a closed thread when the same messageId is already in
   await expect(threadPanel).not.toBeVisible();
 
   const link =
-    "buzz://message?channel=9a1657ac-f7aa-5db0-b632-d8bbeb6dfb50&id=mock-general-welcome";
+    "crew://message?channel=9a1657ac-f7aa-5db0-b632-d8bbeb6dfb50&id=mock-general-welcome";
   await page
     .getByTestId("message-input")
     .fill(`Reopen same root link repro ${link}`);

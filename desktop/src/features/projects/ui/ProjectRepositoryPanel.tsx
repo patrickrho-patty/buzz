@@ -39,7 +39,7 @@ import type { UserProfileLookup } from "@/features/profile/lib/identity";
 import type { UserSearchResult } from "@/shared/api/types";
 import { cn } from "@/shared/lib/cn";
 import { normalizePubkey } from "@/shared/lib/pubkey";
-import { BuzzLoadingState } from "@/shared/ui/BuzzLoadingState";
+import { CrewLoadingState } from "@/shared/ui/CrewLoadingState";
 import { SyntaxHighlightedCode } from "@/shared/ui/markdown";
 import { UserAvatar } from "@/shared/ui/UserAvatar";
 import {
@@ -583,7 +583,7 @@ function FileContentPanel({
         Last changed {formatLastChangedAt(file.lastChangedAt)}
       </div>
       {fileContent.isLoading ? (
-        <BuzzLoadingState label="Loading file" />
+        <CrewLoadingState label="Loading file" />
       ) : fileContent.content ? (
         <pre className="overflow-x-auto bg-background/60 p-4">
           {language ? (
@@ -712,7 +712,7 @@ export function RepositoryFilesPanel({
   // remote/local toggle must stay reachable when one source fails to load.
   if (isLoading) {
     if (!sourceControls) {
-      return <BuzzLoadingState label="Loading repository files" />;
+      return <CrewLoadingState label="Loading repository files" />;
     }
     return (
       <div className={PROJECT_DETAIL_PANEL_CLASS} data-project-detail-panel>
@@ -736,7 +736,7 @@ export function RepositoryFilesPanel({
             <RepoSyncActionButton controls={sourceControls} />
           </div>
         </div>
-        <BuzzLoadingState label="Loading repository files" />
+        <CrewLoadingState label="Loading repository files" />
       </div>
     );
   }

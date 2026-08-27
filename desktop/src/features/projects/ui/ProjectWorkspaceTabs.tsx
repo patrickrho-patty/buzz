@@ -31,7 +31,7 @@ import { projectRepoUnavailableReason } from "@/features/projects/lib/projectRep
 import type { UserProfileLookup } from "@/features/profile/lib/identity";
 import { normalizePubkey } from "@/shared/lib/pubkey";
 import { Button } from "@/shared/ui/button";
-import { BuzzLoadingState } from "@/shared/ui/BuzzLoadingState";
+import { CrewLoadingState } from "@/shared/ui/CrewLoadingState";
 import { Tabs, TabsContent } from "@/shared/ui/tabs";
 import { findReadmeFile } from "./ProjectReadmePanel";
 import { RepositoryFilesPanel } from "./ProjectRepositoryPanel";
@@ -604,7 +604,7 @@ export function WorkspaceTabs({
 
         <TabsContent className="m-0" value="contributors">
           {displayedSnapshotLoading ? (
-            <BuzzLoadingState label="Loading contributors" />
+            <CrewLoadingState label="Loading contributors" />
           ) : (
             <ContributorsPanel
               activityCounts={contributorActivityCounts}

@@ -4,7 +4,7 @@
  * (`griddle_logo_1.png`) with potrace; rendered in `currentColor` so it
  * adapts to the surrounding text color on any surface.
  */
-export function BuzzMark({ className }: { className?: string }) {
+export function CrewMark({ className }: { className?: string }) {
   return (
     <svg
       aria-hidden="true"

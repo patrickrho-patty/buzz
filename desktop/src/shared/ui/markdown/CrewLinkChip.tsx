@@ -95,7 +95,7 @@ function wrappingChipContent(
   );
 }
 
-export function BuzzLinkChip({
+export function CrewLinkChip({
   children,
   className,
   href,
@@ -173,7 +173,7 @@ export function BuzzLinkChip({
   );
 }
 
-export function BuzzInlineLink({
+export function CrewInlineLink({
   children,
   href,
   interactive,

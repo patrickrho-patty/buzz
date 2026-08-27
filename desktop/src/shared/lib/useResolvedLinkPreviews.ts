@@ -18,7 +18,7 @@ import {
 
 import { isEntityLink, parseEntityLink } from "./entityLink";
 import {
-  buzzEntityFallbackTitle,
+  crewEntityFallbackTitle,
   type SupportedLinkPreview,
 } from "./linkPreview";
 
@@ -383,7 +383,7 @@ type ResolvedMetadataByHref = Record<
 export function shouldResolveTitle(preview: SupportedLinkPreview): boolean {
   if (!isEntityLink(preview.href)) return true;
   const parsed = parseEntityLink(preview.href);
-  return parsed.ok && preview.title === buzzEntityFallbackTitle(parsed.value);
+  return parsed.ok && preview.title === crewEntityFallbackTitle(parsed.value);
 }
 
 export function resolveLinkPreview(
@@ -410,7 +410,7 @@ export function resolveLinkPreview(
       : "none";
   return {
     ...preview,
-    snapshotReady: !preview.href.startsWith("buzz://"),
+    snapshotReady: !preview.href.startsWith("crew://"),
     title: shouldResolveTitle(preview) ? metadata.title : preview.title,
     description: metadata.description,
     faviconDataUrl: metadata.faviconDataUrl,
@@ -435,11 +435,11 @@ export function isBuzzEntityPreview(preview: SupportedLinkPreview): boolean {
 }
 
 /**
- * Recipient-side `buzz://` entity cards must render even when the relay
+ * Recipient-side `crew://` entity cards must render even when the relay
  * lookup yields no metadata: `useResolvedLinkPreviews` drops null-metadata
  * previews (correct for external links — no metadata means no card), but
  * entity links always carry a usable fallback title (the repo d-tag, or
- * `<dtag> #<id8>` for PRs/issues — see `buzzEntityFallbackTitle`). Re-adds
+ * `<dtag> #<id8>` for PRs/issues — see `crewEntityFallbackTitle`). Re-adds
  * recognized entity previews on their fallback title; non-entity previews
  * keep the hook's drop behavior.
  */
@@ -514,7 +514,7 @@ export function useResolvedLinkPreviews(
     if (refetchNewNegatives) {
       // Invalidate first, before the peek/load loop below reads the cache, so a
       // newly-present href loads fresh instead of resolving to its stale miss.
-      // buzz:// entity links resolve off the relay, not this cache — skip them.
+      // crew:// entity links resolve off the relay, not this cache — skip them.
       // Newness is judged against the live href set when supplied (so a
       // debounce-swallowed leave/re-entry still counts), else against previews.
       const seen = seenHrefsRef.current;
@@ -540,7 +540,7 @@ export function useResolvedLinkPreviews(
         if (
           alreadyHandled ||
           !liveNow.includes(preview.href) ||
-          preview.href.startsWith("buzz://")
+          preview.href.startsWith("crew://")
         ) {
           continue;
         }
@@ -606,7 +606,7 @@ export function useResolvedLinkPreviews(
 
     const cancelScheduledLoads: Array<() => void> = [];
     for (const preview of previews) {
-      const loader = preview.href.startsWith("buzz://")
+      const loader = preview.href.startsWith("crew://")
         ? entityMetadataLoader
         : metadataLoader;
       const cached = loader.peek(preview.href);

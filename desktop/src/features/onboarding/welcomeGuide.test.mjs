@@ -173,7 +173,7 @@ test("all Welcome starters use the onboarding runtime preference", async () => {
     canAutoInstall: false,
     underlyingCliPath: "/bin/claude",
   };
-  const buzzAgent = {
+  const crewAgent = {
     ...claude,
     id: "crew-agent",
     label: "Buzz Agent",
@@ -195,7 +195,7 @@ test("all Welcome starters use the onboarding runtime preference", async () => {
         isBuiltIn: true,
         isActive: true,
       },
-      [buzzAgent, claude],
+      [crewAgent, claude],
       "claude",
       RELAY_A,
     );

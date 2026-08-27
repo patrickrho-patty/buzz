@@ -36,8 +36,8 @@ export function ToolItem({
   const [isExpanded, setIsExpanded] = React.useState(false);
   const hasArgs = Object.keys(item.args).length > 0;
   const hasResult = item.result.trim().length > 0;
-  const canonicalToolName = item.buzzToolName ?? item.toolName;
-  const buzzTool = getBuzzToolInfo(canonicalToolName);
+  const canonicalToolName = item.crewToolName ?? item.toolName;
+  const crewTool = getBuzzToolInfo(canonicalToolName);
   const compactSummary = buildCompactToolSummary(item);
   const duration = getToolDurationDisplay(item);
   const messageLink = getSentMessageLink(item);
@@ -67,7 +67,7 @@ export function ToolItem({
         <CompactMessageSummary
           args={item.args}
           avatarUrl={agentResolvedAvatarUrl}
-          description={buzzTool?.label}
+          description={crewTool?.label}
           displayName={agentLabel}
           duration={duration}
           hasArgs={hasArgs}
@@ -130,7 +130,7 @@ export function ToolItem({
 
         <ToolDetailBlocks
           args={item.args}
-          description={buzzTool?.label}
+          description={crewTool?.label}
           fileEditDiff={compactSummary.fileEditDiff}
           fileReadContent={compactSummary.fileReadContent}
           hasArgs={hasArgs}

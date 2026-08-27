@@ -173,7 +173,7 @@ test("extractToolIdentity ignores Buzz tool names that only appear in file conte
   assert.deepEqual(identity, {
     title: "read_file",
     toolName: "read_file",
-    buzzToolName: null,
+    crewToolName: null,
   });
 });
 
@@ -188,7 +188,7 @@ test("extractToolIdentity still recognizes explicit Buzz tool fields", () => {
   assert.deepEqual(identity, {
     title: "Tool call",
     toolName: "get_feed",
-    buzzToolName: "get_feed",
+    crewToolName: "get_feed",
   });
 });
 

@@ -1,5 +1,5 @@
 import { ThemeGrainientBackground } from "@/app/ThemeGrainientBackground";
-import { FlappingBee } from "@/shared/ui/buzz-logo/FlappingBee";
+import { FlappingBee } from "@/shared/ui/crew-logo/FlappingBee";
 
 /** Immediate feedback shown while the native huddle session is being prepared. */
 export function HuddleStartingView() {

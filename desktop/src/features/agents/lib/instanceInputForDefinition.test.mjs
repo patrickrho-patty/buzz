@@ -41,7 +41,7 @@ const claudeRuntime = {
   mcpCommand: null,
 };
 
-const buzzAgentRuntime = {
+const crewAgentRuntime = {
   ...gooseRuntime,
   id: "crew-agent",
   label: "Buzz Agent",
@@ -308,7 +308,7 @@ test("row 6: unfetched query refetches instead of resolving empty", async () => 
 test("item-13: goose+crew-agent both available — persona with no runtime resolves crew-agent", () => {
   const { runtime, warnings } = resolveStartRuntimeForDefinition(
     persona({ runtime: undefined }),
-    [gooseRuntime, claudeRuntime, buzzAgentRuntime],
+    [gooseRuntime, claudeRuntime, crewAgentRuntime],
   );
   assert.equal(
     runtime.id,

@@ -21,7 +21,7 @@ type ToolItem = Extract<TranscriptItem, { type: "tool" }>;
 export type ToolClassificationInput = {
   title: string;
   toolName: string;
-  buzzToolName: string | null;
+  crewToolName: string | null;
   args: Record<string, unknown>;
   result: string;
   isError: boolean;
@@ -132,7 +132,7 @@ export function classifyToolItem(item: ToolItem): AgentActivityDescriptor {
   return classifyTool({
     title: item.title,
     toolName: item.toolName,
-    buzzToolName: item.buzzToolName,
+    crewToolName: item.crewToolName,
     args: item.args,
     result: item.result,
     isError: item.isError,
@@ -146,7 +146,7 @@ export function renderClassLabel(renderClass: AgentActivityRenderClass) {
 function classifyLoadSkillTool(
   input: ToolClassificationInput,
 ): AgentActivityDescriptor | null {
-  const isLoadSkill = [input.toolName, input.title, input.buzzToolName].some(
+  const isLoadSkill = [input.toolName, input.title, input.crewToolName].some(
     (value) => value && normalizeToolNameText(value) === "load_skill",
   );
   if (!isLoadSkill) return null;
@@ -173,9 +173,9 @@ function classifyDeveloperHarnessTool(
 
   if (kind === "shell") {
     const command = getToolString(input.args, ["command"]);
-    const buzzCli = command ? parseBuzzCliCommand(command) : null;
-    if (buzzCli) {
-      return buzzCli;
+    const crewCli = command ? parseBuzzCliCommand(command) : null;
+    if (crewCli) {
+      return crewCli;
     }
     return {
       renderClass: "shell",
@@ -274,7 +274,7 @@ function classifyDeveloperHarnessTool(
 function classifyBuzzTool(
   input: ToolClassificationInput,
 ): AgentActivityDescriptor | null {
-  const name = [input.buzzToolName, input.toolName, input.title].find(
+  const name = [input.crewToolName, input.toolName, input.title].find(
     (value) => value && getBuzzToolInfo(value),
   );
   if (!name) return null;
@@ -324,7 +324,7 @@ function resolveDeveloperToolKind(
   | "post_compact_hook"
   | "dev_mcp"
   | null {
-  for (const value of [input.toolName, input.title, input.buzzToolName]) {
+  for (const value of [input.toolName, input.title, input.crewToolName]) {
     const kind = classifyDeveloperToolName(value);
     if (kind) return kind;
   }
@@ -367,7 +367,7 @@ export function parseBuzzCliCommand(
   const preview = isSend
     ? extractBuzzCliInlineContent(tokens, range)
     : extractBuzzCliObjectPreview(tokens, range);
-  const tone = buzzCliTone(group, verb);
+  const tone = crewCliTone(group, verb);
   return {
     renderClass: isSend ? "message" : "relay-op",
     label: titleForBuzzCli(group, verb),
@@ -400,21 +400,21 @@ function actionForBuzzOperation(
   object: string | null,
   tone: AgentActivityTone,
 ): AgentActivityAction {
-  const verb = buzzOperationVerbToken(operation);
+  const verb = crewOperationVerbToken(operation);
   return {
-    verb: buzzOperationVerb(verb, tone),
-    object: object ?? buzzOperationObject(operation),
+    verb: crewOperationVerb(verb, tone),
+    object: object ?? crewOperationObject(operation),
   };
 }
 
-function buzzOperationVerbToken(operation: string) {
+function crewOperationVerbToken(operation: string) {
   if (operation.includes(".")) {
     return operation.split(".")[1] ?? "run";
   }
   return operation.split("_")[0] ?? "run";
 }
 
-function buzzOperationVerb(verb: string, tone: AgentActivityTone) {
+function crewOperationVerb(verb: string, tone: AgentActivityTone) {
   if (verb === "add") return "Added";
   if (verb === "archive") return "Archived";
   if (verb === "create") return "Created";
@@ -430,7 +430,7 @@ function buzzOperationVerb(verb: string, tone: AgentActivityTone) {
   return "Updated";
 }
 
-function buzzOperationObject(operation: string) {
+function crewOperationObject(operation: string) {
   if (isBuzzMessageSend(operation)) return "message";
   if (operation.includes(".")) {
     const [group] = operation.split(".");
@@ -443,7 +443,7 @@ function buzzOperationObject(operation: string) {
   return object ? object.replace(/[-_]+/g, " ") : "Buzz";
 }
 
-function buzzCliTone(group: string, verb: string): AgentActivityTone {
+function crewCliTone(group: string, verb: string): AgentActivityTone {
   if (CREW_CLI_ADMIN_VERBS.has(verb)) return "admin";
   if (CREW_CLI_READ_VERBS.has(verb)) return "read";
   if (group === "feed" && verb === "get") return "read";
@@ -452,7 +452,7 @@ function buzzCliTone(group: string, verb: string): AgentActivityTone {
 
 function extractBuzzCliInlineContent(
   tokens: string[],
-  range: BuzzCommandRange,
+  range: CrewCommandRange,
 ): string | null {
   const content = getFlagValue(tokens, range.verbIndex + 1, "--content");
   if (!content || content === "-") return null;
@@ -462,7 +462,7 @@ function extractBuzzCliInlineContent(
 
 function extractBuzzCliObjectPreview(
   tokens: string[],
-  range: BuzzCommandRange,
+  range: CrewCommandRange,
 ): string | null {
   const flagPreview =
     getFlagValue(tokens, range.verbIndex + 1, "--channel") ??
@@ -478,13 +478,13 @@ function extractBuzzCliObjectPreview(
     : null;
 }
 
-type BuzzCommandRange = {
-  buzzIndex: number;
+type CrewCommandRange = {
+  crewIndex: number;
   groupIndex: number;
   verbIndex: number;
 };
 
-function findBuzzCommand(tokens: string[]): BuzzCommandRange | null {
+function findBuzzCommand(tokens: string[]): CrewCommandRange | null {
   for (let i = 0; i < tokens.length; i++) {
     if (!isBuzzExecutable(tokens[i])) continue;
 
@@ -504,7 +504,7 @@ function findBuzzCommand(tokens: string[]): BuzzCommandRange | null {
       if (!tokens[verbIndex] || isCommandSeparator(tokens[verbIndex])) {
         return null;
       }
-      return { buzzIndex: i, groupIndex: j, verbIndex };
+      return { crewIndex: i, groupIndex: j, verbIndex };
     }
   }
   return null;
@@ -560,7 +560,9 @@ export function tokenizeShellCommand(command: string): string[] {
 }
 
 function isBuzzExecutable(token: string) {
-  return token === "buzz" || token.split(/[\\/]/).pop() === "buzz";
+  const base = token.split(/[\\/]/).pop();
+  // `crew` is the canonical binary; `buzz` accepted for older transcripts.
+  return base === "crew" || base === "buzz" || token === "buzz";
 }
 
 function isCommandSeparator(token: string) {

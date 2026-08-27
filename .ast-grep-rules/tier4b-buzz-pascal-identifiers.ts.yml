@@ -1,0 +1,14 @@
+id: tier4b-buzz-pascal-identifiers-ts
+language: ts
+severity: warning
+rule:
+  kind: identifier
+  pattern: $NAME
+  regex: ^Buzz[A-Z][A-Za-z0-9]*$
+transform:
+  CREW:
+    replace:
+      source: $NAME
+      replace: Buzz
+      by: Crew
+fix: $CREW

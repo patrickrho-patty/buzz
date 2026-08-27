@@ -32,7 +32,7 @@ use tauri::{AppHandle, Emitter};
 
 use crate::commands::NATIVE_NOTIFICATION_ACTIVATED_EVENT;
 
-const TARGET_USER_INFO_KEY: &str = "buzzNotificationTarget";
+const TARGET_USER_INFO_KEY: &str = "crewNotificationTarget";
 const MAX_PENDING_ACTIVATIONS: usize = 64;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize)]
@@ -64,7 +64,7 @@ define_class!(
     // Sync. Apple does not guarantee a queue for notification delegate calls;
     // both Tauri operations used by the callbacks are thread-safe.
     #[unsafe(super(NSObject))]
-    #[name = "BuzzNotificationCenterDelegate"]
+    #[name = "CrewNotificationCenterDelegate"]
     #[thread_kind = AnyThread]
     #[ivars = NotificationDelegateIvars]
     struct NotificationDelegate;

@@ -14,7 +14,7 @@ import {
   resolveUserLabel,
   type UserProfileLookup,
 } from "@/features/profile/lib/identity";
-import { BuzzLoadingState } from "@/shared/ui/BuzzLoadingState";
+import { CrewLoadingState } from "@/shared/ui/CrewLoadingState";
 import { Card } from "@/shared/ui/card";
 import { DropdownMenuItem } from "@/shared/ui/dropdown-menu";
 import { CopyShareLinkMenuItem } from "./CopyShareLinkMenuItem";
@@ -189,7 +189,7 @@ export function ProjectsPullRequestsList({
   viewMode,
 }: ProjectsPullRequestsListProps) {
   if (isLoading) {
-    return <BuzzLoadingState label="Loading reviews" />;
+    return <CrewLoadingState label="Loading reviews" />;
   }
 
   const loadNotice = (

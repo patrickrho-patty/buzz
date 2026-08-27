@@ -2,7 +2,7 @@ import type {
   AcpRuntimeCatalogEntry,
   GlobalAgentConfig,
 } from "@/shared/api/types";
-import { CREW_AGENT_THINKING_EFFORT } from "../ui/buzzAgentConfig";
+import { CREW_AGENT_THINKING_EFFORT } from "../ui/crewAgentConfig";
 
 /**
  * Lifecycle status of the ACP runtime catalog query on a per-agent surface.
@@ -69,7 +69,7 @@ export type AgentConfigFieldDescriptor =
   | {
       kind: "effort";
       optionSource:
-        | "buzzAgentCatalog"
+        | "crewAgentCatalog"
         | "legacyProviderModelCatalog"
         | "harnessNative";
       currentPersistence:
@@ -208,7 +208,7 @@ export function deriveAgentConfigFieldModel({
       kind: "effort",
       optionSource:
         runtime.id === "crew-agent"
-          ? "buzzAgentCatalog"
+          ? "crewAgentCatalog"
           : "legacyProviderModelCatalog",
       currentPersistence: {
         kind: "envVar",

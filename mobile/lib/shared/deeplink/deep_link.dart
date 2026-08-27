@@ -1,7 +1,7 @@
-/// Parsing for `buzz://` deep links.
+/// Parsing for `crew://` deep links.
 ///
 /// Mirrors the desktop handler in `desktop/src-tauri/src/deep_link.rs`:
-/// `buzz://message?channel=<uuid>&id=<hex>[&thread=<hex>]` references a
+/// `crew://message?channel=<uuid>&id=<hex>[&thread=<hex>]` references a
 /// message (optionally inside a thread) in a channel. Required params that
 /// are missing or empty make the link invalid — the caller never sees a
 /// half-formed target.
@@ -17,7 +17,7 @@ sealed class BuzzDeepLink {
 /// A parsed relay invite link.
 ///
 /// Canonical share links are `https://<relay>/invite/<code>`. The custom
-/// `buzz://join?relay=<ws(s)://relay>&code=<code>` form is only an installed-app
+/// `crew://join?relay=<ws(s)://relay>&code=<code>` form is only an installed-app
 /// handoff from the web landing page.
 class InviteDeepLink extends BuzzDeepLink {
   /// Relay URL normalized to the websocket scheme used by the app.
@@ -52,7 +52,7 @@ class InviteDeepLink extends BuzzDeepLink {
 
 /// A parsed channel-only deep link.
 ///
-/// Canonical form: `buzz://channel/<channel-uuid>`.
+/// Canonical form: `crew://channel/<channel-uuid>`.
 class ChannelDeepLink extends BuzzDeepLink {
   /// Channel UUID from the sole path segment.
   final String channelId;
@@ -70,7 +70,7 @@ class ChannelDeepLink extends BuzzDeepLink {
   String toString() => 'ChannelDeepLink(channel: $channelId)';
 }
 
-/// A parsed `buzz://message` deep link.
+/// A parsed `crew://message` deep link.
 class MessageDeepLink extends BuzzDeepLink {
   /// Channel UUID from the `channel` query param.
   final String channelId;
@@ -103,11 +103,11 @@ class MessageDeepLink extends BuzzDeepLink {
       'thread: $threadRootId)';
 }
 
-/// Build a canonical `buzz://message` link for a channel message.
+/// Build a canonical `crew://message` link for a channel message.
 ///
 /// Mirrors `desktop/src/features/messages/lib/messageLink.ts` so links copied
 /// or shared from mobile round-trip through every client's parser:
-/// `buzz://message?channel=<uuid>&id=<eventId>[&thread=<rootId>]`.
+/// `crew://message?channel=<uuid>&id=<eventId>[&thread=<rootId>]`.
 ///
 /// An empty [threadRootId] is treated as "no thread" so callers can pass
 /// through a nullable thread reference without extra checks.
@@ -135,7 +135,7 @@ String buildMessageLink({
   ).toString();
 }
 
-/// Parse a canonical `buzz://channel/<channel-uuid>` URI.
+/// Parse a canonical `crew://channel/<channel-uuid>` URI.
 ///
 /// The channel ID must be the URI's sole non-empty path segment. Query
 /// parameters and fragments are rejected so malformed or ambiguous links never
@@ -161,7 +161,7 @@ ChannelDeepLink? parseChannelDeepLink(Uri uri) {
   return ChannelDeepLink(channelId: channelId.toLowerCase());
 }
 
-/// Parse a `buzz://message?…` URI into a [MessageDeepLink].
+/// Parse a `crew://message?…` URI into a [MessageDeepLink].
 ///
 /// Returns `null` unless the URI exactly matches the canonical message-link
 /// shape: no path, fragment, credentials, duplicate or unknown parameters; a
@@ -204,13 +204,13 @@ MessageDeepLink? parseMessageDeepLink(Uri uri) {
   );
 }
 
-/// Parse canonical HTTPS invite links and `buzz://join` app handoffs.
+/// Parse canonical HTTPS invite links and `crew://join` app handoffs.
 ///
 /// Accepted forms:
 /// - `https://<relay>/invite/<code>` -> `wss://<relay>` + code
 /// - `http://localhost/invite/<code>` -> `ws://localhost` + code in debug builds
-/// - `buzz://join?relay=<wss://relay>&code=<code>` -> relay + code
-/// - `buzz://join?relay=<ws://localhost>&code=<code>` -> local relay in debug
+/// - `crew://join?relay=<wss://relay>&code=<code>` -> relay + code
+/// - `crew://join?relay=<ws://localhost>&code=<code>` -> local relay in debug
 ///
 /// Rejects credentials, fragments, missing params, nested relay credentials, and
 /// non-invite paths so scanners do not accidentally treat arbitrary URLs as
@@ -304,7 +304,7 @@ class EntityDeepLink extends BuzzDeepLink {
   });
 }
 
-/// Parse canonical `buzz://repo|pr|issue` permalinks for inline presentation.
+/// Parse canonical `crew://repo|pr|issue` permalinks for inline presentation.
 EntityDeepLink? parseEntityDeepLink(Uri uri) {
   if (uri.scheme != 'buzz' || !{'repo', 'pr', 'issue'}.contains(uri.host)) {
     return null;

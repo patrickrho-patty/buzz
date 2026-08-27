@@ -39,7 +39,7 @@ function toolItems(events) {
 }
 
 function activityTitle(item) {
-  return formatToolTitle(item.buzzToolName ?? item.toolName, item.title);
+  return formatToolTitle(item.crewToolName ?? item.toolName, item.title);
 }
 
 // --- stub-overflow vanish (pins the pre-existing degraded-frame behavior) ---
@@ -164,7 +164,7 @@ test("buildTranscript keeps read_file activity categorized by the actual tool wh
   ]);
 
   assert.equal(item.toolName, "read_file");
-  assert.equal(item.buzzToolName, null);
+  assert.equal(item.crewToolName, null);
   assert.equal(item.title, "read_file");
   assert.equal(activityTitle(item), "read_file");
   assert.equal(item.status, "completed");
@@ -200,7 +200,7 @@ test("buildTranscript keeps shell activity categorized by the actual tool when g
   ]);
 
   assert.equal(item.toolName, "shell");
-  assert.equal(item.buzzToolName, null);
+  assert.equal(item.crewToolName, null);
   assert.equal(activityTitle(item), "shell");
   assert.equal(item.status, "completed");
   assert.match(item.result, /get_event/);
@@ -228,7 +228,7 @@ test("buildTranscript categorizes explicit Buzz tool calls for the activity bar"
   ]);
 
   assert.equal(item.toolName, "get_feed");
-  assert.equal(item.buzzToolName, "get_feed");
+  assert.equal(item.crewToolName, "get_feed");
   assert.equal(activityTitle(item), "Get Feed");
   assert.deepEqual(item.args, { limit: 20 });
   assert.equal(item.status, "completed");

@@ -1,7 +1,7 @@
 import { useCommunityOnboarding } from "@/features/onboarding/communityOnboarding";
 import { useSystemColorScheme } from "@/shared/theme/useSystemColorScheme";
 import { Button } from "@/shared/ui/button";
-import { FlappingBee } from "@/shared/ui/buzz-logo/FlappingBee";
+import { FlappingBee } from "@/shared/ui/crew-logo/FlappingBee";
 import { StartupWindowDragRegion } from "@/shared/ui/StartupWindowDragRegion";
 
 /**

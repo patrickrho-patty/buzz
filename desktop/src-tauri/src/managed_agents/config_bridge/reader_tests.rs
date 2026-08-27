@@ -251,7 +251,7 @@ fn record_model_overrides_file_model() {
     let surface = read_config_surface(&record, Some(runtime), None, &no_tiers(), None);
     let model = surface.normalized.model.unwrap();
     assert_eq!(model.value.as_deref(), Some("explicit-model"));
-    assert_eq!(model.origin, ConfigOrigin::BuzzExplicit);
+    assert_eq!(model.origin, ConfigOrigin::CrewExplicit);
 }
 
 #[test]
@@ -522,7 +522,7 @@ fn record_system_prompt_shadows_config_file_prompt_as_secondary() {
     let field =
         build_system_prompt_field(&record, &Some("File prompt.".to_string()), &no_tiers()).unwrap();
     assert_eq!(field.value.as_deref(), Some("Record prompt."));
-    assert_eq!(field.origin, ConfigOrigin::BuzzExplicit);
+    assert_eq!(field.origin, ConfigOrigin::CrewExplicit);
     assert_eq!(field.overridden_value.as_deref(), Some("File prompt."));
     assert_eq!(field.overridden_origin, Some(ConfigOrigin::ConfigFile));
 }
@@ -536,7 +536,7 @@ fn no_system_prompt_from_any_tier_yields_none() {
 #[test]
 fn explicit_record_model_not_retagged_when_already_present() {
     let mut record = test_record();
-    // Record already has its own model — origin stays BuzzExplicit.
+    // Record already has its own model — origin stays CrewExplicit.
     record.model = Some("explicit-model".to_string());
     let runtime = test_runtime();
 
@@ -544,7 +544,7 @@ fn explicit_record_model_not_retagged_when_already_present() {
 
     let model = surface.normalized.model.unwrap();
     assert_eq!(model.value.as_deref(), Some("explicit-model"));
-    assert_eq!(model.origin, ConfigOrigin::BuzzExplicit);
+    assert_eq!(model.origin, ConfigOrigin::CrewExplicit);
 }
 
 #[test]
@@ -585,7 +585,7 @@ fn extra_env_vars_appear_in_advanced_as_buzz_explicit() {
         .find(|f| f.key == "SPROUT_ACP_MEMORY")
         .unwrap();
     assert_eq!(field.value.as_deref(), Some("mem-value"));
-    assert_eq!(field.origin, ConfigOrigin::BuzzExplicit);
+    assert_eq!(field.origin, ConfigOrigin::CrewExplicit);
     assert!(matches!(
         field.write_via,
         ConfigWriteMechanism::RespawnWithEnvVar { ref env_key } if env_key == "SPROUT_ACP_MEMORY"
@@ -614,7 +614,7 @@ fn extra_env_var_skipped_when_already_in_file_config_extra() {
 // ── crew-agent normalized env-var field tests ─────────────────────────────────
 //
 // crew-agent uses env vars (not a config file) for max_output_tokens and
-// context_limit. build_numeric_env_field must surface these as BuzzExplicit
+// context_limit. build_numeric_env_field must surface these as CrewExplicit
 // when the env var is present in record.env_vars, and must not double-surface
 // them in the advanced tier.
 
@@ -667,7 +667,7 @@ fn crew_agent_max_output_tokens_from_env_is_crew_explicit() {
 
     let field = surface.normalized.max_output_tokens.unwrap();
     assert_eq!(field.value.as_deref(), Some("8192"));
-    assert_eq!(field.origin, ConfigOrigin::BuzzExplicit);
+    assert_eq!(field.origin, ConfigOrigin::CrewExplicit);
     assert!(matches!(
         field.write_via,
         ConfigWriteMechanism::RespawnWithEnvVar { ref env_key }
@@ -688,7 +688,7 @@ fn crew_agent_context_limit_from_env_is_crew_explicit() {
 
     let field = surface.normalized.context_limit.unwrap();
     assert_eq!(field.value.as_deref(), Some("100000"));
-    assert_eq!(field.origin, ConfigOrigin::BuzzExplicit);
+    assert_eq!(field.origin, ConfigOrigin::CrewExplicit);
     assert!(matches!(
         field.write_via,
         ConfigWriteMechanism::RespawnWithEnvVar { ref env_key }
@@ -752,7 +752,7 @@ fn crew_agent_thinking_effort_from_env_is_crew_explicit() {
 
     let field = surface.normalized.thinking_effort.unwrap();
     assert_eq!(field.value.as_deref(), Some("high"));
-    assert_eq!(field.origin, ConfigOrigin::BuzzExplicit);
+    assert_eq!(field.origin, ConfigOrigin::CrewExplicit);
     assert!(matches!(
         field.write_via,
         ConfigWriteMechanism::RespawnWithEnvVar { ref env_key }
@@ -861,7 +861,7 @@ fn persona_effort_shadows_global_and_tags_persona_default() {
     assert_eq!(effort.overridden_origin, Some(ConfigOrigin::GlobalDefault));
 }
 
-/// AC-3: record-level effort wins over persona and global, stays BuzzExplicit.
+/// AC-3: record-level effort wins over persona and global, stays CrewExplicit.
 #[test]
 fn record_effort_outranks_persona_and_global_keeps_buzz_explicit() {
     let mut record = test_record();
@@ -879,7 +879,7 @@ fn record_effort_outranks_persona_and_global_keeps_buzz_explicit() {
         .thinking_effort
         .expect("effort must surface from record tier");
     assert_eq!(effort.value.as_deref(), Some("xhigh"));
-    assert_eq!(effort.origin, ConfigOrigin::BuzzExplicit);
+    assert_eq!(effort.origin, ConfigOrigin::CrewExplicit);
 }
 
 /// AC-4: no effort from any tier → thinking_effort field is absent.

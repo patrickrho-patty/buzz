@@ -168,20 +168,20 @@ export function isInsideHiddenSpoiler(element: Element): boolean {
 }
 
 /**
- * `urlTransform` for `<ReactMarkdown>` that preserves `buzz://` deep links
- * used by Buzz — both `buzz://message?…` links and `buzz://pr|issue|repo?…`
+ * `urlTransform` for `<ReactMarkdown>` that preserves `crew://` deep links
+ * used by Buzz — both `crew://message?…` links and `crew://pr|issue|repo?…`
  * entity links. The default transform strips unknown schemes (returns `""`)
  * before the `a` component override can see them, which would break copy →
  * paste → click end-to-end.
  *
  * Policy:
- * - `buzz://message` hrefs — preserved unconditionally (handled by the
+ * - `crew://message` hrefs — preserved unconditionally (handled by the
  *   message-link pill renderer).
- * - `buzz://pr|issue|repo` hrefs — preserved only when `parseEntityLink`
- *   succeeds, keeping the sanitizer active against arbitrary `buzz://` URIs.
+ * - `crew://pr|issue|repo` hrefs — preserved only when `parseEntityLink`
+ *   succeeds, keeping the sanitizer active against arbitrary `crew://` URIs.
  * - Everything else delegates to `defaultUrlTransform`.
  */
-export function buzzDeepLinkUrlTransform(value: string, key: string): string {
+export function crewDeepLinkUrlTransform(value: string, key: string): string {
   if (key !== "href") return defaultUrlTransform(value);
   if (isMessageLink(value) || isChannelLink(value)) return value;
   if (parseEntityLink(value).ok) return value;
@@ -189,11 +189,11 @@ export function buzzDeepLinkUrlTransform(value: string, key: string): string {
 }
 
 /**
- * @deprecated Preserved for external callers; use `buzzDeepLinkUrlTransform`
- * which also handles `buzz://pr|issue|repo` entity links.
+ * @deprecated Preserved for external callers; use `crewDeepLinkUrlTransform`
+ * which also handles `crew://pr|issue|repo` entity links.
  */
 export function messageLinkUrlTransform(value: string, key: string): string {
-  return buzzDeepLinkUrlTransform(value, key);
+  return crewDeepLinkUrlTransform(value, key);
 }
 
 export function getReactNodeText(node: React.ReactNode): string {

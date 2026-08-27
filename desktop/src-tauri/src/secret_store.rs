@@ -141,7 +141,7 @@ impl BlobLockGuard {
             // needed. Derive a unique mutex name from the lockfile path so
             // distinct services get distinct mutexes.
             let name_str = format!(
-                "Local\\BuzzKeychain-{}",
+                "Local\\CrewKeychain-{}",
                 path.file_stem()
                     .and_then(|s| s.to_str())
                     .unwrap_or("default")

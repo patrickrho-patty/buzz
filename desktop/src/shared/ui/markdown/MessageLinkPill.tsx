@@ -15,7 +15,7 @@ import {
 } from "@/shared/ui/tooltip";
 import { truncateInlineChipLabel } from "@/shared/ui/mentionChip";
 
-import { BuzzLinkChip } from "./BuzzLinkChip";
+import { CrewLinkChip } from "./CrewLinkChip";
 import { useInlineTooltipPosition } from "./useInlineTooltipPosition";
 import { useMessageLinkMetadata } from "./useMessageLinkMetadata";
 import type { MessageLinkPillProps } from "./types";
@@ -189,7 +189,7 @@ function MessageLinkPillContents({
     const chipLabel = truncateInlineChipLabel(channelLabel);
     const isDeleted = metadata.state.kind === "deleted";
     const chip = (
-      <BuzzLinkChip
+      <CrewLinkChip
         data-message-link=""
         data-message-link-state={isDeleted ? "deleted" : undefined}
         href={permalink}
@@ -227,7 +227,7 @@ function MessageLinkPillContents({
         wrapping
       >
         {chipLabel}
-      </BuzzLinkChip>
+      </CrewLinkChip>
     );
     return interactive ? (
       <MessageLinkMetadataTooltip footer={tooltipFooter} metadata={metadata}>

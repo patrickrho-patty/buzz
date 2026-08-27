@@ -117,9 +117,9 @@ for (const theme of THEMES) {
     const owner = "a".repeat(64);
     const issueId = "b".repeat(64);
     const links = [
-      `buzz://channel/${channelId}`,
-      `buzz://message?channel=${channelId}&id=mock-general-welcome`,
-      `buzz://issue?id=${issueId}&owner=${owner}&d=buzz-world`,
+      `crew://channel/${channelId}`,
+      `crew://message?channel=${channelId}&id=mock-general-welcome`,
+      `crew://issue?id=${issueId}&owner=${owner}&d=buzz-world`,
     ].join(" ");
     const composer = page.getByTestId("message-input");
     await composer.evaluate((element, text) => {

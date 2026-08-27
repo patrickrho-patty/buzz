@@ -681,7 +681,7 @@ test("buildRecord_runtime_switch_new_hiddenKeys_then_generic_edit", () => {
   //   (c) An unset new-runtime hidden key is not introduced.
 
   // Derive both descriptor sets from real runtime objects.
-  const buzzAgentRuntime = {
+  const crewAgentRuntime = {
     id: "crew-agent",
     label: "Buzz Agent",
     avatarUrl: "",
@@ -728,15 +728,15 @@ test("buildRecord_runtime_switch_new_hiddenKeys_then_generic_edit", () => {
     loginHint: null,
   };
 
-  const buzzDescriptors = deriveNumericDescriptors(buzzAgentRuntime);
+  const crewDescriptors = deriveNumericDescriptors(crewAgentRuntime);
   const gooseDescriptors = deriveNumericDescriptors(gooseRuntime);
-  const buzzHiddenKeys = structuredEnvKeys(buzzDescriptors);
+  const crewHiddenKeys = structuredEnvKeys(crewDescriptors);
   const gooseHiddenKeys = structuredEnvKeys(gooseDescriptors);
 
   // Sanity-check that CREW_AGENT_MAX_ROUNDS is hidden under crew-agent but not
   // under Goose — that contrast is what makes it become a generic row.
   assert.ok(
-    buzzHiddenKeys.includes("CREW_AGENT_MAX_ROUNDS"),
+    crewHiddenKeys.includes("CREW_AGENT_MAX_ROUNDS"),
     "CREW_AGENT_MAX_ROUNDS must be hidden under crew-agent descriptors",
   );
   assert.equal(
@@ -810,7 +810,7 @@ test("filterBakedGenericRows_numeric_baked_key_excluded_and_placeholder_shown", 
   // filterBakedGenericRows path must exclude this key from the generic
   // baked-row display so it isn't editable twice, while the structured
   // numeric input shows the inherited placeholder via numericTuningPlaceholder.
-  const buzzAgentRuntime = {
+  const crewAgentRuntime = {
     id: "crew-agent",
     label: "Buzz Agent",
     avatarUrl: "",
@@ -834,7 +834,7 @@ test("filterBakedGenericRows_numeric_baked_key_excluded_and_placeholder_shown", 
     loginHint: null,
   };
 
-  const numericDescriptors = deriveNumericDescriptors(buzzAgentRuntime);
+  const numericDescriptors = deriveNumericDescriptors(crewAgentRuntime);
   const numericStructuredKeys = structuredEnvKeys(numericDescriptors);
 
   assert.ok(

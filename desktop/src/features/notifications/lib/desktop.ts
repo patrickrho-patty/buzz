@@ -64,7 +64,7 @@ function notificationExtra(
   }
 
   return {
-    buzzNotificationTarget: target,
+    crewNotificationTarget: target,
   };
 }
 
@@ -219,7 +219,7 @@ export async function listenForDesktopNotificationActions(
       try {
         pluginListener = await onAction((notification) => {
           const target = parseNotificationTarget(
-            notification.extra?.buzzNotificationTarget,
+            notification.extra?.crewNotificationTarget,
           );
           if (!target) {
             return;

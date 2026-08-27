@@ -1,0 +1,14 @@
+id: tier4-camel-buzz-identifiers
+language: tsx
+severity: warning
+rule:
+  kind: identifier
+  pattern: $NAME
+  regex: ^buzz[A-Z][A-Za-z0-9]*$
+transform:
+  CREW:
+    replace:
+      source: $NAME
+      replace: buzz
+      by: crew
+fix: $CREW

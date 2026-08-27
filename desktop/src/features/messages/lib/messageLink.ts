@@ -1,10 +1,10 @@
 /**
- * `buzz://message` link encoding for "Copy link" / deep-link-to-message.
+ * `crew://message` link encoding for "Copy link" / deep-link-to-message.
  *
- * Format: `buzz://message?channel=<uuid>&id=<eventId>[&thread=<rootId>]`
+ * Format: `crew://message?channel=<uuid>&id=<eventId>[&thread=<rootId>]`
  */
 
-const MESSAGE_LINK_SCHEME = "buzz:";
+const MESSAGE_LINK_SCHEME = "crew:";
 const MESSAGE_LINK_HOST = "message";
 
 export type MessageLinkInput = {
@@ -33,7 +33,7 @@ export type MessageLinkParseResult =
   | { ok: false; reason: string };
 
 /**
- * Build a `buzz://message` URL for a given channel + message.
+ * Build a `crew://message` URL for a given channel + message.
  *
  * Empty `threadRootId` is treated as "no thread" so callers can pass through
  * the result of `getThreadReference(tags).rootId` without extra null checks.
@@ -56,7 +56,7 @@ export function buildMessageLink(input: MessageLinkInput): string {
 }
 
 /**
- * Parse a `buzz://message?…` URL. Returns a discriminated result so callers can
+ * Parse a `crew://message?…` URL. Returns a discriminated result so callers can
  * render a fallback (e.g. a plain link) without throwing.
  */
 export function parseMessageLink(url: string): MessageLinkParseResult {
@@ -67,10 +67,12 @@ export function parseMessageLink(url: string): MessageLinkParseResult {
     return { ok: false, reason: "invalid-url" };
   }
 
-  if (parsed.protocol !== MESSAGE_LINK_SCHEME) {
+  // `crew://` is canonical; legacy `buzz://` links keep parsing during the
+  // Buzz→Crew rename window.
+  if (parsed.protocol !== MESSAGE_LINK_SCHEME && parsed.protocol !== "buzz:") {
     return { ok: false, reason: "wrong-scheme" };
   }
-  // `new URL("buzz://message?…")` puts "message" in `hostname`.
+  // `new URL("crew://message?…")` puts "message" in `hostname`.
   if (parsed.hostname !== MESSAGE_LINK_HOST) {
     return { ok: false, reason: "wrong-host" };
   }
@@ -100,7 +102,7 @@ export function parseMessageLink(url: string): MessageLinkParseResult {
  */
 export function isMessageLink(href: string | undefined | null): boolean {
   if (!href) return false;
-  return href.startsWith("buzz://message?") || href === "buzz://message";
+  return href.startsWith("crew://message?") || href === "crew://message";
 }
 
 type MessageLinkRenderInput = {
@@ -115,7 +117,7 @@ export type MessageLinkRenderTarget =
 
 /**
  * Centralizes how markdown-rendered anchors map to message-link UI. Both
- * CommonMark autolinks (`<buzz://message?...>`) and explicitly labeled links
+ * CommonMark autolinks (`<crew://message?...>`) and explicitly labeled links
  * arrive as anchors; autolinks have label === href and should render as pills,
  * while intentionally labeled links keep their label.
  */

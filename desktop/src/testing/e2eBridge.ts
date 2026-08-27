@@ -497,7 +497,7 @@ type E2eConfig = {
     // Event IDs that `get_event` should report as definitively not found.
     // Causes `useDraftRootStatus` to classify as `deleted`.
     deletedEventIds?: string[];
-    // Pending community deep links (buzz://join / buzz://connect / buzz://add-community) seeded into
+    // Pending community deep links (crew://join / crew://connect / crew://add-community) seeded into
     // the mocked Rust-side queue. Mirrors the real queue's semantics:
     // `take_pending_community_deep_link` peeks the head and
     // `acknowledge_pending_community_deep_link` removes by id. Drives the
@@ -1853,7 +1853,7 @@ function buildMockConfigSurface(pubkey: string): {
     normalized: {
       model: {
         value: "gpt-4o",
-        origin: "buzzExplicit",
+        origin: "crewExplicit",
         overriddenValue: "gpt-4o-mini",
         overriddenOrigin: "configFile",
         isRequired: false,
@@ -2188,7 +2188,7 @@ function buildMockConfigSurface(pubkey: string): {
     normalized: {
       model: {
         value: "gpt-4o",
-        origin: "buzzExplicit",
+        origin: "crewExplicit",
         overriddenValue: null,
         overriddenOrigin: null,
         isRequired: false,
@@ -2237,7 +2237,7 @@ function buildMockConfigSurface(pubkey: string): {
     },
   };
 
-  const buzzAgentSurface = {
+  const crewAgentSurface = {
     ...gooseSurface,
     runtimeId: "crew-agent",
     runtimeLabel: "Buzz Agent",
@@ -2269,7 +2269,7 @@ function buildMockConfigSurface(pubkey: string): {
     case PUBKEY_MULTI_ORIGIN:
       return multiOriginSurface;
     case PUBKEY_CREW_AGENT:
-      return buzzAgentSurface;
+      return crewAgentSurface;
     default:
       return gooseSurface;
   }
