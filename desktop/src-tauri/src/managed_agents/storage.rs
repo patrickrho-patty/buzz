@@ -222,7 +222,7 @@ fn migrate_inline_key(store: &impl KeyStore, record: &ManagedAgentRecord) -> Key
 /// `Some(error)` when `private_key_nsec` is empty — after [`hydrate_keys`] an
 /// empty key means a keyring outage or a genuinely absent secret, NOT a
 /// deliberately keyless agent. Spawning anyway would inject an empty
-/// `BUZZ_PRIVATE_KEY`/`NOSTR_PRIVATE_KEY`, launching with no identity. Callers
+/// `CREW_PRIVATE_KEY`/`NOSTR_PRIVATE_KEY`, launching with no identity. Callers
 /// (the spawn path) must fail closed (Wes storage.rs:158).
 pub(crate) fn spawn_key_refusal(record: &ManagedAgentRecord) -> Option<String> {
     record.private_key_nsec.is_empty().then(|| {

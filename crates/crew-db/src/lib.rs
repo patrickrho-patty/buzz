@@ -458,7 +458,7 @@ impl RoutePredicate {
     /// sound predicate from the query shape. Never produces a covered arm
     /// without both a channel-scope proof AND a real upper bound.
     ///
-    /// `routing_enabled` is whether `BUZZ_REPLICA_READ_MAX_AGE_MS` is set
+    /// `routing_enabled` is whether `CREW_REPLICA_READ_MAX_AGE_MS` is set
     /// (non-zero). When it is NOT, this returns `Bounded` — which the zero
     /// budget then fails closed — so the new seams are genuinely dark at
     /// the deploy default even for channel-pinned queries carrying `until`.
@@ -480,7 +480,7 @@ impl RoutePredicate {
     }
 }
 
-/// Map the configured read budget (`BUZZ_REPLICA_READ_MAX_AGE_MS`) to the
+/// Map the configured read budget (`CREW_REPLICA_READ_MAX_AGE_MS`) to the
 /// runtime gate: `0` disables bounded-staleness routing; anything above the
 /// fence staleness gate is clamped to it (an entry older than the staleness
 /// gate never routes anyway, so a larger budget would only misrepresent the
@@ -536,7 +536,7 @@ pub struct DbConfig {
     /// Maximum number of connections in the pool.
     pub max_connections: u32,
     /// Maximum connections in the read-replica pool (env
-    /// `BUZZ_DB_READ_POOL_SIZE`). `None` inherits [`Self::max_connections`].
+    /// `CREW_DB_READ_POOL_SIZE`). `None` inherits [`Self::max_connections`].
     pub read_max_connections: Option<u32>,
     /// Minimum number of idle connections to maintain.
     pub min_connections: u32,
@@ -547,7 +547,7 @@ pub struct DbConfig {
     /// Seconds a connection may sit idle before being closed.
     pub idle_timeout_secs: u64,
     /// Replica read budget `B` in milliseconds (bounded arm, env
-    /// `BUZZ_REPLICA_READ_MAX_AGE_MS`). `0` disables bounded-staleness
+    /// `CREW_REPLICA_READ_MAX_AGE_MS`). `0` disables bounded-staleness
     /// routing — the rollout default. Values above
     /// [`replica_fence::FENCE_STALENESS`] are clamped to it: an entry older
     /// than the staleness gate never routes anyway, so a larger budget
@@ -853,7 +853,7 @@ impl Db {
     /// probe. Returns `Ok(false)` when no replica is configured.
     ///
     /// Ordering matters (Perci, PR #2084 review): this must run **after**
-    /// the migration decision. On a relay with `BUZZ_AUTO_MIGRATE` off, the
+    /// the migration decision. On a relay with `CREW_AUTO_MIGRATE` off, the
     /// writer pool arms the GUC regardless, but if migration 0021 has not
     /// been applied there is no trigger enforcing it — and a heartbeat probe
     /// would open the fence over an unenforced floor. So the probe is gated
@@ -969,7 +969,7 @@ impl Db {
             // and reader connection health/latency; high active suggests
             // contention, but this metric alone does not distinguish
             // contention from slow connects. Note the gauge is a coarse
-            // sample (BUZZ_POOL_METRICS_INTERVAL_SECS, default 10s) while
+            // sample (CREW_POOL_METRICS_INTERVAL_SECS, default 10s) while
             // the event it explains lasts ~150ms — a short burst may fall
             // between samples entirely, so absence of elevated active is
             // NOT evidence of a cold connect.
@@ -1081,7 +1081,7 @@ impl Db {
     ///
     /// `max` is the **reader's** ceiling ([`Db::read_max_connections`]), not
     /// the writer's: `crew_db_read_pool_active / crew_db_read_pool_max` is
-    /// the operator's utilisation signal for tuning `BUZZ_DB_READ_POOL_SIZE`,
+    /// the operator's utilisation signal for tuning `CREW_DB_READ_POOL_SIZE`,
     /// and deriving it from the writer's max would misreport saturation by
     /// exactly the ratio of the two pool sizes — in the direction that hides
     /// the problem.
@@ -1797,7 +1797,7 @@ impl Db {
     /// ([`RoutePredicate::for_query`]): a channel-pinned query with an
     /// `until` upper bound may be served covered (provably complete below
     /// the fence wall); anything else is bounded-staleness only. The whole
-    /// seam is gated on `BUZZ_REPLICA_READ_MAX_AGE_MS` (default off): when
+    /// seam is gated on `CREW_REPLICA_READ_MAX_AGE_MS` (default off): when
     /// unset, even covered-eligible queries stay on the writer, so merging
     /// this seam is a true no-op until the budget is configured. Every
     /// failure fails closed to the writer.
@@ -3082,7 +3082,7 @@ impl Db {
     ///   offload. NOTE: enabling the budget also breaks read-your-own-writes
     ///   on the GET leg; the client-side WS `since`-overlap union intended
     ///   to cover fresh events has NOT shipped yet — do not enable
-    ///   `BUZZ_REPLICA_HEAD_MAX_AGE_SECS` until it has, proven by a
+    ///   `CREW_REPLICA_HEAD_MAX_AGE_SECS` until it has, proven by a
     ///   post-then-immediately-refetch test.
     ///
     /// Every failure fails closed to the writer and is recorded in
@@ -7467,7 +7467,7 @@ mod tests {
 
     /// Truth table for [`RoutePredicate::for_query`]: the strongest sound
     /// predicate per query shape, and — the deploy-day default row — that
-    /// `routing_enabled = false` (BUZZ_REPLICA_READ_MAX_AGE_MS unset)
+    /// `routing_enabled = false` (CREW_REPLICA_READ_MAX_AGE_MS unset)
     /// forces `Bounded` even for covered-eligible shapes, so the zero
     /// budget fails the new seams closed (Dawn's covered-at-zero-budget
     /// catch, design doc rev 5).
@@ -9297,7 +9297,7 @@ mod tests {
     /// `spawn_fence_probe` must verify the floor guard before letting the
     /// probe run — catalog shape AND observed behavior — and refuse on
     /// sabotage. This is the production gate for a relay running with
-    /// `BUZZ_AUTO_MIGRATE` off: an armed GUC with no enforcing trigger must
+    /// `CREW_AUTO_MIGRATE` off: an armed GUC with no enforcing trigger must
     /// never yield an open fence.
     #[tokio::test]
     #[ignore = "requires Postgres"]
@@ -9363,7 +9363,7 @@ mod tests {
             "unexpected error: {err}"
         );
 
-        // Sabotage B: trigger dropped entirely (the BUZZ_AUTO_MIGRATE=off /
+        // Sabotage B: trigger dropped entirely (the CREW_AUTO_MIGRATE=off /
         // 0021-unapplied shape). Catalog check must refuse.
         sqlx::query("DROP TRIGGER events_created_at_floor ON events")
             .execute(&db.pool)

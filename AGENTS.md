@@ -199,9 +199,9 @@ check existing reply handlers for the pattern.
 ## Agent CLI (`buzz-cli`)
 
 `buzz` is the agent-first CLI. Auth env vars
-(`BUZZ_RELAY_URL`, `BUZZ_PRIVATE_KEY`, `BUZZ_AUTH_TAG`) are auto-injected
+(`CREW_RELAY_URL`, `CREW_PRIVATE_KEY`, `CREW_AUTH_TAG`) are auto-injected
 by the ACP harness into managed agent subprocesses. In development, set
-`BUZZ_PRIVATE_KEY` and `BUZZ_RELAY_URL` in your environment manually.
+`CREW_PRIVATE_KEY` and `CREW_RELAY_URL` in your environment manually.
 
 ### Building the CLI
 
@@ -289,7 +289,7 @@ Output is a PNG path on stdout.
 
 Use `--messages` to inject content into a channel before capture. The JSON file
 is an array of objects — `channelName` and `content` are required, all other
-fields are optional and passed through to `__BUZZ_E2E_EMIT_MOCK_MESSAGE__`:
+fields are optional and passed through to `__CREW_E2E_EMIT_MOCK_MESSAGE__`:
 
 ```json
 [
@@ -403,7 +403,7 @@ must run BEFORE `installMockBridge(page)` — React reads state on mount, the
 bridge triggers mount.
 
 **Live messages:** Call `waitForMockLiveSubscription(page, channelName)` before
-`__BUZZ_E2E_EMIT_MOCK_MESSAGE__` — messages are silently dropped without a
+`__CREW_E2E_EMIT_MOCK_MESSAGE__` — messages are silently dropped without a
 subscription. Navigate to the channel first (triggers subscription), then away
 (so unread indicators appear), then inject.
 

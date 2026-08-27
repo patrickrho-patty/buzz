@@ -68,9 +68,9 @@ where
 Buzz CLI — interact with a Buzz relay
 
 Configuration (flags override env vars):
-  BUZZ_RELAY_URL     Relay base URL        [default: http://localhost:3000]
-  BUZZ_PRIVATE_KEY   Nostr private key (hex or nsec)  [required]
-  BUZZ_AUTH_TAG      NIP-OA auth tag JSON  [optional]
+  CREW_RELAY_URL     Relay base URL        [default: http://localhost:3000]
+  CREW_PRIVATE_KEY   Nostr private key (hex or nsec)  [required]
+  CREW_AUTH_TAG      NIP-OA auth tag JSON  [optional]
 
 The 'pack' subcommand runs locally and does not require a relay connection.
 
@@ -78,16 +78,16 @@ Exit codes: 0=ok  1=bad input  2=relay/network error  3=auth error  4=other  5=w
 Errors are JSON on stderr: {\"error\": \"<category>\", \"message\": \"<detail>\"}"
 )]
 struct Cli {
-    /// Relay URL (http:// or https://). Overrides BUZZ_RELAY_URL env var.
-    #[arg(long, env = "BUZZ_RELAY_URL", default_value = "http://localhost:3000")]
+    /// Relay URL (http:// or https://). Overrides CREW_RELAY_URL env var.
+    #[arg(long, env = "CREW_RELAY_URL", default_value = "http://localhost:3000")]
     relay: String,
 
     /// Nostr private key (hex or nsec). This is the CLI's identity.
-    #[arg(long, env = "BUZZ_PRIVATE_KEY", hide_env_values = true)]
+    #[arg(long, env = "CREW_PRIVATE_KEY", hide_env_values = true)]
     private_key: Option<String>,
 
     /// NIP-OA auth tag JSON (owner attestation). Injected into every signed event.
-    #[arg(long, env = "BUZZ_AUTH_TAG", hide_env_values = true)]
+    #[arg(long, env = "CREW_AUTH_TAG", hide_env_values = true)]
     auth_tag: Option<String>,
 
     /// Output format: 'json' (default, full fields) or 'compact' (reduced fields).
@@ -305,7 +305,7 @@ republish in progress). If the retry also fails, the command exits with an error
 Suggested --reason codes (unknown values are allowed): rotated, retired, \
 bot-rebuilt, left-organization, spam\n\n\
 Archiving a third-party identity is a human owner/admin action: an agent \
-running under BUZZ_AUTH_TAG signs as itself, so it can only ever satisfy \
+running under CREW_AUTH_TAG signs as itself, so it can only ever satisfy \
 the self path (target == signer) — not the owner-of-agent path for another \
 identity.\n\n\
 Examples:\n  \
@@ -1772,7 +1772,7 @@ pub enum MediaCmd {
 pub enum MemCmd {
     /// List non-tombstoned memory entries
     Ls {
-        /// Owner pubkey (hex). Overrides BUZZ_AUTH_TAG.
+        /// Owner pubkey (hex). Overrides CREW_AUTH_TAG.
         #[arg(long)]
         owner: Option<String>,
         /// Agent pubkey (hex) to read as this key's owner.
@@ -1868,7 +1868,7 @@ pub enum PackCmd {
 /// Community moderation commands.
 ///
 /// The community (tenant) is selected by the relay host in `--relay` /
-/// `BUZZ_RELAY_URL` — moderation commands are community-global and carry no
+/// `CREW_RELAY_URL` — moderation commands are community-global and carry no
 /// channel scope. The signing key must be a community owner/admin; the relay
 /// authorizes every command.
 #[derive(Subcommand)]
@@ -1961,7 +1961,7 @@ pub enum ModerationCmd {
     },
 }
 
-/// Normalize hand-authored `BUZZ_AUTH_TAG` input to strict JSON.
+/// Normalize hand-authored `CREW_AUTH_TAG` input to strict JSON.
 ///
 /// `.env` files and shell exports sometimes carry the tag in the unquoted
 /// shorthand `[auth,<hex>,<conditions>,<hex>]` (quotes dropped by hand).
@@ -2010,14 +2010,14 @@ async fn run(cli: Cli) -> Result<(), CliError> {
     // Auth: private key is required for all relay operations.
     // The keypair IS the identity — no tokens, no other auth.
     let private_key_str = cli.private_key.ok_or_else(|| {
-        CliError::Auth("BUZZ_PRIVATE_KEY is required (use --private-key or set env var)".into())
+        CliError::Auth("CREW_PRIVATE_KEY is required (use --private-key or set env var)".into())
     })?;
     let keys = Keys::parse(&private_key_str)
-        .map_err(|e| CliError::Key(format!("invalid BUZZ_PRIVATE_KEY: {e}")))?;
+        .map_err(|e| CliError::Key(format!("invalid CREW_PRIVATE_KEY: {e}")))?;
 
     // NIP-OA: parse and verify the auth tag if provided.
     //
-    // `BUZZ_AUTH_TAG` is hand-authored configuration, so the unquoted raw
+    // `CREW_AUTH_TAG` is hand-authored configuration, so the unquoted raw
     // shorthand `[auth,hex,,hex]` is normalized to JSON here — at this input
     // edge only. The SDK grammar and the `x-auth-tag` wire format stay strict
     // JSON; all validation and signature verification happen on the strict
@@ -2026,17 +2026,17 @@ async fn run(cli: Cli) -> Result<(), CliError> {
         Some(ref input) if !input.is_empty() => {
             let json = normalize_auth_tag_input(input);
             let tag = crew_sdk::nip_oa::parse_auth_tag(&json)
-                .map_err(|e| CliError::Auth(format!("BUZZ_AUTH_TAG is malformed: {e}")))?;
+                .map_err(|e| CliError::Auth(format!("CREW_AUTH_TAG is malformed: {e}")))?;
             crew_sdk::nip_oa::verify_auth_tag(&json, &keys.public_key()).map_err(|e| {
                 CliError::Auth(format!(
-                    "BUZZ_AUTH_TAG verification failed for pubkey {}: {e}",
+                    "CREW_AUTH_TAG verification failed for pubkey {}: {e}",
                     keys.public_key().to_hex()
                 ))
             })?;
             // Canonical wire form derives from the parsed-and-verified tag
             // (same shape as crew-acp's RestClient), never from raw input.
             let canonical = serde_json::to_string(tag.as_slice())
-                .map_err(|e| CliError::Auth(format!("BUZZ_AUTH_TAG serialization failed: {e}")))?;
+                .map_err(|e| CliError::Auth(format!("CREW_AUTH_TAG serialization failed: {e}")))?;
             (Some(tag), Some(canonical))
         }
         _ => (None, None),

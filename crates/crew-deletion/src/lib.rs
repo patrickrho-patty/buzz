@@ -528,7 +528,7 @@ async fn connect_store() -> Result<DeletionStore> {
     let database_url = required_env("DATABASE_URL")?;
     let db = Db::new(&DbConfig {
         database_url,
-        max_connections: env_parse("BUZZ_DB_POOL_SIZE", 20),
+        max_connections: env_parse("CREW_DB_POOL_SIZE", 20),
         ..DbConfig::default()
     })
     .await?;
@@ -549,7 +549,7 @@ fn nonempty_s3_region(region: String) -> Option<String> {
 
 fn s3_region_from_env() -> String {
     resolve_s3_region(
-        std::env::var("BUZZ_S3_REGION").ok(),
+        std::env::var("CREW_S3_REGION").ok(),
         std::env::var("AWS_REGION").ok(),
     )
 }
@@ -561,12 +561,12 @@ async fn connect_services() -> Result<Services> {
 
 async fn connect_services_with_store(store: DeletionStore) -> Result<Services> {
     let media_config = crew_media::MediaConfig {
-        s3_endpoint: required_env("BUZZ_S3_ENDPOINT")?,
-        s3_access_key: required_env("BUZZ_S3_ACCESS_KEY")?,
-        s3_secret_key: required_env("BUZZ_S3_SECRET_KEY")?,
-        s3_bucket: required_env("BUZZ_S3_BUCKET")?,
+        s3_endpoint: required_env("CREW_S3_ENDPOINT")?,
+        s3_access_key: required_env("CREW_S3_ACCESS_KEY")?,
+        s3_secret_key: required_env("CREW_S3_SECRET_KEY")?,
+        s3_bucket: required_env("CREW_S3_BUCKET")?,
         s3_region: s3_region_from_env(),
-        s3_addressing_style: std::env::var("BUZZ_S3_ADDRESSING_STYLE")
+        s3_addressing_style: std::env::var("CREW_S3_ADDRESSING_STYLE")
             .unwrap_or_else(|_| "path".to_string())
             .parse()
             .map_err(anyhow::Error::msg)?,
@@ -583,7 +583,7 @@ async fn connect_services_with_store(store: DeletionStore) -> Result<Services> {
     let redis_url = required_env("REDIS_URL")?;
     let mut redis_config = deadpool_redis::Config::from_url(&redis_url);
     redis_config.pool = Some(deadpool_redis::PoolConfig::new(env_parse(
-        "BUZZ_REDIS_POOL_SIZE",
+        "CREW_REDIS_POOL_SIZE",
         16,
     )));
     let redis = redis_config
@@ -1363,7 +1363,7 @@ async fn verify_redis_absence(
 }
 
 fn sweep_object_cap() -> u64 {
-    std::env::var("BUZZ_DELETION_SWEEP_MAX_OBJECTS")
+    std::env::var("CREW_DELETION_SWEEP_MAX_OBJECTS")
         .ok()
         .and_then(|value| value.parse().ok())
         .filter(|value| *value > 0)
@@ -1371,7 +1371,7 @@ fn sweep_object_cap() -> u64 {
 }
 
 fn manifest_chunk_keys() -> usize {
-    std::env::var("BUZZ_DELETION_MANIFEST_CHUNK_KEYS")
+    std::env::var("CREW_DELETION_MANIFEST_CHUNK_KEYS")
         .ok()
         .and_then(|value| value.parse::<usize>().ok())
         .filter(|value| *value > 0)
@@ -1477,9 +1477,9 @@ mod tests {
     }
 
     async fn claimed_test_deletion(prefix: &str) -> (Db, Services, ClaimedDeletion) {
-        let database_url = std::env::var("BUZZ_TEST_DATABASE_URL")
+        let database_url = std::env::var("CREW_TEST_DATABASE_URL")
             .or_else(|_| std::env::var("DATABASE_URL"))
-            .expect("BUZZ_TEST_DATABASE_URL or DATABASE_URL is required");
+            .expect("CREW_TEST_DATABASE_URL or DATABASE_URL is required");
         let pool = sqlx::PgPool::connect(&database_url)
             .await
             .expect("connect deletion engine test DB");
@@ -1544,26 +1544,26 @@ mod tests {
     }
 
     fn deletion_test_media_storage() -> Arc<MediaStorage> {
-        let endpoint = std::env::var("BUZZ_TEST_S3_ENDPOINT")
-            .or_else(|_| std::env::var("BUZZ_S3_ENDPOINT"))
-            .expect("BUZZ_TEST_S3_ENDPOINT or BUZZ_S3_ENDPOINT is required");
-        let access_key = std::env::var("BUZZ_TEST_S3_ACCESS_KEY")
-            .or_else(|_| std::env::var("BUZZ_S3_ACCESS_KEY"))
-            .expect("BUZZ_TEST_S3_ACCESS_KEY or BUZZ_S3_ACCESS_KEY is required");
-        let secret_key = std::env::var("BUZZ_TEST_S3_SECRET_KEY")
-            .or_else(|_| std::env::var("BUZZ_S3_SECRET_KEY"))
-            .expect("BUZZ_TEST_S3_SECRET_KEY or BUZZ_S3_SECRET_KEY is required");
-        let bucket = std::env::var("BUZZ_TEST_S3_BUCKET")
-            .or_else(|_| std::env::var("BUZZ_S3_BUCKET"))
-            .expect("BUZZ_TEST_S3_BUCKET or BUZZ_S3_BUCKET is required");
+        let endpoint = std::env::var("CREW_TEST_S3_ENDPOINT")
+            .or_else(|_| std::env::var("CREW_S3_ENDPOINT"))
+            .expect("CREW_TEST_S3_ENDPOINT or CREW_S3_ENDPOINT is required");
+        let access_key = std::env::var("CREW_TEST_S3_ACCESS_KEY")
+            .or_else(|_| std::env::var("CREW_S3_ACCESS_KEY"))
+            .expect("CREW_TEST_S3_ACCESS_KEY or CREW_S3_ACCESS_KEY is required");
+        let secret_key = std::env::var("CREW_TEST_S3_SECRET_KEY")
+            .or_else(|_| std::env::var("CREW_S3_SECRET_KEY"))
+            .expect("CREW_TEST_S3_SECRET_KEY or CREW_S3_SECRET_KEY is required");
+        let bucket = std::env::var("CREW_TEST_S3_BUCKET")
+            .or_else(|_| std::env::var("CREW_S3_BUCKET"))
+            .expect("CREW_TEST_S3_BUCKET or CREW_S3_BUCKET is required");
         Arc::new(
             MediaStorage::new(&crew_media::MediaConfig {
                 s3_endpoint: endpoint,
                 s3_access_key: access_key,
                 s3_secret_key: secret_key,
                 s3_bucket: bucket,
-                s3_region: std::env::var("BUZZ_TEST_S3_REGION")
-                    .or_else(|_| std::env::var("BUZZ_S3_REGION"))
+                s3_region: std::env::var("CREW_TEST_S3_REGION")
+                    .or_else(|_| std::env::var("CREW_S3_REGION"))
                     .unwrap_or_else(|_| "us-east-1".to_string()),
                 s3_addressing_style: crew_media::S3AddressingStyle::Path,
                 max_image_bytes: 1,
@@ -1759,7 +1759,7 @@ mod tests {
 
     #[test]
     fn deletion_configuration_requires_every_destructive_dependency() {
-        let variable = format!("BUZZ_DELETION_REQUIRED_TEST_{}", Uuid::new_v4().simple());
+        let variable = format!("CREW_DELETION_REQUIRED_TEST_{}", Uuid::new_v4().simple());
         assert!(required_env(&variable).is_err());
         std::env::set_var(&variable, "   ");
         assert!(required_env(&variable).is_err());
@@ -1835,7 +1835,7 @@ mod tests {
     #[ignore = "requires Postgres"]
     async fn stale_lease_during_failure_recording_is_lost_ownership() {
         let (_, services, claim) = claimed_test_deletion("deletion-stale-record").await;
-        let database_url = std::env::var("BUZZ_TEST_DATABASE_URL")
+        let database_url = std::env::var("CREW_TEST_DATABASE_URL")
             .or_else(|_| std::env::var("DATABASE_URL"))
             .expect("test database URL");
         let pool = sqlx::PgPool::connect(&database_url)
@@ -1921,9 +1921,9 @@ mod tests {
     #[tokio::test]
     #[ignore = "requires Postgres"]
     async fn serving_guard_cancels_protected_operation_when_heartbeat_is_lost() {
-        let database_url = std::env::var("BUZZ_TEST_DATABASE_URL")
+        let database_url = std::env::var("CREW_TEST_DATABASE_URL")
             .or_else(|_| std::env::var("DATABASE_URL"))
-            .expect("BUZZ_TEST_DATABASE_URL or DATABASE_URL is required");
+            .expect("CREW_TEST_DATABASE_URL or DATABASE_URL is required");
         let pool = sqlx::PgPool::connect(&database_url)
             .await
             .expect("connect serving guard test DB");

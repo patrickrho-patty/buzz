@@ -148,7 +148,7 @@ canonical address (`ws://localhost:3600`) even from inside a task container.
 ([`forwarder/relay_forwarder.rs`](forwarder/relay_forwarder.rs)) with the
 agent stack; it listens on the container's loopback and bridges the byte
 stream to the Docker host gateway (`host.docker.internal`, overridable via
-`BUZZ_BENCHMARK_DOCKER_HOST`).
+`CREW_BENCHMARK_DOCKER_HOST`).
 
 `scripts/run_leaderboard.py` is the layer underneath, for running against an
 already-provisioned stack. It wraps the invocation above with only

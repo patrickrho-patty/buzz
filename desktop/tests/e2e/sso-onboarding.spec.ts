@@ -18,7 +18,7 @@ test.beforeEach(async ({ page }) => {
   // whoami mock alone (the real cold-start path).
 
   await page.addInitScript((email) => {
-    (window as unknown as Record<string, string>).__BUZZ_E2E_WHOAMI_EMAIL__ =
+    (window as unknown as Record<string, string>).__CREW_E2E_WHOAMI_EMAIL__ =
       email;
   }, SSO_EMAIL);
   await installMockBridge(
@@ -79,7 +79,7 @@ test("whoami invoke carries the onboarding transaction relay URL", async ({
   await expect(input).toHaveValue("e2e-test");
 
   const whoamiPayloads = await page.evaluate(() =>
-    (window.__BUZZ_E2E_COMMAND_LOG__ ?? [])
+    (window.__CREW_E2E_COMMAND_LOG__ ?? [])
       .filter((entry) => entry.command === "oidc_whoami")
       .map((entry) => entry.payload),
   );

@@ -1261,6 +1261,7 @@ name = "countdown-bot"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "crew-core",
  "crew-sdk",
  "futures-util",
  "nostr 0.44.7",

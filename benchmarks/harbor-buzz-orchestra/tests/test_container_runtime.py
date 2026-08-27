@@ -166,7 +166,7 @@ def test_prompt_hash_and_identity_override_are_fail_closed(tmp_path):
         )
 
     endpoint = EndpointLaunchConfig(
-        "anthropic", "ANTHROPIC_API_KEY", {"BUZZ_ACP_MCP_COMMAND": "evil"}
+        "anthropic", "ANTHROPIC_API_KEY", {"CREW_ACP_MCP_COMMAND": "evil"}
     )
     with pytest.raises(RuntimeLaunchError, match="identity"):
         runtime(tmp_path)._reject_identity_overrides(endpoint)
@@ -328,23 +328,23 @@ async def test_launch_wires_the_desktop_environment(tmp_path, configured, expect
     command, env = environment.commands[-1]
     assert f"{REMOTE_BIN}/crew-acp" in command
     # The real product wiring: acp spawns crew-agent, which gets crew-dev-mcp.
-    assert env["BUZZ_ACP_AGENT_COMMAND"] == f"{REMOTE_BIN}/crew-agent"
-    assert env["BUZZ_ACP_MCP_COMMAND"] == f"{REMOTE_BIN}/crew-dev-mcp"
-    assert env["BUZZ_RELAY_URL"] == trial.relay_ws_url
-    assert env["BUZZ_PRIVATE_KEY"] == orch.nostr_secret_key
+    assert env["CREW_ACP_AGENT_COMMAND"] == f"{REMOTE_BIN}/crew-agent"
+    assert env["CREW_ACP_MCP_COMMAND"] == f"{REMOTE_BIN}/crew-dev-mcp"
+    assert env["CREW_RELAY_URL"] == trial.relay_ws_url
+    assert env["CREW_PRIVATE_KEY"] == orch.nostr_secret_key
     assert env["NOSTR_PRIVATE_KEY"] == orch.nostr_secret_key
-    assert env["BUZZ_AGENT_NO_HINTS"] == "1"
-    assert env["BUZZ_AGENT_MAX_ROUNDS"] == expected
-    assert env["BUZZ_ACP_SYSTEM_PROMPT_FILE"].endswith("orch-1.system-prompt.md")
+    assert env["CREW_AGENT_NO_HINTS"] == "1"
+    assert env["CREW_AGENT_MAX_ROUNDS"] == expected
+    assert env["CREW_ACP_SYSTEM_PROMPT_FILE"].endswith("orch-1.system-prompt.md")
     # The composed prompt was uploaded into the container.
     assert any(
-        target == env["BUZZ_ACP_SYSTEM_PROMPT_FILE"]
+        target == env["CREW_ACP_SYSTEM_PROMPT_FILE"]
         for _, target in environment.uploads
     )
 
 
 def test_runtime_validates_construction_bounds(tmp_path):
-    # 0 is legal and means unbounded (BUZZ_AGENT_MAX_ROUNDS=0); the trial
+    # 0 is legal and means unbounded (CREW_AGENT_MAX_ROUNDS=0); the trial
     # budget is the clock. Only negatives are rejected.
     runtime(tmp_path, max_agent_rounds=0)
     with pytest.raises(ValueError, match="unbounded"):
@@ -744,4 +744,4 @@ async def test_thinking_effort_reaches_the_agent(tmp_path, pinned, expected):
         trial_dir=tmp_path,
     )
     _, env = environment.commands[-1]
-    assert env["BUZZ_AGENT_THINKING_EFFORT"] == expected
+    assert env["CREW_AGENT_THINKING_EFFORT"] == expected

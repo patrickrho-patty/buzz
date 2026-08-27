@@ -2280,7 +2280,7 @@ mod tests {
     #[ignore = "requires Postgres"]
     async fn accessible_channel_ids_are_not_truncated_at_one_thousand() {
         let database_url =
-            std::env::var("BUZZ_TEST_DATABASE_URL").unwrap_or_else(|_| TEST_DB_URL.to_string());
+            std::env::var("CREW_TEST_DATABASE_URL").unwrap_or_else(|_| TEST_DB_URL.to_string());
         let pool = PgPool::connect(&database_url)
             .await
             .expect("connect to test DB");
@@ -2319,7 +2319,7 @@ mod tests {
     #[ignore = "requires Postgres"]
     async fn get_members_returns_full_roster_beyond_1000() {
         let database_url =
-            std::env::var("BUZZ_TEST_DATABASE_URL").unwrap_or_else(|_| TEST_DB_URL.to_string());
+            std::env::var("CREW_TEST_DATABASE_URL").unwrap_or_else(|_| TEST_DB_URL.to_string());
         let pool = PgPool::connect(&database_url)
             .await
             .expect("connect to test DB");

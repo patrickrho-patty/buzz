@@ -40,9 +40,9 @@ class BuzzCli:
                 timeout=self._timeout,
                 check=False,
                 env={
-                    "BUZZ_RELAY_URL": self._relay_url,
-                    "BUZZ_PRIVATE_KEY": self._secret_key,
-                    "BUZZ_AUTH_TAG": self._auth_tag,
+                    "CREW_RELAY_URL": self._relay_url,
+                    "CREW_PRIVATE_KEY": self._secret_key,
+                    "CREW_AUTH_TAG": self._auth_tag,
                     "PATH": _path(),
                 },
             )

@@ -7,16 +7,16 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-val uploadKeystorePath = providers.environmentVariable("BUZZ_ANDROID_UPLOAD_KEYSTORE_PATH").orNull
-val uploadKeystorePassword = providers.environmentVariable("BUZZ_ANDROID_UPLOAD_KEYSTORE_PASSWORD").orNull
-val uploadKeyAlias = providers.environmentVariable("BUZZ_ANDROID_UPLOAD_KEY_ALIAS").orNull
-val uploadKeyPassword = providers.environmentVariable("BUZZ_ANDROID_UPLOAD_KEY_PASSWORD").orNull
+val uploadKeystorePath = providers.environmentVariable("CREW_ANDROID_UPLOAD_KEYSTORE_PATH").orNull
+val uploadKeystorePassword = providers.environmentVariable("CREW_ANDROID_UPLOAD_KEYSTORE_PASSWORD").orNull
+val uploadKeyAlias = providers.environmentVariable("CREW_ANDROID_UPLOAD_KEY_ALIAS").orNull
+val uploadKeyPassword = providers.environmentVariable("CREW_ANDROID_UPLOAD_KEY_PASSWORD").orNull
 val uploadSigningValues =
     mapOf(
-        "BUZZ_ANDROID_UPLOAD_KEYSTORE_PATH" to uploadKeystorePath,
-        "BUZZ_ANDROID_UPLOAD_KEYSTORE_PASSWORD" to uploadKeystorePassword,
-        "BUZZ_ANDROID_UPLOAD_KEY_ALIAS" to uploadKeyAlias,
-        "BUZZ_ANDROID_UPLOAD_KEY_PASSWORD" to uploadKeyPassword,
+        "CREW_ANDROID_UPLOAD_KEYSTORE_PATH" to uploadKeystorePath,
+        "CREW_ANDROID_UPLOAD_KEYSTORE_PASSWORD" to uploadKeystorePassword,
+        "CREW_ANDROID_UPLOAD_KEY_ALIAS" to uploadKeyAlias,
+        "CREW_ANDROID_UPLOAD_KEY_PASSWORD" to uploadKeyPassword,
     )
 val missingUploadSigningValues = uploadSigningValues.filterValues { it.isNullOrBlank() }.keys
 val hasUploadSigning = missingUploadSigningValues.isEmpty()
@@ -74,18 +74,18 @@ if (
 //     pipeline that signs through the central APK Signer service (Cashkite,
 //     BOT-1234). No keystore material may be present in this mode.
 val releaseSigningMode =
-    providers.environmentVariable("BUZZ_ANDROID_RELEASE_SIGNING").orNull ?: "upload-keystore"
+    providers.environmentVariable("CREW_ANDROID_RELEASE_SIGNING").orNull ?: "upload-keystore"
 val externalReleaseSigning = releaseSigningMode == "external"
 if (releaseSigningMode !in setOf("upload-keystore", "external")) {
     throw GradleException(
-        "BUZZ_ANDROID_RELEASE_SIGNING must be \"upload-keystore\" or \"external\", got: " +
+        "CREW_ANDROID_RELEASE_SIGNING must be \"upload-keystore\" or \"external\", got: " +
             releaseSigningMode,
     )
 }
 if (externalReleaseSigning && uploadSigningValues.values.any { !it.isNullOrBlank() }) {
     throw GradleException(
-        "BUZZ_ANDROID_RELEASE_SIGNING=external must not be combined with " +
-            "BUZZ_ANDROID_UPLOAD_* credentials; unset one of them.",
+        "CREW_ANDROID_RELEASE_SIGNING=external must not be combined with " +
+            "CREW_ANDROID_UPLOAD_* credentials; unset one of them.",
     )
 }
 
@@ -164,33 +164,33 @@ gradle.taskGraph.whenReady {
     if (buildsRelease && externalReleaseSigning) {
         // External signing: the unsigned bundle goes to the central APK
         // Signer. All keystore checks are intentionally skipped; the
-        // guard above already rejected any BUZZ_ANDROID_UPLOAD_* values.
+        // guard above already rejected any CREW_ANDROID_UPLOAD_* values.
         return@whenReady
     }
     if (buildsRelease && !hasUploadSigning) {
         throw GradleException(
             "Release builds require Android upload signing credentials. Missing: " +
                 missingUploadSigningValues.sorted().joinToString(", ") +
-                ". For central APK Signer pipelines set BUZZ_ANDROID_RELEASE_SIGNING=external.",
+                ". For central APK Signer pipelines set CREW_ANDROID_RELEASE_SIGNING=external.",
         )
     }
     if (buildsRelease) {
         val configuredKeystore = File(requireNotNull(uploadKeystorePath))
         if (!configuredKeystore.isAbsolute) {
             throw GradleException(
-                "BUZZ_ANDROID_UPLOAD_KEYSTORE_PATH must be absolute: $configuredKeystore",
+                "CREW_ANDROID_UPLOAD_KEYSTORE_PATH must be absolute: $configuredKeystore",
             )
         }
         val keystore = file(configuredKeystore)
         val repositoryRoot = rootProject.projectDir.parentFile.parentFile.canonicalFile
         if (keystore.canonicalFile.toPath().startsWith(repositoryRoot.toPath())) {
             throw GradleException(
-                "BUZZ_ANDROID_UPLOAD_KEYSTORE_PATH must be outside the repository: $keystore",
+                "CREW_ANDROID_UPLOAD_KEYSTORE_PATH must be outside the repository: $keystore",
             )
         }
         if (!keystore.isFile || !keystore.canRead()) {
             throw GradleException(
-                "BUZZ_ANDROID_UPLOAD_KEYSTORE_PATH is not a readable file: $keystore",
+                "CREW_ANDROID_UPLOAD_KEYSTORE_PATH is not a readable file: $keystore",
             )
         }
     }

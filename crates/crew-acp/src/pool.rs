@@ -223,7 +223,7 @@ pub struct OwnedAgent {
     /// already emits its terminal immediately — so this gate prevents a
     /// double-emit there. Consumed (reset) at apply time.
     pub desired_model_pending_ack: bool,
-    /// Persisted startup effort value from `BUZZ_ACP_EFFORT_LEVEL` (carried from
+    /// Persisted startup effort value from `CREW_ACP_EFFORT_LEVEL` (carried from
     /// the Desktop record via `Config.effort_level`). Held per-worker and applied
     /// once, at the first session creation, by pairing with the adapter's
     /// advertised `thought_level` configId. This is spawn-scoped only — there is
@@ -632,7 +632,7 @@ pub struct PromptContext {
     /// the per-session core engram fetch is skipped and `core_sections`
     /// remains empty for every channel, so `format_prompt` renders no
     /// `[Agent Memory — core]` section. On by default; disabled via
-    /// `--no-memory` / `BUZZ_ACP_NO_MEMORY`.
+    /// `--no-memory` / `CREW_ACP_NO_MEMORY`.
     pub memory_enabled: bool,
     /// Harness identity string for NIP-AM `harness` field. Derived from the
     /// configured `agent_command` at startup (e.g. `"goose"`, `"crew-agent"`).
@@ -1202,7 +1202,7 @@ async fn create_session_and_apply_model(
     // Apply the worker's spawn-scoped startup effort, if configured and the
     // running model advertises a `thought_level` option. Runs on every session
     // creation (config options are per-session), mirroring the model-switch
-    // application above. The held value comes from `BUZZ_ACP_EFFORT_LEVEL` and
+    // application above. The held value comes from `CREW_ACP_EFFORT_LEVEL` and
     // never mutates — there is no pool-level effort state and no live switching.
     // Reads the post-switch snapshot so the configId is discovered on the model
     // the session is actually running; computed BEFORE the capture emission so
@@ -1274,13 +1274,13 @@ fn mcp_servers_with_git_origin(
     let mut servers = servers.to_vec();
     let origin = match (channel_id, channel_type) {
         (Some(channel_id), Some("stream")) => Some(EnvVar {
-            name: "BUZZ_GIT_ORIGIN_CHANNEL_ID".into(),
+            name: "CREW_GIT_ORIGIN_CHANNEL_ID".into(),
             value: channel_id.to_string(),
         }),
         (Some(_), _) => agent_name
             .filter(|name| !name.trim().is_empty())
             .map(|name| EnvVar {
-                name: "BUZZ_GIT_ORIGIN_AGENT_NAME".into(),
+                name: "CREW_GIT_ORIGIN_AGENT_NAME".into(),
                 value: name.trim().to_string(),
             }),
         (None, _) => None,
@@ -1878,7 +1878,7 @@ pub async fn run_prompt_task(
     // happens when a session is invalidated and recreated (see
     // `SessionState::invalidate_channel`).
     //
-    // Operator opt-out: `--no-memory` / `BUZZ_ACP_NO_MEMORY` skips the fetch.
+    // Operator opt-out: `--no-memory` / `CREW_ACP_NO_MEMORY` skips the fetch.
     if ctx.memory_enabled {
         if let (PromptSource::Channel(cid), Some(owner_pk)) =
             (&source, ctx.agent_owner_pubkey.as_ref())
@@ -4753,12 +4753,12 @@ mod tests {
             None,
         );
         assert!(servers[0].env.iter().any(|entry| {
-            entry.name == "BUZZ_GIT_ORIGIN_CHANNEL_ID" && entry.value == channel_id.to_string()
+            entry.name == "CREW_GIT_ORIGIN_CHANNEL_ID" && entry.value == channel_id.to_string()
         }));
         assert!(!servers[0]
             .env
             .iter()
-            .any(|entry| entry.name == "BUZZ_GIT_ORIGIN_AGENT_NAME"));
+            .any(|entry| entry.name == "CREW_GIT_ORIGIN_AGENT_NAME"));
     }
 
     #[test]
@@ -4770,12 +4770,12 @@ mod tests {
             Some("Builder"),
         );
         assert!(servers[0].env.iter().any(|entry| {
-            entry.name == "BUZZ_GIT_ORIGIN_AGENT_NAME" && entry.value == "Builder"
+            entry.name == "CREW_GIT_ORIGIN_AGENT_NAME" && entry.value == "Builder"
         }));
         assert!(!servers[0]
             .env
             .iter()
-            .any(|entry| entry.name == "BUZZ_GIT_ORIGIN_CHANNEL_ID"));
+            .any(|entry| entry.name == "CREW_GIT_ORIGIN_CHANNEL_ID"));
     }
 
     // These pin the initial_message dispatch path (run_prompt_task, ~line 855):

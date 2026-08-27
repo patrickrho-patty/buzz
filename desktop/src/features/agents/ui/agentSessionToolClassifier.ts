@@ -41,7 +41,7 @@ const DEVELOPER_TOOL_BASES = new Set([
   "postcompact",
 ]);
 
-const BUZZ_CLI_GROUPS = new Set([
+const CREW_CLI_GROUPS = new Set([
   "messages",
   "channels",
   "dms",
@@ -62,7 +62,7 @@ const BUZZ_CLI_GROUPS = new Set([
   "pack",
 ]);
 
-const BUZZ_CLI_ADMIN_VERBS = new Set([
+const CREW_CLI_ADMIN_VERBS = new Set([
   "archive",
   "unarchive",
   "create",
@@ -73,7 +73,7 @@ const BUZZ_CLI_ADMIN_VERBS = new Set([
   "set-channel-add-policy",
 ]);
 
-const BUZZ_CLI_READ_VERBS = new Set([
+const CREW_CLI_READ_VERBS = new Set([
   "get",
   "list",
   "thread",
@@ -444,8 +444,8 @@ function buzzOperationObject(operation: string) {
 }
 
 function buzzCliTone(group: string, verb: string): AgentActivityTone {
-  if (BUZZ_CLI_ADMIN_VERBS.has(verb)) return "admin";
-  if (BUZZ_CLI_READ_VERBS.has(verb)) return "read";
+  if (CREW_CLI_ADMIN_VERBS.has(verb)) return "admin";
+  if (CREW_CLI_READ_VERBS.has(verb)) return "read";
   if (group === "feed" && verb === "get") return "read";
   return "write";
 }
@@ -499,7 +499,7 @@ function findBuzzCommand(tokens: string[]): BuzzCommandRange | null {
         }
         continue;
       }
-      if (!BUZZ_CLI_GROUPS.has(tokens[j])) continue;
+      if (!CREW_CLI_GROUPS.has(tokens[j])) continue;
       const verbIndex = j + 1;
       if (!tokens[verbIndex] || isCommandSeparator(tokens[verbIndex])) {
         return null;

@@ -49,7 +49,7 @@ curl -s http://localhost:3000/_liveness
 # "ok" or 200 status
 ```
 
-The `.env` should have `BUZZ_REQUIRE_AUTH_TOKEN=false` for local dev.
+The `.env` should have `CREW_REQUIRE_AUTH_TOKEN=false` for local dev.
 
 ---
 
@@ -69,13 +69,13 @@ cargo run -p buzz-admin -- mint-token \
 ```
 
 This generates a keypair and prints:
-- **Private key (nsec)** — save for `BUZZ_PRIVATE_KEY` testing
+- **Private key (nsec)** — save for `CREW_PRIVATE_KEY` testing
 
 Export:
 
 ```bash
-export BUZZ_RELAY_URL="http://localhost:3000"
-export BUZZ_PRIVATE_KEY="nsec1..."   # from the mint output
+export CREW_RELAY_URL="http://localhost:3000"
+export CREW_PRIVATE_KEY="nsec1..."   # from the mint output
 ```
 
 ### Scope reference
@@ -517,9 +517,9 @@ buzz users set-profile 2>&1; echo "exit: $?"
 # exit: 1 (at least one field required)
 
 # Exit 3: No auth configured
-env -u BUZZ_PRIVATE_KEY \
+env -u CREW_PRIVATE_KEY \
   cargo run -p buzz-cli -- channels list 2>&1; echo "exit: $?"
-# stderr: {"error":"auth_error","message":"auth error: BUZZ_PRIVATE_KEY is required (use --private-key or set env var)"}
+# stderr: {"error":"auth_error","message":"auth error: CREW_PRIVATE_KEY is required (use --private-key or set env var)"}
 # exit: 3
 
 # Not-found returns null, not an error (exit 0)
@@ -535,14 +535,14 @@ buzz channels get --channel "00000000-0000-0000-0000-000000000000"
 Test authentication.
 
 ```bash
-# Private key (BUZZ_PRIVATE_KEY)
-BUZZ_PRIVATE_KEY="nsec1..." buzz channels list | jq .
+# Private key (CREW_PRIVATE_KEY)
+CREW_PRIVATE_KEY="nsec1..." buzz channels list | jq .
 # Should succeed
 
 # No auth → exit 3
-env -u BUZZ_PRIVATE_KEY \
+env -u CREW_PRIVATE_KEY \
   cargo run -p buzz-cli -- channels list 2>&1; echo "exit: $?"
-# stderr: {"error":"auth_error","message":"auth error: BUZZ_PRIVATE_KEY is required (use --private-key or set env var)"}
+# stderr: {"error":"auth_error","message":"auth error: CREW_PRIVATE_KEY is required (use --private-key or set env var)"}
 # exit: 3
 ```
 

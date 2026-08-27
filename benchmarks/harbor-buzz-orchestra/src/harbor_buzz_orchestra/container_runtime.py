@@ -28,7 +28,7 @@ from .runtime import RuntimeResult
 from .task_fixtures import fixture_for
 
 DEFAULT_MAX_AGENT_ROUNDS = (
-    0  # 0 = unbounded (BUZZ_AGENT_MAX_ROUNDS=0); the trial budget is the clock
+    0  # 0 = unbounded (CREW_AGENT_MAX_ROUNDS=0); the trial budget is the clock
 )
 # Reasoning effort for a roster entry that does not pin one. Pinned here rather
 # than left to the provider so an unset effort still means a recorded, stable
@@ -425,37 +425,37 @@ class BuzzContainerRuntime:
         return {
             **endpoint.env,
             "RUST_LOG": self._rust_log(endpoint.env.get("RUST_LOG")),
-            "BUZZ_RELAY_URL": trial.relay_ws_url,
-            "BUZZ_PRIVATE_KEY": credential.nostr_secret_key,
+            "CREW_RELAY_URL": trial.relay_ws_url,
+            "CREW_PRIVATE_KEY": credential.nostr_secret_key,
             # Desktop parity: the GUI also sets NOSTR_PRIVATE_KEY on crew-acp
             # so crew-dev-mcp's shim can wire git auth/signing for the agent.
             "NOSTR_PRIVATE_KEY": credential.nostr_secret_key,
-            "BUZZ_AUTH_TAG": credential.nostr_auth_tag,
-            "BUZZ_ACP_AGENT_COMMAND": f"{REMOTE_BIN}/crew-agent",
-            "BUZZ_ACP_AGENT_ARGS": "",
-            "BUZZ_ACP_MCP_COMMAND": f"{REMOTE_BIN}/crew-dev-mcp",
-            "BUZZ_ACP_CHANNELS": trial.channel_id,
-            "BUZZ_ACP_SUBSCRIBE": "mentions",
-            "BUZZ_ACP_RESPOND_TO": "anyone",
-            "BUZZ_ACP_NO_MEMORY": "true",
-            "BUZZ_ACP_SYSTEM_PROMPT_FILE": remote_prompt,
-            "BUZZ_AGENT_PROVIDER": endpoint.provider,
-            "BUZZ_AGENT_MODEL": credential.llm_endpoint,
-            "BUZZ_AGENT_THINKING_EFFORT": (
+            "CREW_AUTH_TAG": credential.nostr_auth_tag,
+            "CREW_ACP_AGENT_COMMAND": f"{REMOTE_BIN}/crew-agent",
+            "CREW_ACP_AGENT_ARGS": "",
+            "CREW_ACP_MCP_COMMAND": f"{REMOTE_BIN}/crew-dev-mcp",
+            "CREW_ACP_CHANNELS": trial.channel_id,
+            "CREW_ACP_SUBSCRIBE": "mentions",
+            "CREW_ACP_RESPOND_TO": "anyone",
+            "CREW_ACP_NO_MEMORY": "true",
+            "CREW_ACP_SYSTEM_PROMPT_FILE": remote_prompt,
+            "CREW_AGENT_PROVIDER": endpoint.provider,
+            "CREW_AGENT_MODEL": credential.llm_endpoint,
+            "CREW_AGENT_THINKING_EFFORT": (
                 agent_class.generation.thinking_effort or THINKING_EFFORT
             ),
-            "BUZZ_AGENT_MAX_OUTPUT_TOKENS": str(
+            "CREW_AGENT_MAX_OUTPUT_TOKENS": str(
                 agent_class.generation.max_output_tokens
             ),
-            "BUZZ_AGENT_MAX_CONTEXT_TOKENS": str(
+            "CREW_AGENT_MAX_CONTEXT_TOKENS": str(
                 agent_class.generation.context_window_tokens
             ),
-            "BUZZ_AGENT_MAX_ROUNDS": str(
+            "CREW_AGENT_MAX_ROUNDS": str(
                 agent_class.budget.max_calls or self.max_agent_rounds
             ),
             # The pinned persona is the whole prompt: no hint-file or skill
             # discovery from the task filesystem (metadata reports this).
-            "BUZZ_AGENT_NO_HINTS": "1",
+            "CREW_AGENT_NO_HINTS": "1",
             endpoint.api_key_env: credential.llm_api_key,
         }
 
@@ -846,9 +846,9 @@ class BuzzContainerRuntime:
             stderr=asyncio.subprocess.PIPE,
             env={
                 **os.environ,
-                "BUZZ_RELAY_URL": self._user_relay_url(trial),
-                "BUZZ_PRIVATE_KEY": credential.nostr_secret_key,
-                "BUZZ_AUTH_TAG": credential.nostr_auth_tag,
+                "CREW_RELAY_URL": self._user_relay_url(trial),
+                "CREW_PRIVATE_KEY": credential.nostr_secret_key,
+                "CREW_AUTH_TAG": credential.nostr_auth_tag,
             },
         )
         stdout, stderr = await process.communicate()
@@ -963,12 +963,12 @@ class BuzzContainerRuntime:
     @staticmethod
     def _reject_identity_overrides(endpoint: EndpointLaunchConfig) -> None:
         forbidden = {
-            "BUZZ_RELAY_URL",
-            "BUZZ_PRIVATE_KEY",
-            "BUZZ_AUTH_TAG",
-            "BUZZ_ACP_CHANNELS",
-            "BUZZ_ACP_MCP_COMMAND",
-            "BUZZ_ACP_AGENT_COMMAND",
+            "CREW_RELAY_URL",
+            "CREW_PRIVATE_KEY",
+            "CREW_AUTH_TAG",
+            "CREW_ACP_CHANNELS",
+            "CREW_ACP_MCP_COMMAND",
+            "CREW_ACP_AGENT_COMMAND",
         }
         overlap = forbidden & endpoint.env.keys()
         if overlap:

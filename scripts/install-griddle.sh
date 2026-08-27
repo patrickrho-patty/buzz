@@ -30,7 +30,7 @@ echo "installed: $APP_DST"
 # signing identity across reinstalls — no password prompt on every update.
 # (Ad-hoc signing changes the signature each install, which orphans the
 # keychain ACL entry and forces the macOS permission prompt.)
-IDENT="${GRIDDLE_CODESIGN_IDENTITY:-Developer ID Application: Patty Co.,LTD (S37644C7R8)}"
+IDENT="${CREW_CODESIGN_IDENTITY:-Developer ID Application: Patty Co.,LTD (S37644C7R8)}"
 if security find-identity -v -p codesigning 2>/dev/null | grep -q "Developer ID Application"; then
   codesign --force --deep --options runtime --sign "$IDENT" "$APP_DST" 2>/dev/null \
     && echo "Developer ID re-signed (stable keychain identity)" \

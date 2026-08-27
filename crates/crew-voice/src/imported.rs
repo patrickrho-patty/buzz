@@ -647,10 +647,10 @@ mod tests {
     }
 
     #[test]
-    #[ignore = "requires BUZZ_VOICE_IMPORT_TEST_DIR with common-format fixtures"]
+    #[ignore = "requires CREW_VOICE_IMPORT_TEST_DIR with common-format fixtures"]
     fn imports_common_audio_format_fixtures() {
         let fixtures =
-            PathBuf::from(std::env::var("BUZZ_VOICE_IMPORT_TEST_DIR").expect("fixture directory"));
+            PathBuf::from(std::env::var("CREW_VOICE_IMPORT_TEST_DIR").expect("fixture directory"));
         let temp = tempfile::tempdir().expect("temp voice workspace");
         let library = PocketVoiceLibrary::new(temp.path().join("library"));
 

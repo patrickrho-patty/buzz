@@ -440,7 +440,7 @@ test.describe("community rail", () => {
     await expect
       .poll(() =>
         page.evaluate(() => {
-          return (window.__BUZZ_E2E_COMMAND_LOG__ ?? []).findLast(
+          return (window.__CREW_E2E_COMMAND_LOG__ ?? []).findLast(
             (entry) => entry.command === "copy_text_to_clipboard",
           )?.payload;
         }),
@@ -518,7 +518,7 @@ test.describe("community rail", () => {
       .poll(() =>
         page.evaluate(
           () =>
-            (window.__BUZZ_E2E_COMMANDS__ ?? []).filter(
+            (window.__CREW_E2E_COMMANDS__ ?? []).filter(
               (command) => command === "add_channel_members",
             ).length,
         ),
@@ -536,7 +536,7 @@ test.describe("community rail", () => {
     await page.waitForTimeout(250);
 
     const publications = await page.evaluate(() =>
-      (window.__BUZZ_E2E_COMMAND_PAYLOADS__ ?? []).filter(
+      (window.__CREW_E2E_COMMAND_PAYLOADS__ ?? []).filter(
         (entry) => entry.command === "send_channel_message",
       ),
     );
@@ -573,7 +573,7 @@ test.describe("community rail", () => {
       .poll(() =>
         page.evaluate(
           () =>
-            (window.__BUZZ_E2E_COMMANDS__ ?? []).filter(
+            (window.__CREW_E2E_COMMANDS__ ?? []).filter(
               (command) => command === "fetch_link_preview_metadata",
             ).length,
         ),
@@ -590,13 +590,13 @@ test.describe("community rail", () => {
       .toBe(COMMUNITY_B.id);
     expect(
       await page.evaluate(
-        () => window.__BUZZ_E2E_RELEASE_LINK_PREVIEW_METADATA__?.() ?? 0,
+        () => window.__CREW_E2E_RELEASE_LINK_PREVIEW_METADATA__?.() ?? 0,
       ),
     ).toBeGreaterThan(0);
     await page.waitForTimeout(250);
 
     const uploadCalls = await page.evaluate(() =>
-      (window.__BUZZ_E2E_COMMAND_PAYLOADS__ ?? []).filter(
+      (window.__CREW_E2E_COMMAND_PAYLOADS__ ?? []).filter(
         (entry) => entry.command === "upload_media_bytes",
       ),
     );
@@ -632,7 +632,7 @@ test.describe("community rail", () => {
       .poll(() =>
         page.evaluate(
           () =>
-            (window.__BUZZ_E2E_COMMANDS__ ?? []).filter(
+            (window.__CREW_E2E_COMMANDS__ ?? []).filter(
               (command) => command === "upload_media_bytes",
             ).length,
         ),
@@ -644,7 +644,7 @@ test.describe("community rail", () => {
       .poll(() =>
         page.evaluate(
           () =>
-            (window.__BUZZ_E2E_COMMANDS__ ?? []).filter(
+            (window.__CREW_E2E_COMMANDS__ ?? []).filter(
               (command) => command === "cancel_media_upload",
             ).length,
         ),
@@ -652,14 +652,14 @@ test.describe("community rail", () => {
       .toBe(2);
     expect(
       await page.evaluate(
-        () => window.__BUZZ_E2E_RELEASE_LINK_PREVIEW_UPLOADS__?.() ?? 0,
+        () => window.__CREW_E2E_RELEASE_LINK_PREVIEW_UPLOADS__?.() ?? 0,
       ),
     ).toBe(2);
     await page.waitForTimeout(250);
 
     expect(
       await page.evaluate(
-        () => window.__BUZZ_E2E_LINK_PREVIEW_UPLOAD_STARTS__ ?? 0,
+        () => window.__CREW_E2E_LINK_PREVIEW_UPLOAD_STARTS__ ?? 0,
       ),
     ).toBe(0);
   });
@@ -736,13 +736,13 @@ test.describe("community rail", () => {
 
     await page.evaluate(() => {
       const testWindow = window as typeof window & {
-        __BUZZ_E2E__?: { mock?: { channelsReadDelayMs?: number } };
+        __CREW_E2E__?: { mock?: { channelsReadDelayMs?: number } };
       };
-      if (!testWindow.__BUZZ_E2E__) {
+      if (!testWindow.__CREW_E2E__) {
         throw new Error("missing E2E config");
       }
-      testWindow.__BUZZ_E2E__.mock = {
-        ...testWindow.__BUZZ_E2E__.mock,
+      testWindow.__CREW_E2E__.mock = {
+        ...testWindow.__CREW_E2E__.mock,
         channelsReadDelayMs: 800,
       };
     });
@@ -838,16 +838,16 @@ test.describe("community rail", () => {
     expect(
       await page.evaluate(async () => {
         const testWindow = window as Window & {
-          __BUZZ_E2E_DEFER_NEXT_CHANNELS_READ__?: () => void;
-          __BUZZ_E2E_RELEASE_CHANNELS_READ__?: () => number;
-          __BUZZ_E2E_CHANNELS_READ_PENDING__?: number;
-          __BUZZ_E2E_INVOKE_MOCK_COMMAND__?: (
+          __CREW_E2E_DEFER_NEXT_CHANNELS_READ__?: () => void;
+          __CREW_E2E_RELEASE_CHANNELS_READ__?: () => number;
+          __CREW_E2E_CHANNELS_READ_PENDING__?: number;
+          __CREW_E2E_INVOKE_MOCK_COMMAND__?: (
             command: string,
           ) => Promise<unknown>;
         };
-        const deferNext = testWindow.__BUZZ_E2E_DEFER_NEXT_CHANNELS_READ__;
-        const release = testWindow.__BUZZ_E2E_RELEASE_CHANNELS_READ__;
-        const invoke = testWindow.__BUZZ_E2E_INVOKE_MOCK_COMMAND__;
+        const deferNext = testWindow.__CREW_E2E_DEFER_NEXT_CHANNELS_READ__;
+        const release = testWindow.__CREW_E2E_RELEASE_CHANNELS_READ__;
+        const invoke = testWindow.__CREW_E2E_INVOKE_MOCK_COMMAND__;
         if (!deferNext || !release || !invoke) {
           throw new Error("missing channel-read latch seam");
         }
@@ -856,7 +856,7 @@ test.describe("community rail", () => {
         await invoke("get_channels");
         return {
           released,
-          pending: testWindow.__BUZZ_E2E_CHANNELS_READ_PENDING__,
+          pending: testWindow.__CREW_E2E_CHANNELS_READ_PENDING__,
         };
       }),
     ).toEqual({ released: 0, pending: 0 });
@@ -878,14 +878,14 @@ test.describe("community rail", () => {
     await page.evaluate(() => {
       const config = (
         window as Window & {
-          __BUZZ_E2E__?: {
+          __CREW_E2E__?: {
             mock?: {
               channelsReadError?: string;
               channelsReadErrors?: (string | null)[];
             };
           };
         }
-      ).__BUZZ_E2E__;
+      ).__CREW_E2E__;
       if (!config) throw new Error("missing E2E config");
       config.mock = {
         ...config.mock,
@@ -896,18 +896,18 @@ test.describe("community rail", () => {
     await expect
       .poll(() =>
         page.evaluate(
-          () => window.__BUZZ_E2E__?.mock?.channelsReadErrors?.length ?? 0,
+          () => window.__CREW_E2E__?.mock?.channelsReadErrors?.length ?? 0,
         ),
       )
       .toBe(1);
     await page.evaluate(() => {
       const testWindow = window as Window & {
-        __BUZZ_E2E_DEFER_NEXT_CHANNELS_READ__?: () => void;
-        __BUZZ_E2E_INVALIDATE_CHANNELS__?: () => Promise<void>;
+        __CREW_E2E_DEFER_NEXT_CHANNELS_READ__?: () => void;
+        __CREW_E2E_INVALIDATE_CHANNELS__?: () => Promise<void>;
       };
       const deferNextChannelsRead =
-        testWindow.__BUZZ_E2E_DEFER_NEXT_CHANNELS_READ__;
-      const invalidateChannels = testWindow.__BUZZ_E2E_INVALIDATE_CHANNELS__;
+        testWindow.__CREW_E2E_DEFER_NEXT_CHANNELS_READ__;
+      const invalidateChannels = testWindow.__CREW_E2E_INVALIDATE_CHANNELS__;
       if (!deferNextChannelsRead) {
         throw new Error("missing channel-read defer seam");
       }
@@ -923,19 +923,19 @@ test.describe("community rail", () => {
       () =>
         (
           window as Window & {
-            __BUZZ_E2E_CHANNELS_READ_PENDING__?: number;
+            __CREW_E2E_CHANNELS_READ_PENDING__?: number;
           }
-        ).__BUZZ_E2E_CHANNELS_READ_PENDING__ === 1,
+        ).__CREW_E2E_CHANNELS_READ_PENDING__ === 1,
     );
     expect(
       await page.evaluate(async () => {
         const invoke = (
           window as Window & {
-            __BUZZ_E2E_INVOKE_MOCK_COMMAND__?: (
+            __CREW_E2E_INVOKE_MOCK_COMMAND__?: (
               command: string,
             ) => Promise<unknown>;
           }
-        ).__BUZZ_E2E_INVOKE_MOCK_COMMAND__;
+        ).__CREW_E2E_INVOKE_MOCK_COMMAND__;
         if (!invoke) throw new Error("missing mock command seam");
         try {
           await invoke("get_channels");
@@ -950,9 +950,9 @@ test.describe("community rail", () => {
         () =>
           (
             window as Window & {
-              __BUZZ_E2E_CHANNELS_READ_PENDING__?: number;
+              __CREW_E2E_CHANNELS_READ_PENDING__?: number;
             }
-          ).__BUZZ_E2E_CHANNELS_READ_PENDING__,
+          ).__CREW_E2E_CHANNELS_READ_PENDING__,
       ),
     ).toBe(1);
     await page.getByTestId(`community-rail-button-${COMMUNITY_B.id}`).click();
@@ -972,20 +972,20 @@ test.describe("community rail", () => {
       () =>
         (
           window as Window & {
-            __BUZZ_E2E_RELEASE_CHANNELS_READ__?: () => number;
+            __CREW_E2E_RELEASE_CHANNELS_READ__?: () => number;
           }
-        ).__BUZZ_E2E_RELEASE_CHANNELS_READ__?.() ?? 0,
+        ).__CREW_E2E_RELEASE_CHANNELS_READ__?.() ?? 0,
     );
     expect(released).toBe(1);
     expect(
       await page.evaluate(async () => {
         const testWindow = window as Window & {
-          __BUZZ_E2E_INVOKE_MOCK_COMMAND__?: (
+          __CREW_E2E_INVOKE_MOCK_COMMAND__?: (
             command: string,
           ) => Promise<unknown>;
-          __BUZZ_E2E_CHANNELS_READ_PENDING__?: number;
+          __CREW_E2E_CHANNELS_READ_PENDING__?: number;
         };
-        const invoke = testWindow.__BUZZ_E2E_INVOKE_MOCK_COMMAND__;
+        const invoke = testWindow.__CREW_E2E_INVOKE_MOCK_COMMAND__;
         if (!invoke) throw new Error("missing mock command seam");
         let message: string | null = null;
         try {
@@ -995,14 +995,14 @@ test.describe("community rail", () => {
         }
         return {
           message,
-          pending: testWindow.__BUZZ_E2E_CHANNELS_READ_PENDING__,
+          pending: testWindow.__CREW_E2E_CHANNELS_READ_PENDING__,
         };
       }),
     ).toEqual({ message: "temporary channel read failure", pending: 0 });
     await expect
       .poll(() =>
         page.evaluate(
-          () => window.__BUZZ_E2E__?.mock?.channelsReadErrors?.length ?? 0,
+          () => window.__CREW_E2E__?.mock?.channelsReadErrors?.length ?? 0,
         ),
       )
       .toBe(0);
@@ -1019,13 +1019,13 @@ test.describe("community rail", () => {
       .toEqual({ kind: "channel", channelId: "general" });
     await page.evaluate(async () => {
       const testWindow = window as Window & {
-        __BUZZ_E2E__?: {
+        __CREW_E2E__?: {
           mock?: { channelsReadError?: string };
         };
-        __BUZZ_E2E_INVALIDATE_CHANNELS__?: () => Promise<void>;
+        __CREW_E2E_INVALIDATE_CHANNELS__?: () => Promise<void>;
       };
-      const config = testWindow.__BUZZ_E2E__;
-      const invalidateChannels = testWindow.__BUZZ_E2E_INVALIDATE_CHANNELS__;
+      const config = testWindow.__CREW_E2E__;
+      const invalidateChannels = testWindow.__CREW_E2E_INVALIDATE_CHANNELS__;
       if (!config?.mock) throw new Error("missing E2E mock config");
       if (!invalidateChannels) {
         throw new Error("missing channel invalidation seam");
@@ -1124,7 +1124,7 @@ test.describe("community rail", () => {
       .poll(() =>
         page.evaluate(
           () =>
-            window.__BUZZ_E2E_COMMANDS__?.filter(
+            window.__CREW_E2E_COMMANDS__?.filter(
               (command) => command === "clear_pending_navigation_deep_links",
             ).length ?? 0,
         ),
@@ -1145,11 +1145,11 @@ test.describe("community rail", () => {
 
     await expect
       .poll(() =>
-        page.evaluate(() => typeof window.__BUZZ_E2E_INVOKE_MOCK_COMMAND__),
+        page.evaluate(() => typeof window.__CREW_E2E_INVOKE_MOCK_COMMAND__),
       )
       .toBe("function");
     const identityBefore = await page.evaluate(async () =>
-      window.__BUZZ_E2E_INVOKE_MOCK_COMMAND__("get_identity"),
+      window.__CREW_E2E_INVOKE_MOCK_COMMAND__("get_identity"),
     );
     await page.getByTestId("sidebar-profile-avatar-button").click();
     await page.getByTestId("community-switcher").click();
@@ -1194,7 +1194,7 @@ test.describe("community rail", () => {
     await expect
       .poll(() =>
         relaunchPage.evaluate(async () =>
-          window.__BUZZ_E2E_INVOKE_MOCK_COMMAND__("get_identity"),
+          window.__CREW_E2E_INVOKE_MOCK_COMMAND__("get_identity"),
         ),
       )
       .toEqual(identityBefore);

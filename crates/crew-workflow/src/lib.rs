@@ -1889,7 +1889,7 @@ steps:
     // -- SEC-006: event-path regression (requires Postgres) ----------------
 
     async fn setup_db() -> crew_db::Db {
-        let database_url = std::env::var("BUZZ_TEST_DATABASE_URL")
+        let database_url = std::env::var("CREW_TEST_DATABASE_URL")
             .or_else(|_| std::env::var("DATABASE_URL"))
             // Local-only test default; this is not a production credential.
             .unwrap_or_else(|_| {

@@ -188,7 +188,7 @@ class DirectoryUser {
 
 /// Whether the mobile DM directory should show local preview identities.
 const bool mockDmDirectoryEnabled =
-    kDebugMode && bool.fromEnvironment('BUZZ_MOCK_DM_DIRECTORY');
+    kDebugMode && bool.fromEnvironment('CREW_MOCK_DM_DIRECTORY');
 
 /// Whether the new-DM picker should use local preview identities.
 ///

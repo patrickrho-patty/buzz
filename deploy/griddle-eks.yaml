@@ -34,13 +34,13 @@ ownerPubkey: "ebf0b5847e34a95716bca3cd83c1cd91efd8f6b610cc62b4531ec5e7d9825026"
 relay:
   allowNipOaAuth: false
   extraEnv:
-    - name: BUZZ_OIDC_ISSUER
+    - name: CREW_OIDC_ISSUER
       value: https://login.patty.io/realms/internal
-    - name: BUZZ_OIDC_DESKTOP_CLIENT_ID
+    - name: CREW_OIDC_DESKTOP_CLIENT_ID
       value: griddle-desktop
-    - name: BUZZ_OIDC_REDIRECT_URI
+    - name: CREW_OIDC_REDIRECT_URI
       value: griddle://auth/callback
-    - name: BUZZ_OIDC_BRIDGE_CLIENT_ID
+    - name: CREW_OIDC_BRIDGE_CLIENT_ID
       value: griddle-bridge
   extraEnvFrom:
     - secretRef:

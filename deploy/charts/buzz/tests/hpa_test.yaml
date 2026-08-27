@@ -75,5 +75,5 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].env
           content:
-            name: BUZZ_HUDDLE_AUDIO_AVAILABLE
+            name: CREW_HUDDLE_AUDIO_AVAILABLE
             value: "false"

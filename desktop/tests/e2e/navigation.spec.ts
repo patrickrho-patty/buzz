@@ -444,8 +444,8 @@ test("message links to visible root messages open the thread panel", async ({
   );
   await page.evaluate(() => {
     (
-      window as Window & { __BUZZ_E2E_DEFER_GET_EVENT__?: string | null }
-    ).__BUZZ_E2E_DEFER_GET_EVENT__ = "mock-general-welcome";
+      window as Window & { __CREW_E2E_DEFER_GET_EVENT__?: string | null }
+    ).__CREW_E2E_DEFER_GET_EVENT__ = "mock-general-welcome";
   });
 
   const link =
@@ -487,15 +487,15 @@ test("message links to visible root messages open the thread panel", async ({
     .poll(() =>
       page.evaluate(
         () =>
-          (window as Window & { __BUZZ_E2E_GET_EVENT_CALL_COUNT__?: number })
-            .__BUZZ_E2E_GET_EVENT_CALL_COUNT__ ?? 0,
+          (window as Window & { __CREW_E2E_GET_EVENT_CALL_COUNT__?: number })
+            .__CREW_E2E_GET_EVENT_CALL_COUNT__ ?? 0,
       ),
     )
     .toBe(1);
   await page.evaluate(() => {
     (
-      window as Window & { __BUZZ_E2E_RELEASE_GET_EVENT__?: () => number }
-    ).__BUZZ_E2E_RELEASE_GET_EVENT__?.();
+      window as Window & { __CREW_E2E_RELEASE_GET_EVENT__?: () => number }
+    ).__CREW_E2E_RELEASE_GET_EVENT__?.();
   });
   await expect(rootThreadLink).toHaveText("general");
   await expect(rootThreadLink).toHaveClass(/mention-chip/);
@@ -508,9 +508,9 @@ test("message links to visible root messages open the thread panel", async ({
         () =>
           (
             window as Window & {
-              __BUZZ_E2E_COMMAND_LOG__?: Array<{ command: string }>;
+              __CREW_E2E_COMMAND_LOG__?: Array<{ command: string }>;
             }
-          ).__BUZZ_E2E_COMMAND_LOG__?.filter(
+          ).__CREW_E2E_COMMAND_LOG__?.filter(
             ({ command }) => command === "get_event",
           ).length ?? 0,
       ),
@@ -565,9 +565,9 @@ test("message links to visible root messages open the thread panel", async ({
         () =>
           (
             window as Window & {
-              __BUZZ_E2E_COMMAND_LOG__?: Array<{ command: string }>;
+              __CREW_E2E_COMMAND_LOG__?: Array<{ command: string }>;
             }
-          ).__BUZZ_E2E_COMMAND_LOG__?.filter(
+          ).__CREW_E2E_COMMAND_LOG__?.filter(
             ({ command }) => command === "get_event",
           ).length ?? 0,
       ),
@@ -612,12 +612,12 @@ test("message links to visible root messages open the thread panel", async ({
       page.evaluate(() => {
         return (
           window as Window & {
-            __BUZZ_E2E_COMMAND_LOG__?: Array<{
+            __CREW_E2E_COMMAND_LOG__?: Array<{
               command: string;
               payload: { text?: string };
             }>;
           }
-        ).__BUZZ_E2E_COMMAND_LOG__?.findLast(
+        ).__CREW_E2E_COMMAND_LOG__?.findLast(
           ({ command }) => command === "copy_text_to_clipboard",
         )?.payload.text;
       }),
@@ -645,7 +645,7 @@ test("direct-message tooltip metadata stays on one physical line", async ({
   await page.getByTestId("channel-alice-tyler").click();
   await expect(page.getByTestId("chat-title")).toHaveText("alice-tyler");
   await page.evaluate((id) => {
-    window.__BUZZ_E2E_EMIT_MOCK_MESSAGE__?.({
+    window.__CREW_E2E_EMIT_MOCK_MESSAGE__?.({
       channelName: "alice-tyler",
       content: "DM source message",
       id,
@@ -813,7 +813,7 @@ test("cold-start channel deep link drains after the router mounts", async ({
   await expect
     .poll(() =>
       page.evaluate(() =>
-        (window.__BUZZ_E2E_COMMAND_LOG__ ?? []).filter(
+        (window.__CREW_E2E_COMMAND_LOG__ ?? []).filter(
           (entry) =>
             entry.command === "acknowledge_pending_navigation_deep_link",
         ),

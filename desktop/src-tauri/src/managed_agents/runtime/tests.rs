@@ -39,7 +39,7 @@ fn identifier_exact_match_with_quote_boundary() {
 #[test]
 fn identifier_match_with_null_boundary() {
     // In KERN_PROCARGS2, entries are null-delimited.
-    let mut buf = b"BUZZ_MANAGED_AGENT=xyz.patty.griddle.app.dev".to_vec();
+    let mut buf = b"CREW_MANAGED_AGENT=xyz.patty.griddle.app.dev".to_vec();
     buf.push(0);
     buf.extend_from_slice(b"OTHER_VAR=value");
     let id = b"xyz.patty.griddle.app.dev";
@@ -79,7 +79,7 @@ fn marker_entry_is_namespaced_by_instance_id() {
     // release build's (`...app`) agents.
     assert_eq!(
         super::crew_marker_entry("xyz.patty.griddle.app"),
-        b"BUZZ_MANAGED_AGENT=xyz.patty.griddle.app".to_vec()
+        b"CREW_MANAGED_AGENT=xyz.patty.griddle.app".to_vec()
     );
     assert_ne!(
         super::crew_marker_entry("xyz.patty.griddle.app"),
@@ -130,25 +130,25 @@ fn build_env_owner_only_sets_mode_and_removes_others() {
     let (set, remove) = build_respond_to_env(&rec, Some("owner")).unwrap();
     let set_map: std::collections::HashMap<_, _> = set.into_iter().collect();
     assert_eq!(
-        set_map.get("BUZZ_ACP_RESPOND_TO").map(String::as_str),
+        set_map.get("CREW_ACP_RESPOND_TO").map(String::as_str),
         Some("owner-only")
     );
-    assert!(!set_map.contains_key("BUZZ_ACP_RESPOND_TO_ALLOWLIST"));
-    assert!(remove.contains(&"BUZZ_ACP_RESPOND_TO_ALLOWLIST"));
+    assert!(!set_map.contains_key("CREW_ACP_RESPOND_TO_ALLOWLIST"));
+    assert!(remove.contains(&"CREW_ACP_RESPOND_TO_ALLOWLIST"));
     if expected_owner_only() {
         assert_eq!(
             set_map
-                .get("BUZZ_ACP_ALLOWED_RESPOND_TO")
+                .get("CREW_ACP_ALLOWED_RESPOND_TO")
                 .map(String::as_str),
             Some("owner-only")
         );
-        assert!(!remove.contains(&"BUZZ_ACP_ALLOWED_RESPOND_TO"));
+        assert!(!remove.contains(&"CREW_ACP_ALLOWED_RESPOND_TO"));
     } else {
-        assert!(!set_map.contains_key("BUZZ_ACP_ALLOWED_RESPOND_TO"));
-        assert!(remove.contains(&"BUZZ_ACP_ALLOWED_RESPOND_TO"));
+        assert!(!set_map.contains_key("CREW_ACP_ALLOWED_RESPOND_TO"));
+        assert!(remove.contains(&"CREW_ACP_ALLOWED_RESPOND_TO"));
     }
     // auth_tag is present → no AGENT_OWNER fallback fires.
-    assert!(remove.contains(&"BUZZ_ACP_AGENT_OWNER"));
+    assert!(remove.contains(&"CREW_ACP_AGENT_OWNER"));
 }
 
 // select_untracked_bundle_harnesses tests live in runtime/sweep.rs (mod tests).
@@ -165,16 +165,16 @@ fn build_env_allowlist_sets_both_envs_and_joins() {
     let (set, _remove) = build_respond_to_env(&rec, Some("owner")).unwrap();
     let set_map: std::collections::HashMap<_, _> = set.into_iter().collect();
     assert_eq!(
-        set_map.get("BUZZ_ACP_RESPOND_TO").map(String::as_str),
+        set_map.get("CREW_ACP_RESPOND_TO").map(String::as_str),
         Some(expected_mode("allowlist")),
         "runtime wrapper did not apply the declared build policy",
     );
     if expected_owner_only() {
-        assert!(!set_map.contains_key("BUZZ_ACP_RESPOND_TO_ALLOWLIST"));
+        assert!(!set_map.contains_key("CREW_ACP_RESPOND_TO_ALLOWLIST"));
     } else {
         assert_eq!(
             set_map
-                .get("BUZZ_ACP_RESPOND_TO_ALLOWLIST")
+                .get("CREW_ACP_RESPOND_TO_ALLOWLIST")
                 .map(String::as_str),
             Some(format!("{a},{b}").as_str()),
         );
@@ -187,12 +187,12 @@ fn build_env_anyone_omits_allowlist_var() {
     let (set, remove) = build_respond_to_env(&rec, Some("owner")).unwrap();
     let set_map: std::collections::HashMap<_, _> = set.into_iter().collect();
     assert_eq!(
-        set_map.get("BUZZ_ACP_RESPOND_TO").map(String::as_str),
+        set_map.get("CREW_ACP_RESPOND_TO").map(String::as_str),
         Some(expected_mode("anyone")),
         "runtime wrapper did not apply the declared build policy",
     );
-    assert!(!set_map.contains_key("BUZZ_ACP_RESPOND_TO_ALLOWLIST"));
-    assert!(remove.contains(&"BUZZ_ACP_RESPOND_TO_ALLOWLIST"));
+    assert!(!set_map.contains_key("CREW_ACP_RESPOND_TO_ALLOWLIST"));
+    assert!(remove.contains(&"CREW_ACP_RESPOND_TO_ALLOWLIST"));
 }
 
 #[test]
@@ -202,19 +202,19 @@ fn owner_only_access_policy_overrides_stale_anyone_record_at_runtime() {
     let set_map: std::collections::HashMap<_, _> = set.into_iter().collect();
 
     assert_eq!(
-        set_map.get("BUZZ_ACP_RESPOND_TO").map(String::as_str),
+        set_map.get("CREW_ACP_RESPOND_TO").map(String::as_str),
         Some("owner-only"),
         "owner-only-access runtime env widened stale access",
     );
     assert_eq!(
         set_map
-            .get("BUZZ_ACP_ALLOWED_RESPOND_TO")
+            .get("CREW_ACP_ALLOWED_RESPOND_TO")
             .map(String::as_str),
         Some("owner-only"),
         "owner-only-access runtime env omitted the owner-only guard",
     );
-    assert!(!set_map.contains_key("BUZZ_ACP_RESPOND_TO_ALLOWLIST"));
-    assert!(remove.contains(&"BUZZ_ACP_RESPOND_TO_ALLOWLIST"));
+    assert!(!set_map.contains_key("CREW_ACP_RESPOND_TO_ALLOWLIST"));
+    assert!(remove.contains(&"CREW_ACP_RESPOND_TO_ALLOWLIST"));
 }
 
 #[test]
@@ -223,10 +223,10 @@ fn build_env_legacy_record_without_auth_tag_emits_agent_owner() {
     let (set, remove) = build_respond_to_env(&rec, Some("ownerhex")).unwrap();
     let set_map: std::collections::HashMap<_, _> = set.into_iter().collect();
     assert_eq!(
-        set_map.get("BUZZ_ACP_AGENT_OWNER").map(String::as_str),
+        set_map.get("CREW_ACP_AGENT_OWNER").map(String::as_str),
         Some("ownerhex")
     );
-    assert!(!remove.contains(&"BUZZ_ACP_AGENT_OWNER"));
+    assert!(!remove.contains(&"CREW_ACP_AGENT_OWNER"));
 }
 
 #[test]
@@ -235,7 +235,7 @@ fn build_env_legacy_record_without_owner_hex_removes_agent_owner() {
     // env var from the parent.
     let rec = fixture(RespondTo::OwnerOnly, vec![], None);
     let (_set, remove) = build_respond_to_env(&rec, None).unwrap();
-    assert!(remove.contains(&"BUZZ_ACP_AGENT_OWNER"));
+    assert!(remove.contains(&"CREW_ACP_AGENT_OWNER"));
 }
 
 #[test]
@@ -255,7 +255,7 @@ fn build_env_rejects_empty_allowlist_in_allowlist_mode() {
         let (set, _) = build_respond_to_env(&rec, Some("owner")).unwrap();
         let set_map: std::collections::HashMap<_, _> = set.into_iter().collect();
         assert_eq!(
-            set_map.get("BUZZ_ACP_RESPOND_TO").map(String::as_str),
+            set_map.get("CREW_ACP_RESPOND_TO").map(String::as_str),
             Some("owner-only")
         );
     } else {
@@ -538,8 +538,8 @@ fn runtime_metadata_env_vars_injects_model_even_with_acp_model_switching() {
     // crew-agent has supports_acp_model_switching=true but we still inject
     // the model env var because ACP model switching is post-bootstrap
     let vars = runtime_metadata_env_vars(
-        Some("BUZZ_AGENT_MODEL"),
-        Some("BUZZ_AGENT_PROVIDER"),
+        Some("CREW_AGENT_MODEL"),
+        Some("CREW_AGENT_PROVIDER"),
         false,
         Some("goose-claude-4-6-opus"),
         Some("databricks"),
@@ -547,8 +547,8 @@ fn runtime_metadata_env_vars_injects_model_even_with_acp_model_switching() {
     assert_eq!(
         vars,
         vec![
-            ("BUZZ_AGENT_MODEL", "goose-claude-4-6-opus"),
-            ("BUZZ_AGENT_PROVIDER", "databricks"),
+            ("CREW_AGENT_MODEL", "goose-claude-4-6-opus"),
+            ("CREW_AGENT_PROVIDER", "databricks"),
         ]
     );
 }
@@ -1005,7 +1005,7 @@ fn invalid_pubkey_resolves_no_pair_key() {
 // ── Custom-harness orphan sweep coverage ─────────────────────────────────────
 //
 // The sweep/receipt ownership gate must include any process carrying the
-// `BUZZ_MANAGED_AGENT` env marker, regardless of whether the binary name
+// `CREW_MANAGED_AGENT` env marker, regardless of whether the binary name
 // matches `KNOWN_AGENT_BINARIES`. Custom harnesses use arbitrary binary names
 // so name-match alone would silently leak their orphans on crash.
 //

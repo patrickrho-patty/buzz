@@ -25,18 +25,18 @@ import { installRelayBridge } from "../helpers/bridge";
  *
  * Run (in-cluster port-forward, Host rewritten to community host):
  *   kubectl -n sprout port-forward svc/sprout-relay 13000:3000 &
- *   BUZZ_E2E_RELAY_URL=http://127.0.0.1:13000 \
- *   BUZZ_COMMUNITY_HOST=sprout-oss.stage.blox.sqprod.co \
- *   BUZZ_PERF_NSEC=nsec1... \
+ *   CREW_E2E_RELAY_URL=http://127.0.0.1:13000 \
+ *   CREW_COMMUNITY_HOST=sprout-oss.stage.blox.sqprod.co \
+ *   CREW_PERF_NSEC=nsec1... \
  *   npx playwright test --config=playwright.perf.config.ts scrollback-buzzbugs.perf.ts
  */
 
 const RELAY_HTTP =
-  process.env.BUZZ_E2E_RELAY_URL ?? "https://sprout-oss.stage.blox.sqprod.co";
-const NSEC = process.env.BUZZ_PERF_NSEC ?? "";
-const COMMUNITY_HOST = process.env.BUZZ_COMMUNITY_HOST ?? "";
-const TARGET_CHANNEL = process.env.BUZZ_PERF_CHANNEL ?? "buzz-bugs";
-const PAGES = Number(process.env.BUZZ_PERF_PAGES ?? 10);
+  process.env.CREW_E2E_RELAY_URL ?? "https://sprout-oss.stage.blox.sqprod.co";
+const NSEC = process.env.CREW_PERF_NSEC ?? "";
+const COMMUNITY_HOST = process.env.CREW_COMMUNITY_HOST ?? "";
+const TARGET_CHANNEL = process.env.CREW_PERF_CHANNEL ?? "buzz-bugs";
+const PAGES = Number(process.env.CREW_PERF_PAGES ?? 10);
 
 const IDENTITY_OVERRIDE_KEY = "buzz:e2e-identity-override.v1";
 const ONBOARDING_PREFIX = "buzz-onboarding-complete.v1:";
@@ -49,7 +49,7 @@ test.use({ userAgent: REAL_CHROME_UA });
 
 function deriveIdentity(nsec: string) {
   const decoded = decode(nsec.trim());
-  if (decoded.type !== "nsec") throw new Error("BUZZ_PERF_NSEC is not an nsec");
+  if (decoded.type !== "nsec") throw new Error("CREW_PERF_NSEC is not an nsec");
   const skBytes = decoded.data as Uint8Array;
   const privateKey = Buffer.from(skBytes).toString("hex");
   const pubkey = getPublicKey(skBytes);
@@ -95,7 +95,7 @@ test("MEASURE: scroll-back pagination latency in target channel", async ({
   page,
 }) => {
   test.setTimeout(300_000);
-  if (!NSEC) throw new Error("Set BUZZ_PERF_NSEC to a real member nsec");
+  if (!NSEC) throw new Error("Set CREW_PERF_NSEC to a real member nsec");
   const identity = deriveIdentity(NSEC);
 
   await installRelayBridge(page, "tyler");
@@ -109,8 +109,8 @@ test("MEASURE: scroll-back pagination latency in target channel", async ({
         `${welcomePrefix}${encodeURIComponent(relayUrl)}:${ident.pubkey}`,
         "true",
       );
-      const w = window as unknown as { __BUZZ_E2E__?: Record<string, unknown> };
-      w.__BUZZ_E2E__ = { ...(w.__BUZZ_E2E__ ?? {}), identity: ident };
+      const w = window as unknown as { __CREW_E2E__?: Record<string, unknown> };
+      w.__CREW_E2E__ = { ...(w.__CREW_E2E__ ?? {}), identity: ident };
     },
     {
       ident: identity,

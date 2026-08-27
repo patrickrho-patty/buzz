@@ -4,7 +4,7 @@ pub(crate) fn crew_managed_npm_prefix() -> Option<PathBuf> {
     dirs::data_dir().map(|dir| dir.join("Buzz").join("node-tools"))
 }
 
-const BUZZ_MANAGED_NODE_VERSION: &str = "v24.18.0";
+const CREW_MANAGED_NODE_VERSION: &str = "v24.18.0";
 
 pub(crate) fn crew_managed_node_root() -> Option<PathBuf> {
     dirs::data_dir().map(|dir| dir.join("Buzz").join("runtimes").join("node"))
@@ -23,7 +23,7 @@ pub(crate) fn crew_managed_node_bin_dir() -> Option<PathBuf> {
             _ => return None,
         };
     crew_managed_node_root().map(|root| {
-        let dir = root.join(BUZZ_MANAGED_NODE_VERSION).join(platform);
+        let dir = root.join(CREW_MANAGED_NODE_VERSION).join(platform);
         match bin_subdir {
             Some(sub) => dir.join(sub),
             None => dir,

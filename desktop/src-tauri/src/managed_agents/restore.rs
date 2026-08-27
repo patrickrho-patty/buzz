@@ -157,7 +157,7 @@ pub async fn restore_managed_agents_on_launch(
         // Exact-path sweep: kill any crew-acp process whose executable path
         // matches this bundle's harness binary but is not in the tracked set.
         // Complements the env-var sweep above — catches orphans that predate
-        // BUZZ_MANAGED_AGENT injection or lost their PID-file receipt.
+        // CREW_MANAGED_AGENT injection or lost their PID-file receipt.
         //
         // TODO: the three sweeps above each walk the PID table independently.
         // A future consolidation should collect a single shared process snapshot

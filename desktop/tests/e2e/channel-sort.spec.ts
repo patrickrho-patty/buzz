@@ -33,7 +33,7 @@ async function waitForMockLiveSubscription(page: Page, channelName: string) {
     .poll(() =>
       page.evaluate(
         (name) =>
-          window.__BUZZ_E2E_HAS_MOCK_LIVE_SUBSCRIPTION__?.({
+          window.__CREW_E2E_HAS_MOCK_LIVE_SUBSCRIPTION__?.({
             channelName: name,
           }) ?? false,
         channelName,
@@ -49,7 +49,7 @@ async function emitMockMessage(
 ) {
   await page.evaluate(
     ({ channelName, createdAt, pubkey }) => {
-      const emit = window.__BUZZ_E2E_EMIT_MOCK_MESSAGE__;
+      const emit = window.__CREW_E2E_EMIT_MOCK_MESSAGE__;
       if (!emit) {
         throw new Error("Mock message emitter is not installed");
       }

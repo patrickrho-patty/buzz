@@ -112,7 +112,7 @@ def main():
     step(5, "verify Keycloak nostr attributes persisted")
     out = subprocess.run(
         ["kubectl", "-n", "griddle", "get", "secret", "griddle-oidc",
-         "-o", "jsonpath={.data.BUZZ_OIDC_BRIDGE_CLIENT_SECRET}"],
+         "-o", "jsonpath={.data.CREW_OIDC_BRIDGE_CLIENT_SECRET}"],
         capture_output=True, text=True).stdout.strip()
     bridge_secret = base64.b64decode(out).decode()
     tok_body = urllib.parse.urlencode({

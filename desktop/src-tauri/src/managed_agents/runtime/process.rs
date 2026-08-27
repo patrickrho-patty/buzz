@@ -26,7 +26,7 @@ pub(crate) const KNOWN_AGENT_BINARIES: &[&str] = &[
 
 /// Script interpreters that may host managed agent wrappers (e.g. npm shims).
 /// A process whose name matches here is NOT immediately claimed — it must also
-/// carry `BUZZ_MANAGED_AGENT` in its environment (checked by the caller via
+/// carry `CREW_MANAGED_AGENT` in its environment (checked by the caller via
 /// `process_has_buzz_marker()`). This avoids sweeping unrelated node processes.
 pub(crate) const KNOWN_SCRIPT_INTERPRETERS: &[&str] = &["node"];
 
@@ -46,7 +46,7 @@ pub(super) fn name_matches_known_binary(name: &str) -> bool {
 
 /// Check if a process name is a known script interpreter that may be hosting
 /// a managed agent wrapper (e.g. `node` running an npm shim for `codex-acp`).
-/// Callers must additionally verify `BUZZ_MANAGED_AGENT` ownership.
+/// Callers must additionally verify `CREW_MANAGED_AGENT` ownership.
 pub(super) fn name_matches_interpreter(name: &str) -> bool {
     KNOWN_SCRIPT_INTERPRETERS.contains(&name)
 }
@@ -123,7 +123,7 @@ pub(crate) fn process_belongs_to_us(_pid: u32) -> bool {
     false
 }
 
-/// The value stamped into the `BUZZ_MANAGED_AGENT` env var of every agent we
+/// The value stamped into the `CREW_MANAGED_AGENT` env var of every agent we
 /// spawn, identifying *which* desktop instance owns it. We use the app's bundle
 /// identifier (`xyz.patty.griddle.app` for release, `xyz.patty.griddle.app.dev`
 /// for `just dev`) because it is stable across restarts — a relaunched dev
@@ -135,15 +135,15 @@ pub(crate) fn current_instance_id(app: &AppHandle) -> String {
     app.config().identifier.clone()
 }
 
-/// Build the full `BUZZ_MANAGED_AGENT=<instance-id>` env entry we match
+/// Build the full `CREW_MANAGED_AGENT=<instance-id>` env entry we match
 /// against when scanning processes. Kept here so the spawn stamp and the sweep
 /// matcher can never drift apart.
 pub(super) fn crew_marker_entry(instance_id: &str) -> Vec<u8> {
-    format!("BUZZ_MANAGED_AGENT={instance_id}").into_bytes()
+    format!("CREW_MANAGED_AGENT={instance_id}").into_bytes()
 }
 
 /// Check if a running process is one of *our* managed agents: it must carry
-/// `BUZZ_MANAGED_AGENT=<instance_id>` in its environment, where `instance_id`
+/// `CREW_MANAGED_AGENT=<instance_id>` in its environment, where `instance_id`
 /// is this desktop instance's id. A process stamped with a *different* instance
 /// id belongs to another live Buzz app and must never be reaped here.
 #[cfg(target_os = "macos")]

@@ -351,7 +351,7 @@ function parseBuzzEntityPreview(href: string): SupportedLinkPreview | null {
   };
 }
 
-const BUZZ_GIT_PATH_RE =
+const CREW_GIT_PATH_RE =
   /^\/git\/([a-f0-9]{64})\/([a-zA-Z0-9._-]+?)(?:\.git)?\/?$/;
 
 /**
@@ -376,7 +376,7 @@ function parseBuzzGitLink(
     return null;
   }
 
-  const match = BUZZ_GIT_PATH_RE.exec(parsed.pathname);
+  const match = CREW_GIT_PATH_RE.exec(parsed.pathname);
   if (!match) return null;
 
   const [, owner, repo] = match;

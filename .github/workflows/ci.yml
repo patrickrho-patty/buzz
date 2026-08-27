@@ -10,7 +10,7 @@ concurrency:
 
 env:
   CARGO_TERM_COLOR: always
-  BUZZ_TEST_POSTGRES_PASSWORD: buzz_dev
+  CREW_TEST_POSTGRES_PASSWORD: buzz_dev
   PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
 
 jobs:
@@ -487,7 +487,7 @@ jobs:
         # exits permanently on an unmapped host, so the 'localhost:3000'
         # community MUST exist before the relay starts — the retry loop only
         # handles late-seeded channels, not a late-seeded community. The relay
-        # migrates at boot via BUZZ_AUTO_MIGRATE, but that's too late for the
+        # migrates at boot via CREW_AUTO_MIGRATE, but that's too late for the
         # pre-boot seed, so apply the schema here first (then drop AUTO_MIGRATE
         # below). lower(host) is the unique index → ON CONFLICT target. psql
         # isn't on PATH in hermit → exec into the buzz-postgres container.
@@ -518,16 +518,16 @@ jobs:
         run: |
           chmod +x ./target/ci/crew-relay
           nohup env \
-            DATABASE_URL="postgres://buzz:${BUZZ_TEST_POSTGRES_PASSWORD}@localhost:5432/buzz" \
+            DATABASE_URL="postgres://buzz:${CREW_TEST_POSTGRES_PASSWORD}@localhost:5432/buzz" \
             REDIS_URL=redis://localhost:6379 \
             RELAY_URL=ws://localhost:3000 \
-            BUZZ_BIND_ADDR=0.0.0.0:3000 \
-            BUZZ_REQUIRE_AUTH_TOKEN=false \
-            BUZZ_RECONCILE_CHANNELS=true \
-            BUZZ_RATE_LIMIT_HUMAN_MESSAGES_PER_MIN=100000 \
-            BUZZ_RATE_LIMIT_HUMAN_API_CALLS_PER_MIN=100000 \
-            BUZZ_RATE_LIMIT_HUMAN_WS_EVENTS_PER_SEC=10000 \
-            BUZZ_GIT_PROBE_WRITERS=8 \
+            CREW_BIND_ADDR=0.0.0.0:3000 \
+            CREW_REQUIRE_AUTH_TOKEN=false \
+            CREW_RECONCILE_CHANNELS=true \
+            CREW_RATE_LIMIT_HUMAN_MESSAGES_PER_MIN=100000 \
+            CREW_RATE_LIMIT_HUMAN_API_CALLS_PER_MIN=100000 \
+            CREW_RATE_LIMIT_HUMAN_WS_EVENTS_PER_SEC=10000 \
+            CREW_GIT_PROBE_WRITERS=8 \
             SPROUT_REMINDER_SCHEDULER_INTERVAL_SECS=1 \
             ./target/ci/crew-relay > /tmp/crew-relay.log 2>&1 &
           echo $! > /tmp/crew-relay.pid
@@ -647,7 +647,7 @@ jobs:
         # unmapped host (no retry, unlike the channel reconciler), so the
         # 'localhost:3000' community MUST exist before the relay starts — seeding
         # after boot leaves the scheduler dead. The relay migrates at boot via
-        # BUZZ_AUTO_MIGRATE, but that's too late for the pre-boot seed, so apply
+        # CREW_AUTO_MIGRATE, but that's too late for the pre-boot seed, so apply
         # the schema here first (then drop AUTO_MIGRATE below). lower(host) is the
         # unique index → ON CONFLICT target. psql isn't on PATH in hermit → exec
         # into the buzz-postgres container.
@@ -678,13 +678,13 @@ jobs:
         run: |
           chmod +x ./target/ci/crew-relay
           nohup env \
-            DATABASE_URL="postgres://buzz:${BUZZ_TEST_POSTGRES_PASSWORD}@localhost:5432/buzz" \
+            DATABASE_URL="postgres://buzz:${CREW_TEST_POSTGRES_PASSWORD}@localhost:5432/buzz" \
             REDIS_URL=redis://localhost:6379 \
             RELAY_URL=ws://localhost:3000 \
-            BUZZ_BIND_ADDR=0.0.0.0:3000 \
-            BUZZ_REQUIRE_AUTH_TOKEN=false \
-            BUZZ_RECONCILE_CHANNELS=true \
-            BUZZ_GIT_PROBE_WRITERS=8 \
+            CREW_BIND_ADDR=0.0.0.0:3000 \
+            CREW_REQUIRE_AUTH_TOKEN=false \
+            CREW_RECONCILE_CHANNELS=true \
+            CREW_GIT_PROBE_WRITERS=8 \
             SPROUT_REMINDER_SCHEDULER_INTERVAL_SECS=1 \
             ./target/ci/crew-relay > /tmp/crew-relay.log 2>&1 &
           echo $! > /tmp/crew-relay.pid
@@ -708,7 +708,7 @@ jobs:
             -E '(package(crew-db) and test(/relay_invite::tests/)) or (package(crew-relay) and test(/api::invites::tests/))' \
             --run-ignored ignored-only
         env:
-          DATABASE_URL: postgres://buzz:${{ env.BUZZ_TEST_POSTGRES_PASSWORD }}@localhost:5432/buzz
+          DATABASE_URL: postgres://buzz:${{ env.CREW_TEST_POSTGRES_PASSWORD }}@localhost:5432/buzz
       - name: Workspace profile (kind:9033) gate tests
         # Call-site integration for the 9033 authorization gate: open relay
         # rosterless/steward transitions and the closed-relay admin/owner rule,
@@ -720,7 +720,7 @@ jobs:
             -E 'package(crew-relay) and test(/handlers::relay_admin::tests/)' \
             --run-ignored ignored-only
         env:
-          DATABASE_URL: postgres://buzz:${{ env.BUZZ_TEST_POSTGRES_PASSWORD }}@localhost:5432/buzz
+          DATABASE_URL: postgres://buzz:${{ env.CREW_TEST_POSTGRES_PASSWORD }}@localhost:5432/buzz
       - name: NIP-ER reminder e2e
         # Feature e2e for NIP-ER (Event Reminders, kind:30300): write-path
         # validation, author-only read filtering, and scheduler delivery against
@@ -743,7 +743,7 @@ jobs:
             -E 'package(crew-db) and test(coordinate_delete_spares_head_newer_than_the_deletion)' \
             --run-ignored ignored-only
         env:
-          DATABASE_URL: postgres://buzz:${{ env.BUZZ_TEST_POSTGRES_PASSWORD }}@localhost:5432/buzz
+          DATABASE_URL: postgres://buzz:${{ env.CREW_TEST_POSTGRES_PASSWORD }}@localhost:5432/buzz
       - name: Upload relay log
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
@@ -1019,7 +1019,7 @@ jobs:
         # The Windows-only bash resolver lives in crew-dev-mcp; its unit tests
         # only gate if this crate is tested ON Windows.
         # Serial: windows_resolver_tests mutate process-global env
-        # (BUZZ_SHELL/GIT_BASH/SystemRoot) that SharedState::new reads.
+        # (CREW_SHELL/GIT_BASH/SystemRoot) that SharedState::new reads.
         run: cargo test -p crew-dev-mcp --target $env:TARGET -- --test-threads=1
       # Smoke-test the new host-prereq contract: Git for Windows (which provides
       # bash) is available on the runner, a shell command round-trips, and bash

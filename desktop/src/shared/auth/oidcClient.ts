@@ -23,7 +23,7 @@ import { invokeTauri } from "@/shared/api/tauri";
  */
 
 /** HTTP origin of the company relay. REST calls (OIDC) use plain HTTPS. */
-export const GRIDDLE_RELAY_HTTP_ORIGIN = "https://griddle.patty.io";
+export const CREW_RELAY_HTTP_ORIGIN = "https://griddle.patty.io";
 
 type OidcStartResponse = {
   authorization_url: string;
@@ -59,7 +59,7 @@ let pending: {
  * 3-minute timeout.
  */
 export function startOidcLogin(
-  relayOrigin = GRIDDLE_RELAY_HTTP_ORIGIN,
+  relayOrigin = CREW_RELAY_HTTP_ORIGIN,
 ): Promise<OidcCompleteResponse> {
   if (pending) {
     return Promise.reject(new Error("An SSO login is already in progress"));

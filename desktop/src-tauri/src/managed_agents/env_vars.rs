@@ -8,9 +8,9 @@
 //! A small set of *reserved* keys includes Buzz's identity, secrets, security
 //! gates, and control-plane values. Save-time validation rejects those keys.
 //! Runtime filtering strips old persisted overrides. Behavior knobs
-//! (GOOSE_MODE, BUZZ_ACP_MODEL, BUZZ_ACP_SYSTEM_PROMPT, …) remain freely
+//! (GOOSE_MODE, CREW_ACP_MODEL, CREW_ACP_SYSTEM_PROMPT, …) remain freely
 //! overridable. Power users can still bypass their dedicated UI fields.
-//! `BUZZ_ACP_AGENTS` is reserved because Desktop applies harness-specific caps
+//! `CREW_ACP_AGENTS` is reserved because Desktop applies harness-specific caps
 //! before it writes the provider launch policy.
 
 use std::collections::BTreeMap;
@@ -29,8 +29,8 @@ use std::collections::BTreeMap;
 pub(crate) const DERIVED_PROVIDER_MODEL_ENV_KEYS: &[&str] = &[
     "GOOSE_MODEL",
     "GOOSE_PROVIDER",
-    "BUZZ_AGENT_MODEL",
-    "BUZZ_AGENT_PROVIDER",
+    "CREW_AGENT_MODEL",
+    "CREW_AGENT_PROVIDER",
 ];
 
 /// Returns `true` if `key` is a derived provider/model env key that should be
@@ -50,9 +50,9 @@ include!("reserved_env_keys.rs");
 /// nit: Rust's `Command::env` will happily accept a key containing `=`
 /// or whitespace and pass it straight into the child's environ block,
 /// where `getenv("FOO")` then matches whatever comes after the first
-/// `=`. That means a key like `BUZZ_AUTH_TAG=x` with value `forged`
-/// lands as `BUZZ_AUTH_TAG=x=forged` in the child env and
-/// `getenv("BUZZ_AUTH_TAG")` returns `"x=forged"` — a full reserved-
+/// `=`. That means a key like `CREW_AUTH_TAG=x` with value `forged`
+/// lands as `CREW_AUTH_TAG=x=forged` in the child env and
+/// `getenv("CREW_AUTH_TAG")` returns `"x=forged"` — a full reserved-
 /// key bypass. Rejecting non-POSIX keys closes this hole at the
 /// boundary where the input enters the system.
 pub(crate) fn is_well_formed_env_key(key: &str) -> bool {
@@ -177,16 +177,16 @@ pub fn validate_user_env_keys(env_vars: &BTreeMap<String, String>) -> Result<(),
 /// single authority — no second list.
 ///
 /// Allowlist (case-insensitive):
-/// - `BUZZ_AGENT_PROVIDER`, `BUZZ_AGENT_MODEL` — agent runtime selection
-/// - `BUZZ_AGENT_THINKING_EFFORT` — non-secret enum (none/minimal/low/medium/high/xhigh/max)
-/// - `BUZZ_AGENT_THINKING_SUMMARY` — non-secret enum (auto/concise/detailed)
+/// - `CREW_AGENT_PROVIDER`, `CREW_AGENT_MODEL` — agent runtime selection
+/// - `CREW_AGENT_THINKING_EFFORT` — non-secret enum (none/minimal/low/medium/high/xhigh/max)
+/// - `CREW_AGENT_THINKING_SUMMARY` — non-secret enum (auto/concise/detailed)
 /// - `DATABRICKS_HOST`, `DATABRICKS_MODEL` — Block non-secret defaults
 pub(crate) fn is_safe_to_reveal(key: &str) -> bool {
     const SAFE_KEYS: &[&str] = &[
-        "BUZZ_AGENT_PROVIDER",
-        "BUZZ_AGENT_MODEL",
-        "BUZZ_AGENT_THINKING_EFFORT",
-        "BUZZ_AGENT_THINKING_SUMMARY",
+        "CREW_AGENT_PROVIDER",
+        "CREW_AGENT_MODEL",
+        "CREW_AGENT_THINKING_EFFORT",
+        "CREW_AGENT_THINKING_SUMMARY",
         "DATABRICKS_HOST",
         "DATABRICKS_MODEL",
     ];

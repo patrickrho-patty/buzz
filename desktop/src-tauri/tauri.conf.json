@@ -58,7 +58,7 @@
       "binaries/crew-backend-kubernetes",
       "binaries/crew-dev-mcp",
       "binaries/git-credential-nostr",
-      "binaries/buzz"
+      "binaries/crew"
     ],
     "icon": [
       "icons/32x32.png",

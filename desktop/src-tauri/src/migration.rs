@@ -3,7 +3,7 @@
 //! **Worktree sync** (`sync_shared_agent_data`): Per-launch symlink creation
 //! from the current worktree data directory to the canonical dev data
 //! directory (`xyz.patty.griddle.app.dev`). Only runs when
-//! `BUZZ_SHARE_IDENTITY=1` and `BUZZ_PRIVATE_KEY` is set. All dev
+//! `CREW_SHARE_IDENTITY=1` and `CREW_PRIVATE_KEY` is set. All dev
 //! instances share the same physical files — edits in any worktree are
 //! immediately visible to all others.
 //!
@@ -28,7 +28,7 @@ const LEGACY_RELEASE_IDENTIFIER: &str = "xyz.block.sprout.app";
 /// JSON files symlinked from worktree data directories to the canonical
 /// dev data directory. Only data files — never `agent-pids/` or `logs/`.
 /// `identity.key` is deliberately excluded because worktree instances
-/// receive their identity via the `BUZZ_PRIVATE_KEY` env var.
+/// receive their identity via the `CREW_PRIVATE_KEY` env var.
 const SHARED_AGENT_FILES: &[&str] = &[
     "agents/managed-agents.json",
     "agents/personas.json",
@@ -757,26 +757,26 @@ fn replace_builtin_avatar(record: &mut serde_json::Value, persona_id: &str, now:
 /// data directory to the canonical dev data directory.
 ///
 /// Guards:
-/// - `BUZZ_SHARE_IDENTITY` must be `"1"`
-/// - `BUZZ_PRIVATE_KEY` must parse as valid `nostr::Keys`
+/// - `CREW_SHARE_IDENTITY` must be `"1"`
+/// - `CREW_PRIVATE_KEY` must parse as valid `nostr::Keys`
 /// - The canonical dir must differ from the current dir (skip if we ARE canonical)
 /// - The canonical dir must exist
 pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
     // Guard: only runs when sharing identity with a worktree.
-    let is_shared = std::env::var("BUZZ_SHARE_IDENTITY")
+    let is_shared = std::env::var("CREW_SHARE_IDENTITY")
         .map(|v| v == "1")
         .unwrap_or(false);
     if !is_shared {
         return;
     }
 
-    // Guard: BUZZ_PRIVATE_KEY must be a valid nostr key.
-    let has_valid_key = std::env::var("BUZZ_PRIVATE_KEY")
+    // Guard: CREW_PRIVATE_KEY must be a valid nostr key.
+    let has_valid_key = crew_core_pkg::env_alias::env_lookup("CREW_PRIVATE_KEY")
         .ok()
         .and_then(|k| k.parse::<nostr::Keys>().ok())
         .is_some();
     if !has_valid_key {
-        eprintln!("griddle-desktop: shared-agent-sync: BUZZ_PRIVATE_KEY missing or invalid, skipping");
+        eprintln!("griddle-desktop: shared-agent-sync: CREW_PRIVATE_KEY missing or invalid, skipping");
         return;
     }
 
@@ -1239,7 +1239,7 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
         let mut changed = false;
 
         // Only rewrite the structured provider field when the baked build env
-        // marks this as a Block build (BUZZ_AGENT_PROVIDER == "databricks_v2").
+        // marks this as a Block build (CREW_AGENT_PROVIDER == "databricks_v2").
         // OSS users may intentionally select V1 (Model Serving), so we must not
         // silently migrate their provider to V2 (AI Gateway).
         if rewrite_v1_provider && obj.get("provider").and_then(|v| v.as_str()) == Some("databricks")
@@ -1258,7 +1258,7 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
             );
             // Also clear the model field — a V1 model name (e.g. "dbrx-instruct")
             // on a V2 provider would shadow the baked DATABRICKS_MODEL at spawn time
-            // (BUZZ_AGENT_MODEL from runtime_metadata_env_vars takes priority in
+            // (CREW_AGENT_MODEL from runtime_metadata_env_vars takes priority in
             // crew-agent config.rs). Clearing it lets the baked V2 default win.
             if obj.remove("model").is_some() {
                 eprintln!(
@@ -1298,7 +1298,7 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
 /// `provider: "databricks"` to `"databricks_v2"`.
 ///
 /// **Block builds** (where `baked_build_env()` contains
-/// `BUZZ_AGENT_PROVIDER=databricks_v2`): the structured `provider` field is
+/// `CREW_AGENT_PROVIDER=databricks_v2`): the structured `provider` field is
 /// rewritten V1→V2 because the baked release targets V2 exclusively. Records
 /// that were saved before this migration would otherwise silently override the
 /// baked value at spawn time (last-write-wins in `Command::env`).
@@ -1306,7 +1306,7 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
 /// **OSS builds** (baked env empty): the `provider` field is left alone —
 /// V1 (`databricks`) is a valid Model Serving choice for OSS users.
 ///
-/// In both cases, stale `BUZZ_AGENT_PROVIDER` / `BUZZ_AGENT_MODEL` /
+/// In both cases, stale `CREW_AGENT_PROVIDER` / `CREW_AGENT_MODEL` /
 /// `GOOSE_PROVIDER` / `GOOSE_MODEL` are stripped from `env_vars`. These keys
 /// are always re-derived from structured fields at spawn time; persisted copies
 /// silence UI edits and cause stale routing.
@@ -1316,12 +1316,12 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
 /// `reconcile_legacy_command_names` and `reconcile_provider_mcp_commands`.
 pub fn reconcile_databricks_v1_to_v2(app: &tauri::AppHandle) {
     use crate::managed_agents::baked_build_env;
-    // On Block builds, the baked env contains BUZZ_AGENT_PROVIDER=databricks_v2.
+    // On Block builds, the baked env contains CREW_AGENT_PROVIDER=databricks_v2.
     // Use that as a reliable signal that this is a Block build and the V1
     // provider should be migrated. OSS builds have an empty baked env, so
     // rewrite_v1_provider is false and the structured provider is preserved.
     let rewrite_v1_provider = baked_build_env()
-        .get("BUZZ_AGENT_PROVIDER")
+        .get("CREW_AGENT_PROVIDER")
         .map(|v| v == "databricks_v2")
         .unwrap_or(false);
     let Ok(current_dir) = app.path().app_data_dir() else {

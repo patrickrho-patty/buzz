@@ -13,7 +13,7 @@
 #     postgres        : localhost:5471  (db=buzz, user=buzz, pass=crew_dev)
 #     redis           : localhost:6471
 #     minio           : localhost:9471 (console 9472)
-#     relay main      : localhost:3030   ← BUZZ_E2E_RELAY_URL=http://localhost:3030
+#     relay main      : localhost:3030   ← CREW_E2E_RELAY_URL=http://localhost:3030
 #     relay health    : localhost:8088
 #     relay metrics   : localhost:9202
 #
@@ -106,12 +106,12 @@ ok "Schema applied"
 # the channel/member seed. It keys everything off a fixed COMMUNITY_ID and an
 # overridable host — point that host at OUR relay so the tenant binding matches,
 # and point its DB env at OUR isolated postgres. (psql is on PATH, so it uses
-# BUZZ_DB_HOST/PORT rather than the shared `buzz-postgres` container.)
+# CREW_DB_HOST/PORT rather than the shared `buzz-postgres` container.)
 log "Seeding community (host=${COMMUNITY_HOST}), channels, and members..."
-BUZZ_COMMUNITY_HOST="${COMMUNITY_HOST}" \
-  BUZZ_DB_HOST=localhost BUZZ_DB_PORT=${PG_PORT} BUZZ_DB_USER=buzz \
-  BUZZ_DB_PASS=crew_dev BUZZ_DB_NAME=buzz \
-  BUZZ_DB_DOCKER_CONTAINER="${PROJECT}-postgres-1" \
+CREW_COMMUNITY_HOST="${COMMUNITY_HOST}" \
+  CREW_DB_HOST=localhost CREW_DB_PORT=${PG_PORT} CREW_DB_USER=buzz \
+  CREW_DB_PASS=crew_dev CREW_DB_NAME=buzz \
+  CREW_DB_DOCKER_CONTAINER="${PROJECT}-postgres-1" \
   ./scripts/setup-desktop-test-data.sh
 ok "Community + channels + members seeded"
 
@@ -144,21 +144,21 @@ tmux new-session -d -s "${TMUX_SESSION}" "cd '${REPO_ROOT}' && env \
   DATABASE_URL=postgres://buzz:crew_dev@localhost:${PG_PORT}/buzz \
   REDIS_URL=redis://localhost:${REDIS_PORT} \
   RELAY_URL=ws://localhost:${RELAY_MAIN} \
-  BUZZ_BIND_ADDR=0.0.0.0:${RELAY_MAIN} \
-  BUZZ_HEALTH_PORT=${RELAY_HEALTH} \
-  BUZZ_METRICS_PORT=${RELAY_METRICS} \
-  BUZZ_S3_ENDPOINT=http://localhost:${MINIO_PORT} \
-  BUZZ_S3_ACCESS_KEY=crew_dev \
-  BUZZ_S3_SECRET_KEY=crew_dev_secret \
-  BUZZ_S3_BUCKET=crew-media \
-  BUZZ_REQUIRE_AUTH_TOKEN=false \
-  BUZZ_RECONCILE_CHANNELS=true \
+  CREW_BIND_ADDR=0.0.0.0:${RELAY_MAIN} \
+  CREW_HEALTH_PORT=${RELAY_HEALTH} \
+  CREW_METRICS_PORT=${RELAY_METRICS} \
+  CREW_S3_ENDPOINT=http://localhost:${MINIO_PORT} \
+  CREW_S3_ACCESS_KEY=crew_dev \
+  CREW_S3_SECRET_KEY=crew_dev_secret \
+  CREW_S3_BUCKET=crew-media \
+  CREW_REQUIRE_AUTH_TOKEN=false \
+  CREW_RECONCILE_CHANNELS=true \
   './target/${CARGO_TARGET_PROFILE}/crew-relay' > '${RELAY_LOG}' 2>&1"
 
 # Wait for the main port to accept connections.
 for _ in $(seq 1 30); do
   if curl -s -o /dev/null "http://localhost:${RELAY_MAIN}/"; then
-    ok "Relay live — BUZZ_E2E_RELAY_URL=http://localhost:${RELAY_MAIN}"
+    ok "Relay live — CREW_E2E_RELAY_URL=http://localhost:${RELAY_MAIN}"
     ok "Logs: ${RELAY_LOG}   Attach: tmux attach -t ${TMUX_SESSION}"
     ok "Stop relay: tmux kill-session -t ${TMUX_SESSION}"
     ok "Full teardown: docker compose -p ${PROJECT} -f ${COMPOSE_FILE} down -v"

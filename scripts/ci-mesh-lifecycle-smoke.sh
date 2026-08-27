@@ -70,14 +70,14 @@ read_keys() { "${ADMIN_BIN}" generate-key 2>/dev/null; }
 OWNER_OUT="$(read_keys)"
 RELAY_OWNER_PUBKEY="$(echo "${OWNER_OUT}" | awk '/Public key:/ {print $3}')"
 SIGNER_OUT="$(read_keys)"
-BUZZ_RELAY_PRIVATE_KEY="$(echo "${SIGNER_OUT}" | awk '/Secret key:/ {print $3}')"
-if [[ -z "${RELAY_OWNER_PUBKEY}" || -z "${BUZZ_RELAY_PRIVATE_KEY}" ]]; then
+CREW_RELAY_PRIVATE_KEY="$(echo "${SIGNER_OUT}" | awk '/Secret key:/ {print $3}')"
+if [[ -z "${RELAY_OWNER_PUBKEY}" || -z "${CREW_RELAY_PRIVATE_KEY}" ]]; then
   err "Failed to generate relay identities via crew-admin generate-key"
   exit 1
 fi
-export BUZZ_REQUIRE_RELAY_MEMBERSHIP=true
+export CREW_REQUIRE_RELAY_MEMBERSHIP=true
 export RELAY_OWNER_PUBKEY
-export BUZZ_RELAY_PRIVATE_KEY
+export CREW_RELAY_PRIVATE_KEY
 
 # ── Start the membership-gated relay ─────────────────────────────────────────
 # A stale relay on :3000 would pass the readiness poll while silently running
@@ -107,7 +107,7 @@ log "Running relay-driven mesh lifecycle smoke..."
 RELAY_URL=ws://localhost:3000 \
 DATABASE_URL=postgres://buzz:crew_dev@localhost:5432/buzz \
 REDIS_URL=redis://localhost:6379 \
-BUZZ_ADMIN_BIN="${ADMIN_BIN}" \
+CREW_ADMIN_BIN="${ADMIN_BIN}" \
   "${HARNESS_BIN}"
 
 ok "Relay-driven mesh lifecycle smoke passed"

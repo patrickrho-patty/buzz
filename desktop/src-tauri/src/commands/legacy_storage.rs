@@ -3,9 +3,9 @@ use std::path::{Path, PathBuf};
 use rusqlite::{Connection, OpenFlags};
 use serde::Serialize;
 
-const BUZZ_RELEASE_IDENTIFIER_PREFIX: &str = "xyz.patty.griddle.app";
+const CREW_RELEASE_IDENTIFIER_PREFIX: &str = "xyz.patty.griddle.app";
 const SPROUT_RELEASE_IDENTIFIER: &str = "xyz.block.sprout.app";
-const BUZZ_DEV_IDENTIFIER_PREFIX: &str = "xyz.patty.griddle.app.dev";
+const CREW_DEV_IDENTIFIER_PREFIX: &str = "xyz.patty.griddle.app.dev";
 const SPROUT_DEV_IDENTIFIER_PREFIX: &str = "xyz.block.sprout.app.dev";
 
 const SPROUT_WORKSPACES_KEY: &str = "sprout-workspaces";
@@ -28,15 +28,15 @@ pub struct LegacyOnboardingCompletion {
 }
 
 fn legacy_identifier(current_identifier: &str) -> Option<String> {
-    if current_identifier.starts_with(BUZZ_DEV_IDENTIFIER_PREFIX) {
+    if current_identifier.starts_with(CREW_DEV_IDENTIFIER_PREFIX) {
         Some(current_identifier.replacen(
-            BUZZ_DEV_IDENTIFIER_PREFIX,
+            CREW_DEV_IDENTIFIER_PREFIX,
             SPROUT_DEV_IDENTIFIER_PREFIX,
             1,
         ))
-    } else if current_identifier.starts_with(BUZZ_RELEASE_IDENTIFIER_PREFIX) {
+    } else if current_identifier.starts_with(CREW_RELEASE_IDENTIFIER_PREFIX) {
         Some(current_identifier.replacen(
-            BUZZ_RELEASE_IDENTIFIER_PREFIX,
+            CREW_RELEASE_IDENTIFIER_PREFIX,
             SPROUT_RELEASE_IDENTIFIER,
             1,
         ))

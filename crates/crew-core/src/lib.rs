@@ -13,6 +13,7 @@ pub mod channel;
 /// body parse/serialize, envelope build/validate, head selection.
 pub mod engram;
 /// Relay-side error types.
+pub mod env_alias;
 pub mod error;
 /// Relay-side event wrapper with verification tracking.
 pub mod event;

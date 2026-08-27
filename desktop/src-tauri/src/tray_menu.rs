@@ -26,7 +26,7 @@ use tauri::{
 };
 
 const TRAY_ID: &str = "buzz-tray";
-const OPEN_BUZZ_ID: &str = "tray-open-buzz";
+const OPEN_CREW_ID: &str = "tray-open-buzz";
 const NEW_CHANNEL_ID: &str = "tray-new-channel";
 const QUIT_ID: &str = "tray-quit";
 const OPEN_CHANNEL_PREFIX: &str = "tray-open-channel:";
@@ -40,7 +40,7 @@ static PREVIEW_STARTED_AT: OnceLock<Instant> = OnceLock::new();
 /// without connecting to a relay. It is deliberately unavailable in release
 /// builds and must be explicitly enabled when launching the debug app.
 fn preview_activities() -> Option<Vec<TrayAgentActivity>> {
-    if !cfg!(debug_assertions) || std::env::var("BUZZ_TRAY_MENU_DEMO").ok().as_deref() != Some("1")
+    if !cfg!(debug_assertions) || std::env::var("CREW_TRAY_MENU_DEMO").ok().as_deref() != Some("1")
     {
         return None;
     }
@@ -73,7 +73,7 @@ fn preview_activities() -> Option<Vec<TrayAgentActivity>> {
 }
 
 fn preview_recent_activities() -> Option<Vec<TrayAgentActivity>> {
-    if !cfg!(debug_assertions) || std::env::var("BUZZ_TRAY_MENU_DEMO").ok().as_deref() != Some("1")
+    if !cfg!(debug_assertions) || std::env::var("CREW_TRAY_MENU_DEMO").ok().as_deref() != Some("1")
     {
         return None;
     }
@@ -335,7 +335,7 @@ fn build_menu<R: Runtime>(
     append_separator(app, &menu)?;
     menu.append(&MenuItem::with_id(
         app,
-        OPEN_BUZZ_ID,
+        OPEN_CREW_ID,
         "Open Buzz",
         true,
         None::<&str>,
@@ -446,7 +446,7 @@ fn apply_activity_presentation<R: Runtime>(
 
 fn handle_menu_event<R: Runtime>(app: &AppHandle<R>, id: &str) {
     match id {
-        OPEN_BUZZ_ID => show_main_window(app),
+        OPEN_CREW_ID => show_main_window(app),
         NEW_CHANNEL_ID => {
             show_main_window(app);
             queue_tray_action(app, TrayAction::NewChannel);

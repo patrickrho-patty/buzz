@@ -92,7 +92,7 @@ const TEST_PUBKEYS = [
   "df8e91b86fda13a9a67896df77232f7bdab2ba9c3e165378e1ba3d24c13a328e",
 ];
 
-// `BUZZ_HEADED=1` runs a real browser window instead of headless.
+// `CREW_HEADED=1` runs a real browser window instead of headless.
 //
 // Headless Chromium rasterizes in software (SwiftShader), which mis-renders
 // `backdrop-filter` when an ancestor establishes a rounded clip
@@ -101,7 +101,7 @@ const TEST_PUBKEYS = [
 // inside the rounded focus drawer. Headed rendering is correct, as is the real
 // app's WKWebView, so this is a capture-only artifact. Default stays headless so
 // CI is unaffected.
-const browser = await chromium.launch({ headless: !process.env.BUZZ_HEADED });
+const browser = await chromium.launch({ headless: !process.env.CREW_HEADED });
 const page = await browser.newPage({
   viewport: { width: vpWidth, height: vpHeight },
 });
@@ -163,11 +163,11 @@ await page.addInitScript(
       writable: true,
     });
 
-    window.__BUZZ_E2E__ = {
+    window.__CREW_E2E__ = {
       mode: "mock",
       ...(updateReady ? { mock: { updateAvailable: true } } : {}),
     };
-    window.__BUZZ_E2E_APP_BADGE_COUNT__ = 0;
+    window.__CREW_E2E_APP_BADGE_COUNT__ = 0;
   },
   { updateReady: args["update-ready"] },
 );
@@ -223,7 +223,7 @@ try {
     for (const ch of targetChannels) {
       await page.waitForFunction(
         (name) =>
-          window.__BUZZ_E2E_HAS_MOCK_LIVE_SUBSCRIPTION__?.({
+          window.__CREW_E2E_HAS_MOCK_LIVE_SUBSCRIPTION__?.({
             channelName: name,
           }) ?? false,
         ch,
@@ -234,7 +234,7 @@ try {
     for (const msg of messages) {
       await page.evaluate(
         (m) => {
-          window.__BUZZ_E2E_EMIT_MOCK_MESSAGE__?.(m);
+          window.__CREW_E2E_EMIT_MOCK_MESSAGE__?.(m);
         },
         { ...msg, pubkey: msg.pubkey ?? DEFAULT_MOCK_PUBKEY },
       );

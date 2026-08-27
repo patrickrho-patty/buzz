@@ -882,18 +882,18 @@ mod relay_backed_tests {
     /// reading of that code, which is exactly the claim a real relay can check
     /// and I cannot.
     ///
-    /// `#[ignore]`d because it needs a relay on `BUZZ_TEST_RELAY_URL`. Run:
+    /// `#[ignore]`d because it needs a relay on `CREW_TEST_RELAY_URL`. Run:
     ///
     /// ```text
     /// ./scripts/start-isolated-test-relay.sh          # ws://localhost:3030
-    /// BUZZ_TEST_RELAY_URL=ws://localhost:3030 \
+    /// CREW_TEST_RELAY_URL=ws://localhost:3030 \
     ///   cargo test -p griddle-desktop -- --ignored archive_sync_session
     /// ```
     #[tokio::test]
-    #[ignore = "requires a local relay (set BUZZ_TEST_RELAY_URL)"]
+    #[ignore = "requires a local relay (set CREW_TEST_RELAY_URL)"]
     async fn archive_sync_session_receives_live_events_from_a_real_relay() {
-        let Ok(relay_url) = std::env::var("BUZZ_TEST_RELAY_URL") else {
-            panic!("set BUZZ_TEST_RELAY_URL to a running relay");
+        let Ok(relay_url) = std::env::var("CREW_TEST_RELAY_URL") else {
+            panic!("set CREW_TEST_RELAY_URL to a running relay");
         };
 
         let owner = Keys::generate();

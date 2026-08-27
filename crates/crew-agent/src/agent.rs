@@ -320,7 +320,7 @@ impl RunCtx<'_> {
         *self.turn_pricing_identity = None;
         *self.turn_total_state = TurnTotalState::Unseen;
         // Per-turn handoff-attempt counter. Scoped here (not persisted in the
-        // session) so `BUZZ_AGENT_MAX_HANDOFFS` bounds compactions per
+        // session) so `CREW_AGENT_MAX_HANDOFFS` bounds compactions per
         // `session/prompt` turn rather than per session lifetime. A
         // long-lived session legitimately needs unbounded handoffs across
         // prompts; the cap only exists to stop runaway within a single turn.

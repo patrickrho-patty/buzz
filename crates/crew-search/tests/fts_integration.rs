@@ -1,6 +1,6 @@
 //! Integration tests for community-scoped Postgres FTS.
 //!
-//! Run with a local PG: `BUZZ_TEST_DATABASE_URL=postgres://buzz:buzz_dev@localhost:5432/buzz cargo test -p crew-search --tests -- --include-ignored`
+//! Run with a local PG: `CREW_TEST_DATABASE_URL=postgres://buzz:buzz_dev@localhost:5432/buzz cargo test -p crew-search --tests -- --include-ignored`
 //!
 //! Each test creates a uniquely-named schema, applies every FTS-affecting
 //! migration in order, exercises a scenario, and drops it. Tests are
@@ -30,7 +30,7 @@ const MIGRATION_0008_SQL: &str =
 const MIGRATION_0014_SQL: &str = include_str!("../../../migrations/0014_push_lease_fts.sql");
 
 async fn setup() -> (PgPool, String) {
-    let url = std::env::var("BUZZ_TEST_DATABASE_URL").unwrap_or_else(|_| TEST_DB_URL.to_string());
+    let url = std::env::var("CREW_TEST_DATABASE_URL").unwrap_or_else(|_| TEST_DB_URL.to_string());
     let schema = format!("fts_test_{}", Uuid::new_v4().simple());
     // Connect to the default schema first to create the test schema.
     let admin_pool = PgPoolOptions::new()
@@ -89,7 +89,7 @@ async fn teardown(pool: PgPool, schema: &str) {
     let admin_pool = PgPoolOptions::new()
         .max_connections(1)
         .connect(
-            &std::env::var("BUZZ_TEST_DATABASE_URL").unwrap_or_else(|_| TEST_DB_URL.to_string()),
+            &std::env::var("CREW_TEST_DATABASE_URL").unwrap_or_else(|_| TEST_DB_URL.to_string()),
         )
         .await
         .expect("reconnect for drop");

@@ -17,7 +17,8 @@ async fn main() -> anyhow::Result<()> {
     let target_pubkey = &args[2];
     let message = args[3..].join(" ");
 
-    let url = std::env::var("BUZZ_RELAY_URL").unwrap_or_else(|_| "ws://localhost:3000".into());
+    let url = crew_core::env_alias::env_lookup("CREW_RELAY_URL")
+        .unwrap_or_else(|_| "ws://localhost:3000".into());
     let keys = Keys::generate();
     println!("Sender pubkey: {}", keys.public_key().to_hex());
 

@@ -156,11 +156,11 @@ log "Starting relay..."
 # membership-gated relay (e.g. the mesh lifecycle smoke). All three must be
 # set together — the relay fails fast otherwise.
 MEMBERSHIP_ENV=()
-if [[ "${BUZZ_REQUIRE_RELAY_MEMBERSHIP:-}" == "true" ]]; then
+if [[ "${CREW_REQUIRE_RELAY_MEMBERSHIP:-}" == "true" ]]; then
   MEMBERSHIP_ENV+=(
-    BUZZ_REQUIRE_RELAY_MEMBERSHIP=true
-    RELAY_OWNER_PUBKEY="${RELAY_OWNER_PUBKEY:?RELAY_OWNER_PUBKEY required with BUZZ_REQUIRE_RELAY_MEMBERSHIP=true}"
-    BUZZ_RELAY_PRIVATE_KEY="${BUZZ_RELAY_PRIVATE_KEY:?BUZZ_RELAY_PRIVATE_KEY required with BUZZ_REQUIRE_RELAY_MEMBERSHIP=true}"
+    CREW_REQUIRE_RELAY_MEMBERSHIP=true
+    RELAY_OWNER_PUBKEY="${RELAY_OWNER_PUBKEY:?RELAY_OWNER_PUBKEY required with CREW_REQUIRE_RELAY_MEMBERSHIP=true}"
+    CREW_RELAY_PRIVATE_KEY="${CREW_RELAY_PRIVATE_KEY:?CREW_RELAY_PRIVATE_KEY required with CREW_REQUIRE_RELAY_MEMBERSHIP=true}"
   )
   log "Membership gating enabled (NIP-43)"
 fi
@@ -169,10 +169,10 @@ nohup env \
   DATABASE_URL=postgres://buzz:crew_dev@localhost:5432/buzz \
   REDIS_URL=redis://localhost:6379 \
   RELAY_URL=ws://localhost:3000 \
-  BUZZ_BIND_ADDR=0.0.0.0:3000 \
-  BUZZ_REQUIRE_AUTH_TOKEN=false \
-  BUZZ_RECONCILE_CHANNELS=true \
-  BUZZ_GIT_PROBE_WRITERS=8 \
+  CREW_BIND_ADDR=0.0.0.0:3000 \
+  CREW_REQUIRE_AUTH_TOKEN=false \
+  CREW_RECONCILE_CHANNELS=true \
+  CREW_GIT_PROBE_WRITERS=8 \
   ${MEMBERSHIP_ENV[@]+"${MEMBERSHIP_ENV[@]}"} \
   "./target/${CARGO_PROFILE}/crew-relay" > /tmp/crew-relay.log 2>&1 &
 echo $! > /tmp/crew-relay.pid

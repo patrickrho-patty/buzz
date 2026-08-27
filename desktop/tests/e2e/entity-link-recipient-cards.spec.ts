@@ -27,7 +27,7 @@ test("agent-style message with angle-bracket buzz:// links renders entity cards 
   await page.addInitScript(
     ({ repoAddress, prId, issueId, alicePubkey, prSubject, issueSubject }) => {
       const createdAt = Math.floor(Date.now() / 1000) - 60;
-      window.__BUZZ_E2E_EXTRA_PROJECT_EVENTS__ = [
+      window.__CREW_E2E_EXTRA_PROJECT_EVENTS__ = [
         {
           id: prId,
           kind: 1618, // KIND_GIT_PULL_REQUEST
@@ -69,14 +69,14 @@ test("agent-style message with angle-bracket buzz:// links renders entity cards 
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await page.getByTestId("channel-general").click();
   await page.waitForFunction(
-    () => typeof window.__BUZZ_E2E_EMIT_MOCK_MESSAGE__ === "function",
+    () => typeof window.__CREW_E2E_EMIT_MOCK_MESSAGE__ === "function",
   );
 
   // Simulate an agent/CLI sender: plain kind-9 message with angle-bracket
   // buzz:// URLs in a Markdown list and NO link-preview snapshot tags.
   await page.evaluate(
     ({ prId, issueId, alicePubkey }) => {
-      window.__BUZZ_E2E_EMIT_MOCK_MESSAGE__?.({
+      window.__CREW_E2E_EMIT_MOCK_MESSAGE__?.({
         channelName: "general",
         pubkey: alicePubkey,
         content: [
@@ -275,7 +275,7 @@ test("issue chip width is metadata-independent while the title loads", async ({
 }) => {
   await page.addInitScript(
     ({ repoAddress, issueId, alicePubkey, issueSubject }) => {
-      window.__BUZZ_E2E_EXTRA_PROJECT_EVENTS__ = [
+      window.__CREW_E2E_EXTRA_PROJECT_EVENTS__ = [
         {
           id: issueId,
           kind: 1621, // KIND_GIT_ISSUE
@@ -303,11 +303,11 @@ test("issue chip width is metadata-independent while the title loads", async ({
   // result and never recovers, which would hide the resolved-title half of
   // this invariant. Natural relay latency supplies the pending window.
   await page.waitForFunction(
-    () => typeof window.__BUZZ_E2E_EMIT_MOCK_MESSAGE__ === "function",
+    () => typeof window.__CREW_E2E_EMIT_MOCK_MESSAGE__ === "function",
   );
   await page.evaluate(
     ({ issueId, alicePubkey }) => {
-      window.__BUZZ_E2E_EMIT_MOCK_MESSAGE__?.({
+      window.__CREW_E2E_EMIT_MOCK_MESSAGE__?.({
         channelName: "general",
         pubkey: alicePubkey,
         content: `Issue link: buzz://issue?id=${issueId}&owner=${alicePubkey}&d=relay-tools`,
@@ -358,14 +358,14 @@ test("entity tooltip uses project context while relay metadata is delayed", asyn
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await page.getByTestId("channel-general").click();
   await page.evaluate(() =>
-    window.__BUZZ_E2E_ACTIVATE_RELAY_RATE_LIMIT__?.(300),
+    window.__CREW_E2E_ACTIVATE_RELAY_RATE_LIMIT__?.(300),
   );
   await page.waitForFunction(
-    () => typeof window.__BUZZ_E2E_EMIT_MOCK_MESSAGE__ === "function",
+    () => typeof window.__CREW_E2E_EMIT_MOCK_MESSAGE__ === "function",
   );
   await page.evaluate(
     ({ issueId, owner }) => {
-      window.__BUZZ_E2E_EMIT_MOCK_MESSAGE__?.({
+      window.__CREW_E2E_EMIT_MOCK_MESSAGE__?.({
         channelName: "general",
         content: `Delayed issue: buzz://issue?id=${issueId}&owner=${owner}&d=buzz`,
       });
@@ -433,7 +433,7 @@ test("reopening the same entity link reapplies its workspace state", async ({
   await page.addInitScript(
     ({ issueId, issueSubject, prId, prSubject, repoAddress, owner }) => {
       const createdAt = Math.floor(Date.now() / 1000) - 60;
-      window.__BUZZ_E2E_EXTRA_PROJECT_EVENTS__ = [
+      window.__CREW_E2E_EXTRA_PROJECT_EVENTS__ = [
         {
           id: prId,
           kind: 1618, // KIND_GIT_PULL_REQUEST
@@ -546,11 +546,11 @@ test("deleted reply links identify deletion and fall back to their thread root",
   await installMockBridge(page, { deletedEventIds: [deletedReplyId] });
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await page.waitForFunction(
-    () => typeof window.__BUZZ_E2E_EMIT_MOCK_MESSAGE__ === "function",
+    () => typeof window.__CREW_E2E_EMIT_MOCK_MESSAGE__ === "function",
   );
   await page.evaluate(
     ({ id }) => {
-      window.__BUZZ_E2E_EMIT_MOCK_MESSAGE__?.({
+      window.__CREW_E2E_EMIT_MOCK_MESSAGE__?.({
         channelName: "random",
         content: "Surviving thread root",
         id,

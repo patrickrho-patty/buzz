@@ -9,6 +9,7 @@ anyhow = "1"
 futures-util = { workspace = true }
 nostr = { workspace = true }
 serde_json = { workspace = true }
+crew-core = { path = "../../crates/crew-core" }
 crew-sdk = { path = "../../crates/crew-sdk" }
 tokio = { workspace = true, features = ["rt-multi-thread", "macros", "time", "signal"] }
 tokio-tungstenite = { workspace = true }

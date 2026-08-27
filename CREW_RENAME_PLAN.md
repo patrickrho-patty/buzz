@@ -33,7 +33,7 @@ emoji JSON and two test-fixture display strings ("Product crew",
    app_profile strings, hashtext salt literals: dual-write/dual-read flip.
 3. **Env vars** — BUZZ_\*/GRIDDLE_\* → CREW_\* across Rust/TS/Dart/sh/yaml;
    alias window at boot for externally documented contracts
-   (BUZZ_RELAY_URL, BUZZ_PRIVATE_KEY, BUZZ_AUTH_TAG) + dual emission in
+   (CREW_RELAY_URL, CREW_PRIVATE_KEY, CREW_AUTH_TAG) + dual emission in
    child-env builders; `.env.example` both rows during window.
 4. **Desktop/web TS** — identifiers then free strings incl. tauri.conf.json
    identifier `xyz.patty.griddle.app` → `…crew…`; deep-link scheme

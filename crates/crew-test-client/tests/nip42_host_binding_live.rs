@@ -11,8 +11,8 @@
 //! INSERT INTO communities (id, host) VALUES
 //!   ('11111111-1111-4111-8111-111111111111', 'a.localhost:3100'),
 //!   ('22222222-2222-4222-8222-222222222222', 'b.localhost:3100');
-//! # Run one binary, BUZZ_HEALTH_PORT=8180 BUZZ_METRICS_PORT=9202,
-//! # BUZZ_RECONCILE_CHANNELS=false, BUZZ_GIT_CONFORMANCE_PROBE=false
+//! # Run one binary, CREW_HEALTH_PORT=8180 CREW_METRICS_PORT=9202,
+//! # CREW_RECONCILE_CHANNELS=false, CREW_GIT_CONFORMANCE_PROBE=false
 //! ```
 //!
 //! Each test is `#[ignore]` so it only runs explicitly:

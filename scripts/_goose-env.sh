@@ -13,14 +13,14 @@ _prompt="${5:-}"
 cargo build --release -p crew-acp -p crew-cli
 
 env_args=(
-    BUZZ_RELAY_URL="$_relay"
-    BUZZ_PRIVATE_KEY="$_key"
-    BUZZ_ACP_AGENT_COMMAND=goose
-    BUZZ_ACP_AGENT_ARGS=acp
-    BUZZ_ACP_AGENTS="$_agents"
+    CREW_RELAY_URL="$_relay"
+    CREW_PRIVATE_KEY="$_key"
+    CREW_ACP_AGENT_COMMAND=goose
+    CREW_ACP_AGENT_ARGS=acp
+    CREW_ACP_AGENTS="$_agents"
     GOOSE_MODE=auto
 )
-[[ -n "$_prompt" ]] && env_args+=(BUZZ_ACP_SYSTEM_PROMPT="$_prompt")
+[[ -n "$_prompt" ]] && env_args+=(CREW_ACP_SYSTEM_PROMPT="$_prompt")
 if [[ "$_heartbeat" != "0" ]]; then
-    env_args+=(BUZZ_ACP_HEARTBEAT_INTERVAL="$_heartbeat")
+    env_args+=(CREW_ACP_HEARTBEAT_INTERVAL="$_heartbeat")
 fi

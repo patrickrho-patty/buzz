@@ -42,13 +42,13 @@ async function driveConnectionDegraded(
     // the state override and write "connected" back over it.
     await page.waitForFunction(() => {
       const win = window as Window & {
-        __BUZZ_E2E_GET_RELAY_CONNECTION_STATE__?: () => string;
-        __BUZZ_E2E_SET_RELAY_CONNECTION_STATE__?: unknown;
+        __CREW_E2E_GET_RELAY_CONNECTION_STATE__?: () => string;
+        __CREW_E2E_SET_RELAY_CONNECTION_STATE__?: unknown;
       };
       return (
-        typeof win.__BUZZ_E2E_SET_RELAY_CONNECTION_STATE__ === "function" &&
-        typeof win.__BUZZ_E2E_GET_RELAY_CONNECTION_STATE__ === "function" &&
-        win.__BUZZ_E2E_GET_RELAY_CONNECTION_STATE__() === "connected"
+        typeof win.__CREW_E2E_SET_RELAY_CONNECTION_STATE__ === "function" &&
+        typeof win.__CREW_E2E_GET_RELAY_CONNECTION_STATE__ === "function" &&
+        win.__CREW_E2E_GET_RELAY_CONNECTION_STATE__() === "connected"
       );
     });
   } else {
@@ -58,17 +58,17 @@ async function driveConnectionDegraded(
       () =>
         typeof (
           window as Window & {
-            __BUZZ_E2E_SET_RELAY_CONNECTION_STATE__?: unknown;
+            __CREW_E2E_SET_RELAY_CONNECTION_STATE__?: unknown;
           }
-        ).__BUZZ_E2E_SET_RELAY_CONNECTION_STATE__ === "function",
+        ).__CREW_E2E_SET_RELAY_CONNECTION_STATE__ === "function",
     );
   }
   await page.evaluate((s) => {
     const setter = (
       window as Window & {
-        __BUZZ_E2E_SET_RELAY_CONNECTION_STATE__?: (state: string) => void;
+        __CREW_E2E_SET_RELAY_CONNECTION_STATE__?: (state: string) => void;
       }
-    ).__BUZZ_E2E_SET_RELAY_CONNECTION_STATE__;
+    ).__CREW_E2E_SET_RELAY_CONNECTION_STATE__;
     if (!setter) throw new Error("E2E relay state setter not installed.");
     setter(s);
   }, state);
@@ -93,9 +93,9 @@ test.describe("relay connectivity", () => {
       () =>
         typeof (
           window as Window & {
-            __BUZZ_E2E_SET_RELAY_CONNECTION_STATE__?: unknown;
+            __CREW_E2E_SET_RELAY_CONNECTION_STATE__?: unknown;
           }
-        ).__BUZZ_E2E_SET_RELAY_CONNECTION_STATE__ === "function",
+        ).__CREW_E2E_SET_RELAY_CONNECTION_STATE__ === "function",
     );
     await driveConnectionDegraded(page, "reconnecting");
 

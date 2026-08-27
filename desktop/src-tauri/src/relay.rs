@@ -17,15 +17,15 @@ const DEFAULT_RELAY_WS_URL: &str = "ws://localhost:3000";
 const MALFORMED_RESPONSE_MESSAGE: &str = "relay returned malformed response: not valid JSON";
 
 fn configured_env_var(name: &str) -> Option<String> {
-    std::env::var(name)
+    crew_core_pkg::env_alias::env_lookup(name)
         .ok()
         .map(|value| value.trim().to_string())
         .filter(|value| !value.is_empty())
 }
 
 pub fn relay_ws_url() -> String {
-    configured_env_var("BUZZ_RELAY_URL")
-        .or_else(|| option_env!("BUZZ_DESKTOP_BUILD_RELAY_URL").map(str::to_string))
+    configured_env_var("CREW_RELAY_URL")
+        .or_else(|| option_env!("CREW_DESKTOP_BUILD_RELAY_URL").map(str::to_string))
         .unwrap_or_else(|| DEFAULT_RELAY_WS_URL.to_string())
 }
 
@@ -91,11 +91,11 @@ pub use scope::{
 };
 
 pub fn relay_api_base_url() -> String {
-    if let Some(base) = configured_env_var("BUZZ_RELAY_HTTP") {
+    if let Some(base) = configured_env_var("CREW_RELAY_HTTP") {
         return base.trim_end_matches('/').to_string();
     }
 
-    if let Some(base) = option_env!("BUZZ_DESKTOP_BUILD_RELAY_HTTP") {
+    if let Some(base) = option_env!("CREW_DESKTOP_BUILD_RELAY_HTTP") {
         return base.trim().trim_end_matches('/').to_string();
     }
 

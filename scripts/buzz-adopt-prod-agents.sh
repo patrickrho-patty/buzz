@@ -52,8 +52,8 @@
 #
 # ENV OVERRIDES (read-only against prod; exist so the identity read can be
 # fixture-tested against a scratch keychain without touching real secrets)
-#   BUZZ_KEYCHAIN_SVC   keychain service    (default buzz-desktop)
-#   BUZZ_KEYCHAIN_ACCT  keychain account    (default secrets)
+#   CREW_KEYCHAIN_SVC   keychain service    (default buzz-desktop)
+#   CREW_KEYCHAIN_ACCT  keychain account    (default secrets)
 #
 set -euo pipefail
 
@@ -64,8 +64,8 @@ set -euo pipefail
 SUPPORT="$HOME/Library/Application Support"
 PROD_DIR="$SUPPORT/xyz.patty.griddle.app"
 DEV_DIR="$SUPPORT/xyz.patty.griddle.app.dev"
-KEYCHAIN_SVC="${BUZZ_KEYCHAIN_SVC:-buzz-desktop}"
-KEYCHAIN_ACCT="${BUZZ_KEYCHAIN_ACCT:-secrets}"
+KEYCHAIN_SVC="${CREW_KEYCHAIN_SVC:-buzz-desktop}"
+KEYCHAIN_ACCT="${CREW_KEYCHAIN_ACCT:-secrets}"
 
 DRY_RUN=0
 FORCE=0
@@ -469,11 +469,11 @@ cat <<EOF
        (copies agent:<pubkey> keys buzz-desktop → buzz-desktop-dev).
      - First boot adopts identity.key into the dev keyring, then deletes it.
   2. Worktree launches: worktree-suffixed dev dirs are symlinked to the
-     canonical dev dir by sync_shared_agent_data ONLY when BUZZ_SHARE_IDENTITY=1.
-     If you launch from a worktree, export BUZZ_SHARE_IDENTITY=1 (and
-     BUZZ_PRIVATE_KEY) or the worktree will mint its own duplicate agents.
+     canonical dev dir by sync_shared_agent_data ONLY when CREW_SHARE_IDENTITY=1.
+     If you launch from a worktree, export CREW_SHARE_IDENTITY=1 (and
+     CREW_PRIVATE_KEY) or the worktree will mint its own duplicate agents.
 EOF
-if [[ "${BUZZ_SHARE_IDENTITY:-}" != "1" ]]; then
-  say "  NOTE: BUZZ_SHARE_IDENTITY is not set in this shell — set it for worktree launches."
+if [[ "${CREW_SHARE_IDENTITY:-}" != "1" ]]; then
+  say "  NOTE: CREW_SHARE_IDENTITY is not set in this shell — set it for worktree launches."
 fi
 exit 0

@@ -12,11 +12,11 @@ cargo install --path crates/buzz-cli
 
 | Env Var | Mode | Use Case |
 |---------|------|----------|
-| `BUZZ_PRIVATE_KEY` | NIP-98 Schnorr signature | Agents with a keypair |
+| `CREW_PRIVATE_KEY` | NIP-98 Schnorr signature | Agents with a keypair |
 
 ```bash
 # Private key identity (NIP-98 signed requests)
-export BUZZ_PRIVATE_KEY="nsec1..."
+export CREW_PRIVATE_KEY="nsec1..."
 buzz channels list
 ```
 
@@ -26,7 +26,7 @@ All output is JSON on stdout. Errors are JSON on stderr. Exit codes: 0=ok, 1=use
 
 ```bash
 # Set relay URL (defaults to http://localhost:3000)
-export BUZZ_RELAY_URL="https://relay.example.com"
+export CREW_RELAY_URL="https://relay.example.com"
 
 # Messages
 buzz messages send --channel <uuid> --content "Hello"

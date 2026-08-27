@@ -43,7 +43,7 @@ pub(crate) const AGENTS_MD: &str = include_str!("nest_agents.md");
 
 /// Default SKILL.md content for the crew-cli skill.
 /// Written to ~/.buzz/.agents/skills/crew-cli/SKILL.md on first init.
-const BUZZ_CLI_SKILL_MD: &str = include_str!("nest_skill.md");
+const CREW_CLI_SKILL_MD: &str = include_str!("nest_skill.md");
 
 /// Template content version for AGENTS.md static content (above managed markers).
 /// Bump this when changing `nest_agents.md` to trigger refresh on existing installs.
@@ -202,7 +202,7 @@ pub fn ensure_nest_at(root: &Path) -> Result<(), String> {
     {
         Ok(mut file) => {
             use std::io::Write;
-            file.write_all(BUZZ_CLI_SKILL_MD.as_bytes())
+            file.write_all(CREW_CLI_SKILL_MD.as_bytes())
                 .map_err(|e| format!("write {}: {e}", skill_md.display()))?;
         }
         Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {}
@@ -465,9 +465,9 @@ fn refresh_skill_md_if_stale(root: &Path) -> Result<(), String> {
     let skill_content = if old_is_real_dir {
         // Preserve user-edited content during migration.
         fs::read_to_string(old_skill_dir.join("SKILL.md"))
-            .unwrap_or_else(|_| BUZZ_CLI_SKILL_MD.to_string())
+            .unwrap_or_else(|_| CREW_CLI_SKILL_MD.to_string())
     } else {
-        BUZZ_CLI_SKILL_MD.to_string()
+        CREW_CLI_SKILL_MD.to_string()
     };
 
     // Ensure the canonical .agents skill directory exists.

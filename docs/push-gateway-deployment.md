@@ -4,8 +4,8 @@
 
 ## Network and health
 
-- Public listener: `BUZZ_PUSH_BIND_ADDR` (default `0.0.0.0:8080`). Route `https://push.buzz.xyz` to this port.
-- Private health listener: `BUZZ_PUSH_HEALTH_ADDR` (default `0.0.0.0:8081`). Probe `/_liveness` and `/_readiness`; do not expose this port publicly. The chart has no pod-ingress allowance for 8081; Kubernetes node/kubelet-origin probe traffic is exempt from NetworkPolicy. Add a narrowly selected monitoring source only if the target CNI requires pod-origin health scraping.
+- Public listener: `CREW_PUSH_BIND_ADDR` (default `0.0.0.0:8080`). Route `https://push.buzz.xyz` to this port.
+- Private health listener: `CREW_PUSH_HEALTH_ADDR` (default `0.0.0.0:8081`). Probe `/_liveness` and `/_readiness`; do not expose this port publicly. The chart has no pod-ingress allowance for 8081; Kubernetes node/kubelet-origin probe traffic is exempt from NetworkPolicy. Add a narrowly selected monitoring source only if the target CNI requires pod-origin health scraping.
 - Readiness fails when PostgreSQL authority is unavailable. Graceful shutdown stops accepting new requests before draining in-flight APNs calls.
 
 ## Required configuration
@@ -13,20 +13,20 @@
 | Variable | Purpose |
 |---|---|
 | `DATABASE_URL` | PostgreSQL authority/admission store. Runtime credentials need DML on the six gateway tables, not DDL. |
-| `BUZZ_PUSH_PUBLIC_DELIVERY_URL` | Exact externally signed URL, normally `https://push.buzz.xyz/v1/deliveries/apns`. |
-| `BUZZ_PUSH_MAX_GRANT_LIFETIME_SECONDS` | Maximum delegation capability lifetime (`1..=31536000`). |
-| `BUZZ_PUSH_MAX_INSTALLATION_LIFETIME_SECONDS` | Maximum encrypted-token installation lifetime (default 90 days, max one year). Clients must renew before expiry. |
-| `BUZZ_PUSH_ENABLED_PROFILES` | Comma-separated `buzz-ios-production` and/or `buzz-ios-sandbox`. |
-| `BUZZ_PUSH_APP_ATTEST_APP_ID` | Exact Apple App Attest application identifier (`TEAMID.bundle-id`). |
-| `BUZZ_PUSH_APP_ATTEST_ROOT_CERT_PATH` | Read-only mounted Apple App Attest root certificate PEM. |
-| `BUZZ_PUSH_APNS_KEY_PATH` | Read-only mounted Apple APNs `.p8` provider key. |
-| `BUZZ_PUSH_APNS_KEY_ID` | APNs provider key id. |
-| `BUZZ_PUSH_APNS_TEAM_ID` | Apple developer team id. |
-| `BUZZ_PUSH_APNS_TOPIC` | Buzz iOS bundle id. |
-| `BUZZ_PUSH_GRANT_KEYS` | Capability AEAD keyring, `id:base64-32-bytes[,predecessor...]`; current key first. |
-| `BUZZ_PUSH_TOKEN_KEYS` | Independent token-custody AEAD keyring in the same format. Never reuse grant keys. |
+| `CREW_PUSH_PUBLIC_DELIVERY_URL` | Exact externally signed URL, normally `https://push.buzz.xyz/v1/deliveries/apns`. |
+| `CREW_PUSH_MAX_GRANT_LIFETIME_SECONDS` | Maximum delegation capability lifetime (`1..=31536000`). |
+| `CREW_PUSH_MAX_INSTALLATION_LIFETIME_SECONDS` | Maximum encrypted-token installation lifetime (default 90 days, max one year). Clients must renew before expiry. |
+| `CREW_PUSH_ENABLED_PROFILES` | Comma-separated `buzz-ios-production` and/or `buzz-ios-sandbox`. |
+| `CREW_PUSH_APP_ATTEST_APP_ID` | Exact Apple App Attest application identifier (`TEAMID.bundle-id`). |
+| `CREW_PUSH_APP_ATTEST_ROOT_CERT_PATH` | Read-only mounted Apple App Attest root certificate PEM. |
+| `CREW_PUSH_APNS_KEY_PATH` | Read-only mounted Apple APNs `.p8` provider key. |
+| `CREW_PUSH_APNS_KEY_ID` | APNs provider key id. |
+| `CREW_PUSH_APNS_TEAM_ID` | Apple developer team id. |
+| `CREW_PUSH_APNS_TOPIC` | Buzz iOS bundle id. |
+| `CREW_PUSH_GRANT_KEYS` | Capability AEAD keyring, `id:base64-32-bytes[,predecessor...]`; current key first. |
+| `CREW_PUSH_TOKEN_KEYS` | Independent token-custody AEAD keyring in the same format. Never reuse grant keys. |
 
-Optional endpoint quota policy variables are `BUZZ_PUSH_ENDPOINT_QUOTA_WINDOW_SECONDS` (default `10`, max `86400`) and `BUZZ_PUSH_ENDPOINT_QUOTA_MAX_DELIVERIES` (default `10`, max `10000`). These are Buzz policy hypotheses, not Apple-published limits; tune under load while retaining a hard ceiling.
+Optional endpoint quota policy variables are `CREW_PUSH_ENDPOINT_QUOTA_WINDOW_SECONDS` (default `10`, max `86400`) and `CREW_PUSH_ENDPOINT_QUOTA_MAX_DELIVERIES` (default `10`, max `10000`). These are Buzz policy hypotheses, not Apple-published limits; tune under load while retaining a hard ceiling.
 
 ## Secret and key rotation rules
 
@@ -44,7 +44,7 @@ The service reaps expired challenges and replay rows, idle quota rows, expired/r
 
 ## Metrics and alerting
 
-The gateway serves Prometheus metrics at `GET /metrics` on the **private health listener** (`BUZZ_PUSH_HEALTH_ADDR`, default `0.0.0.0:8081`) — the same port as the probes, never on the public `8080`. All series are sanitized and bounded-cardinality: label values are drawn only from closed sets (the six APNs outcome classes, the fixed admission results, the static error codes already returned to callers, and the readiness causes). No endpoint, device token, relay pubkey, request id, or any request-scoped identifier is ever used as a label.
+The gateway serves Prometheus metrics at `GET /metrics` on the **private health listener** (`CREW_PUSH_HEALTH_ADDR`, default `0.0.0.0:8081`) — the same port as the probes, never on the public `8080`. All series are sanitized and bounded-cardinality: label values are drawn only from closed sets (the six APNs outcome classes, the fixed admission results, the static error codes already returned to callers, and the readiness causes). No endpoint, device token, relay pubkey, request id, or any request-scoped identifier is ever used as a label.
 
 | Metric | Type | Labels | Meaning |
 |---|---|---|---|
@@ -64,7 +64,7 @@ Alerting rules ship as an opt-in prometheus-operator `PrometheusRule` (`promethe
 
 | Alert | Fires when | Severity | Action |
 |---|---|---|---|
-| `PushGatewayConfigurationFault` | any `configuration_fault` outcomes for 10m | critical | APNs provider token/topic is unhealthy. Check the `.p8` key, `BUZZ_PUSH_APNS_KEY_ID`, `..._TEAM_ID`, and `..._TOPIC`. No endpoints are being invalidated, but nothing is delivering. |
+| `PushGatewayConfigurationFault` | any `configuration_fault` outcomes for 10m | critical | APNs provider token/topic is unhealthy. Check the `.p8` key, `CREW_PUSH_APNS_KEY_ID`, `..._TEAM_ID`, and `..._TOPIC`. No endpoints are being invalidated, but nothing is delivering. |
 | `PushGatewayAdmissionUnavailable` | any admission `unavailable` for 5m | critical | PostgreSQL authority store is unreachable. Check DB connectivity and the pod's `postgresEgressCidrs` NetworkPolicy. |
 | `PushGatewayReadinessAuthorityFailing` | readiness `authority` failures for 5m | warning | Replicas are being pulled from the Service on DB check failure. Fix DB health before capacity drops below the PodDisruptionBudget. |
 | `PushGatewayReaperFailing` | reaper failed ≥2 times within 30m (runs every 5m) | warning | Expired reservations aren't being swept, growing the bounded-until-expiry window. Check DB write availability. |
@@ -72,7 +72,7 @@ Alerting rules ship as an opt-in prometheus-operator `PrometheusRule` (`promethe
 
 ## Relay configuration
 
-Relays default `BUZZ_PUSH_GATEWAY_DELIVERY_URL` to the exact public delivery URL
+Relays default `CREW_PUSH_GATEWAY_DELIVERY_URL` to the exact public delivery URL
 `https://push.buzz.xyz/v1/deliveries/apns`. Operators can override it with
 another exact HTTPS `/v1/deliveries/apns` URL, or explicitly disable NIP-PL push
 by setting the variable to an empty string. When enabled, the relay advertises

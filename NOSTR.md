@@ -29,7 +29,7 @@ Connect any NIP-29 client straight to the relay.
 
 ```bash
 # 1. (Optional) Enable pubkey allowlist — must be set BEFORE relay startup
-export BUZZ_PUBKEY_ALLOWLIST=true
+export CREW_PUBKEY_ALLOWLIST=true
 
 # 2. Start the relay (auto-starts Docker services and runs migrations)
 just relay &                         # relay on :3000
@@ -84,7 +84,7 @@ PGPASSWORD=buzz_dev psql -h localhost -U buzz -d buzz -c \
 
 ### Pubkey Allowlist
 
-When `BUZZ_PUBKEY_ALLOWLIST=true`, NIP-42 connections that authenticate with only a pubkey
+When `CREW_PUBKEY_ALLOWLIST=true`, NIP-42 connections that authenticate with only a pubkey
 (no API token) are checked against the `pubkey_allowlist` table. This lets you open the
 relay to specific external Nostr identities without granting full access.
 
@@ -213,7 +213,7 @@ nak req -k 1059 --tag "p=<your-hex-pubkey>" \
 
 ## Relay Membership (NIP-43)
 
-When `BUZZ_REQUIRE_RELAY_MEMBERSHIP=true`, every authenticated connection is checked against the
+When `CREW_REQUIRE_RELAY_MEMBERSHIP=true`, every authenticated connection is checked against the
 `relay_members` table. In today's single-community deployment this is the relay-wide member list; in multi-community mode the same rule is scoped to the host-derived community. Only pubkeys with a row for that community may use that community. The relay owner
 is bootstrapped automatically from `RELAY_OWNER_PUBKEY` on startup.
 
@@ -262,7 +262,7 @@ docker compose exec relay buzz-admin list-members
 |----------|-------|
 | `DATABASE_URL` | Postgres connection string |
 | `REDIS_URL` | Redis connection string |
-| `BUZZ_RELAY_PRIVATE_KEY` | Hex private key — required to sign kind:13534 events |
+| `CREW_RELAY_PRIVATE_KEY` | Hex private key — required to sign kind:13534 events |
 
 ### NIP-43 Admin Events (WebSocket)
 
@@ -334,9 +334,9 @@ but only admins/owners can set it. Full spec:
 
 | Variable | Required | Default | Description |
 |----------|:--------:|---------|-------------|
-| `BUZZ_PUBKEY_ALLOWLIST` | ❌ | `false` | Enable pubkey allowlist for NIP-42 pubkey-only auth |
-| `BUZZ_RELAY_PRIVATE_KEY` | ❌ | random | Hex secret key for relay signing (discovery events, system messages) |
-| `BUZZ_REQUIRE_AUTH_TOKEN` | ❌ | `false` | Require authenticated NIP-42 for all connections |
+| `CREW_PUBKEY_ALLOWLIST` | ❌ | `false` | Enable pubkey allowlist for NIP-42 pubkey-only auth |
+| `CREW_RELAY_PRIVATE_KEY` | ❌ | random | Hex secret key for relay signing (discovery events, system messages) |
+| `CREW_REQUIRE_AUTH_TOKEN` | ❌ | `false` | Require authenticated NIP-42 for all connections |
 
 ---
 

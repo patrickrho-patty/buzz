@@ -619,11 +619,11 @@ const WELCOME_CHANNEL_ENSURED_STORAGE_KEY_PREFIX =
   "buzz-welcome-channel-ensured.v2:";
 const ONBOARDING_COMPLETION_STORAGE_KEY_PREFIX = "buzz-onboarding-complete.v1:";
 const DEFAULT_MOCK_PUBKEY = "deadbeef".repeat(8);
-// The relay HTTP/WS URLs follow BUZZ_E2E_RELAY_URL (same env var seed.ts reads),
+// The relay HTTP/WS URLs follow CREW_E2E_RELAY_URL (same env var seed.ts reads),
 // so a suite pointed at an isolated relay (e.g. the read-model harness on :3030)
 // uses it without per-spec wiring. Falls back to the shared dev relay when unset.
 const DEFAULT_RELAY_HTTP_URL =
-  process.env.BUZZ_E2E_RELAY_URL ?? "http://localhost:3000";
+  process.env.CREW_E2E_RELAY_URL ?? "http://localhost:3000";
 const DEFAULT_RELAY_WS_URL = DEFAULT_RELAY_HTTP_URL.replace(/^http/, "ws");
 
 function cloneEngramEntry(entry: MockEngramEntry): MockEngramEntry {
@@ -900,18 +900,18 @@ export async function installBridge(page: Page, options: BridgeOptions) {
       });
 
       const testWindow = window as Window & {
-        __BUZZ_E2E__?: Record<string, unknown>;
-        __BUZZ_E2E_APP_BADGE_COUNT__?: number;
-        __BUZZ_E2E_APP_BADGE_STATE__?: string;
-        __BUZZ_E2E_CLICK_NOTIFICATION__?: (index: number) => boolean;
-        __BUZZ_E2E_NOTIFICATIONS__?: Array<{
+        __CREW_E2E__?: Record<string, unknown>;
+        __CREW_E2E_APP_BADGE_COUNT__?: number;
+        __CREW_E2E_APP_BADGE_STATE__?: string;
+        __CREW_E2E_CLICK_NOTIFICATION__?: (index: number) => boolean;
+        __CREW_E2E_NOTIFICATIONS__?: Array<{
           body: string | null;
           title: string;
         }>;
       };
-      const currentConfig = testWindow.__BUZZ_E2E__ ?? {};
+      const currentConfig = testWindow.__CREW_E2E__ ?? {};
 
-      testWindow.__BUZZ_E2E__ = {
+      testWindow.__CREW_E2E__ = {
         ...currentConfig,
         identity: bridgeIdentity ?? currentConfig.identity,
         mock,
@@ -921,9 +921,9 @@ export async function installBridge(page: Page, options: BridgeOptions) {
         autoConnectDefaultRelay:
           autoConnectDefaultRelay ?? currentConfig.autoConnectDefaultRelay,
       };
-      testWindow.__BUZZ_E2E_APP_BADGE_COUNT__ = 0;
-      testWindow.__BUZZ_E2E_APP_BADGE_STATE__ = "none";
-      testWindow.__BUZZ_E2E_CLICK_NOTIFICATION__ = (index: number) => {
+      testWindow.__CREW_E2E_APP_BADGE_COUNT__ = 0;
+      testWindow.__CREW_E2E_APP_BADGE_STATE__ = "none";
+      testWindow.__CREW_E2E_CLICK_NOTIFICATION__ = (index: number) => {
         const notification = notificationInstances[index];
         if (!notification) {
           return false;
@@ -934,7 +934,7 @@ export async function installBridge(page: Page, options: BridgeOptions) {
         notification.onclick?.(event);
         return true;
       };
-      testWindow.__BUZZ_E2E_NOTIFICATIONS__ = notificationLog;
+      testWindow.__CREW_E2E_NOTIFICATIONS__ = notificationLog;
     },
     {
       identity,
@@ -977,7 +977,7 @@ export async function installRelayBridge(
   await installBridge(page, {
     mode: "relay",
     user,
-    // Thread BUZZ_E2E_RELAY_URL into BOTH transports. The app defaults these to
+    // Thread CREW_E2E_RELAY_URL into BOTH transports. The app defaults these to
     // :3000 in relay mode; without explicit wiring HTTP queries (channel list,
     // feed) miss an isolated relay and surface as "Failed to fetch".
     relayHttpUrl: DEFAULT_RELAY_HTTP_URL,

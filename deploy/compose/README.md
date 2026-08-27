@@ -16,7 +16,7 @@ For a public VPS with automatic Let's Encrypt certificates:
 
 ```bash
 cd deploy/compose
-BUZZ_COMPOSE_TLS=true ./run.sh start
+CREW_COMPOSE_TLS=true ./run.sh start
 ```
 
 The bootstrap script should eventually replace manual `.env` editing for normal
@@ -27,19 +27,19 @@ keypair.
 
 - Requires Docker Compose v2.24.4 or newer; the TLS override uses Compose's
   `!reset` tag to remove the direct relay port when Caddy terminates HTTPS.
-- Default `BUZZ_IMAGE` tracks `ghcr.io/block/buzz:main` for early testing. Pin it to `ghcr.io/block/buzz:sha-<7>` or a semver release tag for production once available.
-- Keep `BUZZ_RELAY_PRIVATE_KEY`, `BUZZ_GIT_HOOK_HMAC_SECRET`, database/Redis,
+- Default `CREW_IMAGE` tracks `ghcr.io/block/buzz:main` for early testing. Pin it to `ghcr.io/block/buzz:sha-<7>` or a semver release tag for production once available.
+- Keep `CREW_RELAY_PRIVATE_KEY`, `CREW_GIT_HOOK_HMAC_SECRET`, database/Redis,
   and S3 secrets stable across restarts.
 - `RELAY_OWNER_PUBKEY` is intentionally not prefixed with `BUZZ_`; it must be a
   64-character hex Nostr pubkey when closed relay mode is enabled.
-- `BUZZ_AUTO_MIGRATE` is opt-in. Set `BUZZ_AUTO_MIGRATE=true` or run
+- `CREW_AUTO_MIGRATE` is opt-in. Set `CREW_AUTO_MIGRATE=true` or run
   `buzz-admin migrate` before starting the relay when bootstrapping a fresh
   database. Auto-migration requires an image that includes embedded SQLx
   migrations.
 - The stack uses Postgres, Redis, MinIO, and a git data volume because
   those are real Buzz dependencies today. Minimal mode can simplify this later.
 - The bundled Compose stack fixes the relay endpoint to `http://minio:9000` and
-  `BUZZ_S3_ADDRESSING_STYLE=path`: Docker DNS resolves `minio`, not
+  `CREW_S3_ADDRESSING_STYLE=path`: Docker DNS resolves `minio`, not
   `<bucket>.minio`. It is not configurable for an external S3 provider through
   `.env`; use the Helm chart or a custom Compose configuration for providers
   such as new Railway Storage Buckets that require `virtual` addressing.
@@ -56,6 +56,6 @@ cp .env.example .env
 $EDITOR .env
 ./run.sh config
 ./run.sh start
-curl -fsS "http://127.0.0.1:$(grep -E '^BUZZ_HTTP_PORT=' .env | cut -d= -f2-)/_liveness"
+curl -fsS "http://127.0.0.1:$(grep -E '^CREW_HTTP_PORT=' .env | cut -d= -f2-)/_liveness"
 ./run.sh status
 ```

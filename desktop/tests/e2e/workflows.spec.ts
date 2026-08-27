@@ -368,9 +368,9 @@ test("rejects a stale card toggle without overwriting a newer edit", async ({
     .first();
 
   await page.evaluate(async (name) => {
-    const invoke = window.__BUZZ_E2E_INVOKE_MOCK_COMMAND__;
+    const invoke = window.__CREW_E2E_INVOKE_MOCK_COMMAND__;
     if (!invoke) throw new Error("mock command bridge unavailable");
-    const createCall = [...(window.__BUZZ_E2E_COMMAND_PAYLOADS__ ?? [])]
+    const createCall = [...(window.__CREW_E2E_COMMAND_PAYLOADS__ ?? [])]
       .reverse()
       .find((call) => call.command === "create_workflow");
     const channelId = (
@@ -404,9 +404,9 @@ test("rejects a stale card toggle without overwriting a newer edit", async ({
       .filter({ hasText: "workflow changed since it was loaded" }),
   ).toBeVisible();
   const authoritativeName = await page.evaluate(async () => {
-    const invoke = window.__BUZZ_E2E_INVOKE_MOCK_COMMAND__;
+    const invoke = window.__CREW_E2E_INVOKE_MOCK_COMMAND__;
     if (!invoke) throw new Error("mock command bridge unavailable");
-    const createCall = [...(window.__BUZZ_E2E_COMMAND_PAYLOADS__ ?? [])]
+    const createCall = [...(window.__CREW_E2E_COMMAND_PAYLOADS__ ?? [])]
       .reverse()
       .find((call) => call.command === "create_workflow");
     const channelId = (
@@ -427,9 +427,9 @@ test("reports a rejected workflow status change", async ({ page }) => {
   await navigateToWorkflows(page);
   await createWorkflow(page, workflowName);
   await page.evaluate(() => {
-    window.__BUZZ_E2E__ ??= {};
-    window.__BUZZ_E2E__.mock ??= {};
-    window.__BUZZ_E2E__.mock.workflowUpdateError = "relay refused the update";
+    window.__CREW_E2E__ ??= {};
+    window.__CREW_E2E__.mock ??= {};
+    window.__CREW_E2E__.mock.workflowUpdateError = "relay refused the update";
   });
 
   const workflowCard = page
@@ -598,9 +598,9 @@ test("rejected deletion keeps the confirmation, editor, and draft", async ({
     ),
   );
   await page.evaluate(() => {
-    window.__BUZZ_E2E__ ??= {};
-    window.__BUZZ_E2E__.mock ??= {};
-    window.__BUZZ_E2E__.mock.workflowDeleteError = "relay refused deletion";
+    window.__CREW_E2E__ ??= {};
+    window.__CREW_E2E__.mock ??= {};
+    window.__CREW_E2E__.mock.workflowDeleteError = "relay refused deletion";
   });
 
   await editor.getByRole("button", { name: "Workflow actions" }).click();
@@ -851,7 +851,7 @@ test("stale editor save preserves the local draft and reports the conflict", asy
   await dialog.getByRole("button", { name: "Save workflow name" }).click();
 
   await page.evaluate(async () => {
-    const invoke = window.__BUZZ_E2E_INVOKE_MOCK_COMMAND__;
+    const invoke = window.__CREW_E2E_INVOKE_MOCK_COMMAND__;
     if (!invoke) throw new Error("mock command bridge unavailable");
     const workflowId = new URL(window.location.href).hash.match(
       /workflows\/([^?]+)/,
@@ -880,7 +880,7 @@ test("unsupported workflow opens canonical YAML without a fabricated sequence", 
   const workflowName = `unsupported_detail_${Date.now()}`;
   await navigateToWorkflows(page);
   const workflowId = await page.evaluate(async (name) => {
-    const invoke = window.__BUZZ_E2E_INVOKE_MOCK_COMMAND__;
+    const invoke = window.__CREW_E2E_INVOKE_MOCK_COMMAND__;
     if (!invoke) throw new Error("mock command bridge unavailable");
     const workflow = (await invoke("create_workflow", {
       channelId: "94a444a4-c0a3-5966-ab05-530c6ddc2301",
@@ -970,7 +970,7 @@ test("card click opens the animated trigger inspector, triggers a run, and hides
   ).toHaveAttribute("aria-pressed", "true");
   const triggerCallsBefore = await page.evaluate(
     () =>
-      window.__BUZZ_E2E_COMMAND_PAYLOADS__?.filter(
+      window.__CREW_E2E_COMMAND_PAYLOADS__?.filter(
         (call) => call.command === "trigger_workflow",
       ).length ?? 0,
   );
@@ -980,7 +980,7 @@ test("card click opens the animated trigger inspector, triggers a run, and hides
     .poll(async () =>
       page.evaluate(
         () =>
-          window.__BUZZ_E2E_COMMAND_PAYLOADS__?.filter(
+          window.__CREW_E2E_COMMAND_PAYLOADS__?.filter(
             (call) => call.command === "trigger_workflow",
           ).length ?? 0,
       ),

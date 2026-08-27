@@ -74,7 +74,7 @@ Multi-hour session. Captured the whole arc end-to-end so nothing is lost at hand
 
 ## Desktop branding — final fixes after iteration
 - **`desktop/src-tauri/Info.plist`**: `CFBundleDisplayName: "Buzz"` → `"Griddle"`; `CFBundleName: "Buzz"` → `"Griddle"`. (productName alone in tauri.conf.json didn't update macOS display name.)
-- **`desktop/src-tauri/src/app_state_keyring.rs`**: keychain service `"buzz-desktop"` → `"griddle-desktop"`. env var `BUZZ_DEV_KEYRING_SERVICE` → `GRIDDLE_DEV_KEYRING_SERVICE`. Touched dozens of `.rs` files to update service name + lockfile path (`/tmp/buzz-keychain-` → `/tmp/griddle-keychain-`).
+- **`desktop/src-tauri/src/app_state_keyring.rs`**: keychain service `"buzz-desktop"` → `"griddle-desktop"`. env var `CREW_DEV_KEYRING_SERVICE` → `CREW_DEV_KEYRING_SERVICE`. Touched dozens of `.rs` files to update service name + lockfile path (`/tmp/buzz-keychain-` → `/tmp/griddle-keychain-`).
 - **Bundle identifier**: `xyz.block.buzz.app` → `xyz.patty.griddle.app` (and `.dev` variant). Affects keychain layout + macOS app-data dir paths.
 - **`desktop/index.html`** (caught late — separate frontend build): `<title></title>` → `<title>Griddle</title>`; `/buzz.svg` → `/griddle.svg`. File renamed.
 - **`desktop/public/landing/buzz-wordmark.png`** (caught late — public asset dir, file path): replaced PNG, updated `MachineOnboardingFlow.tsx` `alt` + `src`. The new wordmark is `griddle_logo_1.png` (the icon mark) at 280×280 centered on 777x326 canvas. Initially I used `griddle_logo_2.png` (the "Griddle by Patty" lockup) which looked awful — cropped the speech-bubble tail; re-did with `griddle_logo_1.png` clean.
@@ -89,7 +89,7 @@ Multi-hour session. Captured the whole arc end-to-end so nothing is lost at hand
 ## Final tooling saved
 - `scripts/install-griddle.sh` — one-command reinstall from build output over `/Applications/Griddle.app`. Stops running process, replaces app, ad-hoc re-signs. DMG version preserves notarization ticket; in-place install does not.
 - `~/griddle-backups/`:
-  - `griddle-identity-key.txt` — relay BUZZ_RELAY_PRIVATE_KEY
+  - `griddle-identity-key.txt` — relay CREW_RELAY_PRIVATE_KEY
   - `griddle-owner-key.pem` + `griddle-owner-privkey-hex.txt` — owner Nostr keypair
   - `griddle-secrets-backup.yaml` — full griddle-buzz-relay Secret (relay key + bundled PG/Redis/MinIO creds)
   - `mint-invite-nip98.py` — owner-side invite minter
@@ -158,7 +158,7 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 
 ## 04:30 KST — Milestone: relay-side OIDC implementation compiles clean
 - New files: `crates/buzz-relay/src/oidc.rs` (engine: PKCE, code exchange, JWKS validation w/ 10-min cache, AES-256-GCM key wrapping, KeycloakAdmin client w/ token cache, 30s membership sync loop) + `crates/buzz-relay/src/api/oidc.rs` (GET /auth/oidc/start, POST /auth/oidc/complete).
-- Config: new `OidcConfig` struct (all-or-nothing env vars `BUZZ_OIDC_ISSUER/DESKTOP_CLIENT_ID/REDIRECT_URI/BRIDGE_CLIENT_ID/BRIDGE_CLIENT_SECRET/KEY_WRAP_SECRET`), wired into `from_env` + `Ok(Self{..})` init.
+- Config: new `OidcConfig` struct (all-or-nothing env vars `CREW_OIDC_ISSUER/DESKTOP_CLIENT_ID/REDIRECT_URI/BRIDGE_CLIENT_ID/BRIDGE_CLIENT_SECRET/KEY_WRAP_SECRET`), wired into `from_env` + `Ok(Self{..})` init.
 - Routes registered in router.rs; sync loop spawned in main.rs when enabled.
 - Deps added (workspace + buzz-relay): jsonwebtoken 9, aes-gcm 0.10, once_cell, urlencoding; reqwest += "form" feature.
 - Gotchas hit & fixed: nostr::prelude glob shadows `rand` (resolved via `::rand::`), rand 0.10 API (`random()` not `gen_range`), aes-gcm `KeyInit::new` ambiguity vs sha2 Digest glob (resolved `<Aes256Gcm as aes_gcm::KeyInit>::new`), jsonwebtoken 9 `set_issuer/set_audience` + `DecodingKey::from_jwk` Result, JwkSet `common.key_algorithm`, reqwest missing form feature.
@@ -170,11 +170,11 @@ Capture complete. Ready for next session to continue from `/Users/patrickrho/pro
 - Keycloak: `griddle-desktop` public client created (PKCE S256, redirect `griddle://auth/callback` + localhost dev fallback).
 - Unit tests: 8/8 pass (PKCE RFC 7636 known-answer, AES-GCM roundtrip + tamper detection, KcUser parsing).
 - Desktop: `oidcClient.ts` (browser flow w/ state validation, 3-min timeout, cancel), "Sign in with Patty" primary CTA, `griddle://auth/callback` deep-link scheme registered (tauri.conf + deep_link.rs + lib.rs argv forward). tsc + biome clean.
-- Deploy: image v0.2.0 (GH Actions, ~25 min), helm upgrade w/ BUZZ_OIDC_* env (relay.extraEnv + griddle-oidc secret), RWO deadlock broken via scale 0→1.
+- Deploy: image v0.2.0 (GH Actions, ~25 min), helm upgrade w/ CREW_OIDC_* env (relay.extraEnv + griddle-oidc secret), RWO deadlock broken via scale 0→1.
 - Verified live: sync loop started (30s); GET /auth/oidc/start returns proper Keycloak URL (PKCE S256, griddle-desktop client); POST /auth/oidc/complete correctly 401s bad codes via Keycloak.
 - Desktop rebuilt + installed to /Applications (ad-hoc signed; CFBundleURLSchemes = [buzz, griddle]).
 - kubectl context gotcha: context had drifted to `orbstack` — must use `kubectl config use-context arn:aws:eks:ap-northeast-2:361645878435:cluster/rho-cluster`.
-- CORS: relay permissive when BUZZ_CORS_ORIGINS unset — desktop fetch to relay works.
+- CORS: relay permissive when CREW_CORS_ORIGINS unset — desktop fetch to relay works.
 - E2E pending user test: launch /Applications/Griddle.app → "Sign in with Patty" → browser Google SSO → auto-return.
 
 ## 05:35 KST — Fixes: InvalidAlgorithm, manual buttons, keychain prompts

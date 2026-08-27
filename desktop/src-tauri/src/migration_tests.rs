@@ -443,7 +443,7 @@ fn canonical_dev_data_dir_returns_self_for_canonical_instance() {
     // When the current app data dir IS the canonical dev identifier,
     // canonical_dev_data_dir returns the exact same path — the caller
     // (sync_shared_agent_data) uses this equality to skip the sync.
-    // The env-var guards (BUZZ_SHARE_IDENTITY, BUZZ_PRIVATE_KEY)
+    // The env-var guards (CREW_SHARE_IDENTITY, CREW_PRIVATE_KEY)
     // require a live Tauri AppHandle and are covered by integration
     // testing only.
     let current = PathBuf::from("/Users/me/Library/Application Support/xyz.patty.griddle.app.dev");

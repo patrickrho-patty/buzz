@@ -103,7 +103,7 @@ test("mobile pairing starts on demand and reveals the QR code", async ({
   expect(
     await page.evaluate(
       () =>
-        (window.__BUZZ_E2E_COMMAND_LOG__ ?? []).filter(
+        (window.__CREW_E2E_COMMAND_LOG__ ?? []).filter(
           (entry) => entry.command === "start_pairing",
         ).length,
     ),
@@ -217,7 +217,7 @@ test("mobile pairing starts on demand and reveals the QR code", async ({
   expect(
     await page.evaluate(
       () =>
-        (window.__BUZZ_E2E_COMMAND_LOG__ ?? []).filter(
+        (window.__CREW_E2E_COMMAND_LOG__ ?? []).filter(
           (entry) => entry.command === "start_pairing",
         ).length,
     ),

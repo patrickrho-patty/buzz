@@ -1150,44 +1150,44 @@ function updateMockRelayMembershipFromAdminEvent(event: RelayEvent): boolean {
 
 declare global {
   interface Window {
-    __BUZZ_E2E__?: E2eConfig;
-    __BUZZ_E2E_WHOAMI_EMAIL__?: string;
-    __BUZZ_E2E_COMMANDS__?: string[];
-    __BUZZ_E2E_COMMAND_PAYLOADS__?: Array<{
+    __CREW_E2E__?: E2eConfig;
+    __CREW_E2E_WHOAMI_EMAIL__?: string;
+    __CREW_E2E_COMMANDS__?: string[];
+    __CREW_E2E_COMMAND_PAYLOADS__?: Array<{
       command: string;
       payload: unknown;
     }>;
-    __BUZZ_E2E_COMMAND_LOG__?: Array<{
+    __CREW_E2E_COMMAND_LOG__?: Array<{
       command: string;
       payload: unknown;
     }>;
     /** Release a mock media proxy held at port 0 and return its ready port. */
-    __BUZZ_E2E_RELEASE_MEDIA_PROXY__?: () => number;
+    __CREW_E2E_RELEASE_MEDIA_PROXY__?: () => number;
     /** Release mock send events that were stored but withheld from live subscribers. */
-    __BUZZ_E2E_RELEASE_SEND_MESSAGE_LIVE_ECHO__?: () => number;
-    __BUZZ_E2E_EMIT_MEDIA_UPLOAD_PHASE__?: (input: {
+    __CREW_E2E_RELEASE_SEND_MESSAGE_LIVE_ECHO__?: () => number;
+    __CREW_E2E_EMIT_MEDIA_UPLOAD_PHASE__?: (input: {
       id: string;
       phase: string;
     }) => Promise<void>;
-    __BUZZ_E2E_EMIT_MEDIA_UPLOAD_PROGRESS__?: (input: {
+    __CREW_E2E_EMIT_MEDIA_UPLOAD_PROGRESS__?: (input: {
       id: string;
       sent: number;
       total: number;
     }) => Promise<void>;
-    __BUZZ_E2E_EMIT_MOCK_HUDDLE_TTS_SPEAKER__?: (payload: {
+    __CREW_E2E_EMIT_MOCK_HUDDLE_TTS_SPEAKER__?: (payload: {
       pubkey: string | null;
       level: number;
     }) => Promise<void>;
-    __BUZZ_E2E_WEBVIEW_ZOOM__?: number;
-    __BUZZ_E2E_HAS_MOCK_LIVE_SUBSCRIPTION__?: (input: {
+    __CREW_E2E_WEBVIEW_ZOOM__?: number;
+    __CREW_E2E_HAS_MOCK_LIVE_SUBSCRIPTION__?: (input: {
       channelName: string;
       kind?: number;
     }) => boolean;
-    __BUZZ_E2E_HAS_MOCK_OWNER_KIND_SUBSCRIPTION__?: (input: {
+    __CREW_E2E_HAS_MOCK_OWNER_KIND_SUBSCRIPTION__?: (input: {
       ownerPubkey: string;
       kind: number;
     }) => boolean;
-    __BUZZ_E2E_EMIT_MOCK_MESSAGE__?: (input: {
+    __CREW_E2E_EMIT_MOCK_MESSAGE__?: (input: {
       channelName: string;
       content: string;
       parentEventId?: string | null;
@@ -1204,7 +1204,7 @@ declare global {
     /** Prepend `count` synthetic older messages to a channel's mock store so
      *  an older-history fetch has something to paginate. Mirrors how the real
      *  relay backfills history. Returns the created events. */
-    __BUZZ_E2E_PREPEND_MOCK_HISTORY__?: (input: {
+    __CREW_E2E_PREPEND_MOCK_HISTORY__?: (input: {
       channelName: string;
       count: number;
       startIndex?: number;
@@ -1212,48 +1212,48 @@ declare global {
       createdAtStart?: number;
       emit?: boolean;
     }) => RelayEvent[];
-    __BUZZ_E2E_EMIT_MOCK_TYPING__?: (input: {
+    __CREW_E2E_EMIT_MOCK_TYPING__?: (input: {
       channelName: string;
       createdAt?: number;
       pubkey?: string;
       threadHeadId?: string;
     }) => RelayEvent;
-    __BUZZ_E2E_INVOKE_MOCK_COMMAND__?: (
+    __CREW_E2E_INVOKE_MOCK_COMMAND__?: (
       command: string,
       payload?: Record<string, unknown>,
     ) => Promise<unknown>;
-    __BUZZ_E2E_EMIT_TAURI_EVENT__?: (
+    __CREW_E2E_EMIT_TAURI_EVENT__?: (
       event: string,
       payload: unknown,
     ) => Promise<void>;
-    __BUZZ_E2E_SET_MOCK_HUDDLE_SNAPSHOT__?: (input: {
+    __CREW_E2E_SET_MOCK_HUDDLE_SNAPSHOT__?: (input: {
       members: MockHuddleMemberSeed[];
       transcriptionEnabled: boolean;
     }) => Promise<void>;
-    __BUZZ_E2E_PUSH_MOCK_FEED_ITEM__?: (item: RawFeedItem) => RawFeedItem;
+    __CREW_E2E_PUSH_MOCK_FEED_ITEM__?: (item: RawFeedItem) => RawFeedItem;
     /** Replace an existing feed item by id (or push if not found) and fire the updated event. */
-    __BUZZ_E2E_REPLACE_MOCK_FEED_ITEM__?: (
+    __CREW_E2E_REPLACE_MOCK_FEED_ITEM__?: (
       oldId: string,
       item: RawFeedItem,
     ) => RawFeedItem;
-    __BUZZ_E2E_SIGNED_EVENTS__?: Array<{
+    __CREW_E2E_SIGNED_EVENTS__?: Array<{
       content: string;
       createdAt?: number;
       kind: number;
       tags: string[][];
     }>;
     /** Project-scoped events accepted by the mock relay. */
-    __BUZZ_E2E_ACCEPTED_PROJECT_EVENTS__?: Array<{
+    __CREW_E2E_ACCEPTED_PROJECT_EVENTS__?: Array<{
       content: string;
       kind: number;
       tags: string[][];
     }>;
     /** Project event kinds rejected once, in order, to exercise retry flows. */
-    __BUZZ_E2E_REJECT_PROJECT_EVENT_KINDS__?: number[];
+    __CREW_E2E_REJECT_PROJECT_EVENT_KINDS__?: number[];
     /** Makes the mock relay reject project announcements as an unknown kind. */
-    __BUZZ_E2E_UNSUPPORTED_PROJECT_ANNOUNCEMENTS__?: boolean;
+    __CREW_E2E_UNSUPPORTED_PROJECT_ANNOUNCEMENTS__?: boolean;
     /** Project event kinds accepted once but reported as failed to test lost acknowledgements. */
-    __BUZZ_E2E_FAIL_PROJECT_EVENT_ACK_KINDS__?: number[];
+    __CREW_E2E_FAIL_PROJECT_EVENT_ACK_KINDS__?: number[];
     /**
      * Extra project events appended to the mock store on first access.
      * Use to seed standalone repositories (kind 30617) or other project-scoped
@@ -1261,7 +1261,7 @@ declare global {
      * Events must be complete RelayEvent shapes; id is a required field so that
      * id-keyed queries (e.g. lost-ACK recovery) can match them.
      */
-    __BUZZ_E2E_EXTRA_PROJECT_EVENTS__?: Array<{
+    __CREW_E2E_EXTRA_PROJECT_EVENTS__?: Array<{
       id: string;
       kind: number;
       pubkey: string;
@@ -1270,7 +1270,7 @@ declare global {
       tags: string[][];
     }>;
     /** Structured merge error returned by the mock native merge command. */
-    __BUZZ_E2E_PROJECT_MERGE_ERROR__?: {
+    __CREW_E2E_PROJECT_MERGE_ERROR__?: {
       code: string;
       message: string;
       recovery: {
@@ -1280,16 +1280,16 @@ declare global {
       } | null;
     };
     /** Overrides the first mock repository owner for delegated-owner tests. */
-    __BUZZ_E2E_PROJECT_OWNER_OVERRIDE__?: string;
+    __CREW_E2E_PROJECT_OWNER_OVERRIDE__?: string;
     /** Project history kinds rejected with CLOSED for aggregate-query tests. */
-    __BUZZ_E2E_REJECT_PROJECT_QUERY_KINDS__?: number[];
+    __CREW_E2E_REJECT_PROJECT_QUERY_KINDS__?: number[];
     /** Captured aggregate project-history filters for request-count assertions. */
-    __BUZZ_E2E_PROJECT_QUERY_FILTERS__?: MockFilter[];
+    __CREW_E2E_PROJECT_QUERY_FILTERS__?: MockFilter[];
     /** Optional local repository snapshot returned for project branch tests. */
-    __BUZZ_E2E_PROJECT_LOCAL_REPO_SNAPSHOT__?: unknown;
+    __CREW_E2E_PROJECT_LOCAL_REPO_SNAPSHOT__?: unknown;
     /** Optional bounded file contents returned by repository content reads. */
-    __BUZZ_E2E_PROJECT_REPO_FILE_CONTENTS__?: Record<string, string | null>;
-    __BUZZ_E2E_PROJECT_REPO_SYNC_STATUS__?: {
+    __CREW_E2E_PROJECT_REPO_FILE_CONTENTS__?: Record<string, string | null>;
+    __CREW_E2E_PROJECT_REPO_SYNC_STATUS__?: {
       local_path: string | null;
       local_branch: string | null;
       local_branches: string[];
@@ -1308,26 +1308,26 @@ declare global {
       can_pull: boolean;
       pull_block_reason: string | null;
     };
-    __BUZZ_E2E_SET_RELAY_CONNECTION_STATE__?: (state: ConnectionState) => void;
-    __BUZZ_E2E_GET_RELAY_CONNECTION_STATE__?: () => ConnectionState;
+    __CREW_E2E_SET_RELAY_CONNECTION_STATE__?: (state: ConnectionState) => void;
+    __CREW_E2E_GET_RELAY_CONNECTION_STATE__?: () => ConnectionState;
     /** Queue deterministic mock AUTH outcomes, consumed in order. */
-    __BUZZ_E2E_QUEUE_AUTH_RESPONSES__?: (
+    __CREW_E2E_QUEUE_AUTH_RESPONSES__?: (
       responses: Array<{ success: boolean; message: string }>,
     ) => void;
     /** Inject CLOSED into every active mock live subscription. */
-    __BUZZ_E2E_CLOSE_LIVE_SUBSCRIPTIONS__?: (reason: string) => number;
+    __CREW_E2E_CLOSE_LIVE_SUBSCRIPTIONS__?: (reason: string) => number;
     /** Queue CLOSED responses for channel history REQs. */
-    __BUZZ_E2E_QUEUE_CHANNEL_HISTORY_CLOSES__?: (reasons: string[]) => void;
-    __BUZZ_E2E_SET_STALL_WEBSOCKET_SENDS__?: (stall: boolean) => void;
-    __BUZZ_E2E_DISCONNECT_MOCK_WEBSOCKETS__?: () => number;
-    __BUZZ_E2E_RESTART_MOCK_WEBSOCKETS__?: () => number;
-    __BUZZ_E2E_SET_MOCK_WEBSOCKET_UNAVAILABLE__?: (
+    __CREW_E2E_QUEUE_CHANNEL_HISTORY_CLOSES__?: (reasons: string[]) => void;
+    __CREW_E2E_SET_STALL_WEBSOCKET_SENDS__?: (stall: boolean) => void;
+    __CREW_E2E_DISCONNECT_MOCK_WEBSOCKETS__?: () => number;
+    __CREW_E2E_RESTART_MOCK_WEBSOCKETS__?: () => number;
+    __CREW_E2E_SET_MOCK_WEBSOCKET_UNAVAILABLE__?: (
       unavailable: boolean,
     ) => void;
-    __BUZZ_E2E_GET_WEBSOCKET_CONNECT_ATTEMPTS__?: () => number[];
-    __BUZZ_E2E_ACTIVATE_RELAY_RATE_LIMIT__?: (seconds: number) => void;
-    __BUZZ_E2E_RESET_WEBSOCKET_CONNECT_ATTEMPTS__?: () => void;
-    __BUZZ_E2E_SET_MESH__?: (mesh: {
+    __CREW_E2E_GET_WEBSOCKET_CONNECT_ATTEMPTS__?: () => number[];
+    __CREW_E2E_ACTIVATE_RELAY_RATE_LIMIT__?: (seconds: number) => void;
+    __CREW_E2E_RESET_WEBSOCKET_CONNECT_ATTEMPTS__?: () => void;
+    __CREW_E2E_SET_MESH__?: (mesh: {
       admitted?: boolean;
       models?: Array<{ id: string; name: string | null }>;
       denyReason?: string;
@@ -1352,13 +1352,13 @@ declare global {
         peers: number;
       }>;
     }) => void;
-    __BUZZ_E2E_SEED_ACTIVE_TURNS__?: (input: {
+    __CREW_E2E_SEED_ACTIVE_TURNS__?: (input: {
       agentPubkey: string;
       channelId: string;
       turnId: string;
       kind?: "turn_started" | "turn_completed";
     }) => void;
-    __BUZZ_E2E_SEED_OBSERVER_EVENTS__?: (input: {
+    __CREW_E2E_SEED_OBSERVER_EVENTS__?: (input: {
       agentPubkey: string;
       events: Array<{
         seq: number;
@@ -1371,39 +1371,39 @@ declare global {
         payload: unknown;
       }>;
     }) => void;
-    __BUZZ_E2E_EMIT_MOCK_READ_STATE__?: (input: {
+    __CREW_E2E_EMIT_MOCK_READ_STATE__?: (input: {
       clientId: string;
       contexts: Record<string, number>;
       createdAt: number;
       slotId: string;
     }) => unknown;
-    __BUZZ_E2E_SEED_MOCK_REMINDERS__?: (reminders: RelayEvent[]) => void;
-    __BUZZ_E2E_QUERY_CLIENT__?: {
+    __CREW_E2E_SEED_MOCK_REMINDERS__?: (reminders: RelayEvent[]) => void;
+    __CREW_E2E_QUERY_CLIENT__?: {
       invalidateQueries: (filters: { queryKey: readonly unknown[] }) => unknown;
     };
-    __BUZZ_E2E_MD_PARSE_COUNT__?: () => number;
+    __CREW_E2E_MD_PARSE_COUNT__?: () => number;
     /**
      * Activate the community timeout store as if a send was rejected with a
      * timeout message. Lets E2E tests prove the timeout gate fires before encode.
      * Call after page load. Pass expiresAtMs (epoch ms) or 0 for unknown expiry.
      */
-    __BUZZ_E2E_ACTIVATE_TIMEOUT__?: (expiresAtMs: number) => void;
+    __CREW_E2E_ACTIVATE_TIMEOUT__?: (expiresAtMs: number) => void;
     /**
      * Invalidate the channels React Query cache so E2E tests can trigger a
      * re-fetch after calling archive_channel / update_channel via
-     * __BUZZ_E2E_INVOKE_MOCK_COMMAND__. Call after the mutation to make the
+     * __CREW_E2E_INVOKE_MOCK_COMMAND__. Call after the mutation to make the
      * updated channel state visible to subscribers.
      */
-    __BUZZ_E2E_INVALIDATE_CHANNELS__?: () => Promise<void>;
+    __CREW_E2E_INVALIDATE_CHANNELS__?: () => Promise<void>;
     /**
      * Directly mutate a mock channel's properties without going through a
      * command handler.  Use for E2E regressions that need to change
      * channel_type or remove isMember in a single synchronous step, then
-     * follow up with __BUZZ_E2E_INVALIDATE_CHANNELS__ to flush the cache.
+     * follow up with __CREW_E2E_INVALIDATE_CHANNELS__ to flush the cache.
      *
      * Only the listed fields are writeable; omitted fields are left unchanged.
      */
-    __BUZZ_E2E_MUTATE_CHANNEL__?: (opts: {
+    __CREW_E2E_MUTATE_CHANNEL__?: (opts: {
       channelId: string;
       channelType?: "stream" | "forum" | "dm";
       description?: string;
@@ -1411,32 +1411,32 @@ declare global {
     }) => void;
     /**
      * When set to an event ID string, `get_event` calls for that specific ID
-     * are held in a queue and not resolved until `__BUZZ_E2E_RELEASE_GET_EVENT__()`
+     * are held in a queue and not resolved until `__CREW_E2E_RELEASE_GET_EVENT__()`
      * is called.  Calls for any other event ID proceed normally.  Used by the
      * cold-recovery race test to prove mid-flight feedItems updates do not
      * cancel the in-flight promise for the cold anchor specifically.
      * Set to undefined/null to disable deferral.
      */
-    __BUZZ_E2E_DEFER_GET_EVENT__?: string | null;
+    __CREW_E2E_DEFER_GET_EVENT__?: string | null;
     /** Flush all deferred `get_event` calls for the target ID.  Each queued
      *  request is resolved (or rejected) immediately.  Returns the number of
      *  requests released. */
-    __BUZZ_E2E_RELEASE_GET_EVENT__?: () => number;
+    __CREW_E2E_RELEASE_GET_EVENT__?: () => number;
     /** Count of `get_event` invocations for the current defer-target ID since
-     *  the last time `__BUZZ_E2E_DEFER_GET_EVENT__` was set. */
-    __BUZZ_E2E_GET_EVENT_CALL_COUNT__?: number;
+     *  the last time `__CREW_E2E_DEFER_GET_EVENT__` was set. */
+    __CREW_E2E_GET_EVENT_CALL_COUNT__?: number;
     /** Hold the next channel read until released. */
-    __BUZZ_E2E_DEFER_NEXT_CHANNELS_READ__?: () => void;
+    __CREW_E2E_DEFER_NEXT_CHANNELS_READ__?: () => void;
     /** Disarm the latch and release the held channel read, if any. */
-    __BUZZ_E2E_RELEASE_CHANNELS_READ__?: () => number;
+    __CREW_E2E_RELEASE_CHANNELS_READ__?: () => number;
     /** Number of channel reads currently held by the seam. */
-    __BUZZ_E2E_CHANNELS_READ_PENDING__?: number;
+    __CREW_E2E_CHANNELS_READ_PENDING__?: number;
     /** Release all link-preview metadata commands held by the mock bridge. */
-    __BUZZ_E2E_RELEASE_LINK_PREVIEW_METADATA__?: () => number;
+    __CREW_E2E_RELEASE_LINK_PREVIEW_METADATA__?: () => number;
     /** Release link-preview uploads held before mock-native registration. */
-    __BUZZ_E2E_RELEASE_LINK_PREVIEW_UPLOADS__?: () => number;
+    __CREW_E2E_RELEASE_LINK_PREVIEW_UPLOADS__?: () => number;
     /** Uploads that passed mock-native registration and began relay work. */
-    __BUZZ_E2E_LINK_PREVIEW_UPLOAD_STARTS__?: number;
+    __CREW_E2E_LINK_PREVIEW_UPLOAD_STARTS__?: number;
   }
 }
 
@@ -1528,10 +1528,10 @@ let mockIdentityLostCleared = false;
 let mockIdentityLockedCleared = false;
 
 // ── get_event defer/release seam ────────────────────────────────────────────
-// When `window.__BUZZ_E2E_DEFER_GET_EVENT__` is set to a target event ID,
+// When `window.__CREW_E2E_DEFER_GET_EVENT__` is set to a target event ID,
 // `handleGetEvent` holds calls for that ID in this queue.  All other event IDs
 // continue to resolve immediately.
-// `window.__BUZZ_E2E_RELEASE_GET_EVENT__()` flushes the queue and returns the
+// `window.__CREW_E2E_RELEASE_GET_EVENT__()` flushes the queue and returns the
 // count of released requests, giving the race test a deterministic way to prove
 // that a mid-flight feedItems update does NOT cancel the in-flight promise for
 // the specific cold anchor under test.
@@ -2254,7 +2254,7 @@ function buildMockConfigSurface(pubkey: string): {
   // Synthetic agents are intentionally not TEST_IDENTITIES.
   const PUBKEY_MULTI_ORIGIN =
     "abc1230000000000000000000000000000000000000000000000000000000def";
-  const PUBKEY_BUZZ_AGENT =
+  const PUBKEY_CREW_AGENT =
     "b0220000000000000000000000000000000000000000000000000000000000a9";
 
   switch (pubkey) {
@@ -2268,7 +2268,7 @@ function buildMockConfigSurface(pubkey: string): {
       return runtimeOverrideSurface;
     case PUBKEY_MULTI_ORIGIN:
       return multiOriginSurface;
-    case PUBKEY_BUZZ_AGENT:
+    case PUBKEY_CREW_AGENT:
       return buzzAgentSurface;
     default:
       return gooseSurface;
@@ -3360,7 +3360,7 @@ function mockPersonaCatalogPublications() {
 
 // Mesh-compute mock state — TEST-ONLY.
 //
-// This entire module (e2eBridge.ts) is loaded only when `window.__BUZZ_E2E__`
+// This entire module (e2eBridge.ts) is loaded only when `window.__CREW_E2E__`
 // is set by the Playwright harness; it never runs in a shipped build. These
 // handlers stub the `mesh_*` Tauri commands with the SHAPES the UI expects
 // (availability, node status, preset) so the desktop UI flow can be exercised
@@ -3737,7 +3737,7 @@ function handleUpdateWorkflow(args: {
 }) {
   const workflow = mockWorkflows.find((w) => w.id === args.workflowId);
   if (!workflow) throw new Error(`Workflow ${args.workflowId} not found`);
-  const configuredError = window.__BUZZ_E2E__?.mock?.workflowUpdateError;
+  const configuredError = window.__CREW_E2E__?.mock?.workflowUpdateError;
   if (configuredError) throw new Error(configuredError);
   if (workflow.revision !== args.expectedRevision) {
     throw new Error(
@@ -3761,7 +3761,7 @@ function handleUpdateWorkflow(args: {
 }
 
 function handleDeleteWorkflow(args: { workflowId: string }) {
-  const configuredError = window.__BUZZ_E2E__?.mock?.workflowDeleteError;
+  const configuredError = window.__CREW_E2E__?.mock?.workflowDeleteError;
   if (configuredError) throw new Error(configuredError);
   const index = mockWorkflows.findIndex((w) => w.id === args.workflowId);
   if (index === -1) throw new Error(`Workflow ${args.workflowId} not found`);
@@ -3835,7 +3835,7 @@ function buildMockWorkflowRun(workflow: MockWorkflow): RawWorkflowRun {
 function handleTriggerWorkflow(args: { workflowId: string }) {
   const workflow = mockWorkflows.find((w) => w.id === args.workflowId);
   if (!workflow) throw new Error(`Workflow ${args.workflowId} not found`);
-  const configuredError = window.__BUZZ_E2E__?.mock?.workflowTriggerError;
+  const configuredError = window.__CREW_E2E__?.mock?.workflowTriggerError;
   if (configuredError) throw new Error(configuredError);
   const run = buildMockWorkflowRun(workflow);
   mockWorkflowRuns = [run, ...mockWorkflowRuns];
@@ -3970,7 +3970,7 @@ function getManagedAgentRelayMembership(pubkey: string) {
 }
 
 function getConfig(): E2eConfig | undefined {
-  return window.__BUZZ_E2E__;
+  return window.__CREW_E2E__;
 }
 
 function readStoredIdentityOverride(): TestIdentity | undefined {
@@ -5858,7 +5858,7 @@ function buildMockProjectEvents(): RelayEvent[] {
   for (const [projectIndex, seed] of MOCK_PROJECT_SEEDS.entries()) {
     const owner =
       projectIndex === 0
-        ? (window.__BUZZ_E2E_PROJECT_OWNER_OVERRIDE__ ?? seed.owner)
+        ? (window.__CREW_E2E_PROJECT_OWNER_OVERRIDE__ ?? seed.owner)
         : seed.owner;
     const repoAddress = `${KIND_REPO_ANNOUNCEMENT}:${owner}:${seed.dtag}`;
     const authors = [seed.owner, ...seed.contributors];
@@ -5954,7 +5954,7 @@ function buildMockProjectEvents(): RelayEvent[] {
   }
 
   const projectOwner =
-    window.__BUZZ_E2E_PROJECT_OWNER_OVERRIDE__ ?? MOCK_PROJECT_SEEDS[0].owner;
+    window.__CREW_E2E_PROJECT_OWNER_OVERRIDE__ ?? MOCK_PROJECT_SEEDS[0].owner;
   events.push(
     createMockEvent(
       KIND_PROJECT_ANNOUNCEMENT,
@@ -5981,7 +5981,7 @@ function getMockProjectEventStore(): RelayEvent[] {
     // Append any extra events injected by the test via addInitScript before
     // the app boots. This lets a test seed standalone repositories or other
     // project-scoped events without modifying the fixed seed data.
-    const extras = window.__BUZZ_E2E_EXTRA_PROJECT_EVENTS__;
+    const extras = window.__CREW_E2E_EXTRA_PROJECT_EVENTS__;
     if (extras && extras.length > 0) {
       mockProjectEventStore.push(...(extras as RelayEvent[]));
     }
@@ -7980,7 +7980,7 @@ function withMockRuntimeConfigMetadata(
       "model_env_var" in runtime
         ? runtime.model_env_var
         : runtime.id === "crew-agent"
-          ? "BUZZ_AGENT_MODEL"
+          ? "CREW_AGENT_MODEL"
           : runtime.id === "goose"
             ? "GOOSE_MODEL"
             : null,
@@ -7988,7 +7988,7 @@ function withMockRuntimeConfigMetadata(
       "provider_env_var" in runtime
         ? runtime.provider_env_var
         : runtime.id === "crew-agent"
-          ? "BUZZ_AGENT_PROVIDER"
+          ? "CREW_AGENT_PROVIDER"
           : runtime.id === "goose"
             ? "GOOSE_PROVIDER"
             : null,
@@ -7996,7 +7996,7 @@ function withMockRuntimeConfigMetadata(
       "thinking_env_var" in runtime
         ? runtime.thinking_env_var
         : runtime.id === "crew-agent"
-          ? "BUZZ_AGENT_THINKING_EFFORT"
+          ? "CREW_AGENT_THINKING_EFFORT"
           : runtime.id === "goose"
             ? "GOOSE_THINKING_EFFORT"
             : null,
@@ -8004,7 +8004,7 @@ function withMockRuntimeConfigMetadata(
       "max_tokens_env_var" in runtime
         ? runtime.max_tokens_env_var
         : runtime.id === "crew-agent"
-          ? "BUZZ_AGENT_MAX_OUTPUT_TOKENS"
+          ? "CREW_AGENT_MAX_OUTPUT_TOKENS"
           : runtime.id === "goose"
             ? "GOOSE_MAX_TOKENS"
             : null,
@@ -8012,7 +8012,7 @@ function withMockRuntimeConfigMetadata(
       "context_limit_env_var" in runtime
         ? runtime.context_limit_env_var
         : runtime.id === "crew-agent"
-          ? "BUZZ_AGENT_MAX_CONTEXT_TOKENS"
+          ? "CREW_AGENT_MAX_CONTEXT_TOKENS"
           : runtime.id === "goose"
             ? "GOOSE_CONTEXT_LIMIT"
             : null,
@@ -8020,7 +8020,7 @@ function withMockRuntimeConfigMetadata(
       "max_rounds_env_var" in runtime
         ? runtime.max_rounds_env_var
         : runtime.id === "crew-agent"
-          ? "BUZZ_AGENT_MAX_ROUNDS"
+          ? "CREW_AGENT_MAX_ROUNDS"
           : null,
   };
 }
@@ -10038,17 +10038,17 @@ async function handleGetEvent(
   },
   config: E2eConfig | undefined,
 ) {
-  // Defer/release seam: when __BUZZ_E2E_DEFER_GET_EVENT__ is set to this
-  // event's ID, hold this call in the queue until __BUZZ_E2E_RELEASE_GET_EVENT__()
+  // Defer/release seam: when __CREW_E2E_DEFER_GET_EVENT__ is set to this
+  // event's ID, hold this call in the queue until __CREW_E2E_RELEASE_GET_EVENT__()
   // is called.  Only the target ID is deferred; all other IDs resolve normally.
   // This keeps ancestor-lookup and context loads from being stalled or counted.
   if (
-    window.__BUZZ_E2E_DEFER_GET_EVENT__ &&
-    window.__BUZZ_E2E_DEFER_GET_EVENT__ === args.eventId
+    window.__CREW_E2E_DEFER_GET_EVENT__ &&
+    window.__CREW_E2E_DEFER_GET_EVENT__ === args.eventId
   ) {
     // Increment the count only for calls that are actually deferred.
-    window.__BUZZ_E2E_GET_EVENT_CALL_COUNT__ =
-      (window.__BUZZ_E2E_GET_EVENT_CALL_COUNT__ ?? 0) + 1;
+    window.__CREW_E2E_GET_EVENT_CALL_COUNT__ =
+      (window.__CREW_E2E_GET_EVENT_CALL_COUNT__ ?? 0) + 1;
     return new Promise<string>((resolve, reject) => {
       deferredGetEventQueue.push({
         resolve,
@@ -10401,10 +10401,10 @@ function sendToMockSocket(args: {
       filter.kinds?.some((kind) => MOCK_PROJECT_KINDS.has(kind)) ||
       (filter.kinds?.includes(1) && (filter["#a"] || filter["#e"]))
     ) {
-      window.__BUZZ_E2E_PROJECT_QUERY_FILTERS__ ??= [];
-      window.__BUZZ_E2E_PROJECT_QUERY_FILTERS__.push(filter);
+      window.__CREW_E2E_PROJECT_QUERY_FILTERS__ ??= [];
+      window.__CREW_E2E_PROJECT_QUERY_FILTERS__.push(filter);
       const rejectedKinds =
-        window.__BUZZ_E2E_REJECT_PROJECT_QUERY_KINDS__ ?? [];
+        window.__CREW_E2E_REJECT_PROJECT_QUERY_KINDS__ ?? [];
       if (filter.kinds?.some((kind) => rejectedKinds.includes(kind))) {
         sendWsText(socket.handler, [
           "CLOSED",
@@ -10580,7 +10580,7 @@ function sendToMockSocket(args: {
       }
       if (
         event.kind === KIND_PROJECT_ANNOUNCEMENT &&
-        window.__BUZZ_E2E_UNSUPPORTED_PROJECT_ANNOUNCEMENTS__
+        window.__CREW_E2E_UNSUPPORTED_PROJECT_ANNOUNCEMENTS__
       ) {
         sendWsText(socket.handler, [
           "OK",
@@ -10591,10 +10591,10 @@ function sendToMockSocket(args: {
         return;
       }
       const rejectionIndex =
-        window.__BUZZ_E2E_REJECT_PROJECT_EVENT_KINDS__?.indexOf(event.kind) ??
+        window.__CREW_E2E_REJECT_PROJECT_EVENT_KINDS__?.indexOf(event.kind) ??
         -1;
       if (rejectionIndex >= 0) {
-        window.__BUZZ_E2E_REJECT_PROJECT_EVENT_KINDS__?.splice(
+        window.__CREW_E2E_REJECT_PROJECT_EVENT_KINDS__?.splice(
           rejectionIndex,
           1,
         );
@@ -10608,18 +10608,18 @@ function sendToMockSocket(args: {
       }
       getMockProjectEventStore().push(event);
       const acceptedProjectEvents =
-        window.__BUZZ_E2E_ACCEPTED_PROJECT_EVENTS__ ?? [];
+        window.__CREW_E2E_ACCEPTED_PROJECT_EVENTS__ ?? [];
       acceptedProjectEvents.push({
         content: event.content,
         kind: event.kind,
         tags: event.tags,
       });
-      window.__BUZZ_E2E_ACCEPTED_PROJECT_EVENTS__ = acceptedProjectEvents;
+      window.__CREW_E2E_ACCEPTED_PROJECT_EVENTS__ = acceptedProjectEvents;
       const failedAckIndex =
-        window.__BUZZ_E2E_FAIL_PROJECT_EVENT_ACK_KINDS__?.indexOf(event.kind) ??
+        window.__CREW_E2E_FAIL_PROJECT_EVENT_ACK_KINDS__?.indexOf(event.kind) ??
         -1;
       if (failedAckIndex >= 0) {
-        window.__BUZZ_E2E_FAIL_PROJECT_EVENT_ACK_KINDS__?.splice(
+        window.__CREW_E2E_FAIL_PROJECT_EVENT_ACK_KINDS__?.splice(
           failedAckIndex,
           1,
         );
@@ -10689,13 +10689,13 @@ export function maybeInstallE2eTauriMocks() {
   deferredLinkPreviewMetadataQueue = [];
   deferredLinkPreviewUploadQueue = [];
   cancelledMediaUploadIds = new Set<string>();
-  window.__BUZZ_E2E_LINK_PREVIEW_UPLOAD_STARTS__ = 0;
-  window.__BUZZ_E2E_RELEASE_LINK_PREVIEW_METADATA__ = () => {
+  window.__CREW_E2E_LINK_PREVIEW_UPLOAD_STARTS__ = 0;
+  window.__CREW_E2E_RELEASE_LINK_PREVIEW_METADATA__ = () => {
     const queued = deferredLinkPreviewMetadataQueue.splice(0);
     for (const release of queued) release();
     return queued.length;
   };
-  window.__BUZZ_E2E_RELEASE_LINK_PREVIEW_UPLOADS__ = () => {
+  window.__CREW_E2E_RELEASE_LINK_PREVIEW_UPLOADS__ = () => {
     const queued = deferredLinkPreviewUploadQueue.splice(0);
     for (const release of queued) release();
     return queued.length;
@@ -10724,29 +10724,29 @@ export function maybeInstallE2eTauriMocks() {
     (window as Window & { isTauri?: boolean }).isTauri = true;
   }
   mockWindows(config.mock?.windowLabel ?? "main");
-  window.__BUZZ_E2E_COMMANDS__ = [];
-  window.__BUZZ_E2E_COMMAND_PAYLOADS__ = [];
-  window.__BUZZ_E2E_COMMAND_LOG__ = [];
+  window.__CREW_E2E_COMMANDS__ = [];
+  window.__CREW_E2E_COMMAND_PAYLOADS__ = [];
+  window.__CREW_E2E_COMMAND_LOG__ = [];
   mockMediaProxyPort = config.mock?.mediaProxyInitiallyUnavailable
     ? 0
     : MOCK_MEDIA_PROXY_PORT;
-  window.__BUZZ_E2E_RELEASE_MEDIA_PROXY__ = () => {
+  window.__CREW_E2E_RELEASE_MEDIA_PROXY__ = () => {
     mockMediaProxyPort = MOCK_MEDIA_PROXY_PORT;
     resetMediaCaches();
     ensureRelayOriginFetch();
     return mockMediaProxyPort;
   };
-  window.__BUZZ_E2E_EMIT_MOCK_HUDDLE_TTS_SPEAKER__ = (payload) =>
+  window.__CREW_E2E_EMIT_MOCK_HUDDLE_TTS_SPEAKER__ = (payload) =>
     emit("huddle-tts-speaker-level", payload);
-  window.__BUZZ_E2E_SIGNED_EVENTS__ = [];
-  window.__BUZZ_E2E_WEBVIEW_ZOOM__ = 1;
-  window.__BUZZ_E2E_EMIT_MEDIA_UPLOAD_PHASE__ = async (input) => {
+  window.__CREW_E2E_SIGNED_EVENTS__ = [];
+  window.__CREW_E2E_WEBVIEW_ZOOM__ = 1;
+  window.__CREW_E2E_EMIT_MEDIA_UPLOAD_PHASE__ = async (input) => {
     await emit("media-upload-phase", input);
   };
-  window.__BUZZ_E2E_EMIT_MEDIA_UPLOAD_PROGRESS__ = async (input) => {
+  window.__CREW_E2E_EMIT_MEDIA_UPLOAD_PROGRESS__ = async (input) => {
     await emit("media-upload-progress", input);
   };
-  window.__BUZZ_E2E_SET_MOCK_HUDDLE_SNAPSHOT__ = async ({
+  window.__CREW_E2E_SET_MOCK_HUDDLE_SNAPSHOT__ = async ({
     members,
     transcriptionEnabled,
   }) => {
@@ -10759,7 +10759,7 @@ export function maybeInstallE2eTauriMocks() {
     persistMockHuddle();
     await emitMockHuddleState();
   };
-  window.__BUZZ_E2E_EMIT_MOCK_MESSAGE__ = ({
+  window.__CREW_E2E_EMIT_MOCK_MESSAGE__ = ({
     channelName,
     content,
     parentEventId,
@@ -10791,8 +10791,8 @@ export function maybeInstallE2eTauriMocks() {
       id,
     );
   };
-  window.__BUZZ_E2E_PREPEND_MOCK_HISTORY__ = prependMockHistory;
-  window.__BUZZ_E2E_EMIT_MOCK_TYPING__ = ({
+  window.__CREW_E2E_PREPEND_MOCK_HISTORY__ = prependMockHistory;
+  window.__CREW_E2E_EMIT_MOCK_TYPING__ = ({
     channelName,
     createdAt,
     pubkey,
@@ -10812,7 +10812,7 @@ export function maybeInstallE2eTauriMocks() {
       createdAt,
     );
   };
-  window.__BUZZ_E2E_HAS_MOCK_LIVE_SUBSCRIPTION__ = ({ channelName, kind }) => {
+  window.__CREW_E2E_HAS_MOCK_LIVE_SUBSCRIPTION__ = ({ channelName, kind }) => {
     const channel = mockChannels.find(
       (candidate) => candidate.name === channelName,
     );
@@ -10822,17 +10822,17 @@ export function maybeInstallE2eTauriMocks() {
 
     return hasMockLiveSubscription(channel.id, kind);
   };
-  window.__BUZZ_E2E_HAS_MOCK_OWNER_KIND_SUBSCRIPTION__ = ({
+  window.__CREW_E2E_HAS_MOCK_OWNER_KIND_SUBSCRIPTION__ = ({
     ownerPubkey,
     kind,
   }) => hasMockOwnerKindSubscription(ownerPubkey, kind);
-  window.__BUZZ_E2E_PUSH_MOCK_FEED_ITEM__ = (item) => {
+  window.__CREW_E2E_PUSH_MOCK_FEED_ITEM__ = (item) => {
     const category = item.category === "mention" ? "mentions" : item.category;
     mockFeedOverrides[category].unshift(item);
     window.dispatchEvent(new CustomEvent("buzz:e2e-home-feed-updated"));
     return item;
   };
-  window.__BUZZ_E2E_REPLACE_MOCK_FEED_ITEM__ = (oldId, item) => {
+  window.__CREW_E2E_REPLACE_MOCK_FEED_ITEM__ = (oldId, item) => {
     const category = item.category === "mention" ? "mentions" : item.category;
     // Remove the old item from every category bucket (it may have been in a
     // different bucket or the same one).
@@ -10848,8 +10848,8 @@ export function maybeInstallE2eTauriMocks() {
     window.dispatchEvent(new CustomEvent("buzz:e2e-home-feed-updated"));
     return item;
   };
-  window.__BUZZ_E2E_MD_PARSE_COUNT__ = getMarkdownParseCount;
-  window.__BUZZ_E2E_ACTIVATE_TIMEOUT__ = (expiresAtMs: number) => {
+  window.__CREW_E2E_MD_PARSE_COUNT__ = getMarkdownParseCount;
+  window.__CREW_E2E_ACTIVATE_TIMEOUT__ = (expiresAtMs: number) => {
     const expiresAtSec = expiresAtMs > 0 ? Math.floor(expiresAtMs / 1000) : 0;
     const msg =
       expiresAtSec > 0
@@ -10857,12 +10857,12 @@ export function maybeInstallE2eTauriMocks() {
         : "restricted: you are timed out until 0";
     recordTimeoutFromRejection(msg);
   };
-  window.__BUZZ_E2E_INVALIDATE_CHANNELS__ = async () => {
-    await window.__BUZZ_E2E_QUERY_CLIENT__?.invalidateQueries({
+  window.__CREW_E2E_INVALIDATE_CHANNELS__ = async () => {
+    await window.__CREW_E2E_QUERY_CLIENT__?.invalidateQueries({
       queryKey: ["channels"],
     });
   };
-  window.__BUZZ_E2E_MUTATE_CHANNEL__ = ({
+  window.__CREW_E2E_MUTATE_CHANNEL__ = ({
     channelId,
     channelType,
     description,
@@ -10885,38 +10885,38 @@ export function maybeInstallE2eTauriMocks() {
     touchMockChannel(channel);
   };
   // get_event defer/release seam — reset counter and queue on each install.
-  window.__BUZZ_E2E_GET_EVENT_CALL_COUNT__ = 0;
-  window.__BUZZ_E2E_DEFER_GET_EVENT__ = null;
+  window.__CREW_E2E_GET_EVENT_CALL_COUNT__ = 0;
+  window.__CREW_E2E_DEFER_GET_EVENT__ = null;
   deferredGetEventQueue = [];
   deferNextChannelsRead = false;
   deferredChannelsReadResolve = null;
-  window.__BUZZ_E2E_CHANNELS_READ_PENDING__ = 0;
-  window.__BUZZ_E2E_DEFER_NEXT_CHANNELS_READ__ = () => {
+  window.__CREW_E2E_CHANNELS_READ_PENDING__ = 0;
+  window.__CREW_E2E_DEFER_NEXT_CHANNELS_READ__ = () => {
     if (deferredChannelsReadResolve) {
       throw new Error("a channel read is already deferred");
     }
     deferNextChannelsRead = true;
   };
-  window.__BUZZ_E2E_RELEASE_CHANNELS_READ__ = () => {
+  window.__CREW_E2E_RELEASE_CHANNELS_READ__ = () => {
     deferNextChannelsRead = false;
     const resolve = deferredChannelsReadResolve;
     deferredChannelsReadResolve = null;
-    window.__BUZZ_E2E_CHANNELS_READ_PENDING__ = 0;
+    window.__CREW_E2E_CHANNELS_READ_PENDING__ = 0;
     resolve?.();
     return resolve ? 1 : 0;
   };
-  window.__BUZZ_E2E_RELEASE_GET_EVENT__ = () => {
+  window.__CREW_E2E_RELEASE_GET_EVENT__ = () => {
     const queued = deferredGetEventQueue.splice(0);
     for (const entry of queued) {
       entry.run().then(entry.resolve, entry.reject);
     }
     // Disable deferral and reset counter after release so the seam is inert
     // for the remainder of the test (no stray defers from context loads).
-    window.__BUZZ_E2E_DEFER_GET_EVENT__ = null;
-    window.__BUZZ_E2E_GET_EVENT_CALL_COUNT__ = 0;
+    window.__CREW_E2E_DEFER_GET_EVENT__ = null;
+    window.__CREW_E2E_GET_EVENT_CALL_COUNT__ = 0;
     return queued.length;
   };
-  window.__BUZZ_E2E_EMIT_MOCK_READ_STATE__ = ({
+  window.__CREW_E2E_EMIT_MOCK_READ_STATE__ = ({
     clientId,
     contexts,
     createdAt,
@@ -10940,7 +10940,7 @@ export function maybeInstallE2eTauriMocks() {
     emitMockLiveEvent(GLOBAL_MOCK_SUBSCRIPTION, event);
     return event;
   };
-  window.__BUZZ_E2E_SET_RELAY_CONNECTION_STATE__ = (state) => {
+  window.__CREW_E2E_SET_RELAY_CONNECTION_STATE__ = (state) => {
     // Directly emit a connection state change on the relay client singleton,
     // for tests that need to drive degraded relay UI without waiting for the
     // real auth-timeout + reconnect-debounce cycle (~10 s). Reaches the
@@ -10952,15 +10952,15 @@ export function maybeInstallE2eTauriMocks() {
       }
     ).connectionStateEmitter.set(state);
   };
-  window.__BUZZ_E2E_GET_RELAY_CONNECTION_STATE__ = () =>
+  window.__CREW_E2E_GET_RELAY_CONNECTION_STATE__ = () =>
     relayClient.getConnectionState();
-  window.__BUZZ_E2E_QUEUE_AUTH_RESPONSES__ = (responses) => {
+  window.__CREW_E2E_QUEUE_AUTH_RESPONSES__ = (responses) => {
     mockAuthResponses.push(...responses);
   };
-  window.__BUZZ_E2E_QUEUE_CHANNEL_HISTORY_CLOSES__ = (reasons) => {
+  window.__CREW_E2E_QUEUE_CHANNEL_HISTORY_CLOSES__ = (reasons) => {
     mockChannelHistoryCloses.push(...reasons);
   };
-  window.__BUZZ_E2E_CLOSE_LIVE_SUBSCRIPTIONS__ = (reason) => {
+  window.__CREW_E2E_CLOSE_LIVE_SUBSCRIPTIONS__ = (reason) => {
     let closed = 0;
     for (const socket of mockSockets.values()) {
       for (const subId of [...socket.subscriptions.keys()]) {
@@ -10972,25 +10972,25 @@ export function maybeInstallE2eTauriMocks() {
     return closed;
   };
 
-  window.__BUZZ_E2E_SEED_MOCK_REMINDERS__ = (reminders) => {
+  window.__CREW_E2E_SEED_MOCK_REMINDERS__ = (reminders) => {
     mockReminderEvents.length = 0;
     for (const r of reminders) {
       mockReminderEvents.push(r);
     }
   };
 
-  window.__BUZZ_E2E_SET_STALL_WEBSOCKET_SENDS__ = (stall) => {
+  window.__CREW_E2E_SET_STALL_WEBSOCKET_SENDS__ = (stall) => {
     const config = getConfig();
     if (!config?.mock) return;
     config.mock.stallWebsocketSends = stall;
     if (!stall) mockWebsocketSendMutexWedged = false;
   };
-  window.__BUZZ_E2E_DISCONNECT_MOCK_WEBSOCKETS__ = () => {
+  window.__CREW_E2E_DISCONNECT_MOCK_WEBSOCKETS__ = () => {
     const socketIds = [...mockSockets.keys()];
     for (const socketId of socketIds) disconnectMockSocket(socketId);
     return socketIds.length;
   };
-  window.__BUZZ_E2E_RESTART_MOCK_WEBSOCKETS__ = () => {
+  window.__CREW_E2E_RESTART_MOCK_WEBSOCKETS__ = () => {
     const sockets = [...mockSockets.values()];
     mockSockets.clear();
     for (const socket of sockets) {
@@ -10998,20 +10998,20 @@ export function maybeInstallE2eTauriMocks() {
     }
     return sockets.length;
   };
-  window.__BUZZ_E2E_SET_MOCK_WEBSOCKET_UNAVAILABLE__ = (unavailable) => {
+  window.__CREW_E2E_SET_MOCK_WEBSOCKET_UNAVAILABLE__ = (unavailable) => {
     mockWebsocketUnavailable = unavailable;
     if (unavailable) relayWebsocketConnectAttemptStarts.length = 0;
   };
-  window.__BUZZ_E2E_GET_WEBSOCKET_CONNECT_ATTEMPTS__ = () => [
+  window.__CREW_E2E_GET_WEBSOCKET_CONNECT_ATTEMPTS__ = () => [
     ...relayWebsocketConnectAttemptStarts,
   ];
-  window.__BUZZ_E2E_ACTIVATE_RELAY_RATE_LIMIT__ = (seconds) => {
+  window.__CREW_E2E_ACTIVATE_RELAY_RATE_LIMIT__ = (seconds) => {
     activateRateLimit(seconds);
   };
-  window.__BUZZ_E2E_RESET_WEBSOCKET_CONNECT_ATTEMPTS__ = () => {
+  window.__CREW_E2E_RESET_WEBSOCKET_CONNECT_ATTEMPTS__ = () => {
     relayWebsocketConnectAttemptStarts.length = 0;
   };
-  window.__BUZZ_E2E_RELEASE_SEND_MESSAGE_LIVE_ECHO__ = () => {
+  window.__CREW_E2E_RELEASE_SEND_MESSAGE_LIVE_ECHO__ = () => {
     const queued = deferredSendMessageLiveEchoes.splice(0);
     for (const { channelId, event } of queued) {
       emitMockLiveEvent(channelId, event);
@@ -11020,7 +11020,7 @@ export function maybeInstallE2eTauriMocks() {
   };
   // Tests vary mesh admission and models to exercise provider discovery and
   // the managed-agent start preflight.
-  window.__BUZZ_E2E_SET_MESH__ = (mesh) => {
+  window.__CREW_E2E_SET_MESH__ = (mesh) => {
     if (mesh.admitted !== undefined) mockMeshState.admitted = mesh.admitted;
     if (mesh.models !== undefined) mockMeshState.models = mesh.models;
     if (mesh.denyReason !== undefined)
@@ -11034,7 +11034,7 @@ export function maybeInstallE2eTauriMocks() {
       };
   };
   let seedTurnSeq = Date.now();
-  window.__BUZZ_E2E_SEED_ACTIVE_TURNS__ = ({
+  window.__CREW_E2E_SEED_ACTIVE_TURNS__ = ({
     agentPubkey,
     channelId,
     turnId,
@@ -11054,7 +11054,7 @@ export function maybeInstallE2eTauriMocks() {
     syncAgentTurnsFromEvents(agentPubkey, [event]);
     syncAgentObserverEvents(agentPubkey, [event]);
   };
-  window.__BUZZ_E2E_SEED_OBSERVER_EVENTS__ = ({ agentPubkey, events }) => {
+  window.__CREW_E2E_SEED_OBSERVER_EVENTS__ = ({ agentPubkey, events }) => {
     injectObserverEventsForE2E(agentPubkey, events);
   };
   const meshModelName = (modelId: string) => {
@@ -11104,7 +11104,7 @@ export function maybeInstallE2eTauriMocks() {
   ): Promise<unknown> => {
     const activeConfig = getConfig();
     const identity = getActiveIdentity(activeConfig);
-    window.__BUZZ_E2E_COMMANDS__?.push(command);
+    window.__CREW_E2E_COMMANDS__?.push(command);
     const loggedPayload = (() => {
       if (payload instanceof Uint8Array) {
         return { rawByteLength: payload.byteLength };
@@ -11115,11 +11115,11 @@ export function maybeInstallE2eTauriMocks() {
         return null;
       }
     })();
-    window.__BUZZ_E2E_COMMAND_PAYLOADS__?.push({
+    window.__CREW_E2E_COMMAND_PAYLOADS__?.push({
       command,
       payload: loggedPayload,
     });
-    window.__BUZZ_E2E_COMMAND_LOG__?.push({ command, payload });
+    window.__CREW_E2E_COMMAND_LOG__?.push({ command, payload });
 
     switch (command) {
       case "get_huddle_state": {
@@ -11765,7 +11765,7 @@ export function maybeInstallE2eTauriMocks() {
       case "sign_out":
         // Production wipes local state and restarts the app. In the browser
         // harness there is nothing to wipe; resolving is enough — specs
-        // assert invocation via __BUZZ_E2E_COMMANDS__ and the pending UI.
+        // assert invocation via __CREW_E2E_COMMANDS__ and the pending UI.
         return;
       case "generate_backup_passphrase": {
         const request = payload as {
@@ -11929,7 +11929,7 @@ export function maybeInstallE2eTauriMocks() {
       case "get_profile":
         return handleGetProfile(activeConfig);
       case "oidc_whoami":
-        return window.__BUZZ_E2E_WHOAMI_EMAIL__ ?? "";
+        return window.__CREW_E2E_WHOAMI_EMAIL__ ?? "";
       case "update_profile":
         return handleUpdateProfile(
           payload as Parameters<typeof handleUpdateProfile>[0],
@@ -12099,12 +12099,12 @@ export function maybeInstallE2eTauriMocks() {
           ],
         };
       case "get_project_local_repo_snapshot":
-        return window.__BUZZ_E2E_PROJECT_LOCAL_REPO_SNAPSHOT__ ?? null;
+        return window.__CREW_E2E_PROJECT_LOCAL_REPO_SNAPSHOT__ ?? null;
       case "get_project_repo_file_content":
       case "get_project_local_repo_file_content": {
         const path = (payload as { path?: string } | undefined)?.path;
         return path
-          ? (window.__BUZZ_E2E_PROJECT_REPO_FILE_CONTENTS__?.[path] ?? null)
+          ? (window.__CREW_E2E_PROJECT_REPO_FILE_CONTENTS__?.[path] ?? null)
           : null;
       }
       case "get_project_repo_diff":
@@ -12159,7 +12159,7 @@ export function maybeInstallE2eTauriMocks() {
         return null;
       case "get_project_repo_sync_status":
         return (
-          window.__BUZZ_E2E_PROJECT_REPO_SYNC_STATUS__ ?? {
+          window.__CREW_E2E_PROJECT_REPO_SYNC_STATUS__ ?? {
             local_path: null,
             local_branch: null,
             local_branches: [],
@@ -12185,7 +12185,7 @@ export function maybeInstallE2eTauriMocks() {
         return null;
       case "push_project_local_repository": {
         const input = payload as { branchName?: string | null };
-        const status = window.__BUZZ_E2E_PROJECT_REPO_SYNC_STATUS__;
+        const status = window.__CREW_E2E_PROJECT_REPO_SYNC_STATUS__;
         const branch = input.branchName ?? status?.remote_branch ?? "main";
         const commit =
           status?.local_head ?? "0123456789abcdef0123456789abcdef01234567";
@@ -12215,7 +12215,7 @@ export function maybeInstallE2eTauriMocks() {
         // Clones land in reposDir/<repo-name>, matching the terminal mocks.
         const path = "/tmp/buzz/REPOS/buzz";
         const commit = "0123456789abcdef0123456789abcdef01234567";
-        window.__BUZZ_E2E_PROJECT_REPO_SYNC_STATUS__ = {
+        window.__CREW_E2E_PROJECT_REPO_SYNC_STATUS__ = {
           local_path: path,
           local_branch: "main",
           local_branches: ["main"],
@@ -12336,7 +12336,7 @@ export function maybeInstallE2eTauriMocks() {
           normalizedTargetOwner,
           input.createdAt,
         );
-        window.__BUZZ_E2E_SIGNED_EVENTS__?.push({
+        window.__CREW_E2E_SIGNED_EVENTS__?.push({
           content: event.content,
           createdAt: event.created_at,
           kind: event.kind,
@@ -12346,16 +12346,16 @@ export function maybeInstallE2eTauriMocks() {
         let publicationError: string | null = null;
         if (
           event.kind === KIND_PROJECT_ANNOUNCEMENT &&
-          window.__BUZZ_E2E_UNSUPPORTED_PROJECT_ANNOUNCEMENTS__
+          window.__CREW_E2E_UNSUPPORTED_PROJECT_ANNOUNCEMENTS__
         ) {
           publicationError = "restricted: unknown event kind";
         } else {
           const rejectionIndex =
-            window.__BUZZ_E2E_REJECT_PROJECT_EVENT_KINDS__?.indexOf(
+            window.__CREW_E2E_REJECT_PROJECT_EVENT_KINDS__?.indexOf(
               event.kind,
             ) ?? -1;
           if (rejectionIndex >= 0) {
-            window.__BUZZ_E2E_REJECT_PROJECT_EVENT_KINDS__?.splice(
+            window.__CREW_E2E_REJECT_PROJECT_EVENT_KINDS__?.splice(
               rejectionIndex,
               1,
             );
@@ -12363,19 +12363,19 @@ export function maybeInstallE2eTauriMocks() {
           } else {
             getMockProjectEventStore().push(event);
             const acceptedProjectEvents =
-              window.__BUZZ_E2E_ACCEPTED_PROJECT_EVENTS__ ?? [];
+              window.__CREW_E2E_ACCEPTED_PROJECT_EVENTS__ ?? [];
             acceptedProjectEvents.push({
               content: event.content,
               kind: event.kind,
               tags: event.tags,
             });
-            window.__BUZZ_E2E_ACCEPTED_PROJECT_EVENTS__ = acceptedProjectEvents;
+            window.__CREW_E2E_ACCEPTED_PROJECT_EVENTS__ = acceptedProjectEvents;
             const failedAckIndex =
-              window.__BUZZ_E2E_FAIL_PROJECT_EVENT_ACK_KINDS__?.indexOf(
+              window.__CREW_E2E_FAIL_PROJECT_EVENT_ACK_KINDS__?.indexOf(
                 event.kind,
               ) ?? -1;
             if (failedAckIndex >= 0) {
-              window.__BUZZ_E2E_FAIL_PROJECT_EVENT_ACK_KINDS__?.splice(
+              window.__CREW_E2E_FAIL_PROJECT_EVENT_ACK_KINDS__?.splice(
                 failedAckIndex,
                 1,
               );
@@ -12422,7 +12422,7 @@ export function maybeInstallE2eTauriMocks() {
           input.targetOwner,
           input.createdAt,
         );
-        window.__BUZZ_E2E_SIGNED_EVENTS__?.push(event);
+        window.__CREW_E2E_SIGNED_EVENTS__?.push(event);
         getMockProjectEventStore().push(event);
         return null;
       }
@@ -12447,7 +12447,7 @@ export function maybeInstallE2eTauriMocks() {
           ],
           input.targetOwner,
         );
-        window.__BUZZ_E2E_SIGNED_EVENTS__?.push({
+        window.__CREW_E2E_SIGNED_EVENTS__?.push({
           content: event.content,
           kind: event.kind,
           tags: event.tags,
@@ -12491,8 +12491,8 @@ export function maybeInstallE2eTauriMocks() {
             "Only the repository owner or the owner of its managed agent can merge pull requests.",
           );
         }
-        if (window.__BUZZ_E2E_PROJECT_MERGE_ERROR__) {
-          throw window.__BUZZ_E2E_PROJECT_MERGE_ERROR__;
+        if (window.__CREW_E2E_PROJECT_MERGE_ERROR__) {
+          throw window.__CREW_E2E_PROJECT_MERGE_ERROR__;
         }
         const mergeCommit = "abcdef0123456789abcdef0123456789abcdef01";
         const statusEvent = createMockEvent(
@@ -12509,18 +12509,18 @@ export function maybeInstallE2eTauriMocks() {
           input.targetOwner,
           input.statusCreatedAt,
         );
-        window.__BUZZ_E2E_SIGNED_EVENTS__?.push({
+        window.__CREW_E2E_SIGNED_EVENTS__?.push({
           content: statusEvent.content,
           kind: statusEvent.kind,
           tags: statusEvent.tags,
         });
         const rejectionIndex =
-          window.__BUZZ_E2E_REJECT_PROJECT_EVENT_KINDS__?.indexOf(
+          window.__CREW_E2E_REJECT_PROJECT_EVENT_KINDS__?.indexOf(
             statusEvent.kind,
           ) ?? -1;
         let statusPublicationError: string | null = null;
         if (rejectionIndex >= 0) {
-          window.__BUZZ_E2E_REJECT_PROJECT_EVENT_KINDS__?.splice(
+          window.__CREW_E2E_REJECT_PROJECT_EVENT_KINDS__?.splice(
             rejectionIndex,
             1,
           );
@@ -12664,7 +12664,7 @@ export function maybeInstallE2eTauriMocks() {
         if (deferred) {
           await new Promise<void>((resolve) => {
             deferredChannelsReadResolve = resolve;
-            window.__BUZZ_E2E_CHANNELS_READ_PENDING__ = 1;
+            window.__CREW_E2E_CHANNELS_READ_PENDING__ = 1;
           });
         }
         return channels;
@@ -12881,7 +12881,7 @@ export function maybeInstallE2eTauriMocks() {
         return handleParseTeamFile();
       case "export_agent_snapshot":
         // Mimics the save-to-disk path: report success without a real dialog.
-        // Specs assert invocation via __BUZZ_E2E_COMMANDS__.
+        // Specs assert invocation via __CREW_E2E_COMMANDS__.
         return true;
       case "encode_agent_snapshot_for_send": {
         // Return the requested wire format so both message sharing (PNG) and
@@ -13494,8 +13494,8 @@ export function maybeInstallE2eTauriMocks() {
           throw new Error("upload cancelled");
         }
         if (input.filename?.startsWith("link-preview-")) {
-          window.__BUZZ_E2E_LINK_PREVIEW_UPLOAD_STARTS__ =
-            (window.__BUZZ_E2E_LINK_PREVIEW_UPLOAD_STARTS__ ?? 0) + 1;
+          window.__CREW_E2E_LINK_PREVIEW_UPLOAD_STARTS__ =
+            (window.__CREW_E2E_LINK_PREVIEW_UPLOAD_STARTS__ ?? 0) + 1;
         }
         return resolveMockUploadDescriptorForBytes(input, activeConfig);
       }
@@ -13553,7 +13553,7 @@ export function maybeInstallE2eTauriMocks() {
       case "save_agent_card":
         // The save dialog can't run headlessly; report a successful save so the
         // FileCard / image-menu click handlers resolve. Specs assert the
-        // command was invoked via `__BUZZ_E2E_COMMANDS__`, not the dialog.
+        // command was invoked via `__CREW_E2E_COMMANDS__`, not the dialog.
         return true;
       case "card_mint_key_status":
         // Cards: pretend a key is configured in global defaults so the mint
@@ -13576,7 +13576,7 @@ export function maybeInstallE2eTauriMocks() {
           activeConfig,
         );
       case "sign_event":
-        window.__BUZZ_E2E_SIGNED_EVENTS__?.push({
+        window.__CREW_E2E_SIGNED_EVENTS__?.push({
           content: (payload as { content: string }).content,
           createdAt: (payload as { createdAt?: number }).createdAt,
           kind: (payload as { kind: number }).kind,
@@ -13744,7 +13744,7 @@ export function maybeInstallE2eTauriMocks() {
           payload as Parameters<typeof handleGetRunApprovals>[0],
         );
       case "plugin:webview|set_webview_zoom":
-        window.__BUZZ_E2E_WEBVIEW_ZOOM__ = (payload as { value: number }).value;
+        window.__CREW_E2E_WEBVIEW_ZOOM__ = (payload as { value: number }).value;
         return;
       case "start_pairing": {
         const delayMs = activeConfig?.mock?.pairingStartDelayMs ?? 0;
@@ -13817,10 +13817,10 @@ export function maybeInstallE2eTauriMocks() {
       // so specs can drive default-on seeding and toggle ON/OFF flows.
       case "list_save_subscriptions": {
         const win = window as unknown as Record<string, unknown>;
-        if (!win.__BUZZ_E2E_IPC_COUNTERS__) {
-          win.__BUZZ_E2E_IPC_COUNTERS__ = {};
+        if (!win.__CREW_E2E_IPC_COUNTERS__) {
+          win.__CREW_E2E_IPC_COUNTERS__ = {};
         }
-        const ipcCounters = win.__BUZZ_E2E_IPC_COUNTERS__ as Record<
+        const ipcCounters = win.__CREW_E2E_IPC_COUNTERS__ as Record<
           string,
           number
         >;
@@ -14114,9 +14114,9 @@ export function maybeInstallE2eTauriMocks() {
         throw new Error(`Unsupported mocked Tauri command: ${command}`);
     }
   };
-  window.__BUZZ_E2E_INVOKE_MOCK_COMMAND__ = (command, payload) =>
+  window.__CREW_E2E_INVOKE_MOCK_COMMAND__ = (command, payload) =>
     handleMockCommand(command, payload ?? null);
-  window.__BUZZ_E2E_EMIT_TAURI_EVENT__ = (event, payload) =>
+  window.__CREW_E2E_EMIT_TAURI_EVENT__ = (event, payload) =>
     emit(event, payload);
   mockIPC(handleMockCommand, { shouldMockEvents: true });
   const tauriInternals = (
