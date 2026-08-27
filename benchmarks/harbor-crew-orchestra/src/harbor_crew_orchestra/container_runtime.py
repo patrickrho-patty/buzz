@@ -2,7 +2,7 @@
 
 Each provisioned identity is a full ``crew-acp`` → ``crew-agent`` →
 ``crew-dev-mcp`` process tree launched *inside* the task container — the same
-binaries and the same MCP toolset (shell, file tools, the ``buzz`` CLI on
+binaries and the same MCP toolset (shell, file tools, the ``crew`` CLI on
 PATH) that the desktop app gives a Buzz agent. The harness stays outside:
 it provisions, uploads the pinned binaries, posts the task as the trial
 user, and observes the channel until the orchestrator publishes DONE.
@@ -36,11 +36,11 @@ DEFAULT_MAX_AGENT_ROUNDS = (
 # to", which is neither captured in the condition hash nor comparable.
 THINKING_EFFORT = "medium"
 # Container-side layout for the uploaded Buzz stack.
-REMOTE_ROOT = "/opt/buzz"
+REMOTE_ROOT = "/opt/crew"
 REMOTE_BIN = f"{REMOTE_ROOT}/bin"
 REMOTE_PROMPTS = f"{REMOTE_ROOT}/prompts"
 REMOTE_LOGS = f"{REMOTE_ROOT}/logs"
-REMOTE_EVIDENCE = "/logs/artifacts/buzz-evidence.json"
+REMOTE_EVIDENCE = "/logs/artifacts/crew-evidence.json"
 # The relay is host-header tenant-bound (its community row is the authority
 # of its own RELAY_URL), so agents must present that exact Host. When the
 # relay actually lives outside the container, this forwarder listens on the
@@ -93,7 +93,7 @@ class BuzzContainerRuntime:
         buzz_acp_binary: str = "crew-acp",
         buzz_agent_binary: str = "crew-agent",
         buzz_dev_mcp_binary: str = "crew-dev-mcp",
-        buzz_cli_binary: str = "buzz",
+        buzz_cli_binary: str = "crew",
         relay_gateway: str = "",
         forwarder_binary: str = "relay-forwarder",
         max_agent_rounds: int = DEFAULT_MAX_AGENT_ROUNDS,
@@ -133,7 +133,7 @@ class BuzzContainerRuntime:
     ) -> RuntimeResult:
         classes = self._classes_by_agent_id(manifest, trial.credentials)
         orchestrator = next(c for c in trial.credentials if c.role == "orchestrator")
-        trial_dir = self.logs_dir / "buzz"
+        trial_dir = self.logs_dir / "crew"
         trial_dir.mkdir(parents=True, exist_ok=True)
 
         agents: list[_Agent] = []
@@ -234,7 +234,7 @@ class BuzzContainerRuntime:
         # task is graded by its own tests and must still report its result.
         if fixture_for(trial.task_name).requires_evidence and not evidence_exported:
             raise RuntimeLaunchError(
-                "failed to export buzz-evidence.json; the trial has no "
+                "failed to export crew-evidence.json; the trial has no "
                 "verifiable relay state and must not be scored"
             )
 
@@ -651,7 +651,7 @@ class BuzzContainerRuntime:
                 observed_channels=observed_channels,
                 scripted_events=scripted_events,
             )
-            evidence_path = trial_dir / "buzz-evidence.json"
+            evidence_path = trial_dir / "crew-evidence.json"
             evidence_path.write_text(
                 json.dumps(evidence, indent=2, sort_keys=True) + "\n",
                 encoding="utf-8",
@@ -682,7 +682,7 @@ class BuzzContainerRuntime:
     def _record_evidence_error(trial_dir: Path, reason: str) -> None:
         """Persist why the snapshot failed; the caller only sees a bool."""
         try:
-            (trial_dir / "buzz-evidence-error.txt").write_text(reason, encoding="utf-8")
+            (trial_dir / "crew-evidence-error.txt").write_text(reason, encoding="utf-8")
         except OSError:
             # Diagnostics only — never mask the failure we are reporting.
             pass
@@ -854,13 +854,13 @@ class BuzzContainerRuntime:
         stdout, stderr = await process.communicate()
         if process.returncode != 0:
             raise RuntimeLaunchError(
-                f"buzz {shlex.join(args)} exited {process.returncode}: "
+                f"crew {shlex.join(args)} exited {process.returncode}: "
                 f"{stderr.decode(errors='replace').strip()}"
             )
         try:
             return json.loads(stdout)
         except json.JSONDecodeError as error:
-            raise RuntimeLaunchError("buzz returned invalid JSON") from error
+            raise RuntimeLaunchError("crew returned invalid JSON") from error
 
     @staticmethod
     def _user_relay_url(trial: TrialHandle) -> str:

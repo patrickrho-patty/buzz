@@ -15,7 +15,7 @@ import uuid
 import psycopg
 import pytest
 
-from harbor_crew_testbed.buzz_cli import BuzzCli, BuzzCliError
+from harbor_crew_testbed.crew_cli import BuzzCli, BuzzCliError
 from harbor_crew_testbed.provisioner import (
     BuzzTrialProvisioner,
     ProvisioningError,

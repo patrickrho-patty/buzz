@@ -1,4 +1,4 @@
-# Default condition for the local benchmarks/buzz-dataset suite: one production
+# Default condition for the local benchmarks/crew-dataset suite: one production
 # Buzz agent on gpt-5.6-luna at reasoning effort `medium`.
 #
 # crew-acp supplies crates/crew-acp/src/base_prompt.md from the checked-out
@@ -14,7 +14,7 @@
 # deployment config and deliberately outside this manifest — pass it with
 # `--endpoint-config`, since the default is anthropic-live.json.
 schema_version: "1"
-condition: buzz-native-solo-luna-medium
+condition: crew-native-solo-luna-medium
 roster:
   - id: solo
     kind: orchestrator
@@ -23,7 +23,7 @@ roster:
     endpoint: gpt-5.6-luna
     model_revision: gpt-5.6-luna
     prompt:
-      path: personas/buzz-native-solo.md
+      path: personas/crew-native-solo.md
       sha256: 972950f0e2bfb9bf540c98e70e075479ab80cd596cb5ad405dad0cafdc60840b
     generation:
       max_output_tokens: 4096

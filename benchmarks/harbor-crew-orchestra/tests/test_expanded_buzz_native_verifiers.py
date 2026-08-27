@@ -6,7 +6,7 @@ import importlib.util
 from pathlib import Path
 from types import ModuleType
 
-DATASET_ROOT = Path(__file__).resolve().parents[2] / "buzz-dataset"
+DATASET_ROOT = Path(__file__).resolve().parents[2] / "crew-dataset"
 AGENT = "a" * 64
 USER = "u" * 64
 CHANNEL = "channel"

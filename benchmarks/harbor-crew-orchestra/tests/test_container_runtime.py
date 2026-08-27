@@ -630,7 +630,7 @@ async def test_collect_evidence_uploads_verifier_artifact(tmp_path, monkeypatch)
         completion_message_id=reply_id,
     )
     assert environment.uploads[-1][1] == REMOTE_EVIDENCE
-    evidence = json.loads((trial_dir / "buzz-evidence.json").read_text())
+    evidence = json.loads((trial_dir / "crew-evidence.json").read_text())
     assert evidence["messages"][-1]["reply_to_event_id"] == root_id
     assert (trial_dir / "transcript.json").is_file()
 
@@ -656,8 +656,8 @@ async def test_failed_evidence_snapshot_records_the_reason(tmp_path, monkeypatch
     )
     # The caller only sees a bool, so the cause has to survive as an artifact —
     # otherwise a failed export is indistinguishable from a quiet relay.
-    assert "relay unreachable" in (trial_dir / "buzz-evidence-error.txt").read_text()
-    assert not (trial_dir / "buzz-evidence.json").exists()
+    assert "relay unreachable" in (trial_dir / "crew-evidence-error.txt").read_text()
+    assert not (trial_dir / "crew-evidence.json").exists()
 
 
 def test_runtime_logging_keeps_readiness_and_turn_completion_signals(tmp_path):

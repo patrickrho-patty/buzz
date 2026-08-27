@@ -6,7 +6,7 @@ of the box (Terminal-Bench 2.1, 5 attempts per problem, the Sonnet+Haiku
 team); every ``run_leaderboard.py`` selector passes through unchanged. The
 script owns everything around the run:
 
-- A dedicated ``buzz-benchmark`` compose project reusing the production
+- A dedicated ``crew-benchmark`` compose project reusing the production
   bundle (``deploy/compose/compose.yml``) plus the benchmark port overlay,
   on its own ports (relay :3600, Postgres :5633, metrics :9602) so it never
   collides with a dev stack. Secrets and identities are generated once into
@@ -40,7 +40,7 @@ PACKAGE_ROOT = Path(__file__).resolve().parent.parent
 REPO_ROOT = PACKAGE_ROOT.parents[1]
 STATE_DIR = PACKAGE_ROOT / ".benchmark"
 
-COMPOSE_PROJECT = "buzz-benchmark"
+COMPOSE_PROJECT = "crew-benchmark"
 COMPOSE_FILES = (
     REPO_ROOT / "deploy" / "compose" / "compose.yml",
     PACKAGE_ROOT / "testbed" / "compose.benchmark.yml",
@@ -48,7 +48,7 @@ COMPOSE_FILES = (
 RELAY_HTTP_PORT = 3600
 PG_HOST_PORT = 5633
 METRICS_HOST_PORT = 9602
-GUI_BUNDLE_IDENTIFIER = "xyz.block.buzz.app.benchmark"
+GUI_BUNDLE_IDENTIFIER = "xyz.block.crew.app.benchmark"
 
 DEFAULT_DATASET = "terminal-bench/terminal-bench-2-1"
 DEFAULT_ATTEMPTS = 5
@@ -206,7 +206,7 @@ def write_env_file(state: dict[str, str]) -> Path:
     """Compose interpolation env — regenerated from state on every run."""
     env_path = STATE_DIR / ".env"
     lines = {
-        "CREW_IMAGE": os.environ.get("CREW_IMAGE", "ghcr.io/block/buzz:main"),
+        "CREW_IMAGE": os.environ.get("CREW_IMAGE", "ghcr.io/block/crew:main"),
         "CREW_DOMAIN": "localhost",
         "RELAY_URL": f"ws://localhost:{RELAY_HTTP_PORT}",
         "CREW_MEDIA_BASE_URL": f"http://localhost:{RELAY_HTTP_PORT}/media",
@@ -221,8 +221,8 @@ def write_env_file(state: dict[str, str]) -> Path:
         "RELAY_OWNER_PUBKEY": state["owner_pubkey"],
         "CREW_RELAY_PRIVATE_KEY": state["relay_private_key"],
         "CREW_GIT_HOOK_HMAC_SECRET": state["git_hook_hmac_secret"],
-        "POSTGRES_DB": "buzz",
-        "POSTGRES_USER": "buzz",
+        "POSTGRES_DB": "crew",
+        "POSTGRES_USER": "crew",
         "POSTGRES_PASSWORD": state["postgres_password"],
         "REDIS_PASSWORD": state["redis_password"],
         "CREW_S3_ACCESS_KEY": state["s3_access_key"],
@@ -239,7 +239,7 @@ def write_env_file(state: dict[str, str]) -> Path:
 
 def postgres_dsn(state: dict[str, str]) -> str:
     return (
-        f"postgresql://buzz:{state['postgres_password']}@127.0.0.1:{PG_HOST_PORT}/buzz"
+        f"postgresql://crew:{state['postgres_password']}@127.0.0.1:{PG_HOST_PORT}/crew"
     )
 
 
@@ -361,15 +361,15 @@ def ensure_stack(state: dict[str, str]) -> None:
     raise SystemExit(f"benchmark schema apply failed: {last_error}")
 
 
-# -- buzz binaries -----------------------------------------------------------
+# -- crew binaries -----------------------------------------------------------
 
 
 def ensure_binaries() -> dict[str, Path]:
-    """Find the host buzz CLI, building it once if missing."""
+    """Find the host crew CLI, building it once if missing."""
     try:
         return run_leaderboard.find_binaries(None)
     except SystemExit:
-        print("host buzz CLI missing — building (cargo build, first run only)...")
+        print("host crew CLI missing — building (cargo build, first run only)...")
     cargo = REPO_ROOT / "bin" / "cargo"
     subprocess.run(
         [str(cargo), "build", "-p", "crew-cli"],
@@ -497,13 +497,13 @@ def launch_gui(state: dict[str, str]) -> subprocess.Popen:
         "crew-agent",
         "crew-dev-mcp",
         "git-credential-nostr",
-        "buzz",
+        "crew",
     ):
         stub = sidecar_dir / f"{name}-{triple}"
         if not stub.exists():
             stub.touch()
-    real_cli = sidecar_dir / f"buzz-{triple}"
-    real_cli.write_bytes(binaries["buzz"].read_bytes())
+    real_cli = sidecar_dir / f"crew-{triple}"
+    real_cli.write_bytes(binaries["crew"].read_bytes())
     real_cli.chmod(0o755)
 
     print(

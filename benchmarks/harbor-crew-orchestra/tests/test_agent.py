@@ -147,14 +147,14 @@ async def test_cli_runtime_construction_from_json(tmp_path, manifest_data):
         buzz_acp_binary="/pinned/crew-acp",
         buzz_agent_binary="/pinned/crew-agent",
         buzz_dev_mcp_binary="/pinned/crew-dev-mcp",
-        buzz_cli_binary="/pinned/buzz",
+        buzz_cli_binary="/pinned/crew",
     )
     assert agent.runtime.artifact_root == tmp_path
     assert agent.runtime.endpoints["frontier/rev"].provider == "anthropic"
     assert agent.runtime.buzz_acp_binary == "/pinned/crew-acp"
     assert agent.runtime.buzz_agent_binary == "/pinned/crew-agent"
     assert agent.runtime.buzz_dev_mcp_binary == "/pinned/crew-dev-mcp"
-    assert agent.runtime.buzz_cli_binary == "/pinned/buzz"
+    assert agent.runtime.buzz_cli_binary == "/pinned/crew"
 
 
 async def test_cli_construction_requires_complete_pairs(tmp_path, manifest_data):

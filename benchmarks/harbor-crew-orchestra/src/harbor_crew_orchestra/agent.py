@@ -36,7 +36,7 @@ class BuzzOrchestraAgent(BaseAgent):
         buzz_acp_binary: str = "crew-acp",
         buzz_agent_binary: str = "crew-agent",
         buzz_dev_mcp_binary: str = "crew-dev-mcp",
-        buzz_cli_binary: str = "buzz",
+        buzz_cli_binary: str = "crew",
         relay_gateway: str = "",
         forwarder_binary: str = "relay-forwarder",
         run_id: str | None = None,
@@ -62,7 +62,7 @@ class BuzzOrchestraAgent(BaseAgent):
 
     @staticmethod
     def name() -> str:
-        return "buzz-orchestra"
+        return "crew-orchestra"
 
     def version(self) -> str:
         return "0.1.0"

@@ -118,7 +118,7 @@ def test_env_file_wires_owner_and_ports(state_dir):
 def test_compose_command_isolates_the_project(state_dir):
     command = benchmark.compose_command("up", "-d")
     assert command[:2] == ["docker", "compose"]
-    assert command[command.index("--project-name") + 1] == "buzz-benchmark"
+    assert command[command.index("--project-name") + 1] == "crew-benchmark"
     files = [command[i + 1] for i, part in enumerate(command) if part == "-f"]
     assert any(f.endswith("deploy/compose/compose.yml") for f in files)
     assert any(f.endswith("compose.benchmark.yml") for f in files)

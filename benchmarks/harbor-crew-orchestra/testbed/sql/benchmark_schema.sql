@@ -4,7 +4,7 @@
 -- Buzz migrations (canonical plan §two-domain rule). Idempotent: safe to apply
 -- on every testbed bring-up.
 --
---   docker exec -i <postgres> psql -U buzz -d buzz < sql/benchmark_schema.sql
+--   docker exec -i <postgres> psql -U crew -d crew < sql/benchmark_schema.sql
 
 CREATE SCHEMA IF NOT EXISTS benchmark;
 

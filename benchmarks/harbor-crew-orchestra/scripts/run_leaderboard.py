@@ -36,7 +36,7 @@ PACKAGE_ROOT = Path(__file__).resolve().parent.parent
 AGENT_IMPORT = "harbor_crew_orchestra:BuzzOrchestraAgent"
 PROVISIONER_FACTORY = "harbor_crew_testbed:provisioner_from_dict"
 # Host-side: the harness speaks to the relay as the trial user via this CLI.
-BINARIES = ("buzz",)
+BINARIES = ("crew",)
 # Container-side: the production stack uploaded into each task container.
 # These must be Linux builds matching the task image architecture.
 AGENT_BINARIES = ("crew-acp", "crew-agent", "crew-dev-mcp")
@@ -103,10 +103,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="JSON config for the Buzz relay/Postgres provisioner",
     )
     parser.add_argument(
-        "--buzz-bin-dir",
+        "--crew-bin-dir",
         type=Path,
         default=None,
-        help="Directory with the host buzz CLI (default: repo target/release, then target/debug)",
+        help="Directory with the host crew CLI (default: repo target/release, then target/debug)",
     )
     parser.add_argument(
         "--agent-bin-dir",
@@ -157,8 +157,8 @@ def find_binaries(bin_dir: Path | None) -> dict[str, Path]:
             return found
     searched = ", ".join(str(c) for c in candidates)
     raise SystemExit(
-        f"buzz binaries not found (need {', '.join(BINARIES)}; searched {searched}). "
-        "Build them with `cargo build` or pass --buzz-bin-dir."
+        f"crew binaries not found (need {', '.join(BINARIES)}; searched {searched}). "
+        "Build them with `cargo build` or pass --crew-bin-dir."
     )
 
 
@@ -217,7 +217,7 @@ def build_command(
         "buzz_acp_binary": agent_binaries["crew-acp"],
         "buzz_agent_binary": agent_binaries["crew-agent"],
         "buzz_dev_mcp_binary": agent_binaries["crew-dev-mcp"],
-        "buzz_cli_binary": binaries["buzz"],
+        "buzz_cli_binary": binaries["crew"],
         "run_id": args.job_name,
     }
     if args.relay_gateway:
@@ -250,7 +250,7 @@ def write_metadata_template(args: argparse.Namespace, job_dir: Path) -> Path:
             }
         )
     metadata = {
-        "agent_url": "https://github.com/block/buzz",
+        "agent_url": "https://github.com/block/crew",
         "agent_display_name": f"Buzz Orchestra ({manifest.get('condition', 'team')})",
         "agent_org_display_name": "Block",
         "models": models,
