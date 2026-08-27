@@ -30,8 +30,8 @@ export const CREW_THEME_NAME = "crew";
  * this theme too; the `.dark` root class selects the dark gradient values.
  *
  * Crew and Crew Dark are paired in {@link THEME_PAIRS}, so the picker shows a
- * combined "Buzz" tile under System mode (follow-OS) plus a single "Buzz" tile
- * under Light and a "Buzz Dark" tile under Dark.
+ * combined "Crew" tile under System mode (follow-OS) plus a single "Crew" tile
+ * under Light and a "Crew Dark" tile under Dark.
  */
 export const CREW_DARK_THEME_NAME = "crew-dark";
 

@@ -5962,7 +5962,7 @@ function buildMockProjectEvents(): RelayEvent[] {
       [
         ["d", "buzz"],
         ["name", "buzz"],
-        ["description", "The complete Buzz community platform."],
+        ["description", "The complete Crew community platform."],
         ["a", `${KIND_REPO_ANNOUNCEMENT}:${projectOwner}:crew`],
         ["a", `${KIND_REPO_ANNOUNCEMENT}:${ALICE_PUBKEY}:relay-tools`],
       ],

@@ -319,7 +319,7 @@ function parseBuzzEntityPreview(href: string): SupportedLinkPreview | null {
     return {
       kind: "crew-pull-request",
       href: buildPullRequestLink(link),
-      provider: "Buzz",
+      provider: "Crew",
       title,
       typeLabel: "Review",
     };
@@ -328,7 +328,7 @@ function parseBuzzEntityPreview(href: string): SupportedLinkPreview | null {
     return {
       kind: "crew-issue",
       href: buildIssueLink(link),
-      provider: "Buzz",
+      provider: "Crew",
       title,
       typeLabel: "Task",
     };
@@ -337,7 +337,7 @@ function parseBuzzEntityPreview(href: string): SupportedLinkPreview | null {
     return {
       kind: "crew-project",
       href: buildProjectLink(link),
-      provider: "Buzz",
+      provider: "Crew",
       title,
       typeLabel: "project",
     };
@@ -345,7 +345,7 @@ function parseBuzzEntityPreview(href: string): SupportedLinkPreview | null {
   return {
     kind: "crew-repository",
     href: buildRepoLink(link),
-    provider: "Buzz",
+    provider: "Crew",
     title,
     typeLabel: "repo",
   };
@@ -387,7 +387,7 @@ function parseBuzzGitLink(
   return {
     kind: "crew-repository",
     href: buildRepoLink({ owner, dtag: repo }),
-    provider: "Buzz",
+    provider: "Crew",
     title: repo,
     typeLabel: "repo",
   };

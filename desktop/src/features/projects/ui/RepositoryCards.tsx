@@ -127,7 +127,7 @@ function RepositoryIdentity({
 }) {
   // Where the git data lives beats repeating the (often identical) project
   // name — "github.com/block/buzz" for external repos, "owner/repo" for
-  // Buzz-hosted ones.
+  // Crew-hosted ones.
   const displayPath = repositoryDisplayPath(
     repository,
     useRelayOrigin(),
