@@ -11,7 +11,7 @@ tests:
       ownerPubkey: "0000000000000000000000000000000000000000000000000000000000000000"
       postgresql.enabled: true
       minio.enabled: true
-      secrets.existingSecret: "buzz-secrets"
+      secrets.existingSecret: "crew-secrets"
     asserts:
       - failedTemplate:
           errorPattern: "incompatible with secrets.existingSecret"

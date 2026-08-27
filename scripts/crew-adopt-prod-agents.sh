@@ -172,7 +172,7 @@ say "[1/4] Preflight"
 
 # 1a. Refuse if a running DEV build is detected; a running installed DMG is
 #     allowed (read-only detection; never kills). The main app binary is
-#     `buzz-desktop` for both the installed DMG
+#     `crew-desktop` for both the installed DMG
 #     (/Applications/Crew.app/Contents/MacOS/crew-desktop) and dev builds
 #     (target/<profile>/crew-desktop via `tauri dev`). Match that path component
 #     exactly so sidecars/helpers (crew, crew-dev-mcp, crew-agent) don't

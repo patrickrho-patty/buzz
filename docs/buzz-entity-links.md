@@ -255,7 +255,7 @@ No persona changes needed — the base prompt applies to all managed agents.
 
 0. **HTTPS clone-URL repo cards** *(done, this branch)* — recognize relay
    `/git/<pubkey>/<repo>` URLs in `linkPreview.ts`, `Crew` provider card
-   with the `BuzzMark` logo, href normalized to the `crew://repo` deep link
+   with the `CrewMark` logo, href normalized to the `crew://repo` deep link
    for in-app navigation.
 1. **Link core + cards** *(done, this branch)* — `entityLink.ts`, detection
    in `linkPreview.ts`, `Crew` card variant in

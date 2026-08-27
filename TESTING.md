@@ -172,7 +172,7 @@ relay key for authoritative replacement:
 
 ```bash
 export PATH="$PWD/target/release:$PATH"
-export DATABASE_URL="postgres://crew:buzz_dev@localhost:5432/buzz_roster_e2e"
+export DATABASE_URL="postgres://crew:crew_dev@localhost:5432/crew_roster_e2e"
 export CREW_RELAY_URL="http://localhost:3030"  # match the relay from step 3
 export RELAY_URL="ws://localhost:3030"
 export CREW_RELAY_PRIVATE_KEY="<same key used by crew-relay>"
@@ -313,7 +313,7 @@ out of the box with `just setup` or `just relay`. Common overrides:
 | `CREW_HEALTH_PORT`              | `8080`                      | `/_liveness`, `/_readiness` |
 | `CREW_METRICS_PORT`             | `9102`                      | Prometheus `/metrics` |
 | `RELAY_URL`                       | `ws://localhost:3000`       | Advertised in NIP-11 / NIP-42 challenges. **Note: no `CREW_` prefix.** |
-| `DATABASE_URL`                    | `postgres://crew:buzz_dev@localhost:5432/crew` | |
+| `DATABASE_URL`                    | `postgres://crew:crew_dev@localhost:5432/crew` | |
 | `REDIS_URL`                       | `redis://localhost:6379`    | |
 | `CREW_REQUIRE_AUTH_TOKEN`       | `false`                     | When true, REST requires NIP-98 (no `X-Pubkey` fallback) |
 | `CREW_REQUIRE_RELAY_MEMBERSHIP` | `false`                     | When true, only pubkeys in `relay_members` can connect |

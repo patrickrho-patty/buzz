@@ -325,7 +325,7 @@ high-labeled value flows into a low observation"):
   prefixes — `auth-required`, `restricted`, `invalid`, `duplicate`, `pow`,
   `rate-limited`, `blocked`, `error`, `frame-too-large`). Emitting a non-`Σ_err`
   string is a structural code violation (the C2.2 code-fence — a lint, not a model
-  property). Today `RelayError::Database(#[from] buzz_db::DbError)` (`error.rs:11`)
+  property). Today `RelayError::Database(#[from] crew_db::DbError)` (`error.rs:11`)
   is the seam. The *unauthenticated/REST* error surface (`not-found`,
   `bad-request`) is a **distinct fence** — C2.4's typed-input constraint, not
   `Σ_err` — because it has no tenant scope and no label, so it sits outside the

@@ -36,7 +36,7 @@ just relay &                         # relay on :3000
 
 # 3. Add a pubkey to the allowlist (if enabled)
 #    Insert directly — there is no CLI command for this yet.
-PGPASSWORD=buzz_dev psql -h localhost -U crew -d crew -c \
+PGPASSWORD=crew_dev psql -h localhost -U crew -d crew -c \
   "INSERT INTO pubkey_allowlist (pubkey) VALUES (decode('<64-char-hex-pubkey>', 'hex'))"
 
 # 4. Connect any NIP-29 + NIP-42 client to ws://localhost:3000

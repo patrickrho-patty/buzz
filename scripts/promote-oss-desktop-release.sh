@@ -5,7 +5,7 @@ VERSION="${1:-}"
 REPOSITORY="${GITHUB_REPOSITORY:-block/crew}"
 TAG="desktop-v${VERSION}"
 CANDIDATE="updater-manifest.json"
-ROLLING_TAG="buzz-desktop-latest"
+ROLLING_TAG="crew-desktop-latest"
 EXPECTED_PLATFORMS='["darwin-aarch64","darwin-x86_64","linux-x86_64","windows-x86_64"]'
 
 fail() { echo "::error::$*" >&2; exit 1; }

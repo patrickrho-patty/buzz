@@ -24,7 +24,7 @@ effective clock.
 ## Verifier
 
 Reads the post-agent `/logs/artifacts/crew-evidence.json` snapshot (written by
-`BuzzContainerRuntime._collect_evidence` after the agent stops, so the agent
+`CrewContainerRuntime._collect_evidence` after the agent stops, so the agent
 cannot influence it). Every dimension is programmatic; `reward` is the
 conjunction of all of them.
 
