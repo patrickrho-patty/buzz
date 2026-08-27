@@ -640,7 +640,7 @@ mod tests {
         let mut migrations: Vec<_> = MIGRATOR.iter().collect();
         migrations.sort_by_key(|migration| migration.version);
 
-        assert_eq!(migrations.len(), 32);
+        assert_eq!(migrations.len(), 33);
         assert_eq!(migrations[0].version, 1);
         assert_eq!(&*migrations[0].description, "initial schema");
         assert!(migrations[0]
@@ -1078,9 +1078,40 @@ mod tests {
             &sql[start..start + relative_end + fence_end.len()]
         }
         assert_eq!(
-            extract_roster_fence(roster_fence),
+            // 0033 supersedes the 0032 body (crew_* membership lock key);
+            // schema.sql must carry that same post-rename text.
+            extract_roster_fence(
+                MIGRATOR
+                    .iter()
+                    .find(|migration| migration.version == 33)
+                    .expect("embedded migration 0033")
+                    .sql
+                    .as_ref()
+            ),
             extract_roster_fence(desired_schema)
         );
+
+        // Buzz→Crew sentinel rename: migration 0033 supersedes every runtime
+        // contract literal shared with pre-rename binaries. Historical files
+        // keep their legacy spellings (asserted above); this layer pins the
+        // post-rename state so accidental regeneration cannot resurrect them.
+        assert_eq!(migrations[32].version, 33);
+        let crew_sentinels = migrations[32].sql.as_str();
+        assert!(crew_sentinels.contains("current_setting('crew.nip_rs_hard_delete'"));
+        assert!(crew_sentinels.contains("set_config('crew.nip_rs_hard_delete'"));
+        assert!(crew_sentinels.contains("current_setting('crew.created_at_floor'"));
+        assert!(crew_sentinels.contains("'crew_push_gate:'"));
+        assert!(crew_sentinels.contains("'crew_channel_ttl:'"));
+        assert!(crew_sentinels.contains("'crew_channel_membership:'"));
+        assert!(crew_sentinels.contains("'crew-community-deletion:'"));
+        assert!(crew_sentinels.contains("current_setting('crew.deletion_executor_community'"));
+        assert!(crew_sentinels.contains("current_setting('crew.serving_write_community'"));
+        // Mesh status d/k tags persist in historical events: readers match
+        // both spellings while writers moved to the new one.
+        assert!(crew_sentinels.contains("d_tag LIKE 'crew-mesh-member-status:%'"));
+        assert!(crew_sentinels.contains("d_tag LIKE 'buzz-mesh-member-status:%'"));
+        assert!(crew_sentinels.contains(r#"tags @> '[["k", "crew-mesh-status"]]'::jsonb"#));
+        assert!(crew_sentinels.contains(r#"tags @> '[["k", "buzz-mesh-status"]]'::jsonb"#));
     }
 
     #[test]
@@ -1474,6 +1505,16 @@ mod tests {
             .expect("embedded migration 0029")
             .sql
             .as_ref();
+        // 0033 (Buzz→Crew sentinel rename) supersedes some function bodies
+        // with `CREATE OR REPLACE`. The deployed end state — and therefore
+        // schema.sql — is 0029 with those bodies overridden, so parity runs
+        // against the merged surface, not the historical text alone.
+        let migration_0033: &str = MIGRATOR
+            .iter()
+            .find(|migration| migration.version == 33)
+            .expect("embedded migration 0033")
+            .sql
+            .as_ref();
         let workspace_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .parent()
             .and_then(std::path::Path::parent)
@@ -1481,7 +1522,16 @@ mod tests {
         let schema_sql = std::fs::read_to_string(workspace_root.join("schema/schema.sql"))
             .expect("read schema/schema.sql");
 
-        let migration = surface(migration_0029);
+        let mut migration = surface(migration_0029);
+        let renamed = surface(migration_0033);
+        for (function, definition) in renamed.functions {
+            // 0033 must use `CREATE OR REPLACE`; parity compares against
+            // schema.sql's plain `CREATE`. Strip the modifier before diffing.
+            let definition = definition.replacen("create or replace", "create", 1);
+            if migration.functions.contains_key(&function) {
+                migration.functions.insert(function, definition);
+            }
+        }
         let schema = surface(&schema_sql);
 
         assert_eq!(
@@ -2121,8 +2171,8 @@ mod tests {
             .await
             .expect("begin direct fence");
         sqlx::query(
-            "SELECT set_config('buzz.deletion_executor_community', $1, true), \
-                    set_config('buzz.deletion_fence_generation', '1', true)",
+            "SELECT set_config('crew.deletion_executor_community', $1, true), \
+                    set_config('crew.deletion_fence_generation', '1', true)",
         )
         .bind(to_fence.to_string())
         .execute(&mut *fence_connection)

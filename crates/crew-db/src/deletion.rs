@@ -1572,7 +1572,7 @@ impl DeletionStore {
         // Migration 0011 fences hard deletion of NIP-RS rows against legacy
         // writers. Whole-community deletion is an intentional hard-delete path,
         // and the transaction is already bound to an approved, fenced tenant.
-        sqlx::query("SELECT set_config('buzz.nip_rs_hard_delete', 'on', true)")
+        sqlx::query("SELECT set_config('crew.nip_rs_hard_delete', 'on', true)")
             .execute(&mut *tx)
             .await?;
 
@@ -2224,11 +2224,11 @@ impl DeletionStore {
             )));
         }
         sqlx::query(
-            "SELECT set_config('buzz.serving_write_community', $1, true), \
-                    set_config('buzz.serving_write_lease_id', $2, true), \
-                    set_config('buzz.serving_write_owner', $3, true), \
-                    set_config('buzz.serving_write_generation', $4, true), \
-                    set_config('buzz.serving_write_fence_generation', $5, true)",
+            "SELECT set_config('crew.serving_write_community', $1, true), \
+                    set_config('crew.serving_write_lease_id', $2, true), \
+                    set_config('crew.serving_write_owner', $3, true), \
+                    set_config('crew.serving_write_generation', $4, true), \
+                    set_config('crew.serving_write_fence_generation', $5, true)",
         )
         .bind(lease.community_id.to_string())
         .bind(lease.id.to_string())
@@ -2770,8 +2770,8 @@ async fn set_executor_gucs(
     generation: i64,
 ) -> Result<()> {
     sqlx::query(
-        "SELECT set_config('buzz.deletion_executor_community', $1, true), \
-                set_config('buzz.deletion_fence_generation', $2, true)",
+        "SELECT set_config('crew.deletion_executor_community', $1, true), \
+                set_config('crew.deletion_fence_generation', $2, true)",
     )
     .bind(community.to_string())
     .bind(generation.to_string())
@@ -3856,8 +3856,8 @@ mod postgres_tests {
             .await
             .expect("set transaction isolation");
             sqlx::query(
-                "SELECT set_config('buzz.deletion_executor_community', $1, true), \
-                        set_config('buzz.deletion_fence_generation', '0', true)",
+                "SELECT set_config('crew.deletion_executor_community', $1, true), \
+                        set_config('crew.deletion_fence_generation', '0', true)",
             )
             .bind(community.to_string())
             .execute(&mut *tx)
@@ -4051,8 +4051,8 @@ mod postgres_tests {
         }
         let mut lifecycle = db.pool.begin().await.expect("begin target lifecycle");
         sqlx::query(
-            "SELECT set_config('buzz.deletion_executor_community', $1, true), \
-                    set_config('buzz.deletion_fence_generation', '1', true)",
+            "SELECT set_config('crew.deletion_executor_community', $1, true), \
+                    set_config('crew.deletion_fence_generation', '1', true)",
         )
         .bind(target.to_string())
         .execute(&mut *lifecycle)

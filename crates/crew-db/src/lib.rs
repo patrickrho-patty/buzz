@@ -672,7 +672,7 @@ impl Db {
     ///
     /// The writer pool arms the commit-time `created_at` floor guard
     /// (migration 0021) on every connection by setting the
-    /// `buzz.created_at_floor` GUC — this is what makes the replica fence
+    /// `crew.created_at_floor` GUC — this is what makes the replica fence
     /// proof hold for every insert path that goes through this pool.
     pub async fn new(config: &DbConfig) -> Result<Self> {
         let pool = Self::connect_pool(config, &config.database_url).await?;
@@ -710,7 +710,7 @@ impl Db {
             .after_connect(|conn, _meta| {
                 Box::pin(async move {
                     // `SET` cannot take bind parameters; `set_config` can.
-                    sqlx::query("SELECT set_config('buzz.created_at_floor', $1, false)")
+                    sqlx::query("SELECT set_config('crew.created_at_floor', $1, false)")
                         .bind(replica_fence::CREATED_AT_FLOOR_SECS.to_string())
                         .execute(&mut *conn)
                         .await?;
@@ -5243,11 +5243,17 @@ impl Db {
                         .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
             })
             && read_state_t_tag_count == 1;
+        // Mesh status rows may carry either the current `crew-mesh-*` tag
+        // spelling or the legacy `buzz-mesh-*` one written by pre-rename
+        // binaries; both must hard-delete-supersede identically.
         let is_buzz_mesh_status = kind_i32 == crew_core::kind::KIND_BOOKMARK_SET as i32
-            && d_tag.starts_with("buzz-mesh-member-status:")
+            && (d_tag.starts_with("crew-mesh-member-status:")
+                || d_tag.starts_with("buzz-mesh-member-status:"))
             && event.tags.iter().any(|tag| {
                 let parts = tag.as_slice();
-                parts.len() == 2 && parts[0] == "k" && parts[1] == "buzz-mesh-status"
+                parts.len() == 2
+                    && parts[0] == "k"
+                    && (parts[1] == "crew-mesh-status" || parts[1] == "buzz-mesh-status")
             });
         let hard_delete_superseded = is_nip_rs || is_buzz_mesh_status;
 
@@ -5305,7 +5311,7 @@ impl Db {
                 // Migration 0011 rejects regex-coordinate hard deletes from
                 // pre-fix writers. Authorize only this corrected NIP-RS delete,
                 // transaction-locally so pooled connections cannot leak it.
-                sqlx::query("SELECT set_config('buzz.nip_rs_hard_delete', 'on', true)")
+                sqlx::query("SELECT set_config('crew.nip_rs_hard_delete', 'on', true)")
                     .execute(&mut *tx)
                     .await?;
             }
@@ -6372,7 +6378,7 @@ mod tests {
         for commit in [true, false] {
             let mut tx = conn.begin().await.expect("begin GUC transaction");
             let value: String =
-                sqlx::query_scalar("SELECT set_config('buzz.nip_rs_hard_delete', 'on', true)")
+                sqlx::query_scalar("SELECT set_config('crew.nip_rs_hard_delete', 'on', true)")
                     .fetch_one(&mut *tx)
                     .await
                     .expect("set transaction-local GUC");
@@ -6383,7 +6389,7 @@ mod tests {
                 tx.rollback().await.expect("rollback GUC transaction");
             }
             let leaked: Option<String> = sqlx::query_scalar(
-                "SELECT NULLIF(current_setting('buzz.nip_rs_hard_delete', true), '')",
+                "SELECT NULLIF(current_setting('crew.nip_rs_hard_delete', true), '')",
             )
             .fetch_one(&mut *conn)
             .await
@@ -8719,7 +8725,7 @@ mod tests {
             format!("{}/{}", &base[..idx], wname)
         };
         // `Db::new` (not `from_pools`) so the WRITER pool arms the
-        // `buzz.created_at_floor` GUC — `spawn_fence_probe` verifies the
+        // `crew.created_at_floor` GUC — `spawn_fence_probe` verifies the
         // floor guard on a writer connection, and `create_scratch_db`'s
         // plain `PgPool::connect` never arms it. The reader is still the
         // lazy `connect_read_pool` pool this test is about.
@@ -9055,7 +9061,7 @@ mod tests {
                 let mut tx = pool.begin().await.expect("begin");
                 // Arm the guard for this transaction only (the relay's
                 // writer pool arms it per connection; tests are explicit).
-                sqlx::query("SELECT set_config('buzz.created_at_floor', $1, true)")
+                sqlx::query("SELECT set_config('crew.created_at_floor', $1, true)")
                     .bind(crate::replica_fence::CREATED_AT_FLOOR_SECS.to_string())
                     .execute(&mut *tx)
                     .await
@@ -9137,7 +9143,7 @@ mod tests {
             1,
             "SQLx replaces after_connect hooks; writer safety must use exactly one"
         );
-        assert!(connect_pool.contains("buzz.created_at_floor"));
+        assert!(connect_pool.contains("crew.created_at_floor"));
         assert!(connect_pool.contains("SHOW transaction_isolation"));
         assert!(!connect_pool.contains("arm_floor_guard"));
         assert!(!connect_pool.contains("_arm_floor_guard"));
@@ -9224,7 +9230,7 @@ mod tests {
         let cid = CommunityId::from_uuid(community);
 
         // Perci nit: assert the effective session value, not the intent.
-        let effective: String = sqlx::query_scalar("SHOW buzz.created_at_floor")
+        let effective: String = sqlx::query_scalar("SHOW crew.created_at_floor")
             .fetch_one(&db.pool)
             .await
             .expect("SHOW guard GUC");
@@ -9442,7 +9448,7 @@ mod tests {
             let pool = pool.clone();
             async move {
                 let mut tx = pool.begin().await.expect("begin");
-                sqlx::query("SELECT set_config('buzz.created_at_floor', $1, true)")
+                sqlx::query("SELECT set_config('crew.created_at_floor', $1, true)")
                     .bind(crate::replica_fence::CREATED_AT_FLOOR_SECS.to_string())
                     .execute(&mut *tx)
                     .await

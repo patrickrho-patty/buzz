@@ -12,14 +12,18 @@ pub const WIRE_VERSION: u8 = 1;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum AppProfile {
-    BuzzIosProduction,
-    BuzzIosSandbox,
+    CrewIosProduction,
+    CrewIosSandbox,
 }
 impl AppProfile {
+    /// Serialized profile ids stay on the legacy `buzz-ios-*` spellings for
+    /// now: they key APNs credentials for the shipped app bundles and rows
+    /// already stored in `push_leases.app_profile`. New `crew-ios-*` ids are
+    /// accepted as aliases (see parsers) so future builds can migrate.
     pub const fn as_str(self) -> &'static str {
         match self {
-            Self::BuzzIosProduction => "buzz-ios-production",
-            Self::BuzzIosSandbox => "buzz-ios-sandbox",
+            Self::CrewIosProduction => "buzz-ios-production",
+            Self::CrewIosSandbox => "buzz-ios-sandbox",
         }
     }
 }

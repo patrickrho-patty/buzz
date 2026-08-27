@@ -783,8 +783,8 @@ mod tests {
         }
         let mut lifecycle = pool.begin().await.expect("begin lifecycle fixture");
         sqlx::query(
-            "SELECT set_config('buzz.deletion_executor_community', $1, true), \
-                    set_config('buzz.deletion_fence_generation', '0', true)",
+            "SELECT set_config('crew.deletion_executor_community', $1, true), \
+                    set_config('crew.deletion_fence_generation', '0', true)",
         )
         .bind(target.to_string())
         .execute(&mut *lifecycle)

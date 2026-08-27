@@ -922,7 +922,7 @@ BEGIN
     -- including internal paths that bypass live dispatch.
     IF NEW.kind IN (7, 9, 1059, 40007, 46010) THEN
         PERFORM pg_advisory_xact_lock_shared(
-            hashtextextended('buzz_push_gate:' || NEW.community_id::text, 0));
+            hashtextextended('crew_push_gate:' || NEW.community_id::text, 0));
         IF EXISTS (
             SELECT 1 FROM push_leases
             WHERE community_id = NEW.community_id
@@ -959,7 +959,7 @@ BEGIN
     IF NEW.channel_id IS NOT NULL AND NEW.kind <> 9007 THEN
         BEGIN
             PERFORM pg_advisory_xact_lock_shared(hashtextextended(
-                'buzz_channel_ttl:' || NEW.community_id::text || ':' || NEW.channel_id::text, 0));
+                'crew_channel_ttl:' || NEW.community_id::text || ':' || NEW.channel_id::text, 0));
 
             SELECT ttl_seconds INTO channel_ttl
             FROM channels
@@ -1011,7 +1011,7 @@ BEGIN
     END IF;
 
     PERFORM pg_advisory_xact_lock(hashtextextended(
-        'buzz_channel_membership:' || NEW.community_id::text || ':' || NEW.channel_id::text,
+        'crew_channel_membership:' || NEW.community_id::text || ':' || NEW.channel_id::text,
         0
     ));
 
@@ -1071,7 +1071,7 @@ CREATE TRIGGER trg_events_guard_channel_roster_snapshot
 
 -- Replica-fence floor guard (keep in sync with migrations/0021). A deferred
 -- constraint trigger re-checks, inside COMMIT processing, that channel-bearing
--- event rows are no older than `buzz.created_at_floor` seconds before commit
+-- event rows are no older than `crew.created_at_floor` seconds before commit
 -- time (clock_timestamp(), NOT the transaction-frozen now()). This turns the
 -- relay's ingest-time created_at envelope into a commit-time storage
 -- invariant, which is what lets keyset-cursor pages below the replica fence
@@ -1083,7 +1083,7 @@ CREATE TRIGGER trg_events_guard_channel_roster_snapshot
 CREATE FUNCTION events_created_at_floor_guard() RETURNS trigger
 LANGUAGE plpgsql AS $$
 DECLARE
-    floor_secs numeric := nullif(current_setting('buzz.created_at_floor', true), '')::numeric;
+    floor_secs numeric := nullif(current_setting('crew.created_at_floor', true), '')::numeric;
 BEGIN
     IF floor_secs IS NOT NULL
        AND floor_secs > 0
@@ -1468,7 +1468,7 @@ INSERT INTO _operator_global_tables (table_name, reason) VALUES
 
 CREATE FUNCTION community_deletion_lock_key(target UUID) RETURNS BIGINT
 LANGUAGE SQL IMMUTABLE STRICT PARALLEL SAFE AS $$
-    SELECT hashtextextended('buzz-community-deletion:' || target::text, 0)
+    SELECT hashtextextended('crew-community-deletion:' || target::text, 0)
 $$;
 -- Keep the deletion control plane writable while its target tenant is fenced.
 -- This predicate is the single SQL source of truth used by attachment and live
@@ -1548,8 +1548,8 @@ BEGIN
     END IF;
 
     -- Authorization is evaluated independently for every community checked.
-    executor_community := current_setting('buzz.deletion_executor_community', true);
-    executor_generation := current_setting('buzz.deletion_fence_generation', true);
+    executor_community := current_setting('crew.deletion_executor_community', true);
+    executor_generation := current_setting('crew.deletion_fence_generation', true);
     IF executor_community = target::TEXT
        AND executor_generation ~ '^[0-9]+$'
        AND executor_generation::BIGINT = generation THEN
@@ -1558,11 +1558,11 @@ BEGIN
 
     -- A serving mutation admitted before quiescing may finish only while its
     -- exact durable lease remains current and bound to this fence generation.
-    serving_community := current_setting('buzz.serving_write_community', true);
-    serving_lease_id := current_setting('buzz.serving_write_lease_id', true);
-    serving_owner := current_setting('buzz.serving_write_owner', true);
-    serving_generation := current_setting('buzz.serving_write_generation', true);
-    serving_fence_generation := current_setting('buzz.serving_write_fence_generation', true);
+    serving_community := current_setting('crew.serving_write_community', true);
+    serving_lease_id := current_setting('crew.serving_write_lease_id', true);
+    serving_owner := current_setting('crew.serving_write_owner', true);
+    serving_generation := current_setting('crew.serving_write_generation', true);
+    serving_fence_generation := current_setting('crew.serving_write_fence_generation', true);
     IF lifecycle IN ('active', 'quiescing')
        AND serving_community = target::TEXT
        AND serving_lease_id ~ '^[0-9a-fA-F-]{36}$'
@@ -1618,8 +1618,8 @@ $$;
 CREATE FUNCTION enforce_community_tombstone() RETURNS TRIGGER
 LANGUAGE plpgsql AS $$
 DECLARE
-    executor_community TEXT := current_setting('buzz.deletion_executor_community', true);
-    executor_generation TEXT := current_setting('buzz.deletion_fence_generation', true);
+    executor_community TEXT := current_setting('crew.deletion_executor_community', true);
+    executor_generation TEXT := current_setting('crew.deletion_fence_generation', true);
     expected_generation BIGINT;
 BEGIN
     IF TG_OP = 'DELETE' THEN

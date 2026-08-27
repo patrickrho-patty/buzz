@@ -344,8 +344,8 @@ pub async fn set_canvas(
 /// on the channel row: membership is its own contention domain and must not
 /// serialize against unrelated channel metadata writers (`update_channel`,
 /// `set_topic`, the TTL transition). Distinct key domain from
-/// `buzz_channel_ttl:`.
-const CHANNEL_MEMBERSHIP_LOCK_NAMESPACE: &str = "buzz_channel_membership:";
+/// `crew_channel_ttl:`.
+const CHANNEL_MEMBERSHIP_LOCK_NAMESPACE: &str = "crew_channel_membership:";
 
 /// Verify that migration 0032's roster fence is active on the partitioned
 /// `events` parent and every attached partition.
@@ -1617,7 +1617,7 @@ pub async fn update_channel(
         let mut tx = pool.begin().await?;
         sqlx::query("SELECT pg_advisory_xact_lock(hashtextextended($1, 0))")
             .bind(format!(
-                "buzz_channel_ttl:{}:{}",
+                "crew_channel_ttl:{}:{}",
                 community_id.as_uuid(),
                 channel_id
             ))

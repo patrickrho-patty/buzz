@@ -63,8 +63,10 @@ fn ts(v: DateTime<Utc>) -> i64 {
 }
 fn profile(v: &str) -> Result<AppProfile, AuthorityError> {
     match v {
-        "buzz-ios-production" => Ok(AppProfile::BuzzIosProduction),
-        "buzz-ios-sandbox" => Ok(AppProfile::BuzzIosSandbox),
+        // Legacy ids key the shipped APNs credentials; crew-* are forward
+        // aliases for post-rename builds (see AppProfile::as_str docs).
+        "buzz-ios-production" | "crew-ios-production" => Ok(AppProfile::CrewIosProduction),
+        "buzz-ios-sandbox" | "crew-ios-sandbox" => Ok(AppProfile::CrewIosSandbox),
         _ => Err(AuthorityError::Unavailable),
     }
 }

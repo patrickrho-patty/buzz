@@ -70,8 +70,8 @@ use sha2::{Digest, Sha256};
 const KIND_MESH_STATUS: u16 = 30_003;
 /// NIP-43 membership roster snapshot.
 const KIND_MEMBERSHIP: u16 = 13_534;
-const STATUS_D_TAG_PREFIX: &str = "buzz-mesh-member-status";
-const STATUS_K_TAG: &str = "buzz-mesh-status";
+const STATUS_D_TAG_PREFIX: &str = "crew-mesh-member-status";
+const STATUS_K_TAG: &str = "crew-mesh-status";
 
 /// Small, real instruct model; same ref the sibling mesh examples use.
 const DEFAULT_MODEL: &str = "jc-builds/SmolLM2-135M-Instruct-Q4_K_M-GGUF:Q4_K_M";
@@ -170,7 +170,7 @@ async fn init_native_runtime() -> anyhow::Result<()> {
 
 fn member_binding_bytes(member_pubkey: &str) -> Vec<u8> {
     format!(
-        "buzz-mesh-owner-binding-v1:{}",
+        "crew-mesh-owner-binding-v1:{}",
         member_pubkey.trim().to_ascii_lowercase()
     )
     .into_bytes()
@@ -191,7 +191,7 @@ fn member_endpoint_binding_bytes(member_pubkey: &str, endpoint_tokens: &[String]
         digest.update(endpoint.as_bytes());
     }
     format!(
-        "buzz-mesh-owner-endpoint-binding-v1:{}:{}",
+        "crew-mesh-owner-endpoint-binding-v1:{}:{}",
         member_pubkey.trim().to_ascii_lowercase(),
         hex::encode(digest.finalize())
     )
@@ -683,7 +683,7 @@ fn orchestrate() -> anyhow::Result<()> {
         "crew-admin binary not found at {admin} (set CREW_ADMIN_BIN)"
     );
 
-    let scratch = std::env::temp_dir().join(format!("buzz-mesh-lifecycle-{}", std::process::id()));
+    let scratch = std::env::temp_dir().join(format!("crew-mesh-lifecycle-{}", std::process::id()));
     std::fs::create_dir_all(&scratch)?;
 
     // Nostr identities: A (serve member), B (client member), C (stranger).

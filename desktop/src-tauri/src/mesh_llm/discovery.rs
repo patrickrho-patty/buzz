@@ -286,7 +286,9 @@ pub fn availability_from_events(events: Vec<nostr::Event>) -> MeshAvailability {
 pub fn mesh_status_filter() -> serde_json::Value {
     serde_json::json!({
         "kinds": [MESH_STATUS_KIND],
-        "#k": ["buzz-mesh-status"],
+        // Pre-rename binaries still publish the legacy `buzz-mesh-status`
+        // spelling; keep both in play until that generation is gone.
+        "#k": ["crew-mesh-status", "buzz-mesh-status"],
         "limit": MESH_STATUS_PAGE_SIZE
     })
 }
