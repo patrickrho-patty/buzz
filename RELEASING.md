@@ -6,7 +6,7 @@ Mobile uses immutable release-candidate tags cut directly from remote `main`:
 | Lane | Entry point | Artifact |
 |------|-------------|----------|
 | Desktop | `just release-desktop <version>` | Packaged desktop app (signed/notarized macOS, unsigned Windows, and Linux) |
-| Relay | `just release-relay` | `ghcr.io/block/buzz` container image |
+| Relay | `just release-relay` | `ghcr.io/block/crew` container image |
 | Mobile | `scripts/mobile-release.sh candidate X.Y.Z` | Exact `mobile-vX.Y.Z-rc.N` source identity |
 
 The lanes version independently. Desktop reads its manifests, relay reads its
@@ -256,7 +256,7 @@ host's Wayland/GStreamer/graphics stack and requires GLib >= 2.72
   its pull request
 - The Default `main` ruleset configured for squash-only merging, strict required
   checks, stale-review dismissal, and the **Desktop Release Candidate** check
-- Release tag ruleset [`14378754`](https://github.com/block/buzz/rules/14378754)
+- Release tag ruleset [`14378754`](https://github.com/block/crew/rules/14378754)
   active for `desktop-v*` and `mobile-v*`, with creation, update, deletion, and
   non-fast-forward protections and `crew-release-bot` as its sole always-bypass
   actor

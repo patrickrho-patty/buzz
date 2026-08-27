@@ -1,6 +1,6 @@
 # Crew Helm Chart
 
-[Crew](https://github.com/block/buzz) is a Nostr-based messaging platform for human–agent collaboration: a single relay binary serving WebSocket + REST + web UI, backed by PostgreSQL, Redis, and S3-compatible object storage.
+[Crew](https://github.com/block/crew) is a Nostr-based messaging platform for human–agent collaboration: a single relay binary serving WebSocket + REST + web UI, backed by PostgreSQL, Redis, and S3-compatible object storage.
 
 This chart has two operating profiles selected by values:
 
@@ -12,7 +12,7 @@ This chart has two operating profiles selected by values:
 ## Quickstart (eval only)
 
 ```sh
-helm install crew oci://ghcr.io/block/buzz-push-gateway/charts/crew --version 0.1.7 \
+helm install crew oci://ghcr.io/block/crew-push-gateway/charts/crew --version 0.1.7 \
   --create-namespace --namespace crew \
   --set quickstart=true \
   --set postgresql.enabled=true \
@@ -239,7 +239,7 @@ Save these. Losing any of them is data loss. See NOTES.txt printed by `helm inst
 ## Releasing
 
 The chart is published to GHCR as an OCI artifact at
-`oci://ghcr.io/block/buzz-push-gateway/charts/crew` by the `helm chart` workflow
+`oci://ghcr.io/block/crew-push-gateway/charts/crew` by the `helm chart` workflow
 (`.github/workflows/helm-chart.yml`), versioned independently of the desktop app
 and the relay image via its own `chart-v*` tags. Every PR/`main` push still
 lints, unit-tests, and render-checks the chart; only a `chart-v*` tag publishes,

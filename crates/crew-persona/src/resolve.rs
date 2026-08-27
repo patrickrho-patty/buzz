@@ -576,7 +576,7 @@ mod tests {
     }
 
     #[test]
-    fn runtime_env_vars_crew_agent_emits_buzz_agent_vars() {
+    fn runtime_env_vars_crew_agent_emits_crew_agent_vars() {
         let mut lp = stub_persona(Some("databricks:goose-claude-4-6-opus"), None, None);
         lp.runtime = Some("crew-agent".to_owned());
         let vars = runtime_env_vars(&lp);

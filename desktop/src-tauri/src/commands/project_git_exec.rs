@@ -511,11 +511,11 @@ mod tests {
 
     #[test]
     fn local_clone_url_allows_only_public_github_https_urls() {
-        assert!(validate_local_clone_url("https://github.com/block/buzz").is_ok());
-        assert!(validate_local_clone_url("https://github.com/block/buzz.git").is_ok());
-        assert!(validate_local_clone_url("http://github.com/block/buzz").is_err());
-        assert!(validate_local_clone_url("https://github.com/block/buzz/issues").is_err());
-        assert!(validate_local_clone_url("https://user@github.com/block/buzz").is_err());
+        assert!(validate_local_clone_url("https://github.com/block/crew").is_ok());
+        assert!(validate_local_clone_url("https://github.com/block/crew.git").is_ok());
+        assert!(validate_local_clone_url("http://github.com/block/crew").is_err());
+        assert!(validate_local_clone_url("https://github.com/block/crew/issues").is_err());
+        assert!(validate_local_clone_url("https://user@github.com/block/crew").is_err());
         assert!(validate_local_clone_url("https://github.com.evil.test/block/crew").is_err());
         assert!(validate_local_clone_url("https://gitlab.com/block/crew").is_err());
     }

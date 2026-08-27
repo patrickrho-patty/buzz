@@ -141,7 +141,7 @@ mod tests {
 
     fn image(byte: char) -> ImageRef {
         crate::image::parse(&format!(
-            "ghcr.io/block/buzz-sprig@sha256:{}",
+            "ghcr.io/block/crew-sprig@sha256:{}",
             byte.to_string().repeat(64)
         ))
         .unwrap()

@@ -807,7 +807,7 @@ mod tests {
 
     #[test]
     fn favicon_metadata_prefers_a_supported_raster_candidate() {
-        let page = Url::parse("https://github.com/block/buzz").unwrap();
+        let page = Url::parse("https://github.com/block/crew").unwrap();
         let html = r#"<link rel="mask-icon" href="https://assets.example/favicon.svg">
           <link rel="alternate icon" type="image/png" href="https://assets.example/favicon.png">
           <link rel="icon" type="image/svg+xml" href="https://assets.example/favicon.svg">"#;

@@ -27,7 +27,7 @@ keypair.
 
 - Requires Docker Compose v2.24.4 or newer; the TLS override uses Compose's
   `!reset` tag to remove the direct relay port when Caddy terminates HTTPS.
-- Default `CREW_IMAGE` tracks `ghcr.io/block/buzz:main` for early testing. Pin it to `ghcr.io/block/buzz:sha-<7>` or a semver release tag for production once available.
+- Default `CREW_IMAGE` tracks `ghcr.io/block/crew:main` for early testing. Pin it to `ghcr.io/block/crew:sha-<7>` or a semver release tag for production once available.
 - Keep `CREW_RELAY_PRIVATE_KEY`, `CREW_GIT_HOOK_HMAC_SECRET`, database/Redis,
   and S3 secrets stable across restarts.
 - `RELAY_OWNER_PUBKEY` is intentionally not prefixed with `CREW_`; it must be a

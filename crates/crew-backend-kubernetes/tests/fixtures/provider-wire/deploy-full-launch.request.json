@@ -46,8 +46,8 @@
     "turn_timeout_seconds": 300
   },
   "provider_config": {
-    "namespace": "buzz-agents-test",
-    "image": "ghcr.io/block/buzz-sprig@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "namespace": "crew-agents-test",
+    "image": "ghcr.io/block/crew-sprig@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "inactivity_seconds": 3600
   }
 }

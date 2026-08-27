@@ -1,4 +1,4 @@
-export const CREW_RELEASES_URL = "https://github.com/block/buzz/releases";
+export const CREW_RELEASES_URL = "https://github.com/block/crew/releases";
 const CREW_RELEASES_API_URL =
   "https://api.github.com/repos/block/crew/releases?per_page=10";
 const CACHE_KEY = "crew.latestDownload.v1";

@@ -95,11 +95,11 @@ The chart defaults to the `main` image tag because `.github/workflows/docker.yml
 
 ```bash
 gh attestation verify \
-  oci://ghcr.io/block/buzz-push-gateway@sha256:<64-lowercase-hex> \
+  oci://ghcr.io/block/crew-push-gateway@sha256:<64-lowercase-hex> \
   --owner block
 ```
 
-Only after that command succeeds, set the exact digest as `image.digest`; the chart then renders `ghcr.io/block/buzz@sha256:...` and ignores the mutable tag. `values-production.yaml` is an intentionally invalid production-input contract: deployment CI must inject this verified `image.digest`, the provisioned Apple application identifier, an environment-owned Gateway parent reference, and the actual PostgreSQL network. Schema validation rejects the artifact when any remains empty; the render guard proves both rejection and a fully injected render.
+Only after that command succeeds, set the exact digest as `image.digest`; the chart then renders `ghcr.io/block/crew@sha256:...` and ignores the mutable tag. `values-production.yaml` is an intentionally invalid production-input contract: deployment CI must inject this verified `image.digest`, the provisioned Apple application identifier, an environment-owned Gateway parent reference, and the actual PostgreSQL network. Schema validation rejects the artifact when any remains empty; the render guard proves both rejection and a fully injected render.
 
 Network policy keeps APNs HTTPS and PostgreSQL egress in separate CIDR lists. APNs currently requires broad TCP/443 reachability; `networkPolicy.postgresEgressCidrs` must be narrowed to the production database network, and the DNS namespace/pod selectors must match the cluster DNS deployment. The sample private CIDR is not a claim about the production topology.
 
@@ -125,5 +125,5 @@ creates `push-chart-vX.Y.Z` and dispatches
 `.github/workflows/push-gateway-helm-chart.yml` with that immutable tag and bare
 version. The publisher verifies the checked-out commit is the tag target and the
 chart version equals `X.Y.Z` before pushing
-`oci://ghcr.io/block/buzz-push-gateway/charts/crew-push-gateway`. A manually pushed
+`oci://ghcr.io/block/crew-push-gateway/charts/crew-push-gateway`. A manually pushed
 `push-chart-vX.Y.Z` tag is the documented rescue path and runs the same checks.

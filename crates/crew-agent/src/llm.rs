@@ -2252,7 +2252,7 @@ async fn openrouter_post(
         let resp = match http
             .post(url)
             .header("content-type", "application/json")
-            .header("HTTP-Referer", "https://github.com/block/buzz")
+            .header("HTTP-Referer", "https://github.com/block/crew")
             .header("X-OpenRouter-Title", "Crew")
             .bearer_auth(bearer)
             .body(body_bytes.clone())
@@ -7671,7 +7671,7 @@ mod tests {
             .expect("one request captured")
             .to_lowercase();
         assert!(
-            header_str.contains("http-referer: https://github.com/block/buzz"),
+            header_str.contains("http-referer: https://github.com/block/crew"),
             "got: {header_str}"
         );
         assert!(

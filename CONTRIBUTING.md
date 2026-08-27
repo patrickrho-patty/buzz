@@ -4,7 +4,7 @@ Welcome, and thank you for your interest in contributing! Crew is an
 open-source project and we're glad you're here. This guide will help you
 get from zero to a merged pull request.
 
-If you have questions that aren't answered here, [open an issue](https://github.com/block/buzz/issues/new).
+If you have questions that aren't answered here, [open an issue](https://github.com/block/crew/issues/new).
 
 ---
 
@@ -35,7 +35,7 @@ unacceptable behavior to **conduct@crew-relay.org**.
 
 ## Before You Open a PR
 
-Before starting, search [open PRs](https://github.com/block/buzz/pulls) and [open issues](https://github.com/block/buzz/issues) for duplicates — someone may already be working on the same thing. When you open your PR, link the closest existing one in the description (or say "none found").
+Before starting, search [open PRs](https://github.com/block/crew/pulls) and [open issues](https://github.com/block/crew/issues) for duplicates — someone may already be working on the same thing. When you open your PR, link the closest existing one in the description (or say "none found").
 
 For anything beyond a small fix, opening an issue first is strongly recommended. Describe the problem and proposed solution so a maintainer can acknowledge the approach before you build — it avoids two people building the same thing in parallel.
 
@@ -133,7 +133,7 @@ clippy`, `just test-unit`, and `just test` need no GTK.
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/block/buzz.git
+git clone https://github.com/block/crew.git
 cd crew
 
 # 2. Activate Hermit (optional but recommended)

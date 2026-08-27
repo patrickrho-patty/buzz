@@ -31,7 +31,7 @@ Crew spans five repos. This one (`block/crew`) is the OSS source for the relay, 
 
 | Repo | Purpose |
 |------|---------|
-| [block/crew](https://github.com/block/buzz) | OSS source — relay, desktop app, mobile app, CLI, agent harness |
+| [block/crew](https://github.com/block/crew) | OSS source — relay, desktop app, mobile app, CLI, agent harness |
 | [squareup/crew-releases](https://github.com/squareup/squareup/crew-releases) | Buildkite pipelines producing Block-signed macOS + iOS builds with `-block` desktop version suffix |
 | [squareup/sprout-oss](https://github.com/squareup/sprout-oss) | CI pipeline building the relay Docker image and pushing to internal ECR |
 | [squareup/block-coder-tf-stacks](https://github.com/squareup/block-coder-tf-stacks) | Terraform + ArgoCD deploying the relay to the staging Kubernetes cluster |
@@ -455,7 +455,7 @@ not post. This catches the most common screenshot regression.
 
 **PR comments:** Use a body template (3rd arg to `post-screenshots.sh`) with
 `{{filename}}` placeholders. Each screenshot gets a `###` heading + one-line
-description. See [PR #803](https://github.com/block/buzz/pull/803).
+description. See [PR #803](https://github.com/block/crew/pull/803).
 
 ---
 

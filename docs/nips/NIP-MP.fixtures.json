@@ -401,7 +401,7 @@
     {
       "name": "valid_member_dtag_contains_colon",
       "expect": "accept",
-      "note": "Repo `d` segment contains a colon. The coordinate splits into at most three parts, so the third part is the repo `d` value verbatim \u2014 `buzz:infra` here. Splitting on every colon instead would make any repo with a colon in its `d` tag unaddressable by a project.",
+      "note": "Repo `d` segment contains a colon. The coordinate splits into at most three parts, so the third part is the repo `d` value verbatim \u2014 `crew:infra` here. Splitting on every colon instead would make any repo with a colon in its `d` tag unaddressable by a project.",
       "template": {
         "kind": 30621,
         "content": "",
@@ -1390,7 +1390,7 @@
             "3580ca9b-47b4-4af9-b22a-1068778f26c6"
           ],
           [
-            "buzz-channel",
+            "crew-channel",
             "00000000-0000-0000-0000-000000000000"
           ]
         ]

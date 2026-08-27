@@ -116,7 +116,7 @@ New to Crew? Pick the path that matches you.
 
 ### I just want to try the app
 
-Grab a packaged build from the [latest release](https://github.com/block/buzz/releases/latest):
+Grab a packaged build from the [latest release](https://github.com/block/crew/releases/latest):
 
 | Platform | File |
 |---|---|
@@ -158,7 +158,7 @@ You'll need [Docker](https://docs.docker.com/get-docker/) and [Hermit](https://c
 
 **Once:**
 ```bash
-git clone https://github.com/block/buzz.git && cd crew
+git clone https://github.com/block/crew.git && cd crew
 . ./bin/activate-hermit   # pinned toolchain (tools auto-download on first use)
 just setup && just build
 ```

@@ -35,7 +35,7 @@ pub fn parse_message_link(input: &str) -> Result<MessageLink, CliError> {
 
     // crew:// is canonical; legacy crew:// links from pre-rename tooling are
     // still accepted during the rename window.
-    if !matches!(url.scheme(), "crew" | "buzz")
+    if !matches!(url.scheme(), "crew" | "crew")
         || url.host_str() != Some("message")
         || !matches!(url.path(), "" | "/")
         || !url.username().is_empty()

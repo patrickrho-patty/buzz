@@ -91,7 +91,7 @@ You are a test bot.
 }
 
 #[test]
-fn resolve_pack_crew_agent_persona_emits_buzz_agent_vars() {
+fn resolve_pack_crew_agent_persona_emits_crew_agent_vars() {
     let tmp = tempfile::tempdir().unwrap();
     let root = tmp.path();
 
