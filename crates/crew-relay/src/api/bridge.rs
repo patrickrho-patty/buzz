@@ -3433,7 +3433,7 @@ mod tests {
         }
     }
 
-    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
+    const TEST_DB_URL: &str = "postgres://crew:crew_dev@localhost:5432/crew"; // sadscan:disable np.postgres.1
 
     /// Build an AppState suitable for handler-level bridge tests.
     ///

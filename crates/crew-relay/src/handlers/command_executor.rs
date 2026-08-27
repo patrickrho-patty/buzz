@@ -1446,7 +1446,7 @@ mod tests {
     async fn persistence_test_context() -> (crew_db::Db, TenantContext) {
         let url = std::env::var("CREW_TEST_DATABASE_URL")
             .or_else(|_| std::env::var("DATABASE_URL"))
-            .unwrap_or_else(|_| "postgres://buzz:crew_dev@localhost:5432/buzz".to_string());
+            .unwrap_or_else(|_| "postgres://crew:crew_dev@localhost:5432/crew".to_string());
         let pool = sqlx::PgPool::connect(&url)
             .await
             .expect("connect workflow persistence test database");

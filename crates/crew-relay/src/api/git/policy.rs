@@ -822,7 +822,7 @@ printf '%s' "$HMAC_INPUT" | openssl dgst -sha256 -hmac "{secret}" -hex 2>/dev/nu
 
     // ── hook_policy_check binding gate (requires Postgres) ──────────────
 
-    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
+    const TEST_DB_URL: &str = "postgres://crew:crew_dev@localhost:5432/crew"; // sadscan:disable np.postgres.1
 
     async fn policy_test_state() -> Arc<AppState> {
         let mut config = crate::config::Config::from_env().expect("default config loads");

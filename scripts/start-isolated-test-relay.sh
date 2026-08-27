@@ -75,7 +75,7 @@ docker compose -p "${PROJECT}" -f "${COMPOSE_FILE}" up -d
 wait_pg() {
   for _ in $(seq 1 60); do
     if docker compose -p "${PROJECT}" -f "${COMPOSE_FILE}" exec -T postgres \
-         pg_isready -U buzz >/dev/null 2>&1; then
+         pg_isready -U crew >/dev/null 2>&1; then
       ok "Postgres ready"; return 0
     fi
     sleep 2
@@ -87,7 +87,7 @@ wait_pg
 # ── Schema + partitions ──────────────────────────────────────────────────────
 export PGPASSWORD=crew_dev
 psql_h() { docker compose -p "${PROJECT}" -f "${COMPOSE_FILE}" exec -T postgres \
-  psql -U buzz -d buzz -v ON_ERROR_STOP=1 "$@"; }
+  psql -U crew -d crew -v ON_ERROR_STOP=1 "$@"; }
 
 log "Resetting isolated database and applying schema..."
 # This database belongs only to the crew-harness Compose project. Reset it on
@@ -141,7 +141,7 @@ if command -v lsof >/dev/null 2>&1 && lsof -nP -iTCP:"${RELAY_MAIN}" -sTCP:LISTE
 fi
 log "Starting relay in tmux session '${TMUX_SESSION}' on :${RELAY_MAIN} (health :${RELAY_HEALTH}, metrics :${RELAY_METRICS})..."
 tmux new-session -d -s "${TMUX_SESSION}" "cd '${REPO_ROOT}' && env \
-  DATABASE_URL=postgres://buzz:crew_dev@localhost:${PG_PORT}/buzz \
+  DATABASE_URL=postgres://crew:crew_dev@localhost:${PG_PORT}/buzz \
   REDIS_URL=redis://localhost:${REDIS_PORT} \
   RELAY_URL=ws://localhost:${RELAY_MAIN} \
   CREW_BIND_ADDR=0.0.0.0:${RELAY_MAIN} \

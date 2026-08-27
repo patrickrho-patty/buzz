@@ -2276,7 +2276,7 @@ mod track_c_tests {
     }
 
     async fn finalize_test_state() -> (Arc<AppState>, sqlx::PgPool) {
-        const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
+        const TEST_DB_URL: &str = "postgres://crew:crew_dev@localhost:5432/crew"; // sadscan:disable np.postgres.1
         let mut config = crate::config::Config::from_env().expect("default config loads");
         config.require_relay_membership = false;
         config.redis_url = "redis://127.0.0.1:1".to_string();
@@ -3198,7 +3198,7 @@ mod sec005_read_gate_tests {
 
     // ── authorize_git_read matrix (requires Postgres) ────────────────────
 
-    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
+    const TEST_DB_URL: &str = "postgres://crew:crew_dev@localhost:5432/crew"; // sadscan:disable np.postgres.1
 
     async fn setup_db() -> crew_db::Db {
         let url = std::env::var("CREW_TEST_DATABASE_URL")

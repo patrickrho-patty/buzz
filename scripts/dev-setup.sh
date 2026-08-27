@@ -54,13 +54,13 @@ load_env() {
   # untouched.
   if [[ "${DATABASE_URL:-}" == "postgres://sprout:sprout_dev@localhost:5432/sprout" ]]; then
     warn "Migrating legacy default DATABASE_URL from sprout to buzz for this setup run"
-    DATABASE_URL="postgres://buzz:crew_dev@localhost:5432/buzz"
+    DATABASE_URL="postgres://crew:crew_dev@localhost:5432/crew"
   fi
   if [[ "${PGUSER:-}" == "sprout" ]]; then PGUSER="buzz"; fi
   if [[ "${PGPASSWORD:-}" == "sprout_dev" ]]; then PGPASSWORD="crew_dev"; fi
   if [[ "${PGDATABASE:-}" == "sprout" ]]; then PGDATABASE="buzz"; fi
 
-  export DATABASE_URL="${DATABASE_URL:-postgres://buzz:crew_dev@localhost:5432/buzz}"
+  export DATABASE_URL="${DATABASE_URL:-postgres://crew:crew_dev@localhost:5432/crew}"
   export PGHOST="${PGHOST:-localhost}"
   export PGPORT="${PGPORT:-5432}"
   export PGUSER="${PGUSER:-buzz}"

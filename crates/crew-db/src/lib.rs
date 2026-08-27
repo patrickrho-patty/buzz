@@ -561,7 +561,7 @@ impl Default for DbConfig {
     /// At 20 main + 5 audit = 25/pod, four relay pods fit within the PG limit.
     fn default() -> Self {
         Self {
-            database_url: "postgres://buzz:crew_dev@localhost:5432/buzz".to_string(), // sadscan:disable np.postgres.1
+            database_url: "postgres://crew:crew_dev@localhost:5432/crew".to_string(), // sadscan:disable np.postgres.1
             read_database_url: None,
             max_connections: 20,
             read_max_connections: None,
@@ -5499,7 +5499,7 @@ mod tests {
     use sqlx::{Acquire, PgPool};
     use uuid::Uuid;
 
-    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz";
+    const TEST_DB_URL: &str = "postgres://crew:crew_dev@localhost:5432/crew";
 
     async fn setup_db() -> Db {
         let database_url =

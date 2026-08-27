@@ -411,7 +411,7 @@ mod tests {
     use super::*;
     use sqlx::{postgres::PgPoolOptions, AssertSqlSafe};
 
-    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz";
+    const TEST_DB_URL: &str = "postgres://crew:crew_dev@localhost:5432/crew";
 
     #[tokio::test]
     #[ignore = "requires PostgreSQL with CREATEDB/CREATEROLE"]

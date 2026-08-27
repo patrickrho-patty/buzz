@@ -388,7 +388,7 @@ mod tests {
     use sqlx::PgPool;
     use uuid::Uuid;
 
-    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
+    const TEST_DB_URL: &str = "postgres://crew:crew_dev@localhost:5432/crew"; // sadscan:disable np.postgres.1
 
     async fn setup_pool() -> PgPool {
         PgPool::connect(&test_database_url())

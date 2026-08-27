@@ -3382,7 +3382,7 @@ mod tests {
 
         let url = std::env::var("CREW_TEST_DATABASE_URL")
             .or_else(|_| std::env::var("DATABASE_URL"))
-            .unwrap_or_else(|_| "postgres://buzz:crew_dev@localhost:5432/buzz".to_string()); // sadscan:disable np.postgres.1
+            .unwrap_or_else(|_| "postgres://crew:crew_dev@localhost:5432/crew".to_string()); // sadscan:disable np.postgres.1
         let pool = sqlx::PgPool::connect(&url).await.expect("connect test DB");
         let db = crew_db::Db::from_pool(pool);
         db.migrate().await.expect("migrate test DB");

@@ -46,7 +46,7 @@ services:
       start_period: 30s
     restart: unless-stopped
     networks:
-      - buzz-net
+      - crew-net
 
   postgres:
     image: postgres:17-alpine
@@ -65,7 +65,7 @@ services:
       start_period: 10s
     restart: unless-stopped
     networks:
-      - buzz-net
+      - crew-net
 
   redis:
     image: redis:7-alpine
@@ -82,7 +82,7 @@ services:
       start_period: 5s
     restart: unless-stopped
     networks:
-      - buzz-net
+      - crew-net
 
   minio:
     image: minio/minio:RELEASE.2025-09-07T16-13-09Z
@@ -100,7 +100,7 @@ services:
       start_period: 10s
     restart: unless-stopped
     networks:
-      - buzz-net
+      - crew-net
 
   minio-init:
     image: minio/mc:RELEASE.2025-08-13T08-35-41Z
@@ -119,24 +119,24 @@ services:
       '
     restart: "no"
     networks:
-      - buzz-net
+      - crew-net
 
 volumes:
   crew-postgres-data:
     labels:
-      com.buzz.volume: postgres
+      com.crew.volume: postgres
   crew-redis-data:
     labels:
-      com.buzz.volume: redis
+      com.crew.volume: redis
   crew-minio-data:
     labels:
-      com.buzz.volume: minio
+      com.crew.volume: minio
   buzz-git-data:
     labels:
-      com.buzz.volume: git
+      com.crew.volume: git
 
 networks:
-  buzz-net:
+  crew-net:
     driver: bridge
     labels:
-      com.buzz.network: production
+      com.crew.network: production

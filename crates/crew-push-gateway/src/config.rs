@@ -222,7 +222,7 @@ mod tests {
             ),
             (
                 "DATABASE_URL".into(),
-                "postgres://buzz:test@localhost/buzz".into(),
+                "postgres://crew:test@localhost/buzz".into(),
             ),
             ("CREW_PUSH_APP_ATTEST_APP_ID".into(), "TEAM.app".into()),
             (

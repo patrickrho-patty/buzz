@@ -166,7 +166,7 @@ if [[ "${CREW_REQUIRE_RELAY_MEMBERSHIP:-}" == "true" ]]; then
 fi
 
 nohup env \
-  DATABASE_URL=postgres://buzz:crew_dev@localhost:5432/buzz \
+  DATABASE_URL=postgres://crew:crew_dev@localhost:5432/crew \
   REDIS_URL=redis://localhost:6379 \
   RELAY_URL=ws://localhost:3000 \
   CREW_BIND_ADDR=0.0.0.0:3000 \

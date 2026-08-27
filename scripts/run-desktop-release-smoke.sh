@@ -44,7 +44,7 @@ cleanup() {
     kill -9 "${RELAY_PID}" 2>/dev/null || true
   fi
   docker exec crew-redis redis-cli -n "${REDIS_DB}" FLUSHDB >/dev/null 2>&1 || true
-  docker exec crew-postgres dropdb -U buzz --if-exists "${DB_NAME}" >/dev/null 2>&1 || true
+  docker exec crew-postgres dropdb -U crew --if-exists "${DB_NAME}" >/dev/null 2>&1 || true
   if [[ "${LOCK_HELD}" == true ]]; then rmdir "${LOCK_DIR}" 2>/dev/null || true; fi
   exit "${status}"
 }
@@ -83,13 +83,13 @@ phase services "${phase_start}"
 
 phase_start="$(date +%s)"
 log "creating isolated database ${DB_NAME}"
-docker exec crew-postgres createdb -U buzz "${DB_NAME}"
+docker exec crew-postgres createdb -U crew "${DB_NAME}"
 export PGHOST=localhost PGPORT=5432 PGUSER=buzz PGPASSWORD=crew_dev PGDATABASE="${DB_NAME}"
 export PGSCHEMA_PLAN_HOST=localhost PGSCHEMA_PLAN_PORT=5432 PGSCHEMA_PLAN_DB="${DB_NAME}"
 export PGSCHEMA_PLAN_USER=buzz PGSCHEMA_PLAN_PASSWORD=crew_dev
 ./bin/pgschema apply --file schema/schema.sql --auto-approve
 docker exec -i -e PGPASSWORD=crew_dev crew-postgres \
-  psql -U buzz -d "${DB_NAME}" -v ON_ERROR_STOP=1 < scripts/attach-schema-partitions.sql
+  psql -U crew -d "${DB_NAME}" -v ON_ERROR_STOP=1 < scripts/attach-schema-partitions.sql
 CREW_DB_NAME="${DB_NAME}" CREW_COMMUNITY_HOST="${COMMUNITY_HOST}" ./scripts/setup-desktop-test-data.sh
 docker exec crew-redis redis-cli -n "${REDIS_DB}" FLUSHDB >/dev/null
 phase database "${phase_start}"
@@ -104,7 +104,7 @@ else
 fi
 log "starting relay at ${RELAY_HTTP_URL}"
 env \
-  DATABASE_URL="postgres://buzz:crew_dev@localhost:5432/${DB_NAME}" \
+  DATABASE_URL="postgres://crew:crew_dev@localhost:5432/${DB_NAME}" \
   REDIS_URL="redis://localhost:6379/${REDIS_DB}" \
   RELAY_URL="ws://${COMMUNITY_HOST}" \
   CREW_BIND_ADDR="127.0.0.1:${RELAY_PORT}" \

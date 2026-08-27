@@ -865,7 +865,7 @@ mod tests {
     };
     use nostr::{EventBuilder, Keys, Kind};
 
-    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz";
+    const TEST_DB_URL: &str = "postgres://crew:crew_dev@localhost:5432/crew";
 
     async fn setup_pool() -> PgPool {
         let database_url = std::env::var("CREW_TEST_DATABASE_URL")

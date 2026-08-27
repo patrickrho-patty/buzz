@@ -432,7 +432,7 @@ async fn connect_member_services() -> Result<(Db, Arc<PubSubManager>, Keys)> {
 
 async fn connect_db() -> Result<Db> {
     let db_url = std::env::var("DATABASE_URL")
-        .unwrap_or_else(|_| "postgres://buzz:crew_dev@localhost:5432/buzz".to_string());
+        .unwrap_or_else(|_| "postgres://crew:crew_dev@localhost:5432/crew".to_string());
     let db = Db::new(&DbConfig {
         database_url: db_url,
         ..DbConfig::default()

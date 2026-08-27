@@ -105,7 +105,7 @@ trap cleanup EXIT
 
 log "Running relay-driven mesh lifecycle smoke..."
 RELAY_URL=ws://localhost:3000 \
-DATABASE_URL=postgres://buzz:crew_dev@localhost:5432/buzz \
+DATABASE_URL=postgres://crew:crew_dev@localhost:5432/crew \
 REDIS_URL=redis://localhost:6379 \
 CREW_ADMIN_BIN="${ADMIN_BIN}" \
   "${HARNESS_BIN}"

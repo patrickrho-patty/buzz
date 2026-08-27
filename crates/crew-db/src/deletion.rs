@@ -3131,7 +3131,7 @@ mod postgres_tests {
     async fn store() -> (Db, DeletionStore) {
         let database_url = std::env::var("CREW_TEST_DATABASE_URL")
             .or_else(|_| std::env::var("DATABASE_URL"))
-            .unwrap_or_else(|_| "postgres://buzz:crew_dev@localhost:5432/buzz".to_string());
+            .unwrap_or_else(|_| "postgres://crew:crew_dev@localhost:5432/crew".to_string());
         let db = Db::new(&DbConfig {
             database_url,
             max_connections: 5,
@@ -4409,7 +4409,7 @@ mod postgres_tests {
         // per-database, so the parked migration lock cannot stall them.
         let base_url = std::env::var("CREW_TEST_DATABASE_URL")
             .or_else(|_| std::env::var("DATABASE_URL"))
-            .unwrap_or_else(|_| "postgres://buzz:crew_dev@localhost:5432/buzz".to_string());
+            .unwrap_or_else(|_| "postgres://crew:crew_dev@localhost:5432/crew".to_string());
         let admin = PgPool::connect(&base_url)
             .await
             .expect("connect admin database");
@@ -4594,7 +4594,7 @@ mod postgres_tests {
     async fn desired_state_schema_bootstrap_progresses_beyond_fencing() {
         let base_url = std::env::var("CREW_TEST_DATABASE_URL")
             .or_else(|_| std::env::var("DATABASE_URL"))
-            .unwrap_or_else(|_| "postgres://buzz:crew_dev@localhost:5432/buzz".to_string());
+            .unwrap_or_else(|_| "postgres://crew:crew_dev@localhost:5432/crew".to_string());
         let admin = PgPool::connect(&base_url)
             .await
             .expect("connect admin database");

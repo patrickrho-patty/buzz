@@ -10,7 +10,7 @@ concurrency:
 
 env:
   CARGO_TERM_COLOR: always
-  CREW_TEST_POSTGRES_PASSWORD: buzz_dev
+  CREW_TEST_POSTGRES_PASSWORD: crew_dev
   PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
 
 jobs:
@@ -494,22 +494,22 @@ jobs:
         env:
           PGHOST: localhost
           PGPORT: "5432"
-          PGUSER: buzz
-          PGPASSWORD: buzz_dev
-          PGDATABASE: buzz
+          PGUSER: crew
+          PGPASSWORD: crew_dev
+          PGDATABASE: crew
           # Use the already-running docker postgres for desired-state planning instead of
           # downloading an embedded Postgres from Maven Central (transient-fetch flake source).
           PGSCHEMA_PLAN_HOST: localhost
           PGSCHEMA_PLAN_PORT: "5432"
-          PGSCHEMA_PLAN_DB: buzz
-          PGSCHEMA_PLAN_USER: buzz
-          PGSCHEMA_PLAN_PASSWORD: buzz_dev
+          PGSCHEMA_PLAN_DB: crew
+          PGSCHEMA_PLAN_USER: crew
+          PGSCHEMA_PLAN_PASSWORD: crew_dev
         run: |
           ./bin/pgschema apply --file schema/schema.sql --auto-approve
-          docker exec -i -e PGPASSWORD=buzz_dev crew-postgres \
-            psql -U buzz -d buzz -v ON_ERROR_STOP=1 < scripts/attach-schema-partitions.sql
-          docker exec -e PGPASSWORD=buzz_dev crew-postgres \
-            psql -U buzz -d buzz -qtA -c "
+          docker exec -i -e PGPASSWORD=crew_dev crew-postgres \
+            psql -U crew -d crew -v ON_ERROR_STOP=1 < scripts/attach-schema-partitions.sql
+          docker exec -e PGPASSWORD=crew_dev crew-postgres \
+            psql -U crew -d crew -qtA -c "
           INSERT INTO communities (id, host)
           VALUES ('00000000-0000-4000-8000-00000000c0de', 'localhost:3000')
           ON CONFLICT (lower(host)) DO NOTHING
@@ -518,7 +518,7 @@ jobs:
         run: |
           chmod +x ./target/ci/crew-relay
           nohup env \
-            DATABASE_URL="postgres://buzz:${CREW_TEST_POSTGRES_PASSWORD}@localhost:5432/buzz" \
+            DATABASE_URL="postgres://crew:${CREW_TEST_POSTGRES_PASSWORD}@localhost:5432/crew" \
             REDIS_URL=redis://localhost:6379 \
             RELAY_URL=ws://localhost:3000 \
             CREW_BIND_ADDR=0.0.0.0:3000 \
@@ -654,22 +654,22 @@ jobs:
         env:
           PGHOST: localhost
           PGPORT: "5432"
-          PGUSER: buzz
-          PGPASSWORD: buzz_dev
-          PGDATABASE: buzz
+          PGUSER: crew
+          PGPASSWORD: crew_dev
+          PGDATABASE: crew
           # Use the already-running docker postgres for desired-state planning instead of
           # downloading an embedded Postgres from Maven Central (transient-fetch flake source).
           PGSCHEMA_PLAN_HOST: localhost
           PGSCHEMA_PLAN_PORT: "5432"
-          PGSCHEMA_PLAN_DB: buzz
-          PGSCHEMA_PLAN_USER: buzz
-          PGSCHEMA_PLAN_PASSWORD: buzz_dev
+          PGSCHEMA_PLAN_DB: crew
+          PGSCHEMA_PLAN_USER: crew
+          PGSCHEMA_PLAN_PASSWORD: crew_dev
         run: |
           ./bin/pgschema apply --file schema/schema.sql --auto-approve
-          docker exec -i -e PGPASSWORD=buzz_dev crew-postgres \
-            psql -U buzz -d buzz -v ON_ERROR_STOP=1 < scripts/attach-schema-partitions.sql
-          docker exec -e PGPASSWORD=buzz_dev crew-postgres \
-            psql -U buzz -d buzz -qtA -c "
+          docker exec -i -e PGPASSWORD=crew_dev crew-postgres \
+            psql -U crew -d crew -v ON_ERROR_STOP=1 < scripts/attach-schema-partitions.sql
+          docker exec -e PGPASSWORD=crew_dev crew-postgres \
+            psql -U crew -d crew -qtA -c "
           INSERT INTO communities (id, host)
           VALUES ('00000000-0000-4000-8000-00000000c0de', 'localhost:3000')
           ON CONFLICT (lower(host)) DO NOTHING
@@ -678,7 +678,7 @@ jobs:
         run: |
           chmod +x ./target/ci/crew-relay
           nohup env \
-            DATABASE_URL="postgres://buzz:${CREW_TEST_POSTGRES_PASSWORD}@localhost:5432/buzz" \
+            DATABASE_URL="postgres://crew:${CREW_TEST_POSTGRES_PASSWORD}@localhost:5432/crew" \
             REDIS_URL=redis://localhost:6379 \
             RELAY_URL=ws://localhost:3000 \
             CREW_BIND_ADDR=0.0.0.0:3000 \
@@ -708,7 +708,7 @@ jobs:
             -E '(package(crew-db) and test(/relay_invite::tests/)) or (package(crew-relay) and test(/api::invites::tests/))' \
             --run-ignored ignored-only
         env:
-          DATABASE_URL: postgres://buzz:${{ env.CREW_TEST_POSTGRES_PASSWORD }}@localhost:5432/buzz
+          DATABASE_URL: postgres://crew:${{ env.CREW_TEST_POSTGRES_PASSWORD }}@localhost:5432/crew
       - name: Workspace profile (kind:9033) gate tests
         # Call-site integration for the 9033 authorization gate: open relay
         # rosterless/steward transitions and the closed-relay admin/owner rule,
@@ -720,7 +720,7 @@ jobs:
             -E 'package(crew-relay) and test(/handlers::relay_admin::tests/)' \
             --run-ignored ignored-only
         env:
-          DATABASE_URL: postgres://buzz:${{ env.CREW_TEST_POSTGRES_PASSWORD }}@localhost:5432/buzz
+          DATABASE_URL: postgres://crew:${{ env.CREW_TEST_POSTGRES_PASSWORD }}@localhost:5432/crew
       - name: NIP-ER reminder e2e
         # Feature e2e for NIP-ER (Event Reminders, kind:30300): write-path
         # validation, author-only read filtering, and scheduler delivery against
@@ -743,7 +743,7 @@ jobs:
             -E 'package(crew-db) and test(coordinate_delete_spares_head_newer_than_the_deletion)' \
             --run-ignored ignored-only
         env:
-          DATABASE_URL: postgres://buzz:${{ env.CREW_TEST_POSTGRES_PASSWORD }}@localhost:5432/buzz
+          DATABASE_URL: postgres://crew:${{ env.CREW_TEST_POSTGRES_PASSWORD }}@localhost:5432/crew
       - name: Upload relay log
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7

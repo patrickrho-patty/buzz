@@ -14,16 +14,16 @@ services:
       - "${CADDY_HTTPS_PORT:-443}:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - buzz-caddy-data:/data
-      - buzz-caddy-config:/config
+      - crew-caddy-data:/data
+      - crew-caddy-config:/config
     restart: unless-stopped
     networks:
-      - buzz-net
+      - crew-net
 
 volumes:
-  buzz-caddy-data:
+  crew-caddy-data:
     labels:
-      com.buzz.volume: caddy-data
-  buzz-caddy-config:
+      com.crew.volume: caddy-data
+  crew-caddy-config:
     labels:
-      com.buzz.volume: caddy-config
+      com.crew.volume: caddy-config

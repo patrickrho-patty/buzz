@@ -404,7 +404,7 @@ mod tests {
     use crate::Db;
     use nostr::Keys;
 
-    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz";
+    const TEST_DB_URL: &str = "postgres://crew:crew_dev@localhost:5432/crew";
 
     async fn setup_db() -> Db {
         let pool = PgPool::connect(TEST_DB_URL)

@@ -172,7 +172,7 @@ mod tests {
     use super::*;
     use std::collections::BTreeSet;
 
-    const TEST_DB_URL: &str = "postgres://buzz:crew_dev@localhost:5432/buzz"; // sadscan:disable np.postgres.1
+    const TEST_DB_URL: &str = "postgres://crew:crew_dev@localhost:5432/crew"; // sadscan:disable np.postgres.1
 
     #[derive(Debug, Clone, Copy, PartialEq, Eq)]
     enum ConstraintKind {
