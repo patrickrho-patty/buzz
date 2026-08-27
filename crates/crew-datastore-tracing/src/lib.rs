@@ -121,7 +121,7 @@ pub fn datastore_span(args: TokenStream, item: TokenStream) -> TokenStream {
         _ => false,
     };
     let original_body = function.block;
-    let result = format_ident!("__buzz_datastore_result_7f3a9c");
+    let result = format_ident!("__crew_datastore_result_7f3a9c");
     let record_error = returns_result.then(|| {
         quote! {
             if #result.is_err() {

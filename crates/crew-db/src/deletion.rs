@@ -34,7 +34,7 @@ pub const REDIS_STORE_NAME: &str = "redis";
 /// its entire run; destructive catalog validation, purge, and final logical
 /// verification hold the shared transaction-scoped counterpart. Exact catalog
 /// equality is therefore stable for the whole destructive interval, not just
-/// the instant it is checked. The value is arbitrary (ASCII `buzzdel1`) but
+/// the instant it is checked. The value is arbitrary (ASCII `crewdel1`) but
 /// permanently stable: changing it silently drops the exclusion contract
 /// against replicas still holding the old key during a rolling deploy.
 pub const SCHEMA_DESTRUCTION_LOCK_KEY: i64 = 0x62757a7a64656c31;
