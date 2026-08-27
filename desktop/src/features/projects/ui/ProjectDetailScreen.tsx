@@ -214,7 +214,7 @@ export function ProjectDetailScreen(props: ProjectDetailScreenProps) {
     activeBranch,
     activeRepoPullRequest,
     activeTag,
-    isBuzzHost: repoRemote.host.kind === "crew",
+    isCrewHost: repoRemote.host.kind === "crew",
     repository,
     reposDir: activeCommunity?.reposDir,
     repoSource,

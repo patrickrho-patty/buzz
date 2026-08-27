@@ -102,7 +102,7 @@ export function resolveComposerMessageLinkAttributes(
   }
 }
 
-function unwrapExactBuzzLink(text: string): string | null {
+function unwrapExactCrewLink(text: string): string | null {
   const href =
     text.startsWith("<") && text.endsWith(">") ? text.slice(1, -1) : text;
   if (!href || /\s/.test(href)) return null;
@@ -137,7 +137,7 @@ export function createComposerLinkPasteHandler(
 ) {
   return (view: EditorView, event: ClipboardEvent): boolean => {
     const text = event.clipboardData?.getData("text/plain") ?? "";
-    const crewHref = unwrapExactBuzzLink(text);
+    const crewHref = unwrapExactCrewLink(text);
     const crewLinkType =
       view.state.schema.nodes[COMPOSER_MESSAGE_LINK_NODE_NAME];
     if (crewHref && crewLinkType) {

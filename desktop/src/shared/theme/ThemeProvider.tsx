@@ -247,7 +247,7 @@ export function isCrewTheme(themeName: string): boolean {
   return themeName === "crew" || themeName === "crew-dark";
 }
 /** @deprecated use isCrewTheme */
-export const isBuzzTheme = isCrewTheme;
+export const isCrewTheme = isCrewTheme;
 
 
 /**
@@ -258,13 +258,13 @@ function resolveEffectiveAccent(
   themeName: string,
   accentColor: string,
 ): string {
-  return isBuzzTheme(themeName) ? NEUTRAL_ACCENT : accentColor;
+  return isCrewTheme(themeName) ? NEUTRAL_ACCENT : accentColor;
 }
 
 /** Toggle the Crew-specific gradient marker independently from glass. */
-function applyBuzzSidebar(themeName: string) {
+function applyCrewSidebar(themeName: string) {
   const root = document.documentElement;
-  if (isBuzzTheme(themeName)) {
+  if (isCrewTheme(themeName)) {
     root.setAttribute("data-crew-sidebar", "");
     // Keep the concrete Crew variant on the root as well as the generic
     // marker. The gradient stylesheet matches this attribute directly, which
@@ -410,7 +410,7 @@ function applyCachedVars(): string | null {
     }
     root.classList.remove("light", "dark");
     root.classList.add(isDark ? "dark" : "light");
-    applyBuzzSidebar(themeName);
+    applyCrewSidebar(themeName);
     glassThemeReady = true;
 
     const accent = getStorageItem(ACCENT_STORAGE_KEY) ?? DEFAULT_ACCENT;
@@ -451,7 +451,7 @@ async function applyTheme(name: SyntaxThemeName): Promise<{
 
   root.classList.remove("light", "dark");
   root.classList.add(isDark ? "dark" : "light");
-  applyBuzzSidebar(name);
+  applyCrewSidebar(name);
   glassThemeReady = true;
   maybeEnableGlassBackground(glassVibrancyRequest);
 
@@ -582,7 +582,7 @@ export function ThemeProvider({
   // but remove the live marker for every other theme.
   useEffect(() => {
     setProminentActiveTabActive(
-      prominentActiveTab && isBuzzTheme(effectiveTheme),
+      prominentActiveTab && isCrewTheme(effectiveTheme),
     );
   }, [effectiveTheme, prominentActiveTab]);
 

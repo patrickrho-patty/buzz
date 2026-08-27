@@ -10,7 +10,7 @@ function escapeHtml(value: string) {
     .replace(/"/g, "&quot;");
 }
 
-function createBuzzCodeBlockHtml(code: string) {
+function createCrewCodeBlockHtml(code: string) {
   // Keep the code as one text node; the paste reader recovers it via textContent.
   return `<pre ${CREW_CODE_BLOCK_ATTRIBUTE}="true"><code>${escapeHtml(code)}</code></pre>`;
 }
@@ -25,7 +25,7 @@ export async function copyCodeBlockToClipboard(code: string) {
     try {
       await clipboard.write([
         new ClipboardItem({
-          "text/html": new Blob([createBuzzCodeBlockHtml(code)], {
+          "text/html": new Blob([createCrewCodeBlockHtml(code)], {
             type: "text/html",
           }),
           "text/plain": new Blob([code], { type: "text/plain" }),
@@ -40,7 +40,7 @@ export async function copyCodeBlockToClipboard(code: string) {
   await copyTextToSystemClipboard(code);
 }
 
-export function getBuzzCodeBlockClipboardText(
+export function getCrewCodeBlockClipboardText(
   clipboardData: DataTransfer | null | undefined,
 ) {
   const html = clipboardData?.getData("text/html");

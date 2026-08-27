@@ -50,7 +50,7 @@ async function expectProjectContextGroups(
   await expect(panel.getByTestId("project-repository-people")).toHaveCount(0);
 }
 
-async function openBuzzProject(page: import("@playwright/test").Page) {
+async function openCrewProject(page: import("@playwright/test").Page) {
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await page.getByTestId("open-projects-view").click();
   await page.getByTestId("projects-section-projects").click();
@@ -178,7 +178,7 @@ test("restricted repositories keep event work visible and offer access help", as
     projectAccessChannelId: "11111111-1111-4111-8111-111111111111",
     projectRepoSnapshotError: "remote: repository not found",
   });
-  await openBuzzProject(page);
+  await openCrewProject(page);
 
   const unavailableState = page
     .getByTestId("project-repository-unavailable")
@@ -234,7 +234,7 @@ test("repository pages show a centered Crew loader while fetching", async ({
   page,
 }) => {
   await installMockBridge(page, { projectRepoSnapshotDelayMs: 750 });
-  await openBuzzProject(page);
+  await openCrewProject(page);
 
   const loader = page.getByTestId("crew-loading-state");
   await expect(loader).toBeVisible();
@@ -256,7 +256,7 @@ test("repository pages show a centered Crew loader while fetching", async ({
 // plus, issue detail with inline copy link + avatar timeline, PR detail).
 test("projects v3 workspace screenshot states", async ({ page }) => {
   await installMockBridge(page);
-  await openBuzzProject(page);
+  await openCrewProject(page);
   const initialProjectBreadcrumb = page.getByRole("navigation", {
     name: "Project breadcrumb",
   });

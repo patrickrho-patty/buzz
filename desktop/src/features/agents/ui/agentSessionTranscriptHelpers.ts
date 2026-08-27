@@ -1,6 +1,6 @@
 import type { ObserverEvent, PromptSection } from "./agentSessionTypes";
 import {
-  findBuzzToolName,
+  findCrewToolName,
   isGenericToolTitle,
   normalizeToolName,
 } from "./agentSessionToolCatalog";
@@ -379,7 +379,7 @@ export function extractToolIdentity(update: Record<string, unknown>): {
 } {
   const candidates = collectToolNameCandidates(update);
   const knownName = candidates
-    .map((candidate) => findBuzzToolName(candidate, true))
+    .map((candidate) => findCrewToolName(candidate, true))
     .find((candidate): candidate is string => Boolean(candidate));
   const firstSpecific = candidates.find(
     (candidate) => !isGenericToolTitle(candidate),

@@ -9,7 +9,7 @@ import {
 } from "./RespondToField";
 import type { PersonaBehaviorDraft } from "./personaBehaviorDraft";
 import {
-  isBuzzAgentRuntime,
+  isCrewAgentRuntime,
   CREW_AGENT_THINKING_EFFORT,
 } from "./crewAgentConfig";
 import {
@@ -108,7 +108,7 @@ export function PersonaAdvancedFields({
   const effectiveHiddenKeys = React.useMemo(
     () => [
       ...hiddenEnvKeys,
-      ...(isBuzzAgentRuntime(modelTuningRuntimeId)
+      ...(isCrewAgentRuntime(modelTuningRuntimeId)
         ? [CREW_AGENT_THINKING_EFFORT]
         : []),
       ...structuredEnvKeys(numericDescriptors),
@@ -266,7 +266,7 @@ export function PersonaAdvancedFields({
       ) : null}
 
       {/* Effort-tuning knob — only shown for crew-agent. */}
-      {isBuzzAgentRuntime(modelTuningRuntimeId) ? (
+      {isCrewAgentRuntime(modelTuningRuntimeId) ? (
         <CrewAgentModelTuningFields
           envVars={envVars}
           inheritedEnvVars={inheritedEnvVars}

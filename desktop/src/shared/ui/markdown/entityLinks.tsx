@@ -15,7 +15,7 @@ import {
 } from "@/shared/lib/linkPreview";
 
 import {
-  loadBuzzEntityMetadata,
+  loadCrewEntityMetadata,
   type LinkPreviewMetadata,
 } from "@/shared/lib/useResolvedLinkPreviews";
 import {
@@ -52,7 +52,7 @@ function EntityMetadataTooltip({
   } | null>(null);
   React.useEffect(() => {
     let cancelled = false;
-    void loadBuzzEntityMetadata(href).then((value) => {
+    void loadCrewEntityMetadata(href).then((value) => {
       if (!cancelled) setResolved({ href, metadata: value });
     });
     return () => {

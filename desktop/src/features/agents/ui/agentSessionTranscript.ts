@@ -7,7 +7,7 @@ import type {
   TranscriptItem,
 } from "./agentSessionTypes";
 import {
-  findBuzzToolName,
+  findCrewToolName,
   isGenericToolTitle,
   normalizeToolStatus,
 } from "./agentSessionToolCatalog";
@@ -619,15 +619,15 @@ function upsertTool(
   acpSource?: string,
 ) {
   const existing = d.itemsById.get(id);
-  const canonicalBuzzToolName =
-    crewToolName ?? findBuzzToolName(toolName, true);
+  const canonicalCrewToolName =
+    crewToolName ?? findCrewToolName(toolName, true);
   if (existing?.type === "tool") {
     const updatedTitle = !isGenericToolTitle(title) ? title : existing.title;
     let updatedToolName = existing.toolName;
-    let updatedBuzzToolName = existing.crewToolName;
-    if (canonicalBuzzToolName) {
-      updatedBuzzToolName = canonicalBuzzToolName;
-      updatedToolName = canonicalBuzzToolName;
+    let updatedCrewToolName = existing.crewToolName;
+    if (canonicalCrewToolName) {
+      updatedCrewToolName = canonicalCrewToolName;
+      updatedToolName = canonicalCrewToolName;
     } else if (!existing.crewToolName && !isGenericToolTitle(toolName)) {
       updatedToolName = toolName;
     }
@@ -638,7 +638,7 @@ function upsertTool(
     const descriptor = classifyTool({
       title: updatedTitle,
       toolName: updatedToolName,
-      crewToolName: updatedBuzzToolName,
+      crewToolName: updatedCrewToolName,
       args: updatedArgs,
       result: updatedResult,
       isError: updatedIsError || mergedStatus === "failed",
@@ -649,7 +649,7 @@ function upsertTool(
       descriptor,
       title: updatedTitle,
       toolName: updatedToolName,
-      crewToolName: updatedBuzzToolName,
+      crewToolName: updatedCrewToolName,
       status: mergedStatus,
       args: updatedArgs,
       result: updatedResult,
@@ -665,11 +665,11 @@ function upsertTool(
     });
     return;
   }
-  const resolvedToolName = canonicalBuzzToolName ?? toolName;
+  const resolvedToolName = canonicalCrewToolName ?? toolName;
   const descriptor = classifyTool({
     title,
     toolName: resolvedToolName,
-    crewToolName: canonicalBuzzToolName,
+    crewToolName: canonicalCrewToolName,
     args,
     result,
     isError: isError || status === "failed",
@@ -682,7 +682,7 @@ function upsertTool(
     descriptor,
     title,
     toolName: resolvedToolName,
-    crewToolName: canonicalBuzzToolName,
+    crewToolName: canonicalCrewToolName,
     status,
     args,
     result,

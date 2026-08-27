@@ -16,7 +16,7 @@ import {
   useDismissMediaContextMenu,
 } from "./MediaContextMenu";
 
-function useBuzzLinkContextMenu({
+function useCrewLinkContextMenu({
   href,
   interactive,
   onOpenLink,
@@ -111,7 +111,7 @@ export function CrewLinkChip({
   onOpenLink: () => void;
   wrapping?: boolean;
 }) {
-  const { contextMenu, onContextMenuCapture } = useBuzzLinkContextMenu({
+  const { contextMenu, onContextMenuCapture } = useCrewLinkContextMenu({
     href,
     interactive,
     onOpenLink,
@@ -186,7 +186,7 @@ export function CrewInlineLink({
 }) {
   const contextMenuHref =
     href ?? (typeof props.title === "string" ? props.title : undefined);
-  const { contextMenu, onContextMenuCapture } = useBuzzLinkContextMenu({
+  const { contextMenu, onContextMenuCapture } = useCrewLinkContextMenu({
     href: contextMenuHref,
     interactive,
     onOpenLink,

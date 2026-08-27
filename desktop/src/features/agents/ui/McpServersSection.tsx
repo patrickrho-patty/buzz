@@ -36,7 +36,7 @@ export function McpServersSection({
   runtimeId,
   variant = "compact",
 }: McpServersSectionProps) {
-  const isBuzzAgent = runtimeId === "crew-agent";
+  const isCrewAgent = runtimeId === "crew-agent";
 
   if (!shouldRenderMcpServers(runtimeId, extensions)) {
     return null;
@@ -56,7 +56,7 @@ export function McpServersSection({
         <p className="py-2 text-xs font-medium text-foreground">MCP servers</p>
       ) : null}
 
-      {isBuzzAgent && crewAgentSlot ? crewAgentSlot : null}
+      {isCrewAgent && crewAgentSlot ? crewAgentSlot : null}
 
       {extensions.length > 0 ? (
         <div className="divide-y divide-border/55">

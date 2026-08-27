@@ -16,7 +16,7 @@ import {
   NumericTuningFields,
 } from "./crewAgentModelTuningFields";
 import {
-  isBuzzAgentRuntime,
+  isCrewAgentRuntime,
   CREW_AGENT_THINKING_EFFORT,
 } from "./crewAgentConfig";
 import {
@@ -123,7 +123,7 @@ export function EditAgentAdvancedFields({
   const effectiveHiddenKeys = React.useMemo(
     () => [
       ...hiddenEnvKeys,
-      ...(isBuzzAgentRuntime(modelTuningRuntimeId)
+      ...(isCrewAgentRuntime(modelTuningRuntimeId)
         ? [CREW_AGENT_THINKING_EFFORT]
         : []),
       ...structuredEnvKeys(numericDescriptors),
@@ -359,7 +359,7 @@ export function EditAgentAdvancedFields({
       ) : null}
 
       {/* Effort-tuning knob — only shown for crew-agent. */}
-      {isBuzzAgentRuntime(modelTuningRuntimeId) ? (
+      {isCrewAgentRuntime(modelTuningRuntimeId) ? (
         <CrewAgentModelTuningFields
           envVars={envVars}
           inheritedEnvVars={inheritedEnvVars}

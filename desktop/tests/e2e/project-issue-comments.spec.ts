@@ -10,7 +10,7 @@ const ISSUE_COMMENTS = [
 ];
 const DEFAULT_MOCK_PUBKEY = "deadbeef".repeat(8);
 
-async function openBuzzProject(page: import("@playwright/test").Page) {
+async function openCrewProject(page: import("@playwright/test").Page) {
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await page.getByTestId("open-projects-view").click();
   await page.getByTestId("projects-section-projects").click();
@@ -27,7 +27,7 @@ test("issue detail can open agent chat or seed a channel question", async ({
   page,
 }) => {
   await installMockBridge(page);
-  await openBuzzProject(page);
+  await openCrewProject(page);
 
   await page.getByRole("tab", { name: "Tasks", exact: true }).click();
   const issueRow = page.getByTestId("project-issue-row").first();
@@ -99,7 +99,7 @@ test("issue discussion ignores an author-claimed origin channel", async ({
     { issueId: forgedIssueId, owner: DEFAULT_MOCK_PUBKEY },
   );
   await installMockBridge(page);
-  await openBuzzProject(page);
+  await openCrewProject(page);
   await page.getByRole("tab", { name: "Tasks", exact: true }).click();
 
   const issueRow = page
@@ -136,7 +136,7 @@ test("issue discussion ignores an author-claimed origin channel", async ({
 
 test("issue comments use the project activity timeline", async ({ page }) => {
   await installMockBridge(page);
-  await openBuzzProject(page);
+  await openCrewProject(page);
 
   await page.getByRole("tab", { name: "Tasks", exact: true }).click();
   const issueRow = page.getByTestId("project-issue-row").first();
@@ -185,7 +185,7 @@ test("issue comments use the project activity timeline", async ({ page }) => {
 
 test("issue assignees can be assigned and unassigned", async ({ page }) => {
   await installMockBridge(page);
-  await openBuzzProject(page);
+  await openCrewProject(page);
 
   await page.getByRole("tab", { name: "Tasks", exact: true }).click();
   const issueRow = page.getByTestId("project-issue-row").first();

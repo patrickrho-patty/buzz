@@ -10,7 +10,7 @@ import "@fontsource/jetbrains-mono/700.css";
 import "@/shared/styles/globals.css";
 import { UpdaterProvider } from "@/features/settings/hooks/UpdaterProvider";
 import { migrateLegacyCommunityStorageBeforeRender } from "@/features/communities/legacyCommunityStorage";
-import { migrateBuzzStorageKeys } from "@/shared/lib/buzzKeyMigration";
+import { migrateCrewStorageKeys } from "@/shared/lib/buzzKeyMigration";
 import { CommunitiesProvider } from "@/features/communities/useCommunities";
 import { huddleWindowChannelId } from "@/features/huddle/lib/huddleWindow";
 import { CommunityOnboardingProvider } from "@/features/onboarding/communityOnboarding";
@@ -126,7 +126,7 @@ async function installE2eBridgeIfConfigured() {
 async function bootstrap() {
   resetDevWebviewStateFromUrl();
   configureDevE2eBridgeFromUrl();
-  migrateBuzzStorageKeys();
+  migrateCrewStorageKeys();
   recoverLocalStorageQuotaOnStartup();
   initializeConversationDensityPreference();
   initializeFontSizePreference();

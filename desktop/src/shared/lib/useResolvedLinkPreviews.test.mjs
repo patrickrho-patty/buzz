@@ -5,8 +5,8 @@ import { JSDOM } from "jsdom";
 
 import {
   __linkPreviewMetadataTest,
-  fetchBuzzEntityMetadata,
-  isBuzzEntityPreview,
+  fetchCrewEntityMetadata,
+  isCrewEntityPreview,
   resetLinkPreviewMetadataCache,
   resolveLinkPreview,
   withEntityFallbacks,
@@ -244,7 +244,7 @@ test("withEntityFallbacks keeps resolved previews and preserves order", () => {
 
 test("entity fallback eligibility is kind-scoped", () => {
   assert.equal(
-    isBuzzEntityPreview({
+    isCrewEntityPreview({
       ...preview,
       kind: "crew-repository",
       href: `crew://repo?owner=${"cd".repeat(32)}&d=crew`,
@@ -252,7 +252,7 @@ test("entity fallback eligibility is kind-scoped", () => {
     true,
   );
   assert.equal(
-    isBuzzEntityPreview({ ...preview, href: "crew://future?id=example" }),
+    isCrewEntityPreview({ ...preview, href: "crew://future?id=example" }),
     false,
   );
 });
@@ -353,7 +353,7 @@ test("Crew PR metadata includes repository identity and trusted root context", a
       .sort((left, right) => right.created_at - left.created_at)
       .slice(0, filter.limit);
 
-  const result = await fetchBuzzEntityMetadata(
+  const result = await fetchCrewEntityMetadata(
     `crew://pr?id=${id}&owner=${owner}&d=crew`,
     fetchEvents,
   );
@@ -395,7 +395,7 @@ test("Crew entity roots reject ambiguous repository tags", async () => {
         ["subject", "Misbound entity"],
       ],
     });
-    const result = await fetchBuzzEntityMetadata(
+    const result = await fetchCrewEntityMetadata(
       `crew://${type}?id=${id}&owner=${owner}&d=crew`,
       async (filter) =>
         filter.kinds?.includes(30617)
@@ -410,7 +410,7 @@ test("Crew entity roots reject ambiguous repository tags", async () => {
 
 test("Crew repository metadata stays image-less and exposes default branch", async () => {
   const owner = "cd".repeat(32);
-  const result = await fetchBuzzEntityMetadata(
+  const result = await fetchCrewEntityMetadata(
     `crew://repo?owner=${owner}&d=relay-tools`,
     async () => [
       relayEvent({
@@ -438,7 +438,7 @@ test("Crew repository metadata stays image-less and exposes default branch", asy
 
 test("Crew project metadata resolves from the 30621 announcement", async () => {
   const owner = "cd".repeat(32);
-  const result = await fetchBuzzEntityMetadata(
+  const result = await fetchCrewEntityMetadata(
     `crew://project?owner=${owner}&d=pollinator`,
     async () => [
       relayEvent({
@@ -464,7 +464,7 @@ test("Crew project metadata resolves from the 30621 announcement", async () => {
 test("Crew project metadata declines a missing or invalid announcement", async () => {
   const owner = "cd".repeat(32);
   assert.equal(
-    await fetchBuzzEntityMetadata(
+    await fetchCrewEntityMetadata(
       `crew://project?owner=${owner}&d=pollinator`,
       async () => [],
     ),
@@ -472,7 +472,7 @@ test("Crew project metadata declines a missing or invalid announcement", async (
   );
   // Two `d` tags fail NIP-MP envelope validation.
   assert.equal(
-    await fetchBuzzEntityMetadata(
+    await fetchCrewEntityMetadata(
       `crew://project?owner=${owner}&d=pollinator`,
       async () => [
         relayEvent({

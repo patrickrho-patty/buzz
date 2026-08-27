@@ -75,6 +75,6 @@ export function getProviderEffortConfig(
  * Returns true when the given runtime id is crew-agent, which is the only
  * runtime that supports the tier-1 model-tuning knobs above.
  */
-export function isBuzzAgentRuntime(runtimeId: string): boolean {
+export function isCrewAgentRuntime(runtimeId: string): boolean {
   return runtimeId === "crew-agent";
 }

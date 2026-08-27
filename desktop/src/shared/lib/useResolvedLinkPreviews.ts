@@ -252,7 +252,7 @@ function compactMetadata(
 }
 
 /** Resolve builder-focused metadata only from the active relay. */
-export async function fetchBuzzEntityMetadata(
+export async function fetchCrewEntityMetadata(
   href: string,
   fetchEvents: EntityEventFetcher = (filter) => relayClient.fetchEvents(filter),
 ): Promise<LinkPreviewMetadata | null> {
@@ -348,11 +348,11 @@ export async function fetchBuzzEntityMetadata(
 }
 
 const entityMetadataLoader = createMetadataLoader({
-  fetcher: fetchBuzzEntityMetadata,
+  fetcher: fetchCrewEntityMetadata,
 });
 
 /** Share deduplicated relay-native entity metadata across cards and inline tooltips. */
-export async function loadBuzzEntityMetadata(
+export async function loadCrewEntityMetadata(
   href: string,
 ): Promise<LinkPreviewMetadata | null> {
   return (await entityMetadataLoader.load(href)).metadata;
@@ -393,7 +393,7 @@ export function resolveLinkPreview(
   if (metadata === undefined) {
     return {
       ...preview,
-      imageState: isBuzzEntityPreview(preview) ? "none" : "pending",
+      imageState: isCrewEntityPreview(preview) ? "none" : "pending",
     };
   }
   if (metadata === null) {
@@ -415,7 +415,7 @@ export function resolveLinkPreview(
     description: metadata.description,
     faviconDataUrl: metadata.faviconDataUrl,
     provider:
-      (preview.kind === "generic-link" || isBuzzEntityPreview(preview)) &&
+      (preview.kind === "generic-link" || isCrewEntityPreview(preview)) &&
       metadata.siteName
         ? metadata.siteName
         : preview.provider,
@@ -425,7 +425,7 @@ export function resolveLinkPreview(
   };
 }
 
-export function isBuzzEntityPreview(preview: SupportedLinkPreview): boolean {
+export function isCrewEntityPreview(preview: SupportedLinkPreview): boolean {
   return (
     preview.kind === "crew-pull-request" ||
     preview.kind === "crew-issue" ||
@@ -451,7 +451,7 @@ export function withEntityFallbacks(
   return previews.flatMap((preview) => {
     const match = byHref.get(preview.href);
     if (match) return [match];
-    return isBuzzEntityPreview(preview)
+    return isCrewEntityPreview(preview)
       ? [{ ...preview, imageState: "none" as const }]
       : [];
   });

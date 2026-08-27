@@ -27,14 +27,14 @@ export const PRESET_LOGOS: Record<string, string> = {
   openclaw: "/harness-logos/openclaw.svg",
 };
 
-function isBuzzRuntime(runtime: AcpRuntimeCatalogEntry): boolean {
+function isCrewRuntime(runtime: AcpRuntimeCatalogEntry): boolean {
   return runtime.id.trim().toLowerCase() === "crew-agent";
 }
 
 export function getRuntimeDisplayLabel(
   runtime: AcpRuntimeCatalogEntry,
 ): string {
-  return isBuzzRuntime(runtime) ? "Crew" : runtime.label;
+  return isCrewRuntime(runtime) ? "Crew" : runtime.label;
 }
 
 function getRuntimeLogoUrl(runtime: AcpRuntimeCatalogEntry): string | null {
@@ -56,7 +56,7 @@ export function RuntimeIcon({
   const imageUrl = getRuntimeLogoUrl(runtime);
   const Mark = RUNTIME_MARKS[id];
 
-  if (isBuzzRuntime(runtime)) {
+  if (isCrewRuntime(runtime)) {
     // The mark's wide viewBox letterboxes inside a square box, so honoring
     // the caller's size keeps it optically in line with the square logos.
     return <CrewMark className={cn(className, "text-foreground")} />;

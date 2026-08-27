@@ -161,7 +161,7 @@ export function TerminalSubstrate({
       } as React.CSSProperties)
     : undefined;
 
-  const forceBuzzFallback = React.useEffectEvent(() => {
+  const forceCrewFallback = React.useEffectEvent(() => {
     handoffRef.current = { ...INITIAL_HANDOFF_STATE };
     setOwner("crew");
   });
@@ -244,7 +244,7 @@ export function TerminalSubstrate({
   );
 
   React.useEffect(() => {
-    if (!enabled) forceBuzzFallback();
+    if (!enabled) forceCrewFallback();
   }, [enabled]);
 
   React.useEffect(() => {
@@ -304,7 +304,7 @@ export function TerminalSubstrate({
 
   React.useLayoutEffect(() => {
     if (!enabled) {
-      forceBuzzFallback();
+      forceCrewFallback();
       return;
     }
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -400,7 +400,7 @@ export function TerminalSubstrate({
     if (!canvas || !terminalPalette) return;
     const context = canvas.getContext("2d", { alpha: false });
     if (!context) {
-      forceBuzzFallback();
+      forceCrewFallback();
       return;
     }
     const dpr = window.devicePixelRatio || 1;

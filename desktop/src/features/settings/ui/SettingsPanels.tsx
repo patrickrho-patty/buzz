@@ -34,7 +34,7 @@ import { LocalArchiveSettingsCard } from "@/features/local-archive/ui/LocalArchi
 import { cn } from "@/shared/lib/cn";
 import { useCommunities } from "@/features/communities/useCommunities";
 import { Badge } from "@/shared/ui/badge";
-import { isBuzzTheme, useTheme } from "@/shared/theme/ThemeProvider";
+import { isCrewTheme, useTheme } from "@/shared/theme/ThemeProvider";
 import {
   LIGHT_THEMES,
   SYNTAX_THEMES,
@@ -440,7 +440,7 @@ function ThemeSettingsCard() {
   // Crew themes pin a neutral accent (GitHub black in light, white in dark),
   // so the accent picker is hidden while a Crew theme is active. `themeName` is
   // the effective theme, so this also covers System mode resolving to Crew.
-  const crewThemeSelected = isBuzzTheme(themeName);
+  const crewThemeSelected = isCrewTheme(themeName);
   const accentPickerHidden = crewThemeSelected;
   const shouldReduceMotion = useReducedMotion();
 

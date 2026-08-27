@@ -7,7 +7,7 @@ import {
 import { cn } from "@/shared/lib/cn";
 import { normalizePubkey } from "@/shared/lib/pubkey";
 import type { TranscriptItem } from "../agentSessionTypes";
-import { getBuzzToolInfo } from "../agentSessionToolCatalog";
+import { getCrewToolInfo } from "../agentSessionToolCatalog";
 import { buildCompactToolSummary } from "../agentSessionToolSummary";
 import type { AgentTranscriptIdentityProps } from "../activityRenderClasses/types";
 import {
@@ -37,7 +37,7 @@ export function ToolItem({
   const hasArgs = Object.keys(item.args).length > 0;
   const hasResult = item.result.trim().length > 0;
   const canonicalToolName = item.crewToolName ?? item.toolName;
-  const crewTool = getBuzzToolInfo(canonicalToolName);
+  const crewTool = getCrewToolInfo(canonicalToolName);
   const compactSummary = buildCompactToolSummary(item);
   const duration = getToolDurationDisplay(item);
   const messageLink = getSentMessageLink(item);

@@ -268,7 +268,7 @@ async function expectCrewContentShadow(page: Page, mode: "light" | "dark") {
   }
 }
 
-async function expectBuzzGradientPaint(
+async function expectCrewGradientPaint(
   page: Page,
   mode: "light" | "dark",
 ): Promise<string> {
@@ -313,7 +313,7 @@ async function expectBuzzGradientPaint(
   return mode === "light" ? paint.lightImage : paint.darkImage;
 }
 
-async function expectBuzzSettingsPalette(page: Page, mode: "light" | "dark") {
+async function expectCrewSettingsPalette(page: Page, mode: "light" | "dark") {
   const mutedColor =
     mode === "light" ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.4)";
   const sidebar = page.getByTestId("settings-sidebar");
@@ -327,7 +327,7 @@ async function expectBuzzSettingsPalette(page: Page, mode: "light" | "dark") {
     mutedColor,
   );
 
-  await expectBuzzGradientPaint(page, mode);
+  await expectCrewGradientPaint(page, mode);
 
   const version = page.getByTestId("settings-version");
   if ((await version.count()) > 0) {
@@ -335,7 +335,7 @@ async function expectBuzzSettingsPalette(page: Page, mode: "light" | "dark") {
   }
 }
 
-async function expectAppliedBuzzTheme(
+async function expectAppliedCrewTheme(
   page: Page,
   themeName: "crew" | "crew-dark",
   storedTheme: "crew" | "crew-dark" = themeName,
@@ -389,7 +389,7 @@ test("crew light sidebar gradient", async ({ page }) => {
   await seedTheme(page, "crew");
   await installMockBridge(page);
   await openChannel(page);
-  await expectBuzzGradientPaint(page, "light");
+  await expectCrewGradientPaint(page, "light");
   await expectCrewSidebarPalette(page, "light");
   await expectCrewContentShadow(page, "light");
   await expectIconlessSectionTitleAligned(page, "stream-list");
@@ -404,7 +404,7 @@ test("crew dark sidebar gradient", async ({ page }) => {
   await seedTheme(page, "crew-dark");
   await installMockBridge(page);
   await openChannel(page);
-  await expectBuzzGradientPaint(page, "dark");
+  await expectCrewGradientPaint(page, "dark");
   await expectCrewSidebarPalette(page, "dark");
   await expectCrewContentShadow(page, "dark");
   await expectIconlessSectionTitleAligned(page, "stream-list");
@@ -1192,7 +1192,7 @@ test("settings nav uses Crew active pill + hover (light)", async ({ page }) => {
     throw new Error("Settings nav label geometry is missing");
   }
   expect(Math.abs(selectedLabelBox.width - unselectedLabelBox.width)).toBe(0);
-  await expectBuzzSettingsPalette(page, "light");
+  await expectCrewSettingsPalette(page, "light");
   const activeRow = page.getByTestId("settings-nav-appearance");
   await expect(activeRow).toHaveAttribute("data-active", "true");
   await waitForAnimations(page);
@@ -1208,7 +1208,7 @@ test("settings nav uses Crew active pill + hover (dark)", async ({ page }) => {
   const sidebar = page.getByTestId("settings-sidebar");
   await expect(sidebar).toBeVisible({ timeout: 10_000 });
   await page.getByTestId("settings-nav-appearance").click();
-  await expectBuzzSettingsPalette(page, "dark");
+  await expectCrewSettingsPalette(page, "dark");
   await expect(page.getByTestId("settings-content-surface")).toHaveCSS(
     "background-color",
     "rgb(26, 26, 26)",
@@ -1755,13 +1755,13 @@ test("accent picker reveals/hides when toggling Crew", async ({ page }) => {
   await installMockBridge(page);
   await openAppearance(page, "light");
   await expect(page.getByTestId("accent-color-neutral")).toBeVisible();
-  const nonBuzzSettingOrder = await page
+  const nonCrewSettingOrder = await page
     .getByTestId("appearance-theme-card")
     .locator(
       '[data-testid="appearance-color-mode-row"], [data-testid="theme-style-row"], [data-testid="accent-color-options"], [data-testid="glass-background-row"], [data-testid="prominent-active-tab-row"]',
     )
     .evaluateAll((rows) => rows.map((row) => row.getAttribute("data-testid")));
-  expect(nonBuzzSettingOrder).toEqual([
+  expect(nonCrewSettingOrder).toEqual([
     "appearance-color-mode-row",
     "theme-style-row",
     "accent-color-options",
@@ -1825,22 +1825,22 @@ test("Crew light and dark modes apply live without a reload", async ({
   await seedTheme(page, "crew");
   await installMockBridge(page);
   await openAppearance(page, "light");
-  await expectAppliedBuzzTheme(page, "crew");
-  const lightGradient = await expectBuzzGradientPaint(page, "light");
+  await expectAppliedCrewTheme(page, "crew");
+  const lightGradient = await expectCrewGradientPaint(page, "light");
 
   await page.getByTestId("appearance-mode-dark").click();
-  await expectAppliedBuzzTheme(page, "crew-dark");
-  const darkGradient = await expectBuzzGradientPaint(page, "dark");
+  await expectAppliedCrewTheme(page, "crew-dark");
+  const darkGradient = await expectCrewGradientPaint(page, "dark");
   expect(darkGradient).not.toBe(lightGradient);
 
   await page.getByTestId("appearance-mode-light").click();
-  await expectAppliedBuzzTheme(page, "crew");
-  await expectBuzzGradientPaint(page, "light");
+  await expectAppliedCrewTheme(page, "crew");
+  await expectCrewGradientPaint(page, "light");
 
   // Exercise the overlap that previously let a slower, stale theme load win.
   await page.getByTestId("appearance-mode-dark").click();
   await page.getByTestId("appearance-mode-light").click();
-  await expectAppliedBuzzTheme(page, "crew");
+  await expectAppliedCrewTheme(page, "crew");
 });
 
 test("Crew follows native system theme changes without a reload", async ({
@@ -1854,10 +1854,10 @@ test("Crew follows native system theme changes without a reload", async ({
   await openAppearance(page, "system");
 
   await emitNativeThemeChange(page, "dark");
-  await expectAppliedBuzzTheme(page, "crew-dark", "crew");
-  await expectBuzzGradientPaint(page, "dark");
+  await expectAppliedCrewTheme(page, "crew-dark", "crew");
+  await expectCrewGradientPaint(page, "dark");
 
   await emitNativeThemeChange(page, "light");
-  await expectAppliedBuzzTheme(page, "crew", "crew");
-  await expectBuzzGradientPaint(page, "light");
+  await expectAppliedCrewTheme(page, "crew", "crew");
+  await expectCrewGradientPaint(page, "light");
 });

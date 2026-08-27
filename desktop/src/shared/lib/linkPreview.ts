@@ -309,7 +309,7 @@ export function crewEntityFallbackTitle(link: ParsedEntityLink): string {
  * href is rebuilt through the canonical builders so equivalent links (case
  * or query order variants) dedupe to a single card.
  */
-function parseBuzzEntityPreview(href: string): SupportedLinkPreview | null {
+function parseCrewEntityPreview(href: string): SupportedLinkPreview | null {
   const parsed = parseEntityLink(href);
   if (!parsed.ok) return null;
 
@@ -368,7 +368,7 @@ const CREW_GIT_PATH_RE =
  * remain an ordinary external link. Pass `null` when the relay origin is not
  * yet resolved; the link stays external until it can be verified.
  */
-function parseBuzzGitLink(
+function parseCrewGitLink(
   parsed: URL,
   activeRelayOrigin: string | null,
 ): SupportedLinkPreview | null {
@@ -547,7 +547,7 @@ export function parseSupportedLinkPreview(
 ): SupportedLinkPreview | null {
   const candidate = trimUrlCandidate(href);
   if (isEntityLink(candidate)) {
-    return parseBuzzEntityPreview(candidate);
+    return parseCrewEntityPreview(candidate);
   }
 
   let parsed: URL;
@@ -564,7 +564,7 @@ export function parseSupportedLinkPreview(
   }
 
   const recognized =
-    parseBuzzGitLink(parsed, activeRelayOrigin ?? null) ??
+    parseCrewGitLink(parsed, activeRelayOrigin ?? null) ??
     parseGithubLink(parsed) ??
     parseLinearIssue(parsed) ??
     parseGoogleDriveLink(parsed) ??
