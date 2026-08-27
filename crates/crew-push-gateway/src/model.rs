@@ -16,14 +16,13 @@ pub enum AppProfile {
     CrewIosSandbox,
 }
 impl AppProfile {
-    /// Serialized profile ids stay on the legacy `crew-ios-*` spellings for
-    /// now: they key APNs credentials for the shipped app bundles and rows
-    /// already stored in `push_leases.app_profile`. New `crew-ios-*` ids are
-    /// accepted as aliases (see parsers) so future builds can migrate.
+    /// Serialized profile ids are now `crew-ios-*`. Legacy `buzz-ios-*` values
+    /// from shipped app bundles and existing `push_leases` rows remain readable
+    /// via alias handling in parsers (see `config.rs`, `postgres.rs`).
     pub const fn as_str(self) -> &'static str {
         match self {
-            Self::CrewIosProduction => "buzz-ios-production",
-            Self::CrewIosSandbox => "buzz-ios-sandbox",
+            Self::CrewIosProduction => "crew-ios-production",
+            Self::CrewIosSandbox => "crew-ios-sandbox",
         }
     }
 }

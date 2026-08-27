@@ -102,7 +102,7 @@ impl Config {
             .parse::<url::Url>()
             .map_err(|_| ConfigError::Invalid("CREW_PUSH_PUBLIC_DELIVERY_URL"))?;
         if public_delivery_url.scheme() != "https"
-            || public_delivery_url.host_str() != Some("push.buzz.xyz")
+            || !matches!(public_delivery_url.host_str(), Some("push.buzz.xyz") | Some("push.crew.xyz"))
             || public_delivery_url.port().is_some()
             || public_delivery_url.path() != "/v1/deliveries/apns"
             || public_delivery_url.query().is_some()
@@ -218,7 +218,7 @@ mod tests {
             ),
             (
                 "CREW_PUSH_ENABLED_PROFILES".into(),
-                "buzz-ios-production".into(),
+                "crew-ios-production".into(),
             ),
             (
                 "DATABASE_URL".into(),

@@ -2,8 +2,8 @@
 //!
 //! **Worktree sync** (`sync_shared_agent_data`): Per-launch symlink creation
 //! from the current worktree data directory to the canonical dev data
-//! directory (`xyz.patty.griddle.app.dev`). Only runs when
-//! `BUZZ_SHARE_IDENTITY=1` and `BUZZ_PRIVATE_KEY` is set. All dev
+//! directory (`xyz.patty.crew.app.dev`). Only runs when
+//! `CREW_SHARE_IDENTITY=1` and `CREW_PRIVATE_KEY` is set. All dev
 //! instances share the same physical files — edits in any worktree are
 //! immediately visible to all others.
 //!
@@ -21,14 +21,17 @@ use tauri::Manager;
 
 use crate::util::replace_with_symlink;
 
-const CANONICAL_DEV_IDENTIFIER: &str = "xyz.patty.griddle.app.dev";
-const LEGACY_CANONICAL_DEV_IDENTIFIER: &str = "xyz.block.sprout.app.dev";
-const LEGACY_RELEASE_IDENTIFIER: &str = "xyz.block.sprout.app";
+const CANONICAL_DEV_IDENTIFIER: &str = "xyz.patty.crew.app.dev";
+const CANONICAL_RELEASE_IDENTIFIER: &str = "xyz.patty.crew.app";
+const LEGACY_GRIDDLE_DEV_IDENTIFIER: &str = "xyz.patty.griddle.app.dev";
+const LEGACY_GRIDDLE_RELEASE_IDENTIFIER: &str = "xyz.patty.griddle.app";
+const LEGACY_SPROUT_DEV_IDENTIFIER: &str = "xyz.block.sprout.app.dev";
+const LEGACY_SPROUT_RELEASE_IDENTIFIER: &str = "xyz.block.sprout.app";
 
 /// JSON files symlinked from worktree data directories to the canonical
 /// dev data directory. Only data files — never `agent-pids/` or `logs/`.
 /// `identity.key` is deliberately excluded because worktree instances
-/// receive their identity via the `BUZZ_PRIVATE_KEY` env var.
+/// receive their identity via the `CREW_PRIVATE_KEY` env var.
 const SHARED_AGENT_FILES: &[&str] = &[
     "agents/managed-agents.json",
     "agents/personas.json",
@@ -41,8 +44,8 @@ const SHARED_AGENT_DIRS: &[&str] = &["agents/teams"];
 
 /// Returns `true` when `name` is a dev data dir name — i.e. it is exactly the
 /// canonical dev identifier or a worktree variant separated by a `.` (e.g.
-/// `xyz.patty.griddle.app.dev.my-branch`). Rejects prefix-collisions such as
-/// `xyz.patty.griddle.app.developer`. This is the authoritative dev/prod
+/// `xyz.patty.crew.app.dev.my-branch`). Rejects prefix-collisions such as
+/// `xyz.patty.crew.app.developer`. This is the authoritative dev/prod
 /// discriminator shared by `run_boot_migrations`, `sync_shared_agent_data`,
 /// and `reconcile_target_dir`.
 pub(crate) fn is_dev_data_dir_name(name: &str) -> bool {
@@ -59,9 +62,26 @@ fn canonical_dev_data_dir(current: &Path) -> Option<PathBuf> {
 pub(crate) fn legacy_app_data_dir(current: &Path) -> Option<PathBuf> {
     let name = current.file_name()?.to_str()?;
     let legacy_name = if name.starts_with(CANONICAL_DEV_IDENTIFIER) {
-        name.replacen(CANONICAL_DEV_IDENTIFIER, LEGACY_CANONICAL_DEV_IDENTIFIER, 1)
-    } else if name.starts_with("xyz.patty.griddle.app") {
-        name.replacen("xyz.patty.griddle.app", LEGACY_RELEASE_IDENTIFIER, 1)
+        name.replacen(CANONICAL_DEV_IDENTIFIER, LEGACY_GRIDDLE_DEV_IDENTIFIER, 1)
+    } else if name.starts_with(CANONICAL_RELEASE_IDENTIFIER) {
+        name.replacen(CANONICAL_RELEASE_IDENTIFIER, LEGACY_GRIDDLE_RELEASE_IDENTIFIER, 1)
+    } else {
+        return None;
+    };
+    current.parent().map(|parent| parent.join(legacy_name))
+}
+
+pub(crate) fn legacy_sprout_app_data_dir(current: &Path) -> Option<PathBuf> {
+    let name = current.file_name()?.to_str()?;
+    // Very old installs that never ran the Griddle migration still have Sprout data
+    let legacy_name = if name.starts_with(CANONICAL_DEV_IDENTIFIER) {
+        name.replacen(CANONICAL_DEV_IDENTIFIER, LEGACY_SPROUT_DEV_IDENTIFIER, 1)
+    } else if name.starts_with(CANONICAL_RELEASE_IDENTIFIER) {
+        name.replacen(CANONICAL_RELEASE_IDENTIFIER, LEGACY_SPROUT_RELEASE_IDENTIFIER, 1)
+    } else if name.starts_with(LEGACY_GRIDDLE_DEV_IDENTIFIER) {
+        name.replacen(LEGACY_GRIDDLE_DEV_IDENTIFIER, LEGACY_SPROUT_DEV_IDENTIFIER, 1)
+    } else if name.starts_with(LEGACY_GRIDDLE_RELEASE_IDENTIFIER) {
+        name.replacen(LEGACY_GRIDDLE_RELEASE_IDENTIFIER, LEGACY_SPROUT_RELEASE_IDENTIFIER, 1)
     } else {
         return None;
     };
@@ -203,23 +223,27 @@ pub fn migrate_legacy_app_data_dir(app: &tauri::AppHandle) {
             return;
         }
     };
-    let Some(legacy_dir) = legacy_app_data_dir(&current_dir) else {
-        return;
-    };
-    if !legacy_dir.exists() {
-        return;
-    }
-    match copy_dir_all(&legacy_dir, &current_dir) {
-        Ok(()) => eprintln!(
-            "crew-desktop: app-data-migration: copied legacy data from {} to {}",
-            legacy_dir.display(),
-            current_dir.display()
-        ),
-        Err(error) => eprintln!(
-            "crew-desktop: app-data-migration: failed to copy {} to {}: {error}",
-            legacy_dir.display(),
-            current_dir.display()
-        ),
+    // Try Griddle legacy first, then Sprout for very old installs that never ran Griddle
+    let legacy_dirs = [
+        legacy_app_data_dir(&current_dir),
+        legacy_sprout_app_data_dir(&current_dir),
+    ];
+    for legacy_dir in legacy_dirs.into_iter().flatten() {
+        if !legacy_dir.exists() {
+            continue;
+        }
+        match copy_dir_all(&legacy_dir, &current_dir) {
+            Ok(()) => eprintln!(
+                "crew-desktop: app-data-migration: copied legacy data from {} to {}",
+                legacy_dir.display(),
+                current_dir.display()
+            ),
+            Err(error) => eprintln!(
+                "crew-desktop: app-data-migration: failed to copy {} to {}: {error}",
+                legacy_dir.display(),
+                current_dir.display()
+            ),
+        }
     }
 }
 
@@ -758,7 +782,7 @@ fn replace_builtin_avatar(record: &mut serde_json::Value, persona_id: &str, now:
 ///
 /// Guards:
 /// - `BUZZ_SHARE_IDENTITY` must be `"1"`
-/// - `BUZZ_PRIVATE_KEY` must parse as valid `nostr::Keys`
+/// - `CREW_PRIVATE_KEY` must parse as valid `nostr::Keys`
 /// - The canonical dir must differ from the current dir (skip if we ARE canonical)
 /// - The canonical dir must exist
 pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
@@ -770,13 +794,13 @@ pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
         return;
     }
 
-    // Guard: BUZZ_PRIVATE_KEY must be a valid nostr key.
-    let has_valid_key = std::env::var("BUZZ_PRIVATE_KEY")
+    // Guard: CREW_PRIVATE_KEY must be a valid nostr key.
+    let has_valid_key = std::env::var("CREW_PRIVATE_KEY")
         .ok()
         .and_then(|k| k.parse::<nostr::Keys>().ok())
         .is_some();
     if !has_valid_key {
-        eprintln!("crew-desktop: shared-agent-sync: BUZZ_PRIVATE_KEY missing or invalid, skipping");
+        eprintln!("crew-desktop: shared-agent-sync: CREW_PRIVATE_KEY missing or invalid, skipping");
         return;
     }
 

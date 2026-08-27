@@ -18,9 +18,9 @@ migration:
   resources:
     requests: {cpu: 50m, memory: 64Mi}
     limits: {cpu: 250m, memory: 128Mi}
-publicDeliveryUrl: https://push.buzz.xyz/v1/deliveries/apns
+publicDeliveryUrl: https://push.buzz.xyz/v1/deliveries/apns  # TODO(crew): add push.crew.xyz when DNS cutover
 maxGrantLifetimeSeconds: 2592000
-enabledProfiles: buzz-ios-production
+enabledProfiles: crew-ios-production,buzz-ios-production
 # Example App Attest identifier. Production MUST override this with the exact
 # Apple TEAMID.bundle-id value (see values-production.yaml).
 appAttestAppId: TEAMID.xyz.buzz

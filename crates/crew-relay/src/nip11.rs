@@ -207,8 +207,8 @@ fn push_descriptor(
             "current": true
         }],
         "app_profiles": [
-            {"id": "buzz-ios-production", "transport": "apns"},
-            {"id": "buzz-ios-sandbox", "transport": "apns"}
+            {"id": "crew-ios-production", "transport": "apns"},
+            {"id": "crew-ios-sandbox", "transport": "apns"}
         ],
         "push_kinds": crate::handlers::push_lease::PUSH_KINDS,
         "urgent_kinds": crate::handlers::push_lease::URGENT_KINDS,

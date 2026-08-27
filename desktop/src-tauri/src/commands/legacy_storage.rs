@@ -3,9 +3,11 @@ use std::path::{Path, PathBuf};
 use rusqlite::{Connection, OpenFlags};
 use serde::Serialize;
 
-const CREW_RELEASE_IDENTIFIER_PREFIX: &str = "xyz.patty.griddle.app";
+const CREW_RELEASE_IDENTIFIER_PREFIX: &str = "xyz.patty.crew.app";
+const CREW_DEV_IDENTIFIER_PREFIX: &str = "xyz.patty.crew.app.dev";
+const GRIDDLE_RELEASE_IDENTIFIER: &str = "xyz.patty.griddle.app";
+const GRIDDLE_DEV_IDENTIFIER: &str = "xyz.patty.griddle.app.dev";
 const SPROUT_RELEASE_IDENTIFIER: &str = "xyz.block.sprout.app";
-const CREW_DEV_IDENTIFIER_PREFIX: &str = "xyz.patty.griddle.app.dev";
 const SPROUT_DEV_IDENTIFIER_PREFIX: &str = "xyz.block.sprout.app.dev";
 
 const SPROUT_WORKSPACES_KEY: &str = "sprout-workspaces";
@@ -31,12 +33,30 @@ fn legacy_identifier(current_identifier: &str) -> Option<String> {
     if current_identifier.starts_with(CREW_DEV_IDENTIFIER_PREFIX) {
         Some(current_identifier.replacen(
             CREW_DEV_IDENTIFIER_PREFIX,
-            SPROUT_DEV_IDENTIFIER_PREFIX,
+            GRIDDLE_DEV_IDENTIFIER,
             1,
         ))
     } else if current_identifier.starts_with(CREW_RELEASE_IDENTIFIER_PREFIX) {
         Some(current_identifier.replacen(
             CREW_RELEASE_IDENTIFIER_PREFIX,
+            GRIDDLE_RELEASE_IDENTIFIER,
+            1,
+        ))
+    } else {
+        None
+    }
+}
+
+fn legacy_griddle_identifier(current_identifier: &str) -> Option<String> {
+    if current_identifier.starts_with(GRIDDLE_DEV_IDENTIFIER) {
+        Some(current_identifier.replacen(
+            GRIDDLE_DEV_IDENTIFIER,
+            SPROUT_DEV_IDENTIFIER_PREFIX,
+            1,
+        ))
+    } else if current_identifier.starts_with(GRIDDLE_RELEASE_IDENTIFIER) {
+        Some(current_identifier.replacen(
+            GRIDDLE_RELEASE_IDENTIFIER,
             SPROUT_RELEASE_IDENTIFIER,
             1,
         ))
@@ -213,16 +233,16 @@ mod tests {
     #[test]
     fn legacy_identifier_maps_release_identifier() {
         assert_eq!(
-            legacy_identifier("xyz.patty.griddle.app"),
-            Some("xyz.block.sprout.app".to_string())
+            legacy_identifier("xyz.patty.crew.app"),
+            Some("xyz.patty.griddle.app".to_string())
         );
     }
 
     #[test]
     fn legacy_identifier_maps_dev_worktree_identifier() {
         assert_eq!(
-            legacy_identifier("xyz.patty.griddle.app.dev.my-branch"),
-            Some("xyz.block.sprout.app.dev.my-branch".to_string())
+            legacy_identifier("xyz.patty.crew.app.dev.my-branch"),
+            Some("xyz.patty.griddle.app.dev.my-branch".to_string())
         );
     }
 
