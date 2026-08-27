@@ -130,7 +130,7 @@ test.describe("agent readiness gate screenshots", () => {
 
   // Shot 01: inherited agent defaults are an explicit, valid choice. Provider and
   // model controls stay hidden until the user chooses to customize this agent.
-  test("01-create-buzzagent-uses-ai-defaults", async ({ page }) => {
+  test("01-create-crewagent-uses-ai-defaults", async ({ page }) => {
     await installMockBridge(page, {
       globalAgentConfig: {
         provider: "anthropic",
@@ -151,13 +151,13 @@ test.describe("agent readiness gate screenshots", () => {
     await settleAnimations(page);
 
     await page.getByRole("dialog").screenshot({
-      path: `${SHOTS}/01-create-buzzagent-uses-ai-defaults.png`,
+      path: `${SHOTS}/01-create-crewagent-uses-ai-defaults.png`,
     });
   });
 
   // Shot 02: customized Anthropic configuration uses Automatic model instead
   // of presenting an obsolete model-required error.
-  test("02-create-buzzagent-automatic-model", async ({ page }) => {
+  test("02-create-crewagent-automatic-model", async ({ page }) => {
     await installMockBridge(page);
     await openCreateDialog(page);
     await selectProvider(page, "Crew shared compute");
@@ -167,7 +167,7 @@ test.describe("agent readiness gate screenshots", () => {
     await settleAnimations(page);
 
     await page.getByRole("dialog").screenshot({
-      path: `${SHOTS}/02-create-buzzagent-automatic-model.png`,
+      path: `${SHOTS}/02-create-crewagent-automatic-model.png`,
     });
   });
 

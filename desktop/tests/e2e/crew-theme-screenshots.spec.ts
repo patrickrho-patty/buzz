@@ -57,7 +57,7 @@ async function openChannel(page: Page) {
   await expect(page.getByTestId("app-sidebar")).toBeVisible();
 }
 
-async function expectBuzzSidebarPalette(page: Page, mode: "light" | "dark") {
+async function expectCrewSidebarPalette(page: Page, mode: "light" | "dark") {
   const mutedColor =
     mode === "light" ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.4)";
   const searchSurface =
@@ -390,7 +390,7 @@ test("crew light sidebar gradient", async ({ page }) => {
   await installMockBridge(page);
   await openChannel(page);
   await expectBuzzGradientPaint(page, "light");
-  await expectBuzzSidebarPalette(page, "light");
+  await expectCrewSidebarPalette(page, "light");
   await expectBuzzContentShadow(page, "light");
   await expectIconlessSectionTitleAligned(page, "stream-list");
   await expectIconlessSectionTitleAligned(page, "dm-list");
@@ -405,7 +405,7 @@ test("crew dark sidebar gradient", async ({ page }) => {
   await installMockBridge(page);
   await openChannel(page);
   await expectBuzzGradientPaint(page, "dark");
-  await expectBuzzSidebarPalette(page, "dark");
+  await expectCrewSidebarPalette(page, "dark");
   await expectBuzzContentShadow(page, "dark");
   await expectIconlessSectionTitleAligned(page, "stream-list");
   await expectIconlessSectionTitleAligned(page, "dm-list");
