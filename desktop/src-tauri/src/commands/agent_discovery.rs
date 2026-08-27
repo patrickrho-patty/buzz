@@ -1604,7 +1604,7 @@ mod tests {
 
     /// crew-agent has no install commands on any platform.
     #[test]
-    fn test_buzz_agent_has_no_install_commands() {
+    fn test_crew_agent_has_no_install_commands() {
         let crew = crate::managed_agents::known_acp_runtime_exact("crew-agent").unwrap();
         assert!(
             crew.cli_install_commands_for_os().is_empty(),

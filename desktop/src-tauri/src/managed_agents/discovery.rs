@@ -553,7 +553,7 @@ fn resolve_cache() -> &'static std::sync::Mutex<std::collections::HashMap<String
 /// The cache eliminates redundant login-shell spawns when multiple agents share
 /// the same binaries (e.g. `npx`, `uvx`).
 pub fn resolve_command(command: &str) -> Option<PathBuf> {
-    if let Some(managed) = resolve_buzz_managed_command(command) {
+    if let Some(managed) = resolve_crew_managed_command(command) {
         return Some(managed);
     }
 
@@ -590,7 +590,7 @@ pub fn resolve_command(command: &str) -> Option<PathBuf> {
 /// freeze the cheap path exists to avoid. `resolve_command` (the forced path)
 /// is the sole prober and cache populator.
 pub fn resolve_command_cached(command: &str) -> Option<PathBuf> {
-    if let Some(managed) = resolve_buzz_managed_command(command) {
+    if let Some(managed) = resolve_crew_managed_command(command) {
         return Some(managed);
     }
     resolve_cache()
@@ -696,7 +696,7 @@ fn command_basenames(command: &str) -> Vec<String> {
     candidates
 }
 
-fn resolve_buzz_managed_command(command: &str) -> Option<PathBuf> {
+fn resolve_crew_managed_command(command: &str) -> Option<PathBuf> {
     let basenames = command_basenames(command);
     basenames
         .iter()
@@ -715,7 +715,7 @@ fn resolve_command_uncached(command: &str) -> Option<PathBuf> {
         return path.exists().then_some(path);
     }
 
-    if let Some(managed) = resolve_buzz_managed_command(command) {
+    if let Some(managed) = resolve_crew_managed_command(command) {
         return Some(managed);
     }
 

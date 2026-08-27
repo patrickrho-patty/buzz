@@ -148,7 +148,7 @@ fn post_sanitization_empty_global_env_falls_through_to_persona_tier() {
 /// The env block sits above the struct block per v3 candidate-preparation
 /// contract; current reader semantics (struct before env) would be wrong.
 #[test]
-fn record_env_prompt_wins_over_record_struct_prompt_as_buzz_explicit() {
+fn record_env_prompt_wins_over_record_struct_prompt_as_crew_explicit() {
     let mut record = test_record();
     record.system_prompt = Some("struct-prompt-A".to_string());
     record.env_vars.insert(
@@ -266,7 +266,7 @@ fn reserved_key_absent_from_definition_env_falls_through() {
 
 /// B4: record.effort_level surfaces as CrewExplicit when no env var is set.
 #[test]
-fn b4_canonical_effort_level_surfaces_as_buzz_explicit() {
+fn b4_canonical_effort_level_surfaces_as_crew_explicit() {
     let mut record = test_record();
     record.effort_level = Some("high".to_string());
     let runtime = crew_agent_runtime();

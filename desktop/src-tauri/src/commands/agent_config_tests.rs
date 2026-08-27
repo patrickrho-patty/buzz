@@ -226,7 +226,7 @@ fn linked_blank_definition_model_falls_through_to_global_default() {
 /// authoritative — the stale-record clearing above is scoped to linked
 /// instances only.
 #[test]
-fn definition_less_explicit_record_model_keeps_buzz_explicit_origin() {
+fn definition_less_explicit_record_model_keeps_crew_explicit_origin() {
     let mut record = agent_record();
     record.persona_id = None;
     record.model = Some("explicit-model".to_string());
@@ -282,7 +282,7 @@ fn pending_pick_keeps_explicit_x_and_does_not_surface_live_y() {
 /// `CrewExplicit` (its true source — NOT `PersonaDefault`). FAILS against the
 /// shipped no-persona early-return, which left X as primary and Y struck.
 #[test]
-fn genuine_explicit_live_switch_renders_y_over_x_buzz_explicit_secondary() {
+fn genuine_explicit_live_switch_renders_y_over_x_crew_explicit_secondary() {
     let mut record = agent_record();
     record.persona_id = None;
     record.model = Some("model-x".to_string());

@@ -4,7 +4,7 @@ use super::{apply_claude_model_env, apply_effort_env};
 /// `apply_claude_model_env`, even if it was set before (dual-authority defect).
 /// ANTHROPIC_MODEL must be set to the resolved model.
 #[test]
-fn a1_buzz_acp_model_absent_anthropic_model_present_after_env_apply() {
+fn a1_crew_acp_model_absent_anthropic_model_present_after_env_apply() {
     let mut cmd = std::process::Command::new("true");
     // Simulate descriptor.env writing CREW_ACP_MODEL (the pre-A1 path).
     cmd.env("CREW_ACP_MODEL", "claude-opus-4");

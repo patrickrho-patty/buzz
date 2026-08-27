@@ -27,7 +27,7 @@ pub(crate) const KNOWN_AGENT_BINARIES: &[&str] = &[
 /// Script interpreters that may host managed agent wrappers (e.g. npm shims).
 /// A process whose name matches here is NOT immediately claimed — it must also
 /// carry `CREW_MANAGED_AGENT` in its environment (checked by the caller via
-/// `process_has_buzz_marker()`). This avoids sweeping unrelated node processes.
+/// `process_has_crew_marker()`). This avoids sweeping unrelated node processes.
 pub(crate) const KNOWN_SCRIPT_INTERPRETERS: &[&str] = &["node"];
 
 /// Check if a process name matches any of our known agent binaries.
@@ -87,7 +87,7 @@ pub(crate) fn process_belongs_to_us(pid: u32) -> bool {
     }
     let name = String::from_utf8_lossy(&buf[..len as usize]);
     // Fall through for script interpreters (e.g. `node` hosting an npm shim):
-    // the caller's `process_has_buzz_marker()` check decides true ownership.
+    // the caller's `process_has_crew_marker()` check decides true ownership.
     name_matches_known_binary(&name) || name_matches_interpreter(&name)
 }
 
@@ -147,7 +147,7 @@ pub(super) fn crew_marker_entry(instance_id: &str) -> Vec<u8> {
 /// is this desktop instance's id. A process stamped with a *different* instance
 /// id belongs to another live Crew app and must never be reaped here.
 #[cfg(target_os = "macos")]
-pub(crate) fn process_has_buzz_marker(pid: u32, instance_id: &str) -> bool {
+pub(crate) fn process_has_crew_marker(pid: u32, instance_id: &str) -> bool {
     let marker = crew_marker_entry(instance_id);
     let Some(buf) = sweep::procargs2_buffer(pid) else {
         return false;
@@ -191,7 +191,7 @@ pub(crate) fn process_has_buzz_marker(pid: u32, instance_id: &str) -> bool {
 }
 
 #[cfg(all(unix, not(target_os = "macos")))]
-pub(crate) fn process_has_buzz_marker(pid: u32, instance_id: &str) -> bool {
+pub(crate) fn process_has_crew_marker(pid: u32, instance_id: &str) -> bool {
     let marker = crew_marker_entry(instance_id);
     let Ok(data) = std::fs::read(format!("/proc/{pid}/environ")) else {
         return false;
@@ -200,7 +200,7 @@ pub(crate) fn process_has_buzz_marker(pid: u32, instance_id: &str) -> bool {
 }
 
 #[cfg(not(unix))]
-pub(crate) fn process_has_buzz_marker(_pid: u32, _instance_id: &str) -> bool {
+pub(crate) fn process_has_crew_marker(_pid: u32, _instance_id: &str) -> bool {
     false
 }
 
@@ -389,7 +389,7 @@ pub(crate) fn valid_agent_runtime_receipt(
         receipt,
         instance_id,
         process_is_running,
-        process_has_buzz_marker,
+        process_has_crew_marker,
     )
 }
 

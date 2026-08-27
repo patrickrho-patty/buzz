@@ -44,7 +44,7 @@ fn returns_none_for_unknown_commands() {
 }
 
 #[test]
-fn default_agent_command_resolves_bundled_buzz_agent() {
+fn default_agent_command_resolves_bundled_crew_agent() {
     // The default must be bundled crew-agent, never bare `goose` on a stock Windows install.
     assert_eq!(default_agent_command(), "crew-agent");
     assert_eq!(
@@ -70,7 +70,7 @@ fn normalizes_claude_and_codex_args_to_empty() {
 }
 
 #[test]
-fn resolves_buzz_agent_avatar() {
+fn resolves_crew_agent_avatar() {
     assert_eq!(
         managed_agent_avatar_url("crew-agent"),
         Some(CREW_AGENT_AVATAR_URL.to_string())
@@ -82,7 +82,7 @@ fn resolves_buzz_agent_avatar() {
 }
 
 #[test]
-fn normalizes_buzz_agent_args_to_empty() {
+fn normalizes_crew_agent_args_to_empty() {
     assert_eq!(
         normalize_agent_args("crew-agent", Vec::new()),
         Vec::<String>::new()
@@ -332,7 +332,7 @@ fn try_record_agent_command_dangling_persona_runtime_returns_err() {
 /// When neither the record nor persona has any runtime id, `try_record_agent_command`
 /// falls back to `default_agent_command()` — this is the legacy-agent path.
 #[test]
-fn try_record_agent_command_no_runtime_id_defaults_to_buzz_agent() {
+fn try_record_agent_command_no_runtime_id_defaults_to_crew_agent() {
     let record = record_with(None, None, None);
     let result = try_record_agent_command(&record, &[]);
     assert_eq!(

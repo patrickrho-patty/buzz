@@ -343,7 +343,7 @@ class _MarkdownEditingController extends TextEditingController {
           WidgetSpan(
             alignment: PlaceholderAlignment.baseline,
             baseline: TextBaseline.alphabetic,
-            child: _ComposerBuzzLinkChip(
+            child: _ComposerCrewLinkChip(
               icon: presentation.$1,
               label: presentation.$2,
               semanticLabel: presentation.$3,
@@ -490,13 +490,13 @@ class _MarkdownEditingController extends TextEditingController {
   }
 }
 
-class _ComposerBuzzLinkChip extends StatelessWidget {
+class _ComposerCrewLinkChip extends StatelessWidget {
   final IconData icon;
   final String label;
   final String semanticLabel;
   final TextStyle textStyle;
 
-  const _ComposerBuzzLinkChip({
+  const _ComposerCrewLinkChip({
     required this.icon,
     required this.label,
     required this.semanticLabel,

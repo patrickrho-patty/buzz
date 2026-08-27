@@ -7665,7 +7665,7 @@ printf '%s\n' '{{"jsonrpc":"2.0","id":0,"result":{{"stopReason":"end_turn"}}}}'"
     /// A crew-agent-commanded context must not panic — verifies the harness
     /// field flows through encrypt/sign without error.
     #[tokio::test]
-    async fn test_publish_agent_turn_metric_buzz_agent_harness_name() {
+    async fn test_publish_agent_turn_metric_crew_agent_harness_name() {
         let agent_keys = nostr::Keys::generate();
         let owner_keys = nostr::Keys::generate();
         let mut ctx = make_prompt_context_with_owner(&agent_keys, owner_keys.public_key());

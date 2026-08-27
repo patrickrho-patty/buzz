@@ -1339,14 +1339,14 @@ mod windows_resolver_tests {
         touch(&bash);
 
         let path_env = env::join_paths([git.parent().expect("cmd dir")]).expect("join");
-        let old_buzz_shell = env::var_os("CREW_SHELL");
+        let old_crew_shell = env::var_os("CREW_SHELL");
         let old_git_bash = env::var_os("GIT_BASH");
         env::remove_var("CREW_SHELL");
         env::remove_var("GIT_BASH");
 
         let result = resolve_bash(path_env.to_str().expect("utf8"));
 
-        match old_buzz_shell {
+        match old_crew_shell {
             Some(value) => env::set_var("CREW_SHELL", value),
             None => env::remove_var("CREW_SHELL"),
         }

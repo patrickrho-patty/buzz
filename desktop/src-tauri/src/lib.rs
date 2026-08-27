@@ -218,7 +218,7 @@ pub fn run() {
         .register_asynchronous_uri_scheme_protocol("crew-media", |ctx, request, responder| {
             let app = ctx.app_handle().clone();
             tauri::async_runtime::spawn(async move {
-                let response = media_proxy::handle_buzz_media(&app, &request).await;
+                let response = media_proxy::handle_crew_media(&app, &request).await;
                 responder.respond(response);
             });
         })

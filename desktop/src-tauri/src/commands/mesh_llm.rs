@@ -287,7 +287,7 @@ fn crew_mesh_join_targets(
 /// Resolve the validated member endpoint this runtime should join to enter the
 /// existing Crew community mesh. `Ok(None)` means this machine is the first
 /// live serving member (or is itself the shared bootstrap contact).
-pub(crate) async fn resolve_buzz_mesh_join_targets_at(
+pub(crate) async fn resolve_crew_mesh_join_targets_at(
     state: &AppState,
     relay_url: &str,
 ) -> Result<Vec<mesh_llm::MeshServeTarget>, String> {
@@ -305,7 +305,7 @@ pub(crate) async fn resolve_buzz_mesh_join_targets_at(
 /// snapshot. A node start used to repeat the full membership + status query
 /// for each value, making Share Compute startup both slower and more exposed
 /// to inconsistent snapshots.
-async fn resolve_buzz_mesh_startup_at(
+async fn resolve_crew_mesh_startup_at(
     state: &AppState,
     relay_url: &str,
 ) -> (Vec<String>, Option<String>) {
@@ -352,7 +352,7 @@ pub(crate) async fn restore_mesh_sharing(app: &AppHandle, state: &AppState) -> C
         .relay_url
         .clone()
         .unwrap_or_else(|| relay::relay_ws_url_with_override(state));
-    let (trusted_owner_ids, join_token) = resolve_buzz_mesh_startup_at(state, &relay_url).await;
+    let (trusted_owner_ids, join_token) = resolve_crew_mesh_startup_at(state, &relay_url).await;
     let mut runtime = state.mesh_llm_runtime.lock().await;
     if runtime.is_some() {
         return Ok(());
@@ -448,7 +448,7 @@ pub async fn mesh_start_node(
     // endpoint from one snapshot so UI startup does not repeat relay probes.
     if request.trusted_owner_ids.is_none() || request.join_token.is_none() {
         let (trusted_owner_ids, join_token) =
-            resolve_buzz_mesh_startup_at(&state, &relay_url).await;
+            resolve_crew_mesh_startup_at(&state, &relay_url).await;
         request.trusted_owner_ids.get_or_insert(trusted_owner_ids);
         if request.join_token.is_none() {
             request.join_token = join_token;

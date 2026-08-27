@@ -358,11 +358,11 @@ class MessageContent extends HookConsumerWidget {
     final crewLink = uri?.scheme == 'crew' || uri?.scheme == 'crew'
         ? parseCrewDeepLink(uri!) ?? parseEntityDeepLink(uri)
         : null;
-    final isBuzzLink =
+    final isCrewLink =
         crewLink is ChannelDeepLink ||
         crewLink is MessageDeepLink ||
         crewLink is EntityDeepLink;
-    final isCanonicalBuzzLabel = isBuzzLink && text == url;
+    final isCanonicalCrewLabel = isCrewLink && text == url;
     final crewPresentation = switch (crewLink) {
       ChannelDeepLink(:final channelId) => (
         icon: LucideIcons.hash,
@@ -406,7 +406,7 @@ class MessageContent extends HookConsumerWidget {
       decoration: TextDecoration.underline,
       decorationColor: context.colors.primary,
     );
-    final linkTextWidget = isCanonicalBuzzLabel
+    final linkTextWidget = isCanonicalCrewLabel
         ? Text(
             text,
             style: baseStyle.copyWith(
@@ -416,7 +416,7 @@ class MessageContent extends HookConsumerWidget {
           )
         : Text.rich(TextSpan(style: authoredLinkStyle, children: [linkText]));
 
-    final renderedLink = isCanonicalBuzzLabel && crewPresentation != null
+    final renderedLink = isCanonicalCrewLabel && crewPresentation != null
         ? _TokenPill(
             key: ValueKey('crew-link-chip:$url'),
             icon: crewPresentation.icon,

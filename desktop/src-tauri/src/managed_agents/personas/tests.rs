@@ -395,7 +395,7 @@ fn fizz_builtin_has_no_pinned_runtime() {
 }
 
 #[test]
-fn fizz_builtin_resolves_to_buzz_agent() {
+fn fizz_builtin_resolves_to_crew_agent() {
     // With no runtime pin, effective_agent_command must fall through to
     // default_agent_command(), which resolves the bundled crew-agent.
     let records = built_in_persona_records("2026-01-01T00:00:00Z");

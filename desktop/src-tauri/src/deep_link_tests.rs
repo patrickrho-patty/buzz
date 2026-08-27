@@ -353,7 +353,7 @@ fn parse_message_deep_link_extracts_required_params() {
 }
 
 #[test]
-fn parse_message_deep_link_accepts_buzz_scheme() {
+fn parse_message_deep_link_accepts_crew_scheme() {
     let url = Url::parse("crew://message?channel=abc&id=xyz").unwrap();
     let payload = parse_message_deep_link(&url).expect("required params present");
     assert_eq!(payload["channelId"], "abc");

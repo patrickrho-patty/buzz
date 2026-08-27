@@ -126,7 +126,7 @@ test("resolveAgentReadiness_cli_skips_unavailable_runtimes", () => {
   assert.equal(result.ready, false);
 });
 
-test("resolveAgentReadiness_cli_ignores_buzz_agent_runtime", () => {
+test("resolveAgentReadiness_cli_ignores_crew_agent_runtime", () => {
   // crew-agent with availability=available and logged_in must NOT trigger the CLI path.
   const runtimes = [
     makeRuntime({
@@ -143,7 +143,7 @@ test("resolveAgentReadiness_cli_ignores_buzz_agent_runtime", () => {
 // crew-agent path
 // ---------------------------------------------------------------------------
 
-test("resolveAgentReadiness_buzz_agent_ready_when_provider_model_and_key_set", () => {
+test("resolveAgentReadiness_crew_agent_ready_when_provider_model_and_key_set", () => {
   // anthropic requires ANTHROPIC_API_KEY
   const result = resolveAgentReadiness(
     [makeRuntime({ id: "crew-agent", label: "Crew Agent" })],
@@ -157,7 +157,7 @@ test("resolveAgentReadiness_buzz_agent_ready_when_provider_model_and_key_set", (
   assert.deepEqual(result, { ready: true, reason: "crew-agent" });
 });
 
-test("resolveAgentReadiness_buzz_agent_not_ready_when_missing_required_credential_key", () => {
+test("resolveAgentReadiness_crew_agent_not_ready_when_missing_required_credential_key", () => {
   const config = makeConfig({
     provider: "anthropic",
     model: "claude-3-5-sonnet-latest",
@@ -167,7 +167,7 @@ test("resolveAgentReadiness_buzz_agent_not_ready_when_missing_required_credentia
   assert.equal(result.ready, false);
 });
 
-test("resolveAgentReadiness_buzz_agent_not_ready_when_provider_missing", () => {
+test("resolveAgentReadiness_crew_agent_not_ready_when_provider_missing", () => {
   const config = makeConfig({
     provider: null,
     model: "claude-3-5-sonnet-latest",
@@ -177,7 +177,7 @@ test("resolveAgentReadiness_buzz_agent_not_ready_when_provider_missing", () => {
   assert.equal(result.ready, false);
 });
 
-test("resolveAgentReadiness_buzz_agent_not_ready_when_model_missing", () => {
+test("resolveAgentReadiness_crew_agent_not_ready_when_model_missing", () => {
   const config = makeConfig({
     provider: "anthropic",
     model: null,
@@ -236,7 +236,7 @@ test("resolveAgentReadiness_legacy_config_does_not_treat_goose_binary_as_ready",
 // Preferred runtime isolation
 // ---------------------------------------------------------------------------
 
-test("resolveAgentReadiness_preferred_goose_does_not_borrow_ready_buzz_agent_config", () => {
+test("resolveAgentReadiness_preferred_goose_does_not_borrow_ready_crew_agent_config", () => {
   const runtimes = [
     makeRuntime({ id: "goose", label: "Goose" }),
     makeRuntime({ id: "crew-agent", label: "Crew Agent" }),

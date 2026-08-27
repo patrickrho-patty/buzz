@@ -1037,7 +1037,7 @@ mod content_tests {
     use super::*;
 
     #[test]
-    fn passthrough_includes_buzz_owner_attestation() {
+    fn passthrough_includes_crew_owner_attestation() {
         assert!(PASSTHROUGH_ENV.contains(&"CREW_AUTH_TAG"));
     }
 

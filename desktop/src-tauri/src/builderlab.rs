@@ -645,7 +645,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn auth_complete_page_uses_buzz_brand() {
+    fn auth_complete_page_uses_crew_brand() {
         for expected in [
             "<title>Crew authentication complete</title>",
             "#d7d72e",

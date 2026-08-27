@@ -148,7 +148,7 @@ fn pinned_script_source_rejects_broad_sources() {
 }
 
 #[test]
-fn media_directives_allow_the_buzz_media_scheme() {
+fn media_directives_allow_the_crew_media_scheme() {
     // `rewriteRelayUrl` emits `crew-media://localhost/...` until the loopback
     // proxy port resolves, so cold-start media renders through the custom
     // scheme (mapped to `http://crew-media.localhost` on Windows).

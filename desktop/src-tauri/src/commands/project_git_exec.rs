@@ -288,7 +288,7 @@ pub(crate) fn validate_clone_url(clone_url: &str) -> Result<(), String> {
         .path_segments()
         .map(|segments| segments.filter(|s| !s.is_empty()).collect::<Vec<_>>())
         .unwrap_or_default();
-    let is_buzz_repo_path = segments
+    let is_crew_repo_path = segments
         .iter()
         .rposition(|segment| *segment == "git")
         .filter(|index| segments.len() == index + 3)
@@ -298,7 +298,7 @@ pub(crate) fn validate_clone_url(clone_url: &str) -> Result<(), String> {
                 && !segments[index + 2].is_empty()
         })
         .unwrap_or(false);
-    if !is_buzz_repo_path {
+    if !is_crew_repo_path {
         return Err("clone URL must point at a Crew git repository".into());
     }
     Ok(())
@@ -477,7 +477,7 @@ mod tests {
     }
 
     #[test]
-    fn validate_clone_url_requires_buzz_repo_shape() {
+    fn validate_clone_url_requires_crew_repo_shape() {
         let owner = "a".repeat(64);
         assert!(validate_clone_url(&format!("https://relay.example/git/{owner}/repo")).is_ok());
         assert!(

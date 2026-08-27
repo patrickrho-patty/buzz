@@ -269,7 +269,7 @@ mod tests {
     }
 
     #[test]
-    fn recommendation_follows_buzz_curated_tiers() {
+    fn recommendation_follows_crew_curated_tiers() {
         assert_eq!(CURATED_SMALL, "unsloth/gemma-4-E4B-it-GGUF:Q4_K_M");
         assert_eq!(CURATED_LARGE, "unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_M");
         // 64GB+ rated machines get the large curated pick.

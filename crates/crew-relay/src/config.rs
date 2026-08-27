@@ -1671,7 +1671,7 @@ mod tests {
     }
 
     #[test]
-    fn push_gateway_defaults_to_buzz_and_can_be_disabled() {
+    fn push_gateway_defaults_to_crew_and_can_be_disabled() {
         let _guard = ENV_MUTEX.lock().unwrap();
         let previous = std::env::var_os("CREW_PUSH_GATEWAY_DELIVERY_URL");
         std::env::remove_var("CREW_PUSH_GATEWAY_DELIVERY_URL");

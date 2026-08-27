@@ -1011,7 +1011,7 @@ fn invalid_pubkey_resolves_no_pair_key() {
 //
 // Previously: macOS used a two-check OR+AND pattern (equivalent to just marker),
 //             Linux used an AND-gate (name + marker) — wrong for custom harnesses.
-// Fix: all platforms gate on `process_has_buzz_marker` alone; the receipt path
+// Fix: all platforms gate on `process_has_crew_marker` alone; the receipt path
 //      is verified below via `valid_agent_runtime_receipt_with` (injectable),
 //      which no longer takes a name-check predicate at all — reinstating an
 //      AND-gate would be a signature change these tests would catch.

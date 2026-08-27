@@ -378,7 +378,7 @@ test("structuredEnvKeys_global_includes_effort_key_and_numeric_keys", () => {
   );
 });
 
-test("structuredEnvKeys_per_agent_buzz_agent_includes_effort_and_numeric_keys", () => {
+test("structuredEnvKeys_per_agent_crew_agent_includes_effort_and_numeric_keys", () => {
   // Per-agent crew-agent renders effort + all 3 numeric descriptors.
   const crewAgentModel = deriveAgentConfigFieldModel({
     config,

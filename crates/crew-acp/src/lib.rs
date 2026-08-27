@@ -6810,7 +6810,7 @@ mod build_mcp_servers_tests {
     }
 
     #[test]
-    fn session_new_mcp_server_forwards_buzz_auth_tag() {
+    fn session_new_mcp_server_forwards_crew_auth_tag() {
         let _guard = ENV_LOCK.lock().unwrap();
         std::env::set_var("CREW_AUTH_TAG", "test-attestation-tag");
         let config = test_config();
@@ -6827,7 +6827,7 @@ mod build_mcp_servers_tests {
     }
 
     #[test]
-    fn session_new_mcp_server_skips_empty_buzz_auth_tag() {
+    fn session_new_mcp_server_skips_empty_crew_auth_tag() {
         let _guard = ENV_LOCK.lock().unwrap();
         std::env::set_var("CREW_AUTH_TAG", "");
         let config = test_config();

@@ -873,7 +873,7 @@ mod tests {
     }
 
     #[test]
-    fn nudge_body_all_buzz_managed_retains_original_footer() {
+    fn nudge_body_all_crew_managed_retains_original_footer() {
         // Pure Crew-managed requirements → original "Open Edit Agent" footer unchanged.
         let payload = SetupPayload {
             agent_name: "Fizz".to_string(),

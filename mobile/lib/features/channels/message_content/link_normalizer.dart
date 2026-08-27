@@ -126,10 +126,10 @@ String _normalizeBareLink(String segment, Match match) {
   final matched = match[0]!;
   var url = matched;
   var trailing = '';
-  final isBuzzUrl = matched.startsWith('crew://');
+  final isCrewUrl = matched.startsWith('crew://');
   final start = match.start;
 
-  if (isBuzzUrl) {
+  if (isCrewUrl) {
     final outsidePunctuation = _trailingPunctuationPattern.firstMatch(url);
     if (outsidePunctuation != null) {
       url = url.substring(0, outsidePunctuation.start);
@@ -154,7 +154,7 @@ String _normalizeBareLink(String segment, Match match) {
     }
   }
 
-  if (isBuzzUrl) {
+  if (isCrewUrl) {
     final punctuation = _trailingPunctuationPattern.firstMatch(url);
     if (punctuation != null) {
       url = url.substring(0, punctuation.start);

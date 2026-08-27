@@ -548,7 +548,7 @@ fn explicit_record_model_not_retagged_when_already_present() {
 }
 
 #[test]
-fn extra_env_vars_appear_in_advanced_as_buzz_explicit() {
+fn extra_env_vars_appear_in_advanced_as_crew_explicit() {
     let mut record = test_record();
     // Normalized keys — must NOT appear in advanced.
     record
@@ -863,7 +863,7 @@ fn persona_effort_shadows_global_and_tags_persona_default() {
 
 /// AC-3: record-level effort wins over persona and global, stays CrewExplicit.
 #[test]
-fn record_effort_outranks_persona_and_global_keeps_buzz_explicit() {
+fn record_effort_outranks_persona_and_global_keeps_crew_explicit() {
     let mut record = test_record();
     record.env_vars.insert(
         "CREW_AGENT_THINKING_EFFORT".to_string(),

@@ -518,15 +518,15 @@ List<TranscriptItem> buildTranscript(List<ObserverFrame> events) {
     String timestamp,
   ) {
     final existing = itemsById[id];
-    final canonicalBuzzToolName =
+    final canonicalCrewToolName =
         crewToolName ?? _findCrewToolName(toolName, true);
     if (existing is ToolItem) {
       if (!_isGenericToolTitle(title)) {
         existing.title = title;
       }
-      if (canonicalBuzzToolName != null) {
-        existing.crewToolName = canonicalBuzzToolName;
-        existing.toolName = canonicalBuzzToolName;
+      if (canonicalCrewToolName != null) {
+        existing.crewToolName = canonicalCrewToolName;
+        existing.toolName = canonicalCrewToolName;
       } else if (existing.crewToolName == null &&
           !_isGenericToolTitle(toolName)) {
         existing.toolName = toolName;
@@ -541,8 +541,8 @@ List<TranscriptItem> buildTranscript(List<ObserverFrame> events) {
     final item = ToolItem(
       id: id,
       title: title,
-      toolName: canonicalBuzzToolName ?? toolName,
-      crewToolName: canonicalBuzzToolName,
+      toolName: canonicalCrewToolName ?? toolName,
+      crewToolName: canonicalCrewToolName,
       status: status,
       args: args,
       result: result,

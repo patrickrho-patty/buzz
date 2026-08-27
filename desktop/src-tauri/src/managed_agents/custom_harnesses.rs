@@ -901,7 +901,7 @@ mod tests {
     }
 
     #[test]
-    fn validate_rejects_reserved_key_buzz_managed_agent() {
+    fn validate_rejects_reserved_key_crew_managed_agent() {
         // CREW_MANAGED_AGENT and CREW_MANAGED_AGENT_START_NONCE are the
         // ownership markers — supplying them in a definition must be rejected.
         let mut env = BTreeMap::new();

@@ -68,7 +68,7 @@ pub async fn connect_acp_runtime(
 }
 
 fn discover_acp_auth_methods_blocking(runtime_id: &str) -> Result<AcpAuthMethodsResult, String> {
-    let output = run_buzz_acp_auth_command(runtime_id, ["auth-methods", "--json"])?;
+    let output = run_crew_acp_auth_command(runtime_id, ["auth-methods", "--json"])?;
     if !output.status.success() {
         return Err(command_error("crew-acp auth-methods", &output));
     }
@@ -96,7 +96,7 @@ fn connect_acp_runtime_blocking(
         return Ok(ConnectAcpRuntimeResult { launched: true });
     }
 
-    let output = run_buzz_acp_auth_command(
+    let output = run_crew_acp_auth_command(
         &request.runtime_id,
         ["authenticate", "--method-id", request.method_id.as_str()],
     )?;
@@ -107,7 +107,7 @@ fn connect_acp_runtime_blocking(
     Ok(ConnectAcpRuntimeResult { launched: true })
 }
 
-fn run_buzz_acp_auth_command<const N: usize>(
+fn run_crew_acp_auth_command<const N: usize>(
     runtime_id: &str,
     args: [&str; N],
 ) -> Result<std::process::Output, String> {
@@ -127,7 +127,7 @@ fn run_buzz_acp_auth_command<const N: usize>(
         .ok_or_else(|| "crew-acp helper not found".to_string())?;
 
     let augmented_path = auth_command_path();
-    run_buzz_acp_auth_command_with_paths(
+    run_crew_acp_auth_command_with_paths(
         &acp_path,
         adapter_command.0,
         &adapter_command.1,
@@ -173,7 +173,7 @@ fn append_inherited_path(augmented: Option<String>, inherited: Option<String>) -
         .or(Some(augmented))
 }
 
-fn run_buzz_acp_auth_command_with_paths<const N: usize>(
+fn run_crew_acp_auth_command_with_paths<const N: usize>(
     acp_path: &Path,
     adapter_name: &str,
     adapter_path: &Path,
@@ -462,7 +462,7 @@ fn shell_escape(arg: &str) -> String {
 mod tests {
     use super::{
         adapter_terminal_argv, append_inherited_path, is_claude_subscription_login,
-        run_buzz_acp_auth_command_with_paths, shell_escape, shell_join, uses_terminal_auth,
+        run_crew_acp_auth_command_with_paths, shell_escape, shell_join, uses_terminal_auth,
         windows_terminal_args, AcpAuthMethod,
     };
 
@@ -536,7 +536,7 @@ mod tests {
             .expect("join augmented PATH")
             .to_string_lossy()
             .into_owned();
-        let output = run_buzz_acp_auth_command_with_paths(
+        let output = run_crew_acp_auth_command_with_paths(
             &acp_path,
             "claude-agent-acp",
             &adapter_path,

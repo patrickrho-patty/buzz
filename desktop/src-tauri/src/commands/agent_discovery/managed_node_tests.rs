@@ -1,7 +1,7 @@
 use super::*;
 
 #[test]
-fn test_npm_eacces_hint_guidance_mentions_buzz_private_dir() {
+fn test_npm_eacces_hint_guidance_mentions_crew_private_dir() {
     let hint = npm_eacces_hint("EACCES: permission denied", "npm install -g foo").unwrap();
     assert!(
         hint.contains("Crew's private Node tools directory"),

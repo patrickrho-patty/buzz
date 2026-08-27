@@ -289,7 +289,7 @@ pub fn select_untracked_bundle_harnesses(
 /// The buffer layout is: `[i32 argc][exec_path\0][null-pad][argv\0…][env\0…]`.
 /// The exec path is therefore the first null-terminated string immediately
 /// after the leading `i32` — no argv traversal is needed, unlike
-/// `extract_buzz_marker_value` / `process_has_buzz_marker` which must skip
+/// `extract_crew_marker_value` / `process_has_crew_marker` which must skip
 /// past both argv and the exec path to reach the environment entries.
 ///
 /// Returns `None` if the buffer is unreadable or malformed.

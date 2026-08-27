@@ -1625,7 +1625,7 @@ mod tests {
     }
 
     #[test]
-    fn normalizes_buzz_agent_args_to_empty() {
+    fn normalizes_crew_agent_args_to_empty() {
         assert_eq!(
             normalize_agent_args("crew-agent", Vec::new()),
             Vec::<String>::new()
