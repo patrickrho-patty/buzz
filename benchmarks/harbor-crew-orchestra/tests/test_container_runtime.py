@@ -206,7 +206,7 @@ async def test_collects_task_declared_channel_membership(tmp_path, monkeypatch):
             ]
         return [{"pubkey": "member", "role": "member"}]
 
-    monkeypatch.setattr(rt, "_buzz_json", crew_json)
+    monkeypatch.setattr(rt, "_crew_json", crew_json)
 
     observed = await rt._collect_observed_channels(trial)
 
@@ -441,7 +441,7 @@ async def test_send_mentions_by_pubkey_so_task_text_stays_inert(tmp_path, monkey
         calls.append(args)
         return {}
 
-    monkeypatch.setattr(rt, "_buzz_json", crew_json)
+    monkeypatch.setattr(rt, "_crew_json", crew_json)
 
     await rt._send(
         trial.user,
@@ -518,7 +518,7 @@ async def test_wait_for_done_requires_orchestrator_authorship(tmp_path, monkeypa
         observers.append(credential.agent_id)
         return next(rounds)
 
-    monkeypatch.setattr(rt, "_buzz_json", crew_json)
+    monkeypatch.setattr(rt, "_crew_json", crew_json)
     result = await rt._wait_for_done(Environment(), orch, trial, [])
     assert json.dumps(result).find("real") > 0
     # observation happens as the trial user, never as an agent identity
@@ -545,7 +545,7 @@ async def test_solo_turn_end_completes_without_done_message(tmp_path, monkeypatc
     async def crew_json(*args, **kwargs):
         return []
 
-    monkeypatch.setattr(rt, "_buzz_json", crew_json)
+    monkeypatch.setattr(rt, "_crew_json", crew_json)
     assert await rt._wait_for_done(environment, orch, trial, [], solo=solo) is None
 
 
@@ -574,7 +574,7 @@ async def test_scripted_events_wait_for_second_agent_message(tmp_path, monkeypat
     async def turn_counts(*args, **kwargs):
         return next(turn_rounds)
 
-    monkeypatch.setattr(rt, "_buzz_json", crew_json)
+    monkeypatch.setattr(rt, "_crew_json", crew_json)
     monkeypatch.setattr(rt, "_turn_counts", turn_counts)
 
     result = await rt._wait_for_done(
@@ -617,7 +617,7 @@ async def test_collect_evidence_uploads_verifier_artifact(tmp_path, monkeypatch)
     async def crew_json(*args, **kwargs):
         return messages
 
-    monkeypatch.setattr(rt, "_buzz_json", crew_json)
+    monkeypatch.setattr(rt, "_crew_json", crew_json)
     environment = Environment()
     trial_dir = tmp_path / "trial"
     trial_dir.mkdir()
@@ -643,7 +643,7 @@ async def test_failed_evidence_snapshot_records_the_reason(tmp_path, monkeypatch
     async def crew_json(*args, **kwargs):
         raise RuntimeError("relay unreachable")
 
-    monkeypatch.setattr(rt, "_buzz_json", crew_json)
+    monkeypatch.setattr(rt, "_crew_json", crew_json)
     trial_dir = tmp_path / "trial"
     trial_dir.mkdir()
 

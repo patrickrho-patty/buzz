@@ -219,7 +219,7 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
-          NAME="Buzz_${VERSION}_aarch64-signed.dmg"
+          NAME="Crew_${VERSION}_aarch64-signed.dmg"
           cp "$SIGNED_DMG" "$RUNNER_TEMP/$NAME"
           echo "path=$RUNNER_TEMP/$NAME" >> "$GITHUB_OUTPUT"
           echo "name=$NAME" >> "$GITHUB_OUTPUT"

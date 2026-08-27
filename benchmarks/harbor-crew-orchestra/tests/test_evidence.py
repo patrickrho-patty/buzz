@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from harbor_crew_orchestra.evidence import build_buzz_evidence
+from harbor_crew_orchestra.evidence import build_crew_evidence
 from harbor_crew_orchestra.provisioning import (
     AgentCredential,
     DirectoryIdentity,
@@ -42,7 +42,7 @@ def _trial(transcript: dict) -> TrialHandle:
 
 def _evidence(name: str) -> dict:
     transcript = _load(name)
-    return build_buzz_evidence(
+    return build_crew_evidence(
         trial=_trial(transcript),
         messages=list(reversed(transcript["messages"])),
         task_event_id=transcript["messages"][0]["id"],
@@ -74,7 +74,7 @@ def test_top_level_agent_message_has_no_derived_reply_destination():
 def test_malformed_messages_are_safe_and_secrets_are_never_exported():
     transcript = _load("threaded.json")
     trial = _trial(transcript)
-    evidence = build_buzz_evidence(
+    evidence = build_crew_evidence(
         trial=trial,
         messages=[None, {"id": "broken", "tags": ["bad", ["e", 7]]}],
         task_event_id=None,
@@ -113,7 +113,7 @@ def test_exports_only_public_directory_and_observed_channel_state():
     )
     channels = [{"name": "fix-pr-1234", "members": []}]
 
-    evidence = build_buzz_evidence(
+    evidence = build_crew_evidence(
         trial=trial,
         messages=[],
         task_event_id=None,

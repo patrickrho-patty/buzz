@@ -67,7 +67,7 @@ def _normalize_message(
     }
 
 
-def build_buzz_evidence(
+def build_crew_evidence(
     *,
     trial: TrialHandle,
     messages: object,

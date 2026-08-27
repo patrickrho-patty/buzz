@@ -2,7 +2,7 @@ import importlib.util
 import json
 from pathlib import Path
 
-from harbor_crew_orchestra.evidence import build_buzz_evidence
+from harbor_crew_orchestra.evidence import build_crew_evidence
 from harbor_crew_orchestra.provisioning import AgentCredential, TrialHandle
 
 # The Crew-native tasks are a sibling dataset of this harness package.
@@ -44,7 +44,7 @@ def _evidence(content: str) -> dict:
         user=_credential("user", "user", root["pubkey"]),
         task_name="read-named-path-outside-workspace",
     )
-    return build_buzz_evidence(
+    return build_crew_evidence(
         trial=trial,
         messages=transcript["messages"],
         task_event_id=root["id"],

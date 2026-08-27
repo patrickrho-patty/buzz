@@ -21,7 +21,7 @@ from typing import Any
 
 from harbor.environments.base import BaseEnvironment
 
-from .evidence import build_buzz_evidence
+from .evidence import build_crew_evidence
 from .manifest import AgentClass, ExperimentManifest
 from .provisioning import AgentCredential, TrialHandle
 from .runtime import RuntimeResult
@@ -147,7 +147,7 @@ class CrewContainerRuntime:
             forwarder = await self._start_forwarder(environment, trial)
             if forwarder is not None:
                 infra.append(forwarder)
-            await self._buzz_json(
+            await self._crew_json(
                 trial.user,
                 trial,
                 "users",
@@ -156,7 +156,7 @@ class CrewContainerRuntime:
                 trial.user.agent_id,
             )
             for credential in trial.credentials:
-                await self._buzz_json(
+                await self._crew_json(
                     credential,
                     trial,
                     "users",
@@ -520,7 +520,7 @@ class CrewContainerRuntime:
             if polls % LIVENESS_EVERY == 0:
                 await self._raise_for_dead_agents(environment, agents)
             polls += 1
-            messages = await self._buzz_json(
+            messages = await self._crew_json(
                 trial.user,
                 trial,
                 "messages",
@@ -631,7 +631,7 @@ class CrewContainerRuntime:
     ) -> bool:
         """Snapshot public relay state for the verifier before trial teardown."""
         try:
-            messages = await self._buzz_json(
+            messages = await self._crew_json(
                 trial.user,
                 trial,
                 "messages",
@@ -642,7 +642,7 @@ class CrewContainerRuntime:
                 str(TRANSCRIPT_LIMIT),
             )
             observed_channels = await self._collect_observed_channels(trial)
-            evidence = build_buzz_evidence(
+            evidence = build_crew_evidence(
                 trial=trial,
                 messages=messages,
                 task_event_id=task_event_id,
@@ -701,7 +701,7 @@ class CrewContainerRuntime:
         )
         observed: list[dict[str, Any]] = []
         for name in names:
-            matches = await self._buzz_json(
+            matches = await self._crew_json(
                 orchestrator,
                 trial,
                 "channels",
@@ -719,7 +719,7 @@ class CrewContainerRuntime:
                 channel_id = match.get("channel_id")
                 if not isinstance(channel_id, str) or not channel_id:
                     continue
-                members = await self._buzz_json(
+                members = await self._crew_json(
                     orchestrator,
                     trial,
                     "channels",
@@ -779,7 +779,7 @@ class CrewContainerRuntime:
             args += ["--mention", mention]
         if reply_to is not None:
             args += ["--reply-to", reply_to]
-        return await self._buzz_json(credential, trial, *args)
+        return await self._crew_json(credential, trial, *args)
 
     async def _send_scripted_messages(
         self,
@@ -836,7 +836,7 @@ class CrewContainerRuntime:
             )
         return recorded
 
-    async def _buzz_json(
+    async def _crew_json(
         self, credential: AgentCredential, trial: TrialHandle, *args: str
     ) -> Any:
         process = await asyncio.create_subprocess_exec(
