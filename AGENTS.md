@@ -1,6 +1,6 @@
 # AGENTS.md — AI Agent Contributor Guide
 
-This guide is for AI agents contributing to the Buzz codebase. It covers
+This guide is for AI agents contributing to the Crew codebase. It covers
 agent-specific context and conventions. For general contributor info (setup,
 code style, PR process, architecture), see [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -27,18 +27,18 @@ and runtime evidence answer different questions.
 
 ## Ecosystem
 
-Buzz spans five repos. This one (`block/buzz`) is the OSS source for the relay, desktop, mobile, and CLI. The others handle internal builds and deployment:
+Crew spans five repos. This one (`block/crew`) is the OSS source for the relay, desktop, mobile, and CLI. The others handle internal builds and deployment:
 
 | Repo | Purpose |
 |------|---------|
-| [block/buzz](https://github.com/block/buzz) | OSS source — relay, desktop app, mobile app, CLI, agent harness |
-| [squareup/buzz-releases](https://github.com/squareup/buzz-releases) | Buildkite pipelines producing Block-signed macOS + iOS builds with `-block` desktop version suffix |
+| [block/crew](https://github.com/block/buzz) | OSS source — relay, desktop app, mobile app, CLI, agent harness |
+| [squareup/buzz-releases](https://github.com/squareup/squareup/buzz-releases) | Buildkite pipelines producing Block-signed macOS + iOS builds with `-block` desktop version suffix |
 | [squareup/sprout-oss](https://github.com/squareup/sprout-oss) | CI pipeline building the relay Docker image and pushing to internal ECR |
 | [squareup/block-coder-tf-stacks](https://github.com/squareup/block-coder-tf-stacks) | Terraform + ArgoCD deploying the relay to the staging Kubernetes cluster |
 | [squareup/sprout-backend-blox](https://github.com/squareup/sprout-backend-blox) | Desktop backend provider script connecting Blox workstation agents to the relay |
 
 ```
-block/buzz (source)
+block/crew (source)
   ├─► buzz-releases      (desktop + mobile builds → Artifactory, GitHub, Mobile Releases)
   ├─► sprout-oss         (relay Docker image → ECR)
   │     └─► block-coder-tf-stacks  (Helm chart → ArgoCD → staging cluster)
@@ -56,31 +56,31 @@ access information.
 ```
 crates/
   # Relay + core
-  buzz-relay          # WebSocket relay server — main entry point; also hosts git + huddle audio
-  buzz-core           # Core types, event verification, filter matching, kind registry
-  buzz-db             # Postgres event store and data access layer
-  buzz-auth           # Authentication and authorization
-  buzz-pubsub         # Redis pub/sub fan-out, presence, typing indicators
-  buzz-search         # Postgres FTS full-text search
-  buzz-audit          # Hash-chain audit log
-  buzz-media          # Blossom/S3 media storage
+  crew-relay          # WebSocket relay server — main entry point; also hosts git + huddle audio
+  crew-core           # Core types, event verification, filter matching, kind registry
+  crew-db             # Postgres event store and data access layer
+  crew-auth           # Authentication and authorization
+  crew-pubsub         # Redis pub/sub fan-out, presence, typing indicators
+  crew-search         # Postgres FTS full-text search
+  crew-audit          # Hash-chain audit log
+  crew-media          # Blossom/S3 media storage
   # Agent surface
-  buzz-acp            # ACP harness bridging Buzz events to AI agents
-  buzz-agent          # Minimal ACP-compliant agent (non-streaming, tool-calls-as-output)
-  buzz-dev-mcp        # Developer MCP server — shell + file-edit tools
-  buzz-persona        # Agent persona packs
-  buzz-workflow       # YAML-as-code workflow engine (evalexpr conditions)
+  crew-acp            # ACP harness bridging Crew events to AI agents
+  crew-agent          # Minimal ACP-compliant agent (non-streaming, tool-calls-as-output)
+  crew-dev-mcp        # Developer MCP server — shell + file-edit tools
+  crew-persona        # Agent persona packs
+  crew-workflow       # YAML-as-code workflow engine (evalexpr conditions)
   # Clients + interop
-  buzz-pair-relay     # Ephemeral sidecar relay for NIP-AB device pairing
-  buzz-pairing-cli    # CLI for NIP-AB device pairing interop testing
+  crew-pair-relay     # Ephemeral sidecar relay for NIP-AB device pairing
+  crew-pairing-cli    # CLI for NIP-AB device pairing interop testing
   git-sign-nostr      # Sign git objects with a Nostr key
   git-credential-nostr # Git credential helper for Nostr-authed push/fetch
   # Tooling + shared
-  buzz-cli            # Agent-first CLI
-  buzz-sdk            # Typed Nostr event builders
-  buzz-admin          # Operator CLI for relay administration
-  buzz-ws-client      # Shared NIP-42 WebSocket client (connect, auth, publish)
-  buzz-test-client    # Integration test client and E2E test suite
+  crew-cli            # Agent-first CLI
+  crew-sdk            # Typed Nostr event builders
+  crew-admin          # Operator CLI for relay administration
+  crew-ws-client      # Shared NIP-42 WebSocket client (connect, auth, publish)
+  crew-test-client    # Integration test client and E2E test suite
   sprig               # All-in-one harness bundling ACP, agent, and dev MCP
 
 desktop/              # Tauri 2 + React 19 desktop app
@@ -113,8 +113,8 @@ Run `just ci` before every PR — it runs repository-wide formatting, lint,
 and static checks; Rust, Tauri, desktop, and mobile tests; and desktop and web
 builds. Clippy passing does not mean fmt passes; run both.
 
-Run `just test` for integration tests if you touched `buzz-relay`,
-`buzz-db`, or `buzz-auth` — these require a running Postgres and Redis.
+Run `just test` for integration tests if you touched `crew-relay`,
+`crew-db`, or `crew-auth` — these require a running Postgres and Redis.
 
 **Pre-commit hooks** are installed automatically by `just setup` and auto-fix
 formatting via `stage_fixed`. Pre-commit runs fix variants in parallel (Rust
@@ -153,18 +153,18 @@ Additional rules:
 
 ## Key Patterns
 
-**Nostr-first HTTP surface**: Buzz's primary API is NIP-29 over WebSocket. The relay also exposes a narrow HTTP surface: NIP-11/NIP-05 metadata, `POST /events`, `POST /query`, `POST /count`, workflow webhooks at `/hooks/{id}`, Blossom media, git smart HTTP, git policy hooks, and health probes. These HTTP paths all preserve the same host-derived community boundary.
+**Nostr-first HTTP surface**: Crew's primary API is NIP-29 over WebSocket. The relay also exposes a narrow HTTP surface: NIP-11/NIP-05 metadata, `POST /events`, `POST /query`, `POST /count`, workflow webhooks at `/hooks/{id}`, Blossom media, git smart HTTP, git policy hooks, and health probes. These HTTP paths all preserve the same host-derived community boundary.
 
 **Prefer Nostr events over new HTTP endpoints**: For new feature work, model
-the operation as a Nostr event (new kind in `buzz-core/src/kind.rs`, handler
-in `buzz-relay`) rather than adding endpoint-specific JSON APIs. HTTP is
+the operation as a Nostr event (new kind in `crew-core/src/kind.rs`, handler
+in `crew-relay`) rather than adding endpoint-specific JSON APIs. HTTP is
 reserved for things that genuinely need an HTTP-only surface: media upload/download
 (Blossom), webhooks, git smart HTTP, NIP-11/NIP-05 metadata, health checks,
 and the generic Nostr bridge endpoints:
 
 - `POST /events` — submit any signed event (same path the WebSocket uses).
 - `POST /query` — Nostr REQ filters over HTTP. NIP-50 `search` filters
-  are routed to `buzz-search` (Postgres FTS) automatically.
+  are routed to `crew-search` (Postgres FTS) automatically.
 - `POST /count` — Nostr COUNT filters over HTTP.
 
 If you find yourself reaching for a new HTTP endpoint, first check whether
@@ -174,7 +174,7 @@ fan-out, NIP-29 scoping, and the existing auth pipeline for free.
 Reference https://github.com/nostr-protocol/nips
 
 **Event kinds**: All event kind integers are defined in
-`buzz-core/src/kind.rs`. New features get new kind integers — add them here
+`crew-core/src/kind.rs`. New features get new kind integers — add them here
 first, then implement handling in the relay.
 
 **Channel scoping**: Channels use `h` tags (NIP-29 group tag), not `e` tags.
@@ -184,9 +184,9 @@ channel carry its id in their `d` tag instead: kind:39000 (metadata),
 kind:39001, kind:39002 (membership). `get_channels` resolves a user's channels
 from the `d` tag of their kind:39002 events, not from `h`.
 
-**Agent-facing operations go in `buzz-cli`**: New agent-facing features belong in `buzz-cli` — add a subcommand there first, then wire the REST/WebSocket call in `client.rs`. `buzz-dev-mcp` (shell + file tools for `buzz-agent`) is separate.
+**Agent-facing operations go in `crew-cli`**: New agent-facing features belong in `crew-cli` — add a subcommand there first, then wire the REST/WebSocket call in `client.rs`. `crew-dev-mcp` (shell + file tools for `crew-agent`) is separate.
 
-**Workflow conditions**: `buzz-workflow` uses
+**Workflow conditions**: `crew-workflow` uses
 [evalexpr](https://docs.rs/evalexpr) for condition evaluation. Keep expressions
 simple and testable.
 
@@ -196,9 +196,9 @@ check existing reply handlers for the pattern.
 
 ---
 
-## Agent CLI (`buzz-cli`)
+## Agent CLI (`crew-cli`)
 
-`buzz` is the agent-first CLI. Auth env vars
+`crew` is the agent-first CLI. Auth env vars
 (`CREW_RELAY_URL`, `CREW_PRIVATE_KEY`, `CREW_AUTH_TAG`) are auto-injected
 by the ACP harness into managed agent subprocesses. In development, set
 `CREW_PRIVATE_KEY` and `CREW_RELAY_URL` in your environment manually.
@@ -206,19 +206,19 @@ by the ACP harness into managed agent subprocesses. In development, set
 ### Building the CLI
 
 ```bash
-cargo build --release -p buzz-cli
+cargo build --release -p crew-cli
 ```
 
-Binary location: `./target/release/buzz`. Add `./target/release` to `PATH`
+Binary location: `./target/release/crew`. Add `./target/release` to `PATH`
 or invoke with the full path.
 
 ### Deep Links
 
-`buzz://message?channel=<uuid>&id=<hex>` links reference a specific message
+`crew://message?channel=<uuid>&id=<hex>` links reference a specific message
 thread. Pass the link directly to the CLI:
 
 ```bash
-buzz --format compact messages thread --link '<buzz://message?...>'
+crew --format compact messages thread --link '<crew://message?...>'
 ```
 
 The selected message ID is authoritative: `messages thread` verifies its
@@ -231,9 +231,9 @@ All reads return sig-stripped JSON arrays; all writes return
 0=ok, 1=input error, 2=network/relay, 3=auth, 4=other, 5=write conflict (NIP-33 LWW).
 
 `--format compact` is a **global** flag — it goes before the subcommand:
-`buzz --format compact channels list`, NOT `buzz channels list --format compact`.
+`crew --format compact channels list`, NOT `crew channels list --format compact`.
 
-See `crates/buzz-cli/TESTING.md` for the full live-testing runbook.
+See `crates/crew-cli/TESTING.md` for the full live-testing runbook.
 
 ---
 
@@ -244,7 +244,7 @@ just test-unit    # unit tests, no infrastructure needed
 just test         # full integration suite (requires Postgres + Redis)
 ```
 
-E2E tests live in `crates/buzz-test-client/tests/`:
+E2E tests live in `crates/crew-test-client/tests/`:
 - `e2e_relay.rs` — WebSocket relay protocol
 - `e2e_media.rs` — media upload/download (Blossom)
 - `e2e_media_extended.rs` — extended media scenarios
@@ -258,7 +258,7 @@ See [TESTING.md](TESTING.md) for the full multi-agent E2E guide.
 
 ### PR Screenshots
 
-> **Do NOT use `buzz upload`, the relay media endpoint, or any third-party
+> **Do NOT use `crew upload`, the relay media endpoint, or any third-party
 > image host for PR screenshots.** Relay media URLs fail through GitHub's camo
 > proxy. Always use `scripts/post-screenshots.sh` for PNGs before linking them
 > from a PR body/comment. If you hand-edit PR markdown, run
@@ -369,9 +369,9 @@ only the current set remains, otherwise reviewers still see the stale images:
 
 ```bash
 # List screenshot comments to find the stale one's id
-gh pr view <pr> --repo block/buzz --json comments \
+gh pr view <pr> --repo block/crew --json comments \
   --jq '.comments[] | select(.body | test("pr-<pr>--")) | {id, url}'
-gh api -X DELETE repos/block/buzz/issues/comments/<stale-comment-id>
+gh api -X DELETE repos/block/crew/issues/comments/<stale-comment-id>
 ```
 
 Branch cleanup when fully done: `git push origin --delete agent-screenshots/<username>`.
@@ -461,7 +461,7 @@ description. See [PR #803](https://github.com/block/buzz/pull/803).
 
 ## Common Gotchas
 
-1. **Kind `39000` for channel metadata, not `41`** — kind 41 is NIP-01 (unused). All kinds defined in `buzz-core/src/kind.rs`.
+1. **Kind `39000` for channel metadata, not `41`** — kind 41 is NIP-01 (unused). All kinds defined in `crew-core/src/kind.rs`.
 2. **Relay queries must specify `kinds`** — omitting `kinds` triggers the p-gate (403). Always include explicit kind filters.
 3. **`messages search` chooses its own supported kinds** — do not add a `--kinds` option; the current command does not accept one. This differs from raw relay filters, which still need explicit kinds.
 4. **Worktrees: `cd` in the same command** — shell CWD doesn't persist between tool calls. Use `cd /path && cargo build` as one command.

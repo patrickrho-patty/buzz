@@ -669,7 +669,7 @@ void main() {
       expect(selected, ['\u{1F525}']);
       expect(
         prefs.getString(
-          'buzz.quick-reaction-emojis.v1:http://localhost:3000:self',
+          'crew.quick-reaction-emojis.v1:http://localhost:3000:self',
         ),
         isNull,
       );
@@ -789,7 +789,7 @@ void main() {
         await _sendNativeEmojiPickerCall(tester, 'dismissed');
         expect(selected, ['\u{1F525}']);
         expect(dismissals, 1);
-        expect(prefs.getInt('buzz.emoji-picker.skin-tone.v1'), 4);
+        expect(prefs.getInt('crew.emoji-picker.skin-tone.v1'), 4);
       } finally {
         _setMockNativeEmojiPickerHandler(null);
         debugDefaultTargetPlatformOverride = previousPlatform;

@@ -9,11 +9,11 @@ just test               # unit + integration (starts Docker if needed)
 
 `just test` runs unit tests plus integration tests against Postgres and Redis
 (started automatically if not already running). Neither task runs the E2E suites in
-`buzz-test-client` — those are marked `#[ignore]` and require a running relay:
+`crew-test-client` — those are marked `#[ignore]` and require a running relay:
 
 ```bash
 # Start a relay first (see below), then:
-cargo test -p buzz-test-client -- --ignored
+cargo test -p crew-test-client -- --ignored
 ```
 
 ---
@@ -21,7 +21,7 @@ cargo test -p buzz-test-client -- --ignored
 ## Live Local Relay
 
 The fastest way to exercise the relay end-to-end is to build the release
-binaries once, run `buzz-relay`, and drive it with the `buzz` CLI. The
+binaries once, run `crew-relay`, and drive it with the `crew` CLI. The
 CLI signs every request with NIP-98, so you don't need `nak` or hand-rolled
 `curl`.
 
@@ -33,16 +33,16 @@ cp .env.example .env             # one-time
 just setup                       # start Docker services, run migrations
 ```
 
-> **Already running Buzz Desktop?** Desktop uses the same Docker container
-> names (`buzz-postgres`, `buzz-redis`) and the same
+> **Already running Crew Desktop?** Desktop uses the same Docker container
+> names (`crew-postgres`, `crew-redis`) and the same
 > default ports (`:5432`, `:6379`). `just setup` will reuse those
 > services, so **your test relay writes into Desktop's database**. That's
 > fine for read/write smoke tests, but: `just reset` wipes Desktop's data
 > along with yours. If you need isolation, stop Desktop first or run the
 > dev stack on a different Compose project
-> (`COMPOSE_PROJECT_NAME=buzz-dev docker compose …`).
+> (`COMPOSE_PROJECT_NAME=crew-dev docker compose …`).
 
-`just reset` wipes all local data and starts over — **including Buzz
+`just reset` wipes all local data and starts over — **including Crew
 Desktop's data** if its services are sharing your dev stack (see callout
 above).
 
@@ -59,7 +59,7 @@ above).
 ### 2. Build the binaries
 
 ```bash
-cargo build --release -p buzz-relay -p buzz-cli -p buzz-admin
+cargo build --release -p crew-relay -p crew-cli -p crew-admin
 export PATH="$PWD/target/release:$PATH"
 ```
 
@@ -70,9 +70,9 @@ Rebuild after any code change — the steps below use the release binaries.
 In a separate terminal (it runs in the foreground):
 
 ```bash
-buzz-relay                     # release binary from step 2, serves ws://localhost:3000
+crew-relay                     # release binary from step 2, serves ws://localhost:3000
 # alternatives:
-# cargo run --release -p buzz-relay     # rebuild + run in release
+# cargo run --release -p crew-relay     # rebuild + run in release
 # just relay                            # DEBUG build — fast to launch on a hot cache,
 #                                       # but mismatched if step 2 left you on release.
 #                                       # Use `just relay-release` if you want the recipe.
@@ -93,18 +93,18 @@ The relay starts in dev mode (`CREW_REQUIRE_AUTH_TOKEN=false`). The startup
 log emits a WARN about this — that's expected for local testing. See the env
 vars table at the bottom if you need to lock it down.
 
-> **Already running Buzz Desktop (or another relay) on `:3000` / `:8080` /
-> `:9102`?** Buzz binds three ports — main, health, metrics — and any of
+> **Already running Crew Desktop (or another relay) on `:3000` / `:8080` /
+> `:9102`?** Crew binds three ports — main, health, metrics — and any of
 > them can collide. Use a separate terminal per role and export the right
 > vars in each:
 >
-> **In the relay terminal** (before launching `buzz-relay`):
+> **In the relay terminal** (before launching `crew-relay`):
 > ```bash
 > export CREW_BIND_ADDR=0.0.0.0:3030
 > export CREW_HEALTH_PORT=8088
 > export CREW_METRICS_PORT=9202
 > export RELAY_URL=ws://localhost:3030     # advertised in NIP-42 challenges
-> buzz-relay
+> crew-relay
 > ```
 >
 > **In your working / CLI terminal** (for steps 4+ and the ACP harness):
@@ -117,14 +117,14 @@ vars table at the bottom if you need to lock it down.
 >
 > Every snippet later in this doc shows the defaults. When you see
 > `localhost:3000` / `:8080` in a code block, mentally substitute your
-> overrides — or the CLI will end up talking to Buzz Desktop's relay.
+> overrides — or the CLI will end up talking to Crew Desktop's relay.
 
 > **Ignore `just setup`'s "Next steps" banner.** It still prints
-> `just relay` (a debug build). Use `buzz-relay` from step 2 here —
+> `just relay` (a debug build). Use `crew-relay` from step 2 here —
 > step 2 already built the release binary.
 
 When you're done, stop the relay (Ctrl-C in its terminal). If it's
-backgrounded or you lost the terminal: `pkill -f buzz-relay`. Leaving
+backgrounded or you lost the terminal: `pkill -f crew-relay`. Leaving
 it running will collide with the next reviewer who follows this doc on
 the same machine.
 
@@ -135,22 +135,22 @@ back. This is the minimum sequence an agent needs to verify a local relay.
 
 ```bash
 # Generate a keypair
-GEN=$(buzz-admin generate-key)
+GEN=$(crew-admin generate-key)
 export CREW_PRIVATE_KEY=$(echo "$GEN" | awk '/Secret key:/ {print $3}')
 PUBKEY=$(echo "$GEN"           | awk '/Public key:/ {print $3}')
 echo "pubkey: $PUBKEY"
 
 # Create a channel — the UUID is returned in the response
-CHANNEL=$(buzz channels create --name "smoke-$$" --type stream --visibility open | jq -r '.channel_id')
+CHANNEL=$(crew channels create --name "smoke-$$" --type stream --visibility open | jq -r '.channel_id')
 echo "channel: $CHANNEL"
 
 # Send a message and read it back
-SEND=$(buzz messages send --channel "$CHANNEL" --content "hello from smoke test")
+SEND=$(crew messages send --channel "$CHANNEL" --content "hello from smoke test")
 EVENT_ID=$(echo "$SEND" | jq -r '.event_id')
-buzz messages get --channel "$CHANNEL" --limit 5 | jq .
+crew messages get --channel "$CHANNEL" --limit 5 | jq .
 
 # Fetch the reply chain for a specific message (empty array on a leaf — that's fine)
-buzz messages thread --channel "$CHANNEL" --event "$EVENT_ID" | jq .
+crew messages thread --channel "$CHANNEL" --event "$EVENT_ID" | jq .
 ```
 
 A successful run prints `{"event_id":"…","accepted":true,"message":""}` for
@@ -172,10 +172,10 @@ relay key for authoritative replacement:
 
 ```bash
 export PATH="$PWD/target/release:$PATH"
-export DATABASE_URL="postgres://buzz:buzz_dev@localhost:5432/buzz_roster_e2e"
+export DATABASE_URL="postgres://crew:buzz_dev@localhost:5432/buzz_roster_e2e"
 export CREW_RELAY_URL="http://localhost:3030"  # match the relay from step 3
 export RELAY_URL="ws://localhost:3030"
-export CREW_RELAY_PRIVATE_KEY="<same key used by buzz-relay>"
+export CREW_RELAY_PRIVATE_KEY="<same key used by crew-relay>"
 
 scripts/e2e-large-channel-roster.sh
 ```
@@ -192,7 +192,7 @@ PASS targeted-repair-preserves-metadata-and-admin-events channel=<uuid>
 PASS discovery-after-republish channel=<uuid> members=1502 late_pubkey=<hex>
 ```
 
-The script refuses debug binaries and refuses a `buzz` or `buzz-admin` resolved
+The script refuses debug binaries and refuses a `crew` or `crew-admin` resolved
 outside this checkout's `target/release`. It also requires the targeted admin
 operation to use `CREW_RELAY_PRIVATE_KEY`; never substitute an ephemeral signer
 for an authoritative replacement.
@@ -200,10 +200,10 @@ for an authoritative replacement.
 ### 6. Going deeper
 
 For full coverage of every CLI command (54 subcommands across 12 groups),
-follow [`crates/buzz-cli/TESTING.md`](crates/buzz-cli/TESTING.md).
+follow [`crates/crew-cli/TESTING.md`](crates/crew-cli/TESTING.md).
 
 The relay's HTTP bridge accepts three endpoints — useful if you're testing
-a client other than `buzz-cli`:
+a client other than `crew-cli`:
 
 | Endpoint        | Purpose                            |
 |-----------------|------------------------------------|
@@ -213,14 +213,14 @@ a client other than `buzz-cli`:
 
 All three accept NIP-98 auth (recommended) or, in dev mode, an `X-Pubkey`
 header fallback. There is no REST API for fetching message threads — use
-`POST /query` with an `#e` filter, or `buzz messages thread`.
+`POST /query` with an `#e` filter, or `crew messages thread`.
 
 ---
 
 ## ACP Harness (optional, end-to-end with a real agent)
 
-`buzz-acp` connects an ACP-speaking agent (goose, codex, claude code,
-buzz-agent) to the relay. The harness listens for events, drives the
+`crew-acp` connects an ACP-speaking agent (goose, codex, claude code,
+crew-agent) to the relay. The harness listens for events, drives the
 agent over stdio, and the agent replies through MCP tools.
 
 Minimum recipe — assumes the relay from step 3 is running and the channel
@@ -229,24 +229,24 @@ from the sender identity (`CREW_ACP_RESPOND_TO=anyone` still skips events
 the agent signed itself).
 
 ```bash
-cargo build --release -p buzz-acp
+cargo build --release -p crew-acp
 export PATH="$PWD/target/release:$PATH"
 
 # 1. Save your sender identity from step 4 — you'll need it to @mention the agent
 SENDER_SK="$CREW_PRIVATE_KEY"
 
 # 2. Mint a fresh agent identity and capture its pubkey
-AGENT_GEN=$(buzz-admin generate-key)
+AGENT_GEN=$(crew-admin generate-key)
 AGENT_SK=$(echo "$AGENT_GEN" | awk '/Secret key:/ {print $3}')
 AGENT_PUBKEY=$(echo "$AGENT_GEN" | awk '/Public key:/ {print $3}')
 
 # 3. Add the agent as a member of $CHANNEL — still using the sender identity.
 #    Skip this and the agent boots to "discovered 0 channel(s) → agent will
 #    sit idle" and silently ignores every mention.
-buzz channels add-member --channel "$CHANNEL" --pubkey "$AGENT_PUBKEY" --role member
+crew channels add-member --channel "$CHANNEL" --pubkey "$AGENT_PUBKEY" --role member
 
 # 4. Switch to the agent identity and start it.
-#    buzz-acp wants ws:// (not http://). If you set CREW_RELAY_URL to an
+#    crew-acp wants ws:// (not http://). If you set CREW_RELAY_URL to an
 #    http:// URL in step 3, set the ws:// equivalent here — same host/port.
 export CREW_PRIVATE_KEY="$AGENT_SK"
 export CREW_RELAY_URL=ws://localhost:3000   # match step 3 (e.g. ws://localhost:3030 if overridden)
@@ -254,16 +254,16 @@ export CREW_ACP_RESPOND_TO=anyone           # default is owner-only; opens the g
 # NIP-AE core-memory prompt injection is on by default; set CREW_ACP_NO_MEMORY=true to opt out.
 export GOOSE_MODE=auto                        # must be 'auto' or goose hangs on prompts
 
-buzz-acp                                    # foreground; logs to stdout (run in a separate terminal)
+crew-acp                                    # foreground; logs to stdout (run in a separate terminal)
 
 # Optional: turn on per-turn tracing if the default log is too quiet.
-# RUST_LOG=buzz_acp=debug buzz-acp
+# RUST_LOG=buzz_acp=debug crew-acp
 ```
 
 > **Using a different ACP agent?** The default recipe assumes `goose` is on
 > `$PATH` and configured (`goose --version` should print). For codex / claude
-> code / buzz-agent, set `CREW_ACP_AGENT_COMMAND` and `CREW_ACP_AGENT_ARGS`
-> accordingly — see `crates/buzz-acp/README.md`. Without these, buzz-acp
+> code / crew-agent, set `CREW_ACP_AGENT_COMMAND` and `CREW_ACP_AGENT_ARGS`
+> accordingly — see `crates/crew-acp/README.md`. Without these, crew-acp
 > will fail to spawn the agent subprocess on startup.
 
 If you started the agent before adding it to the channel, just run the
@@ -272,11 +272,11 @@ subscribes without restart (`membership notification: subscribing to new channel
 
 The justfile also ships `just goose key="$AGENT_NSEC"` (foreground) and
 `just goose-bg key="$AGENT_NSEC"` (background screen session) which set the
-same env. See `crates/buzz-acp/README.md` for parallel agents, heartbeats,
+same env. See `crates/crew-acp/README.md` for parallel agents, heartbeats,
 respond-to gates, and forum subscriptions.
 
 To exercise deferred ACP startup, add `CREW_ACP_LAZY_POOL=true` before launching
-`buzz-acp`. The harness should connect, authenticate, subscribe, and publish
+`crew-acp`. The harness should connect, authenticate, subscribe, and publish
 online presence without starting the configured ACP child. The first accepted,
 flushable mention should start exactly one child and then dispatch the queued
 message. Automated coverage in `pool_lifecycle_state` pins single-wake,
@@ -288,16 +288,16 @@ from step 4 and @mention the agent:
 
 ```bash
 export CREW_PRIVATE_KEY=$SENDER_SK          # the key from step 4
-buzz messages send --channel "$CHANNEL" \
+crew messages send --channel "$CHANNEL" \
   --content "Hey agent, reply PONG only."
 
 # Wait 10–90s, then read the channel — the agent's reply is a kind:9 from
 # AGENT_PUBKEY. The current ACP build is quiet on stdout during a turn, so
-# `buzz messages get` is how you confirm it ran.
-buzz messages get --channel "$CHANNEL" --limit 5 | jq '.[] | {pubkey, content}'
+# `crew messages get` is how you confirm it ran.
+crew messages get --channel "$CHANNEL" --limit 5 | jq '.[] | {pubkey, content}'
 ```
 
-Replies are kind:9 in the same channel; `buzz messages thread --channel <id>
+Replies are kind:9 in the same channel; `crew messages thread --channel <id>
 --event <event_id>` fetches the reply chain for a specific mention.
 
 ---
@@ -312,8 +312,8 @@ out of the box with `just setup` or `just relay`. Common overrides:
 | `CREW_BIND_ADDR`                | `0.0.0.0:3000`              | Main app port |
 | `CREW_HEALTH_PORT`              | `8080`                      | `/_liveness`, `/_readiness` |
 | `CREW_METRICS_PORT`             | `9102`                      | Prometheus `/metrics` |
-| `RELAY_URL`                       | `ws://localhost:3000`       | Advertised in NIP-11 / NIP-42 challenges. **Note: no `BUZZ_` prefix.** |
-| `DATABASE_URL`                    | `postgres://buzz:buzz_dev@localhost:5432/buzz` | |
+| `RELAY_URL`                       | `ws://localhost:3000`       | Advertised in NIP-11 / NIP-42 challenges. **Note: no `CREW_` prefix.** |
+| `DATABASE_URL`                    | `postgres://crew:buzz_dev@localhost:5432/crew` | |
 | `REDIS_URL`                       | `redis://localhost:6379`    | |
 | `CREW_REQUIRE_AUTH_TOKEN`       | `false`                     | When true, REST requires NIP-98 (no `X-Pubkey` fallback) |
 | `CREW_REQUIRE_RELAY_MEMBERSHIP` | `false`                     | When true, only pubkeys in `relay_members` can connect |
@@ -322,7 +322,7 @@ out of the box with `just setup` or `just relay`. Common overrides:
 | `CREW_AUTO_MIGRATE`             | `false`                     | Opt in with `true`/`1`/`yes`/`on` to run embedded SQLx migrations on relay startup |
 | `RELAY_OWNER_PUBKEY`              | unset                       | Bootstrapped as `owner` in `relay_members` at first start |
 | `CREW_ALLOW_NIP_OA_AUTH`        | `false`                     | Enable NIP-OA owner attestation for membership |
-| `CREW_WEB_DIR`                  | unset (source), `/srv/buzz/web` (container) | Directory containing the invite landing bundle; the production container enables it so `/invite/{code}` always works |
+| `CREW_WEB_DIR`                  | unset (source), `/srv/crew/web` (container) | Directory containing the invite landing bundle; the production container enables it so `/invite/{code}` always works |
 | `CREW_SERVE_GIT_WEB_GUI`        | `false`                     | Set to `true` or `1` to expose the bundled Git repository browser at `/` and `/repos/...`; invite routes do not depend on this flag |
 
 CLI-side, only two matter for testing:
@@ -340,12 +340,12 @@ CLI-side, only two matter for testing:
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | `relay error 500` or `400: restricted: not a channel member` after a code change | Stale binary | Rebuild and re-export `PATH`; or `cargo run` directly |
-| `Address already in use` on relay start (os error 48 on macOS, 98 on Linux) | Another relay (or stale process) holding `:3000` / `:8080` / `:9102` (or your override ports) | The panic line names the failing port — read it first. Then `lsof -iTCP:3000,8080,9102 -sTCP:LISTEN` (or your override equivalents). Kill the offender (`pkill -f buzz-relay`) or use the port-override block in step 3. If you already overrode and *still* collide, a prior reviewer left a relay running on the same alt ports — kill it or pick fresh ports |
+| `Address already in use` on relay start (os error 48 on macOS, 98 on Linux) | Another relay (or stale process) holding `:3000` / `:8080` / `:9102` (or your override ports) | The panic line names the failing port — read it first. Then `lsof -iTCP:3000,8080,9102 -sTCP:LISTEN` (or your override equivalents). Kill the offender (`pkill -f crew-relay`) or use the port-override block in step 3. If you already overrode and *still* collide, a prior reviewer left a relay running on the same alt ports — kill it or pick fresh ports |
 | `auth_error: CREW_PRIVATE_KEY is required` | Env not exported into the CLI's shell | `export CREW_PRIVATE_KEY=...` (or pass `--private-key`) |
 | `auth_error: CREW_AUTH_TAG verification failed … signature verification failed` | A stale `CREW_AUTH_TAG` inherited from a parent shell. The local dev relay rejects it. | `unset CREW_AUTH_TAG` (see the scrub block in step 1) |
 | `auth-required: verification failed` on a closed relay | NIP-OA attestation needed | Set `CREW_AUTH_TAG` to the owner-issued JSON, or relax `CREW_REQUIRE_RELAY_MEMBERSHIP` |
 | `channels list` empty after `channels create` | The CLI doesn't echo the channel UUID; use the filter shown in step 4 | Or `POST /query` with `{"kinds":[39002]}` |
 | ACP agent ignores all events | `CREW_ACP_RESPOND_TO=owner-only` (default) with no owner configured | Set `CREW_ACP_RESPOND_TO=anyone` for testing |
-| ACP logs `discovered 0 channel(s)` / `no channel subscriptions resolved` | Agent identity isn't a member of any channel | `buzz channels add-member --channel "$CHANNEL" --pubkey "$AGENT_PUBKEY" --role member` from another identity |
+| ACP logs `discovered 0 channel(s)` / `no channel subscriptions resolved` | Agent identity isn't a member of any channel | `crew channels add-member --channel "$CHANNEL" --pubkey "$AGENT_PUBKEY" --role member` from another identity |
 | `GOOSE_MODE` warning, agent hangs | Not set | `export GOOSE_MODE=auto` |
 | Tests pass locally but CI fails | Forgot to run `just ci` | `just ci` runs the gate (fmt, clippy, unit tests, desktop/web builds) |

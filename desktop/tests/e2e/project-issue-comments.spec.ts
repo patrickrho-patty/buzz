@@ -16,7 +16,7 @@ async function openBuzzProject(page: import("@playwright/test").Page) {
   await page.getByTestId("projects-section-projects").click();
   const projectEntry = page
     .locator(
-      '[data-testid="project-card-buzz"], [data-testid="project-row-buzz"]',
+      '[data-testid="project-card-crew"], [data-testid="project-row-crew"]',
     )
     .first();
   await expect(projectEntry).toBeVisible({ timeout: 10_000 });
@@ -89,7 +89,7 @@ test("issue discussion ignores an author-claimed origin channel", async ({
           created_at: Math.floor(Date.now() / 1000) + 10,
           content: "This task claims an unrelated visible channel.",
           tags: [
-            ["a", `30617:${owner}:buzz`],
+            ["a", `30617:${owner}:crew`],
             ["subject", "Forged origin task"],
             ["h", "9dae0116-799b-5071-a0a8-fdd30a91a35d"],
           ],
@@ -122,7 +122,7 @@ test("issue discussion ignores an author-claimed origin channel", async ({
   const issueDraftChip = page
     .getByTestId("message-input")
     .locator('[data-composer-crew-link=""]', {
-      hasText: "buzz",
+      hasText: "crew",
     });
   await expect(issueDraftChip).toHaveAttribute(
     "data-href",

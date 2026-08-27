@@ -38,9 +38,9 @@ const COMMUNITY_HOST = process.env.CREW_COMMUNITY_HOST ?? "";
 const TARGET_CHANNEL = process.env.CREW_PERF_CHANNEL ?? "crew-bugs";
 const PAGES = Number(process.env.CREW_PERF_PAGES ?? 10);
 
-const IDENTITY_OVERRIDE_KEY = "buzz:e2e-identity-override.v1";
-const ONBOARDING_PREFIX = "buzz-onboarding-complete.v1:";
-const WELCOME_PREFIX = "buzz-welcome-channel-ensured.v2:";
+const IDENTITY_OVERRIDE_KEY = "crew:e2e-identity-override.v1";
+const ONBOARDING_PREFIX = "crew-onboarding-complete.v1:";
+const WELCOME_PREFIX = "crew-welcome-channel-ensured.v2:";
 
 const REAL_CHROME_UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36";

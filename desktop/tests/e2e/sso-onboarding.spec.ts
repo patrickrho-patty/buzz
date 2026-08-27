@@ -51,7 +51,7 @@ test.beforeEach(async ({ page }) => {
     // Machine onboarding completion is keyed per-pubkey ("prefix:pubkey").
     // deadbeef×8 is the mock bridge identity.
     window.localStorage.setItem(
-      "buzz-machine-onboarding-complete.v2:" + "deadbeef".repeat(8),
+      "crew-machine-onboarding-complete.v2:" + "deadbeef".repeat(8),
       "true",
     );
   });

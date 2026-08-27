@@ -53,7 +53,7 @@ test("top-level project lists show metadata and overflow actions", async ({
 }) => {
   await enableProjectsFeature(page);
   await page.addInitScript(() => {
-    window.localStorage.setItem("buzz.projects.viewMode", "list");
+    window.localStorage.setItem("crew.projects.viewMode", "list");
   });
   await installMockBridge(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
@@ -115,9 +115,9 @@ test("top-level project lists show metadata and overflow actions", async ({
     page.getByRole("menuitem", { name: "My Repositories" }),
   ).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page.getByTestId("repository-row-buzz")).toBeVisible();
+  await expect(page.getByTestId("repository-row-crew")).toBeVisible();
   await expect(page.getByTestId("repository-row-relay-tools")).toBeVisible();
-  const repositoryRow = page.getByTestId("repository-row-buzz");
+  const repositoryRow = page.getByTestId("repository-row-crew");
   await expect(
     repositoryRow.getByTestId("repositories-row-project"),
   ).toHaveCount(0);
@@ -441,13 +441,13 @@ test("multi-repository projects switch the active repository", async ({
   await enableProjectsFeature(page);
   await installMockBridge(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await addProjectToSidebar(page, "buzz");
+  await addProjectToSidebar(page, "crew");
 
-  const primaryRepository = page.getByTestId("sidebar-project-repository-buzz");
+  const primaryRepository = page.getByTestId("sidebar-project-repository-crew");
   const relayToolsRepository = page.getByTestId(
     "sidebar-project-repository-relay-tools",
   );
-  const projectRow = page.getByTestId("sidebar-project-buzz");
+  const projectRow = page.getByTestId("sidebar-project-crew");
   await expect(projectRow).toHaveAttribute("aria-expanded", "true");
   await expect(primaryRepository).toHaveAttribute("data-active", "true");
   await expect(relayToolsRepository).toBeVisible();
@@ -457,7 +457,7 @@ test("multi-repository projects switch the active repository", async ({
   await expect(relayToolsRepository).toBeHidden();
 
   await page.reload({ waitUntil: "domcontentloaded" });
-  await addProjectToSidebar(page, "buzz");
+  await addProjectToSidebar(page, "crew");
   await expect(projectRow).toHaveAttribute("aria-expanded", "false");
   await expect(relayToolsRepository).toBeHidden();
 
@@ -595,7 +595,7 @@ test("latest files commit opens its detail without a divider", async ({
   await page.getByTestId("projects-section-projects").click();
   const projectEntry = page
     .locator(
-      '[data-testid="project-card-buzz"], [data-testid="project-row-buzz"]',
+      '[data-testid="project-card-crew"], [data-testid="project-row-crew"]',
     )
     .first();
   await expect(projectEntry).toBeVisible({ timeout: 10_000 });
@@ -643,10 +643,10 @@ test("commit detail opens from the commits feed with a diff", async ({
   // Projects filter reveals the complete project cards/rows list.
   await page.getByTestId("projects-section-projects").click();
 
-  // Open the first mock project (dtag "buzz" from the e2e bridge fixture).
+  // Open the first mock project (dtag "crew" from the e2e bridge fixture).
   const projectEntry = page
     .locator(
-      '[data-testid="project-card-buzz"], [data-testid="project-row-buzz"]',
+      '[data-testid="project-card-crew"], [data-testid="project-row-crew"]',
     )
     .first();
   await expect(projectEntry).toBeVisible({ timeout: 10_000 });
@@ -808,7 +808,7 @@ test("project discussion row opens its channel thread in context", async ({
   await page.getByTestId("projects-section-projects").click();
   await page
     .locator(
-      '[data-testid="project-card-buzz"], [data-testid="project-row-buzz"]',
+      '[data-testid="project-card-crew"], [data-testid="project-row-crew"]',
     )
     .first()
     .click();
@@ -846,7 +846,7 @@ test("pull request and issue feeds use compact work item rows", async ({
 
   const projectEntry = page
     .locator(
-      '[data-testid="project-card-buzz"], [data-testid="project-row-buzz"]',
+      '[data-testid="project-card-crew"], [data-testid="project-row-crew"]',
     )
     .first();
   await expect(projectEntry).toBeVisible({ timeout: 10_000 });
@@ -948,7 +948,7 @@ test("adding a repository retries and reports an error when the 30617 publicatio
   });
   await installMockBridge(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await addProjectToSidebar(page, "buzz");
+  await addProjectToSidebar(page, "crew");
 
   await page.getByTestId("add-project-repository").click();
   await page.getByTestId("create-project-repository").click();
@@ -1006,7 +1006,7 @@ test("adding a repository treats a lost 30617 acknowledgement as success", async
   });
   await installMockBridge(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await addProjectToSidebar(page, "buzz");
+  await addProjectToSidebar(page, "crew");
 
   await page.getByTestId("add-project-repository").click();
   await page.getByTestId("create-project-repository").click();
@@ -1042,7 +1042,7 @@ test("adding a repository blocks when a standalone 30617 already exists at that 
   await enableProjectsFeature(page);
   // Seed a standalone 30617 (not a project member) owned by the mock identity.
   // The add-repo mutation must block unconditionally when this coordinate exists,
-  // even though it is not yet in the "buzz" project's member list.
+  // even though it is not yet in the "crew" project's member list.
   const MOCK_OWNER = "deadbeef".repeat(8);
   const STANDALONE_DTAG = "existing-standalone";
   await page.addInitScript(
@@ -1070,7 +1070,7 @@ test("adding a repository blocks when a standalone 30617 already exists at that 
   await page.getByTestId("projects-section-projects").click();
   await page
     .locator(
-      '[data-testid="project-card-buzz"], [data-testid="project-row-buzz"]',
+      '[data-testid="project-card-crew"], [data-testid="project-row-crew"]',
     )
     .first()
     .click();
@@ -1111,7 +1111,7 @@ test("navigating via a 30617 entity-link route opens the correct non-primary rep
   page,
 }) => {
   await enableProjectsFeature(page);
-  // Seed a known pull-request for relay-tools (the non-primary member of "buzz")
+  // Seed a known pull-request for relay-tools (the non-primary member of "crew")
   // with a deterministic id so the URL can be constructed before navigation.
   const ALICE_PUBKEY =
     "953d3363262e86b770419834c53d2446409db6d918a57f8f339d495d54ab001f";
@@ -1162,7 +1162,7 @@ test("navigating via a 30617 entity-link route opens the correct non-primary rep
   );
 
   // Direct navigation must not implicitly add the project to the sidebar.
-  await expect(page.getByTestId("sidebar-project-buzz")).toHaveCount(0);
+  await expect(page.getByTestId("sidebar-project-crew")).toHaveCount(0);
   // The seeded PR proves that this detail route resolved relay-tools rather
   // than falling back to the project's primary repository.
   // Use `first()` to avoid Playwright strict-mode violations: the text appears

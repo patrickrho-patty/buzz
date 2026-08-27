@@ -616,8 +616,8 @@ type BridgeOptions = {
 };
 
 const WELCOME_CHANNEL_ENSURED_STORAGE_KEY_PREFIX =
-  "buzz-welcome-channel-ensured.v2:";
-const ONBOARDING_COMPLETION_STORAGE_KEY_PREFIX = "buzz-onboarding-complete.v1:";
+  "crew-welcome-channel-ensured.v2:";
+const ONBOARDING_COMPLETION_STORAGE_KEY_PREFIX = "crew-onboarding-complete.v1:";
 const DEFAULT_MOCK_PUBKEY = "deadbeef".repeat(8);
 // The relay HTTP/WS URLs follow CREW_E2E_RELAY_URL (same env var seed.ts reads),
 // so a suite pointed at an isolated relay (e.g. the read-model harness on :3030)
@@ -811,7 +811,7 @@ async function seedDefaultCommunity(
     },
     {
       fallback: fallbackPubkey,
-      identityOverrideKey: "buzz:e2e-identity-override.v1",
+      identityOverrideKey: "crew:e2e-identity-override.v1",
       relayUrl: relayWsUrl ?? DEFAULT_RELAY_WS_URL,
     },
   );

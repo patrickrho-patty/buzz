@@ -8,7 +8,7 @@ const THEME_STORAGE_KEY = "buzz-theme";
 const OWNER_PUBKEY = "deadbeef".repeat(8);
 
 function snapshotKey(relayUrl: string) {
-  return `buzz-channels.v1:${relayUrl}:${OWNER_PUBKEY.toLowerCase()}`;
+  return `crew-channels.v1:${relayUrl}:${OWNER_PUBKEY.toLowerCase()}`;
 }
 
 const COMMUNITY_A = {
@@ -508,7 +508,7 @@ test.describe("community rail", () => {
 
     const input = page.getByTestId("message-input");
     const previewUrl =
-      "https://github.com/block/buzz/pull/5697?community=reset";
+      "https://github.com/block/crew/pull/5697?community=reset";
     await input.fill("@SlowBot");
     await expect(page.getByTestId("mention-autocomplete")).toBeVisible();
     await input.press("Enter");
@@ -567,7 +567,7 @@ test.describe("community rail", () => {
     await page.getByTestId("channel-general").click();
 
     const input = page.getByTestId("message-input");
-    await input.fill("https://github.com/block/buzz/pull/5697?media=reset");
+    await input.fill("https://github.com/block/crew/pull/5697?media=reset");
     await page.getByTestId("send-message").click();
     await expect
       .poll(() =>
@@ -626,7 +626,7 @@ test.describe("community rail", () => {
     await page.getByTestId("channel-general").click();
 
     const input = page.getByTestId("message-input");
-    await input.fill("https://github.com/block/buzz/pull/5697?native=reset");
+    await input.fill("https://github.com/block/crew/pull/5697?native=reset");
     await page.getByTestId("send-message").click();
     await expect
       .poll(() =>

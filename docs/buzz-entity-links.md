@@ -1,11 +1,11 @@
-# Buzz Entity Links
+# Crew Entity Links
 
 Status: **partially implemented**. Done on this branch:
 
 - Slice 0 — HTTPS relay git clone URLs (`{relay-origin}/git/<pubkey>/<repo>`)
-  render as Buzz repository preview cards in chat
+  render as Crew repository preview cards in chat
   (`desktop/src/shared/lib/linkPreview.ts`).
-- Slice 1 — `buzz://pr|issue|repo|project` deep links: `entityLink.ts`
+- Slice 1 — `crew://pr|issue|repo|project` deep links: `entityLink.ts`
   builders/parser, preview cards with relay title enrichment (repo and
   project titles resolve from their announcement events), in-timeline click
   navigation to `/projects/$projectId`.
@@ -13,7 +13,7 @@ Status: **partially implemented**. Done on this branch:
   `desktop/src-tauri/src/deep_link.rs` emit `deep-link-entity`, and
   `useEntityDeepLinks` routes them through the same handler as in-timeline
   clicks.
-- Slice 3 (create-command part) — `crates/buzz-cli/src/links.rs`, `link`
+- Slice 3 (create-command part) — `crates/crew-cli/src/links.rs`, `link`
   output field on `pr open` / `issues create` / `repos create` /
   `projects create`, base prompt guidance, cross-language golden-format tests.
 - Sharing from the UI — `lib/projectShareLinks.ts` maps the Projects read
@@ -26,33 +26,33 @@ Still unimplemented: `link` on get commands and the follow-ups in slice 4.
 ## Problem
 
 When a message contains a GitHub URL, the desktop client renders a rich
-preview card ("GitHub · PR block/buzz #4020") below the message. Those cards
+preview card ("GitHub · PR block/crew #4020") below the message. Those cards
 are produced entirely client-side by URL parsing in
 `desktop/src/shared/lib/linkPreview.ts` and rendered by
 `desktop/src/shared/ui/link-preview-attachment.tsx`.
 
-Buzz-hosted entities have no equivalent. There is **no link format at all**
-for a Buzz repository, project, pull request, or issue:
+Crew-hosted entities have no equivalent. There is **no link format at all**
+for a Crew repository, project, pull request, or issue:
 
-- The only rich deep link today is `buzz://message?channel=…&id=…`
+- The only rich deep link today is `crew://message?channel=…&id=…`
   (`desktop/src/features/messages/lib/messageLink.ts`), rendered as an inline
   pill via `remarkMessageLinks.ts` + `MessageLinkPill.tsx`.
 - OS-level deep links (`desktop/src-tauri/src/deep_link.rs`,
   `desktop/src/shared/deep-link.ts`) support `connect`, `join`,
   `add-community`, `message`, and `nostr-bind` — no git entities.
-- `buzz pr open` / `buzz issues create` return raw event ids; there is no URL
+- `crew pr open` / `crew issues create` return raw event ids; there is no URL
   in their output and no guidance in the agent base prompt
-  (`crates/buzz-acp/src/base_prompt.md`) for referencing Buzz work items in
+  (`crates/crew-acp/src/base_prompt.md`) for referencing Crew work items in
   chat. Agents can only say "PR up" with a hex id.
 - The relay-served web client only has `/repos/$repoId`; no PR/issue pages.
 
-So an agent that opens a PR on a Buzz-hosted repository cannot produce
+So an agent that opens a PR on a Crew-hosted repository cannot produce
 anything clickable, while the same agent opening a GitHub PR gets a card for
 free.
 
 ## Goals
 
-1. A canonical, shareable link format for Buzz repositories, projects, pull
+1. A canonical, shareable link format for Crew repositories, projects, pull
    requests, and issues.
 2. Rich preview cards in the desktop message timeline for those links, with
    parity to (and better data than) the GitHub cards — titles come from the
@@ -64,8 +64,8 @@ free.
 ## Non-goals (v1)
 
 - Web (browser) pages for PRs/issues — the web client has no such views yet,
-  so links are app-only, same as `buzz://message` today.
-- Cross-community links. Like `buzz://message`, links are interpreted against
+  so links are app-only, same as `crew://message` today.
+- Cross-community links. Like `crew://message`, links are interpreted against
   the community the message was received in. A `relay=` query parameter is
   reserved for a future cross-community version but not emitted or consumed.
 - Generic OpenGraph unfurling for arbitrary URLs — that is the separate
@@ -75,13 +75,13 @@ free.
 
 ## Link format
 
-Extend the existing `buzz://` scheme, mirroring `buzz://message`:
+Extend the existing `crew://` scheme, mirroring `crew://message`:
 
 ```
-buzz://repo?owner=<pubkey-hex>&d=<repo-dtag>[&tab=<tab>]
-buzz://project?owner=<pubkey-hex>&d=<project-dtag>[&tab=<tab>]
-buzz://pr?id=<event-id-hex>&owner=<pubkey-hex>&d=<repo-dtag>
-buzz://issue?id=<event-id-hex>&owner=<pubkey-hex>&d=<repo-dtag>
+crew://repo?owner=<pubkey-hex>&d=<repo-dtag>[&tab=<tab>]
+crew://project?owner=<pubkey-hex>&d=<project-dtag>[&tab=<tab>]
+crew://pr?id=<event-id-hex>&owner=<pubkey-hex>&d=<repo-dtag>
+crew://issue?id=<event-id-hex>&owner=<pubkey-hex>&d=<repo-dtag>
 ```
 
 - `owner` is the 64-char lowercase hex pubkey of the repository/project
@@ -106,7 +106,7 @@ buzz://issue?id=<event-id-hex>&owner=<pubkey-hex>&d=<repo-dtag>
 
 Validation rules match the existing codebase: `owner` and `id` are
 `/^[a-f0-9]{64}$/`; `d` follows addressable d-tag rules already enforced in
-`projectModels.ts` / `buzz-sdk`.
+`projectModels.ts` / `crew-sdk`.
 
 ### HTTPS URLs
 
@@ -115,14 +115,14 @@ Agents naturally paste HTTPS clone URLs
 recognized **first** — implemented on this branch. Detection keys on the
 path shape (`/git/` + 64-hex pubkey segment) rather than a host allow-list,
 since relay hosts differ per community. The preview href is normalized to
-the canonical `buzz://repo?owner=…&d=…` deep link (the raw transport URL is
+the canonical `crew://repo?owner=…&d=…` deep link (the raw transport URL is
 not a browsable page), so clone-URL cards and inline clone-URL anchors get
 the same in-app click navigation as explicit entity links, and both
 spellings of the same repository dedupe to one card.
 
 PRs, issues, and projects have no HTTPS page to link to (the web client has
-no such routes), which is why they use the `buzz://` scheme above: it is
-community-relative by construction, matches the established `buzz://message`
+no such routes), which is why they use the `crew://` scheme above: it is
+community-relative by construction, matches the established `crew://message`
 precedent, and requires no new relay surface. If web views land later, the
 desktop can additionally recognize those `{relay-origin}/…` URLs with the
 same card treatment.
@@ -132,17 +132,17 @@ same card treatment.
 Two presentations, consistent with how GitHub links and message links behave
 today:
 
-1. **Autolinked bare URL** (`<buzz://pr?…>` or bare in text): render an
+1. **Autolinked bare URL** (`<crew://pr?…>` or bare in text): render an
    **attachment card** below the message in the existing `AttachmentGroup`,
-   exactly like GitHub cards. Provider label `Buzz`, type label
+   exactly like GitHub cards. Provider label `Crew`, type label
    `PR` / `issue` / `repo` / `project`.
-2. **Explicitly labeled markdown link** (`[fix the tooltip](buzz://pr?…)`):
+2. **Explicitly labeled markdown link** (`[fix the tooltip](crew://pr?…)`):
    keep the author's label inline (same rule as
    `resolveMessageLinkRenderTarget` in `messageLink.ts`), still clickable.
 
 ### Card content and enrichment
 
-Unlike GitHub (title derived from URL path only), Buzz entities live on the
+Unlike GitHub (title derived from URL path only), Crew entities live on the
 same relay, so the card can show real data:
 
 | Entity  | Title source                              | Fallback            |
@@ -179,8 +179,8 @@ it without a feature→shared boundary violation):
   first and hide the share affordance instead of surfacing a builder throw
 
 Detection: extend `extractSupportedLinkPreviews` in `linkPreview.ts` with a
-`buzz://` pattern (new `SupportedLinkPreviewKind` members
-`buzz-pull-request`, `buzz-issue`, `buzz-repository`, `buzz-project`), or —
+`crew://` pattern (new `SupportedLinkPreviewKind` members
+`crew-pull-request`, `crew-issue`, `crew-repository`, `crew-project`), or —
 if mixing schemes into the URL regex is awkward — a parallel extractor
 composed in `markdown.tsx`. Code blocks / spoiler / image-link masking rules
 are shared either way, and the existing `MAX_PREVIEWS` cap applies across
@@ -211,28 +211,28 @@ in `AppShell` for the main window only — re-parses it with `parseEntityLink`
 and reuses `useOpenEntityLink`, so a link opened from the OS lands on the
 same view as one clicked in a message.
 
-## CLI (`buzz-cli`)
+## CLI (`crew-cli`)
 
 Add a `link` field to the JSON output of the write commands that create
 linkable entities:
 
-- `buzz pr open` → `{ event_id, accepted, message, link }`
-- `buzz issues create` → same
-- `buzz repos create` → link built from owner pubkey + `d`-tag
-- `buzz projects create` → same
+- `crew pr open` → `{ event_id, accepted, message, link }`
+- `crew issues create` → same
+- `crew repos create` → link built from owner pubkey + `d`-tag
+- `crew projects create` → same
 
-The builder lives in one Rust helper (e.g. `crates/buzz-cli/src/links.rs`)
+The builder lives in one Rust helper (e.g. `crates/crew-cli/src/links.rs`)
 so the format has exactly one definition on the Rust side; the TypeScript
 `entityLink.ts` is its mirror and both are covered by shared-format tests
 (golden strings asserted on both sides, like the NIP-MP fixture pattern).
 
-`buzz pr get` / `buzz issues get` / `buzz repos get` also include `link` in
+`crew pr get` / `crew issues get` / `crew repos get` also include `link` in
 their output so agents can link to existing entities, not just ones they
 just created.
 
 ## Agent guidance
 
-One addition to `crates/buzz-acp/src/base_prompt.md`, next to the existing
+One addition to `crates/crew-acp/src/base_prompt.md`, next to the existing
 `--channel` rule for PR opens:
 
 > When you announce a pull request, issue, repository, or project in a
@@ -254,11 +254,11 @@ No persona changes needed — the base prompt applies to all managed agents.
 ## Implementation plan (suggested PR slices)
 
 0. **HTTPS clone-URL repo cards** *(done, this branch)* — recognize relay
-   `/git/<pubkey>/<repo>` URLs in `linkPreview.ts`, `Buzz` provider card
-   with the `BuzzMark` logo, href normalized to the `buzz://repo` deep link
+   `/git/<pubkey>/<repo>` URLs in `linkPreview.ts`, `Crew` provider card
+   with the `BuzzMark` logo, href normalized to the `crew://repo` deep link
    for in-app navigation.
 1. **Link core + cards** *(done, this branch)* — `entityLink.ts`, detection
-   in `linkPreview.ts`, `Buzz` card variant in
+   in `linkPreview.ts`, `Crew` card variant in
    `link-preview-attachment.tsx`, in-timeline click navigation, relay title
    enrichment (with `resetLinkPreviewTitleCache()` wired into
    `resetCommunityState()`). Unit tests (`entityLink.test.mjs`, extended

@@ -529,7 +529,7 @@ test("shows cached profile labels while relay profiles revalidate", {
   await page.addInitScript(
     ({ alicePubkey }) => {
       window.localStorage.setItem(
-        "buzz-user-labels.v1:ws://localhost:3000",
+        "crew-user-labels.v1:ws://localhost:3000",
         JSON.stringify({
           version: 1,
           updatedAt: Date.now(),

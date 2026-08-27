@@ -1,10 +1,10 @@
-# Using Third-Party Nostr Clients with Buzz
+# Using Third-Party Nostr Clients with Crew
 
-Buzz is a Nostr relay that speaks NIP-29 (relay-based groups) natively. Third-party Nostr clients connect directly to `buzz-relay` using NIP-29 and NIP-42 authentication. The old NIP-28 compatibility proxy has been removed.
+Crew is a Nostr relay that speaks NIP-29 (relay-based groups) natively. Third-party Nostr clients connect directly to `crew-relay` using NIP-29 and NIP-42 authentication. The old NIP-28 compatibility proxy has been removed.
 
 ## Community scope
 
-Buzz treats the relay URL/domain as authoritative for the community. Today's
+Crew treats the relay URL/domain as authoritative for the community. Today's
 single-relay deployment has exactly one community behind that URL, so existing
 NIP-29 clients keep using the same WebSocket URL, event kinds, tags, and
 HTTP/media/git paths. In a multi-community deployment, each community is reached
@@ -36,7 +36,7 @@ just relay &                         # relay on :3000
 
 # 3. Add a pubkey to the allowlist (if enabled)
 #    Insert directly — there is no CLI command for this yet.
-PGPASSWORD=buzz_dev psql -h localhost -U buzz -d buzz -c \
+PGPASSWORD=buzz_dev psql -h localhost -U crew -d crew -c \
   "INSERT INTO pubkey_allowlist (pubkey) VALUES (decode('<64-char-hex-pubkey>', 'hex'))"
 
 # 4. Connect any NIP-29 + NIP-42 client to ws://localhost:3000
@@ -71,8 +71,8 @@ PGPASSWORD=buzz_dev psql -h localhost -U buzz -d buzz -c \
 | **NIP-17 DMs (gift wrap)** | ✅ | kind:1059 accepted with ephemeral signing keys. Stored community-globally (`channel_id=None` inside the connected community). Delivered via `#p`-filtered subscriptions. Not indexed in search. |
 | **DM discovery** | ✅ | DM creation emits kind:39000 (with `hidden` tag) + kind:44100 membership notifications. NIP-29 clients discover DMs via standard group discovery flow. |
 | **Join request (kind:9021)** | ✅ | Open channels only. Adds member, emits system message + group discovery events + kind:44100 membership notification. Private channels rejected at ingest. |
-| **Edits (kind:40003)** | ⚠️ | Works on the wire but Buzz-only — no standard NIP-29 client renders these |
-| **Rich content (kind:40002)** | ⚠️ | Works on the wire but Buzz-only — no standard NIP-29 client renders these |
+| **Edits (kind:40003)** | ⚠️ | Works on the wire but Crew-only — no standard NIP-29 client renders these |
+| **Rich content (kind:40002)** | ⚠️ | Works on the wire but Crew-only — no standard NIP-29 client renders these |
 
 ### What Doesn't Work
 
@@ -106,7 +106,7 @@ All discovery events include a `d` tag set to the channel UUID (NIP-29 addressab
 
 | Kind | Tags | Content |
 |------|------|---------|
-| **39000** | `d=<uuid>`, `name`, `closed` (always); `about` (if description non-empty); `private` (if applicable); `hidden` (DM channels only) | Group metadata. **Note:** `closed` is always emitted per NIP-29 convention (Buzz channels require explicit membership), but open channels are still readable/writable by non-members at runtime. The tag reflects the membership model, not access enforcement. |
+| **39000** | `d=<uuid>`, `name`, `closed` (always); `about` (if description non-empty); `private` (if applicable); `hidden` (DM channels only) | Group metadata. **Note:** `closed` is always emitted per NIP-29 convention (Crew channels require explicit membership), but open channels are still readable/writable by non-members at runtime. The tag reflects the membership model, not access enforcement. |
 | **39001** | `d=<uuid>`, `p` tags with role label (`owner`, `admin`) | Admin list |
 | **39002** | `d=<uuid>`, `p` tags for all members | Member list |
 
@@ -219,7 +219,7 @@ is bootstrapped automatically from `RELAY_OWNER_PUBKEY` on startup.
 
 ### CLI: Managing Members
 
-Use `buzz-admin` — the operator CLI shipped in the relay image — to manage relay membership.
+Use `crew-admin` — the operator CLI shipped in the relay image — to manage relay membership.
 In a Docker Compose deployment, use `run.sh`:
 
 ```bash
@@ -236,13 +236,13 @@ In a Docker Compose deployment, use `run.sh`:
 ./run.sh list-members
 ```
 
-Or invoke `buzz-admin` directly inside the container:
+Or invoke `crew-admin` directly inside the container:
 
 ```bash
-docker compose exec relay buzz-admin add-member --pubkey npub1abc...
-docker compose exec relay buzz-admin add-member --pubkey npub1abc... --role admin
-docker compose exec relay buzz-admin remove-member --pubkey npub1abc...
-docker compose exec relay buzz-admin list-members
+docker compose exec relay crew-admin add-member --pubkey npub1abc...
+docker compose exec relay crew-admin add-member --pubkey npub1abc... --role admin
+docker compose exec relay crew-admin remove-member --pubkey npub1abc...
+docker compose exec relay crew-admin list-members
 ```
 
 **Exit codes:**
@@ -368,5 +368,5 @@ but only admins/owners can set it. Full spec:
 ## Further Reading
 
 - [nostr-protocol/nips](https://github.com/nostr-protocol/nips) — the upstream NIP specifications (NIP-01, NIP-29, NIP-42, and the other NIPs referenced throughout this guide).
-- [`docs/nips/`](docs/nips/) — Buzz's own NIP extension documents.
+- [`docs/nips/`](docs/nips/) — Crew's own NIP extension documents.
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) — event kinds, wire protocol, and relay internals.

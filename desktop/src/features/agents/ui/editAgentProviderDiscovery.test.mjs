@@ -1137,7 +1137,7 @@ test("editAgent_findingE_capableBuzzAgentLoadedCatalog_preservedOnNoOpSave", () 
 //              correctly via id-fallback when catalog command is the resolved path
 //
 // Problem: crew-agent stores agentCommand="crew-agent" (short name) while the
-// catalog entry has command="/Applications/Buzz.app/.../crew-agent" (resolved path).
+// catalog entry has command="/Applications/Crew.app/.../crew-agent" (resolved path).
 // Command-based matching fails (short name ≠ full path), so selectedRuntimeId
 // stayed "custom" → selectedRuntime=undefined → canDiscoverModelOptions=false →
 // discovery never fired for inherited agents.
@@ -1164,7 +1164,7 @@ test("editAgent_bugA_inheritedShortName_resolvesViaIdFallback", () => {
   const runtimes = [
     {
       id: "crew-agent",
-      command: "/Applications/Buzz.app/Contents/MacOS/crew-agent", // resolved path
+      command: "/Applications/Crew.app/Contents/MacOS/crew-agent", // resolved path
       availability: "available",
       defaultArgs: [],
     },
@@ -1219,7 +1219,7 @@ test("editAgent_bugA_inheritedShortName_discoveryGatePasses", () => {
   const runtimes = [
     {
       id: "crew-agent",
-      command: "/Applications/Buzz.app/Contents/MacOS/crew-agent",
+      command: "/Applications/Crew.app/Contents/MacOS/crew-agent",
       availability: "available",
       defaultArgs: [],
     },
@@ -1256,7 +1256,7 @@ test("editAgent_bugA_inheritedShortName_discoveryGatePasses", () => {
   );
   assert.equal(
     discoveryAgentCommand,
-    "/Applications/Buzz.app/Contents/MacOS/crew-agent",
+    "/Applications/Crew.app/Contents/MacOS/crew-agent",
     "discoveryAgentCommand must be the resolved path from the catalog entry",
   );
   assert.equal(
@@ -1274,7 +1274,7 @@ test("editAgent_bugA_unknownCommandStillFallsBackToCustom", () => {
   const runtimes = [
     {
       id: "crew-agent",
-      command: "/Applications/Buzz.app/Contents/MacOS/crew-agent",
+      command: "/Applications/Crew.app/Contents/MacOS/crew-agent",
       availability: "available",
       defaultArgs: [],
     },

@@ -54,7 +54,7 @@ void main() {
     expect((items[2] as MessageItem).text, 'Done');
   });
 
-  test('normalizes buzz tool calls and applies result updates', () {
+  test('normalizes crew tool calls and applies result updates', () {
     final items = buildTranscript([
       _updateFrame(
         seq: 1,
@@ -89,7 +89,7 @@ void main() {
     expect(tool.result, 'posted #activity-test-channel');
   });
 
-  test('parses buzz prompt text into user message and metadata', () {
+  test('parses crew prompt text into user message and metadata', () {
     final items = buildTranscript([
       ObserverFrame(
         seq: 1,

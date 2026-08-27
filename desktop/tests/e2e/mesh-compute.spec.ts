@@ -47,7 +47,7 @@ test("Share compute chooses a model before sharing", async ({ page }) => {
   ).toBeVisible();
   await expect(model).toBeVisible();
   await expect(card).toContainText(
-    "Buzz downloads remote models when sharing starts",
+    "Crew downloads remote models when sharing starts",
   );
   await expect(toggle).toBeChecked();
   await expect(
@@ -99,7 +99,7 @@ test("a consuming client can switch to sharing its saved local model", async ({
   // client with one serve start (never a stop command).
   const localModel = "hf://demo/local-small-model:Q4_K_M";
   await page.addInitScript((model) => {
-    window.localStorage.setItem("buzz.mesh-compute.share.model.v1", model);
+    window.localStorage.setItem("crew.mesh-compute.share.model.v1", model);
   }, localModel);
   await installMockBridge(page);
   await page.goto("/");
@@ -121,7 +121,7 @@ test("a consuming client can switch to sharing its saved local model", async ({
   await expect(card).toContainText(
     "This machine is currently using another member's shared compute",
   );
-  await expect(card).toContainText("Buzz may briefly restart");
+  await expect(card).toContainText("Crew may briefly restart");
   await expect(toggle).not.toBeChecked();
   await expect(
     page.getByTestId("mesh-share-compute-options-motion"),

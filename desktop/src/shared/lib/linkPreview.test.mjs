@@ -87,17 +87,17 @@ test("parseSupportedLinkPreview ignores unsupported GitHub URLs", () => {
 const CREW_OWNER =
   "71d67180ba17e749ee825fc8819c9c6ee7003617e1c126504f9b658070ab9224";
 
-test("parseSupportedLinkPreview parses Buzz relay git clone URLs", () => {
+test("parseSupportedLinkPreview parses Crew relay git clone URLs", () => {
   // Must pass the active relay origin for host validation.
   assert.deepEqual(
     parseSupportedLinkPreview(
-      `https://buzz.block.builderlab.xyz/git/${CREW_OWNER}/crew-world-galaxy`,
-      "https://buzz.block.builderlab.xyz",
+      `https://crew.block.builderlab.xyz/git/${CREW_OWNER}/crew-world-galaxy`,
+      "https://crew.block.builderlab.xyz",
     ),
     {
       kind: "crew-repository",
       href: `crew://repo?owner=${CREW_OWNER}&d=crew-world-galaxy`,
-      provider: "Buzz",
+      provider: "Crew",
       title: "crew-world-galaxy",
       typeLabel: "repo",
     },
@@ -105,7 +105,7 @@ test("parseSupportedLinkPreview parses Buzz relay git clone URLs", () => {
   // Same URL without a matching origin stays an ordinary external preview.
   assert.equal(
     parseSupportedLinkPreview(
-      `https://buzz.block.builderlab.xyz/git/${CREW_OWNER}/crew-world-galaxy`,
+      `https://crew.block.builderlab.xyz/git/${CREW_OWNER}/crew-world-galaxy`,
     )?.kind,
     "generic-link",
   );
@@ -120,14 +120,14 @@ test("parseSupportedLinkPreview strips .git suffix from clone URLs", () => {
     {
       kind: "crew-repository",
       href: `crew://repo?owner=${CREW_OWNER}&d=crew-world`,
-      provider: "Buzz",
+      provider: "Crew",
       title: "crew-world",
       typeLabel: "repo",
     },
   );
 });
 
-test("parseSupportedLinkPreview rejects malformed Buzz git URLs", () => {
+test("parseSupportedLinkPreview rejects malformed Crew git URLs", () => {
   for (const href of [
     // Owner segment must be a 64-char lowercase hex pubkey.
     "https://relay.example/git/not-a-pubkey/repo",
@@ -153,22 +153,22 @@ test("parseSupportedLinkPreview rejects clone URLs from non-relay hosts", () => 
   assert.equal(
     parseSupportedLinkPreview(
       `https://evil.example/git/${CREW_OWNER}/my-repo`,
-      "https://buzz.block.builderlab.xyz",
+      "https://crew.block.builderlab.xyz",
     )?.kind,
     "generic-link",
   );
-  // github.com sharing the path shape must never become a Buzz repo card.
+  // github.com sharing the path shape must never become a Crew repo card.
   assert.equal(
     parseSupportedLinkPreview(
       `https://github.com/git/${CREW_OWNER}/my-repo`,
-      "https://buzz.block.builderlab.xyz",
+      "https://crew.block.builderlab.xyz",
     ),
     null,
   );
   // No relay origin provided — stays external.
   assert.equal(
     parseSupportedLinkPreview(
-      `https://buzz.block.builderlab.xyz/git/${CREW_OWNER}/crew-world`,
+      `https://crew.block.builderlab.xyz/git/${CREW_OWNER}/crew-world`,
       null,
     )?.kind,
     "generic-link",
@@ -186,7 +186,7 @@ test("parseSupportedLinkPreview parses crew:// PR and issue deep links", () => {
     {
       kind: "crew-pull-request",
       href: `crew://pr?id=${CREW_EVENT_ID}&owner=${CREW_OWNER}&d=crew-world`,
-      provider: "Buzz",
+      provider: "Crew",
       title: "crew-world #c3b589fa",
       typeLabel: "Review",
     },
@@ -202,7 +202,7 @@ test("parseSupportedLinkPreview parses crew:// PR and issue deep links", () => {
     {
       kind: "crew-repository",
       href: `crew://repo?owner=${CREW_OWNER}&d=crew-world`,
-      provider: "Buzz",
+      provider: "Crew",
       title: "crew-world",
       typeLabel: "repo",
     },
@@ -217,7 +217,7 @@ test("parseSupportedLinkPreview parses crew:// project deep links", () => {
     {
       kind: "crew-project",
       href: `crew://project?owner=${CREW_OWNER}&d=crew-world`,
-      provider: "Buzz",
+      provider: "Crew",
       title: "crew-world",
       typeLabel: "project",
     },
@@ -266,11 +266,11 @@ test("extractSupportedLinkPreviews uses markdown labels for crew:// links", () =
 test("parseSupportedLinkPreview parses Linear issue URLs", () => {
   assert.deepEqual(
     parseSupportedLinkPreview(
-      "https://linear.app/buzz/issue/BUG-321/fix-link-previews",
+      "https://linear.app/crew/issue/BUG-321/fix-link-previews",
     ),
     {
       kind: "linear-issue",
-      href: "https://linear.app/buzz/issue/BUG-321/fix-link-previews",
+      href: "https://linear.app/crew/issue/BUG-321/fix-link-previews",
       provider: "Linear",
       title: "BUG-321",
       typeLabel: "issue",
@@ -280,10 +280,10 @@ test("parseSupportedLinkPreview parses Linear issue URLs", () => {
 
 test("parseSupportedLinkPreview normalizes Linear issue URL variants", () => {
   assert.deepEqual(
-    parseSupportedLinkPreview("linear.app/buzz/issue/a-7/fix-link-previews"),
+    parseSupportedLinkPreview("linear.app/crew/issue/a-7/fix-link-previews"),
     {
       kind: "linear-issue",
-      href: "https://linear.app/buzz/issue/a-7/fix-link-previews",
+      href: "https://linear.app/crew/issue/a-7/fix-link-previews",
       provider: "Linear",
       title: "A-7",
       typeLabel: "issue",
@@ -315,7 +315,7 @@ test("extractSupportedLinkPreviews returns unique supported links in order", () 
     extractSupportedLinkPreviews(
       [
         "See github.com/block/sprout/pull/1",
-        "and https://linear.app/buzz/issue/BUG-2/fix-preview",
+        "and https://linear.app/crew/issue/BUG-2/fix-preview",
         "then https://github.com/block/sprout/pull/1 again.",
         "plus https://docs.google.com/document/d/doc123/edit",
       ].join(" "),
@@ -324,17 +324,17 @@ test("extractSupportedLinkPreviews returns unique supported links in order", () 
   );
 });
 
-test("extractSupportedLinkPreviews picks up bare Buzz clone URLs in prose", () => {
+test("extractSupportedLinkPreviews picks up bare Crew clone URLs in prose", () => {
   assert.deepEqual(
     extractSupportedLinkPreviews(
-      `master pushed; clone: https://buzz.block.builderlab.xyz/git/${CREW_OWNER}/crew-world-galaxy and review please.`,
-      "https://buzz.block.builderlab.xyz",
+      `master pushed; clone: https://crew.block.builderlab.xyz/git/${CREW_OWNER}/crew-world-galaxy and review please.`,
+      "https://crew.block.builderlab.xyz",
     ),
     [
       {
         kind: "crew-repository",
         href: `crew://repo?owner=${CREW_OWNER}&d=crew-world-galaxy`,
-        provider: "Buzz",
+        provider: "Crew",
         title: "crew-world-galaxy",
         typeLabel: "repo",
       },
@@ -343,19 +343,19 @@ test("extractSupportedLinkPreviews picks up bare Buzz clone URLs in prose", () =
   // Without a relay origin the URL is treated as an ordinary external link.
   assert.deepEqual(
     extractSupportedLinkPreviews(
-      `clone: https://buzz.block.builderlab.xyz/git/${CREW_OWNER}/crew-world-galaxy`,
+      `clone: https://crew.block.builderlab.xyz/git/${CREW_OWNER}/crew-world-galaxy`,
     ).map((preview) => preview.kind),
     ["generic-link"],
   );
 });
 
-test("extractSupportedLinkPreviews uses markdown labels for Buzz repo links", () => {
+test("extractSupportedLinkPreviews uses markdown labels for Crew repo links", () => {
   assert.deepEqual(
     extractSupportedLinkPreviews(
-      `[Buzz World](https://relay.example/git/${CREW_OWNER}/crew-world-galaxy)`,
+      `[Crew World](https://relay.example/git/${CREW_OWNER}/crew-world-galaxy)`,
       "https://relay.example",
     ).map((preview) => preview.title),
-    ["Buzz World"],
+    ["Crew World"],
   );
 });
 
@@ -434,7 +434,7 @@ test("extractSupportedLinkPreviews skips URLs inside inline and fenced code", ()
       [
         "`https://github.com/block/sprout/pull/1`",
         "```",
-        "https://linear.app/buzz/issue/BUG-2/fix-preview",
+        "https://linear.app/crew/issue/BUG-2/fix-preview",
         "```",
         "https://github.com/block/sprout/pull/3",
       ].join("\n"),
@@ -501,7 +501,7 @@ test("extractSupportedLinkPreviews skips links inside block spoilers", () => {
       [
         "||",
         "",
-        "https://linear.app/buzz/issue/BUG-99/hidden-spoiler-link",
+        "https://linear.app/crew/issue/BUG-99/hidden-spoiler-link",
         "",
         "||",
         "https://github.com/block/sprout/pull/8",

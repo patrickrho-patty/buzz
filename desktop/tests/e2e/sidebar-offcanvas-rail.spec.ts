@@ -45,10 +45,10 @@ async function setup(page: Page, theme: string) {
  * Regression: the app-sidebar layer is overflow-visible (huddle drawer), so
  * the offcanvas-collapsed sidebar slides out of its container but kept
  * painting over the community rail — opaquely on flat themes, as ghost
- * fragments on the transparent Buzz chrome. The collapsed sidebar must be
+ * fragments on the transparent Crew chrome. The collapsed sidebar must be
  * invisible and non-interactive, leaving the rail clean in every theme.
  */
-for (const theme of ["buzz", "crew-dark", "vesper"]) {
+for (const theme of ["crew", "crew-dark", "vesper"]) {
   test(`collapsed sidebar leaves the community rail clean — ${theme}`, async ({
     page,
   }) => {

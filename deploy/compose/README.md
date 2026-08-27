@@ -1,4 +1,4 @@
-# Buzz Docker Compose deployment
+# Crew Docker Compose deployment
 
 This is the single-node/VPS deployment bundle. It is intentionally separate from
 the root `docker-compose.yml`, which remains local development infrastructure.
@@ -30,14 +30,14 @@ keypair.
 - Default `CREW_IMAGE` tracks `ghcr.io/block/buzz:main` for early testing. Pin it to `ghcr.io/block/buzz:sha-<7>` or a semver release tag for production once available.
 - Keep `CREW_RELAY_PRIVATE_KEY`, `CREW_GIT_HOOK_HMAC_SECRET`, database/Redis,
   and S3 secrets stable across restarts.
-- `RELAY_OWNER_PUBKEY` is intentionally not prefixed with `BUZZ_`; it must be a
+- `RELAY_OWNER_PUBKEY` is intentionally not prefixed with `CREW_`; it must be a
   64-character hex Nostr pubkey when closed relay mode is enabled.
 - `CREW_AUTO_MIGRATE` is opt-in. Set `CREW_AUTO_MIGRATE=true` or run
-  `buzz-admin migrate` before starting the relay when bootstrapping a fresh
+  `crew-admin migrate` before starting the relay when bootstrapping a fresh
   database. Auto-migration requires an image that includes embedded SQLx
   migrations.
 - The stack uses Postgres, Redis, MinIO, and a git data volume because
-  those are real Buzz dependencies today. Minimal mode can simplify this later.
+  those are real Crew dependencies today. Minimal mode can simplify this later.
 - The bundled Compose stack fixes the relay endpoint to `http://minio:9000` and
   `CREW_S3_ADDRESSING_STYLE=path`: Docker DNS resolves `minio`, not
   `<bucket>.minio`. It is not configurable for an external S3 provider through

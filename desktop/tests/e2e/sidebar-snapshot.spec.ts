@@ -11,7 +11,7 @@ const READ_DELAY_MS = 600;
 const SNAPSHOT_FRAME_DELAY_MS = 3_000;
 
 function snapshotKey(relayUrl: string, ownerPubkey = OWNER_PUBKEY) {
-  return `buzz-channels.v1:${relayUrl}:${ownerPubkey.toLowerCase()}`;
+  return `crew-channels.v1:${relayUrl}:${ownerPubkey.toLowerCase()}`;
 }
 
 function makeSnapshotChannel(index: number, prefix = "snapshot") {
@@ -38,9 +38,9 @@ function makeSnapshotChannel(index: number, prefix = "snapshot") {
 const FULL_SNAPSHOT = Array.from({ length: 14 }, (_, index) =>
   makeSnapshotChannel(index),
 );
-const SNAPSHOT_DIAGNOSTIC_MARK = "buzz:sidebar:snapshot-diagnostic";
-const FULL_SIDEBAR_PAINT_MARK = "buzz:sidebar:full-list-painted";
-const BOOT_TO_FULL_SIDEBAR_MEASURE = "buzz:sidebar:boot-to-full-list-painted";
+const SNAPSHOT_DIAGNOSTIC_MARK = "crew:sidebar:snapshot-diagnostic";
+const FULL_SIDEBAR_PAINT_MARK = "crew:sidebar:full-list-painted";
+const BOOT_TO_FULL_SIDEBAR_MEASURE = "crew:sidebar:boot-to-full-list-painted";
 
 function snapshotIntegrity(
   ownerPubkey: string,

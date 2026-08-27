@@ -1,8 +1,8 @@
-# buzz-dataset
+# crew-dataset
 
-Harbor tasks that score **Buzz product behavior**, not just task correctness.
+Harbor tasks that score **Crew product behavior**, not just task correctness.
 Each task poses an ordinary-looking question; what is graded is how the agent
-answers it through Buzz — where the reply lands, who it notifies, what it was
+answers it through Crew — where the reply lands, who it notifies, what it was
 willing to read.
 
 | Task | Behavior under test |
@@ -18,35 +18,35 @@ willing to read.
 | [`ambiguous-user-mention`](ambiguous-user-mention) | Resolves duplicate display names and notifies only the intended pubkey |
 
 For `reply-to-thread` and `user-mention` the graded behavior is **deliberately
-absent from `instruction.md`** — it has to come from `buzz-acp`'s production
+absent from `instruction.md`** — it has to come from `crew-acp`'s production
 base prompt. Read a task's own `README.md` before editing its instruction or
 verifier.
 
 ## Running
 
-These tasks need the [`harbor-buzz-orchestra`](../harbor-buzz-orchestra)
-harness, which launches the real `buzz-acp` → `buzz-agent` → `buzz-dev-mcp`
+These tasks need the [`harbor-crew-orchestra`](../harbor-crew-orchestra)
+harness, which launches the real `crew-acp` → `crew-agent` → `crew-dev-mcp`
 stack inside the task container and exports the relay snapshot each verifier
 grades. Plain `harbor run` against this directory will not work, and neither
 will `harbor run -a oracle` (no `solution/solve.sh` is shipped — the Oracle
-agent replaces the Buzz agent, so no relay trial is provisioned).
+agent replaces the Crew agent, so no relay trial is provisioned).
 
 From the repo root:
 
 ```bash
 just benchmark \
-  --path benchmarks/buzz-dataset/reply-to-thread \
+  --path benchmarks/crew-dataset/reply-to-thread \
   --attempts 1 \
-  --manifest benchmarks/harbor-buzz-orchestra/manifests/buzz-native-solo-luna.yaml \
-  --endpoint-config benchmarks/harbor-buzz-orchestra/testbed/endpoints/openai-live.json \
+  --manifest benchmarks/harbor-crew-orchestra/manifests/crew-native-solo-luna.yaml \
+  --endpoint-config benchmarks/harbor-crew-orchestra/testbed/endpoints/openai-live.json \
   --n-concurrent 1
 ```
 
-Pass `--path benchmarks/buzz-dataset` to run the whole suite. The default
+Pass `--path benchmarks/crew-dataset` to run the whole suite. The default
 condition is one solo agent on `gpt-5.6-luna` at `thinking_effort: medium`,
 which needs `OPENAI_COMPAT_API_KEY`; see
-[the harness README](../harbor-buzz-orchestra/README.md#buzz-native-tasks) for
+[the harness README](../harbor-crew-orchestra/README.md#crew-native-tasks) for
 the alternative Sonnet condition and the evidence-snapshot contract.
 
 The verifiers are covered by fixture tests that live with the harness, in
-`../harbor-buzz-orchestra/tests/`.
+`../harbor-crew-orchestra/tests/`.

@@ -138,7 +138,7 @@ void _inviteTests() {
       );
     });
 
-    test('parses buzz join handoff link', () {
+    test('parses crew join handoff link', () {
       final link = parseInviteDeepLink(
         Uri.parse(
           'crew://join?relay=wss%3A%2F%2Frelay.example.com&code=abc123',
@@ -153,7 +153,7 @@ void _inviteTests() {
       );
     });
 
-    test('normalizes trailing slash in buzz join handoff', () {
+    test('normalizes trailing slash in crew join handoff', () {
       final link = parseInviteDeepLink(
         Uri.parse(
           'crew://join?relay=wss%3A%2F%2Frelay.example.com%2F&code=abc123',
@@ -162,7 +162,7 @@ void _inviteTests() {
       expect(link?.relayUrl, 'wss://relay.example.com');
     });
 
-    test('rejects plaintext public buzz join handoff', () {
+    test('rejects plaintext public crew join handoff', () {
       final relay = Uri.encodeQueryComponent('ws://relay.example.com');
       expect(
         parseInviteDeepLink(Uri.parse('crew://join?relay=$relay&code=abc')),
@@ -170,7 +170,7 @@ void _inviteTests() {
       );
     });
 
-    test('preserves policy receipt in buzz join handoff', () {
+    test('preserves policy receipt in crew join handoff', () {
       final link = parseInviteDeepLink(
         Uri.parse(
           'crew://join?relay=wss%3A%2F%2Frelay.example.com&code=abc123&policy_receipt=receipt.value',
@@ -224,7 +224,7 @@ void _inviteTests() {
       );
     });
 
-    test('rejects buzz join without websocket relay or code', () {
+    test('rejects crew join without websocket relay or code', () {
       expect(
         parseInviteDeepLink(
           Uri.parse('crew://join?relay=https://relay.example.com&code=abc'),
@@ -255,7 +255,7 @@ void _inviteTests() {
       }
     });
 
-    test('rejects buzz join with dangerous relay schemes', () {
+    test('rejects crew join with dangerous relay schemes', () {
       // The `relay=` param is an allowlist — only `ws` / `wss` are safe to
       // hand to a Nostr relay session. Anything else must be dropped by the
       // parser so a hostile QR / share link can't smuggle a browser scheme
@@ -357,18 +357,18 @@ void _buildMessageLinkTests() {
 
     test('parses repo, PR, and issue permalinks', () {
       expect(
-        parseEntityDeepLink(Uri.parse('crew://repo?owner=$owner&d=buzz'))?.type,
+        parseEntityDeepLink(Uri.parse('crew://repo?owner=$owner&d=crew'))?.type,
         'repo',
       );
       expect(
         parseEntityDeepLink(
-          Uri.parse('crew://pr?id=$id&owner=$owner&d=buzz'),
+          Uri.parse('crew://pr?id=$id&owner=$owner&d=crew'),
         )?.eventId,
         id,
       );
       expect(
         parseEntityDeepLink(
-          Uri.parse('crew://issue?id=$id&owner=$owner&d=buzz'),
+          Uri.parse('crew://issue?id=$id&owner=$owner&d=crew'),
         )?.type,
         'issue',
       );
@@ -376,12 +376,12 @@ void _buildMessageLinkTests() {
 
     test('rejects malformed entity permalinks', () {
       expect(
-        parseEntityDeepLink(Uri.parse('crew://repo?owner=short&d=buzz')),
+        parseEntityDeepLink(Uri.parse('crew://repo?owner=short&d=crew')),
         isNull,
       );
       expect(
         parseEntityDeepLink(
-          Uri.parse('crew://pr?id=$id&owner=$owner&d=buzz&extra=true'),
+          Uri.parse('crew://pr?id=$id&owner=$owner&d=crew&extra=true'),
         ),
         isNull,
       );
@@ -396,10 +396,10 @@ void _buildMessageLinkTests() {
         isNull,
       );
       for (final url in [
-        'crew://repo?owner=$owner&owner=$owner&d=buzz',
-        'crew://repo?owner=$owner&d=buzz&d=other',
-        'crew://pr?id=$id&id=$id&owner=$owner&d=buzz',
-        'crew://issue?id=$id&owner=$owner&owner=$owner&d=buzz',
+        'crew://repo?owner=$owner&owner=$owner&d=crew',
+        'crew://repo?owner=$owner&d=crew&d=other',
+        'crew://pr?id=$id&id=$id&owner=$owner&d=crew',
+        'crew://issue?id=$id&owner=$owner&owner=$owner&d=crew',
       ]) {
         expect(parseEntityDeepLink(Uri.parse(url)), isNull, reason: url);
       }

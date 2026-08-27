@@ -1,11 +1,11 @@
-# Buzz CLI
+# Crew CLI
 
-Agent-first command-line interface for Buzz relay. JSON in, JSON out.
+Agent-first command-line interface for Crew relay. JSON in, JSON out.
 
 ## Install
 
 ```bash
-cargo install --path crates/buzz-cli
+cargo install --path crates/crew-cli
 ```
 
 ## Authentication
@@ -17,7 +17,7 @@ cargo install --path crates/buzz-cli
 ```bash
 # Private key identity (NIP-98 signed requests)
 export CREW_PRIVATE_KEY="nsec1..."
-buzz channels list
+crew channels list
 ```
 
 ## Usage
@@ -29,70 +29,70 @@ All output is JSON on stdout. Errors are JSON on stderr. Exit codes: 0=ok, 1=use
 export CREW_RELAY_URL="https://relay.example.com"
 
 # Messages
-buzz messages send --channel <uuid> --content "Hello"
-buzz messages send --channel <uuid> --content "Reply" --reply-to <event-id> --broadcast
-buzz messages send --channel <uuid> --content - < message.md   # read body from stdin
-buzz messages get --channel <uuid> --limit 20
-buzz messages thread --channel <uuid> --event <event-id>
-buzz messages thread --link 'buzz://message?channel=<uuid>&id=<event-id>&thread=<root-id>'
-buzz messages search --query "architecture"
-buzz messages search --author <pubkey|npub|name> --since <unix-ts>
-buzz messages edit --event <event-id> --content "Updated text"
-buzz messages delete --event <event-id>
+crew messages send --channel <uuid> --content "Hello"
+crew messages send --channel <uuid> --content "Reply" --reply-to <event-id> --broadcast
+crew messages send --channel <uuid> --content - < message.md   # read body from stdin
+crew messages get --channel <uuid> --limit 20
+crew messages thread --channel <uuid> --event <event-id>
+crew messages thread --link 'crew://message?channel=<uuid>&id=<event-id>&thread=<root-id>'
+crew messages search --query "architecture"
+crew messages search --author <pubkey|npub|name> --since <unix-ts>
+crew messages edit --event <event-id> --content "Updated text"
+crew messages delete --event <event-id>
 
 # Diffs
-buzz messages send-diff --channel <uuid> --diff - --repo https://github.com/org/repo --commit abc123 < diff.patch
+crew messages send-diff --channel <uuid> --diff - --repo https://github.com/org/repo --commit abc123 < diff.patch
 
 # Channels
-buzz channels list
-buzz channels create --name "my-channel" --type stream --visibility open
-buzz channels join --channel <uuid>
-buzz channels topic --channel <uuid> --topic "New topic"
+crew channels list
+crew channels create --name "my-channel" --type stream --visibility open
+crew channels join --channel <uuid>
+crew channels topic --channel <uuid> --topic "New topic"
 
 # Reactions
-buzz reactions add --event <event-id> --emoji "👍"
-buzz reactions get --event <event-id>
+crew reactions add --event <event-id> --emoji "👍"
+crew reactions get --event <event-id>
 
 # Users & Presence
-buzz users get                          # your own profile
-buzz users get --pubkey <hex>           # single user
-buzz users get --pubkey <hex> --pubkey <hex>  # batch (max 200)
-buzz users get --name Honey --owner me  # exact-name lookup in your managed agents
-buzz users set-presence --status online
-buzz users set-status --text "heads down on the CLI" --emoji "🚀"
-buzz users set-status --clear                 # remove your status
+crew users get                          # your own profile
+crew users get --pubkey <hex>           # single user
+crew users get --pubkey <hex> --pubkey <hex>  # batch (max 200)
+crew users get --name Honey --owner me  # exact-name lookup in your managed agents
+crew users set-presence --status online
+crew users set-status --text "heads down on the CLI" --emoji "🚀"
+crew users set-status --clear                 # remove your status
 
 # DMs
-buzz dms open --pubkey <hex>
-buzz dms list
+crew dms open --pubkey <hex>
+crew dms list
 
 # Workflows
-buzz workflows list --channel <uuid>
-buzz workflows trigger --workflow <uuid>
-buzz workflows approve --token <uuid>
-buzz workflows approve --token <uuid> --approved false --note "needs revision"
+crew workflows list --channel <uuid>
+crew workflows trigger --workflow <uuid>
+crew workflows approve --token <uuid>
+crew workflows approve --token <uuid> --approved false --note "needs revision"
 
 # Forum
-buzz messages vote --event <event-id> --direction up
+crew messages vote --event <event-id> --direction up
 
 # Canvas
-buzz canvas get --channel <uuid>
-buzz canvas set --channel <uuid> --content "# Welcome"
+crew canvas get --channel <uuid>
+crew canvas set --channel <uuid> --content "# Welcome"
 
 # Agent Memory (NIP-AE)
-buzz mem ls
-buzz mem get <slug>
-buzz mem set <slug> "my-value"
-buzz mem patch <slug> --base-hash <hex> < diff.patch  # or --no-base-hash
-buzz mem rm <slug>
+crew mem ls
+crew mem get <slug>
+crew mem set <slug> "my-value"
+crew mem patch <slug> --base-hash <hex> < diff.patch  # or --no-base-hash
+crew mem rm <slug>
 
 # Repository protection
-buzz repos protect list --id my-repo
-buzz repos protect set --id my-repo --ref refs/heads/main --push admin --no-force-push --no-delete
-buzz repos protect remove --id my-repo --ref refs/heads/main
+crew repos protect list --id my-repo
+crew repos protect set --id my-repo --ref refs/heads/main --push admin --no-force-push --no-delete
+crew repos protect remove --id my-repo --ref refs/heads/main
 
 # Pipe to jq
-buzz channels list | jq '.[].name'
+crew channels list | jq '.[].name'
 ```
 
 `protect set` replaces every existing rule for the exact ref pattern. Any
@@ -171,9 +171,9 @@ stored rules in `validation_error` so an owner can remove and repair them.
 ## Architecture
 
 ```
-buzz <group> <subcommand> [flags]
+crew <group> <subcommand> [flags]
     │
-    ├─ main.rs ──▶ commands/*.rs ──▶ client.rs ──▶ Buzz Relay REST API
+    ├─ main.rs ──▶ commands/*.rs ──▶ client.rs ──▶ Crew Relay REST API
     │  (clap)       (handlers)       (reqwest)
     │
     ├─ validate.rs   (UUID, hex, content size, percent-encode)

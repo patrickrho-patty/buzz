@@ -4,8 +4,8 @@
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-If you discover a security vulnerability in Buzz, please report it by emailing
-**buzz@block.xyz**. Include as much detail as possible:
+If you discover a security vulnerability in Crew, please report it by emailing
+**crew@block.xyz**. Include as much detail as possible:
 
 - A description of the vulnerability and its potential impact
 - Steps to reproduce or a proof-of-concept (if available)
@@ -33,7 +33,7 @@ We will credit reporters in release notes unless you prefer to remain anonymous.
 | `main` (latest) | ✅ Active |
 | Previous releases | ⚠️ Best-effort; upgrade recommended |
 
-Buzz is pre-1.0. We do not maintain long-term support branches at this stage.
+Crew is pre-1.0. We do not maintain long-term support branches at this stage.
 All security fixes land on `main` first.
 
 ---
@@ -66,7 +66,7 @@ unless the subscriber is a member.
 
 ### Append-Only Audit Log
 
-All events are written to a tamper-evident audit log (`buzz-audit`). Each
+All events are written to a tamper-evident audit log (`crew-audit`). Each
 log entry is chained to the previous one via a SHA-256 hash chain. Because the
 chain is keyless, it is tamper-evident but not tamper-resistant: it detects
 accidental corruption or single-row edits, but an attacker with database write
@@ -75,7 +75,7 @@ for SOX-grade compliance and eDiscovery.
 
 ### Desktop Secret Storage — OS Keyring
 
-The Buzz desktop app stores nsec private keys in the operating system keyring
+The Crew desktop app stores nsec private keys in the operating system keyring
 rather than in plaintext files: macOS Keychain, Windows Credential Manager, or
 the Linux Secret Service (`gnome-keyring` / `kwallet` via D-Bus). This covers
 both the human identity key and every managed-agent key.

@@ -146,7 +146,7 @@ void main() {
       id: 'note2',
       pubkey: 'alice_pk',
       createdAt: DateTime.now().millisecondsSinceEpoch ~/ 1000 - 60,
-      content: '#buzz\n![image](https://example.com/big.png)',
+      content: '#crew\n![image](https://example.com/big.png)',
       tags: const [
         [
           'imeta',

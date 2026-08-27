@@ -40,12 +40,12 @@ test("pending external metadata reserves the image treatment", () => {
   });
 });
 
-test("pending Buzz entity metadata remains image-less", () => {
+test("pending Crew entity metadata remains image-less", () => {
   const entityPreview = {
     kind: "crew-repository",
-    href: `crew://repo?owner=${"cd".repeat(32)}&d=buzz`,
-    provider: "Buzz",
-    title: "buzz",
+    href: `crew://repo?owner=${"cd".repeat(32)}&d=crew`,
+    provider: "Crew",
+    title: "crew",
     typeLabel: "repo",
   };
   assert.deepEqual(resolveLinkPreview(entityPreview, undefined), {
@@ -100,9 +100,9 @@ test("transient and rejected image fetches use the stable fallback treatment", (
 test("metadata cache keys deduplicate URL fragments", () => {
   assert.equal(
     __linkPreviewMetadataTest.metadataCacheKey(
-      "https://github.com/block/buzz/pull/3834#issuecomment-1",
+      "https://github.com/block/crew/pull/3834#issuecomment-1",
     ),
-    "https://github.com/block/buzz/pull/3834",
+    "https://github.com/block/crew/pull/3834",
   );
 });
 
@@ -204,9 +204,9 @@ test("metadata loader coalesces fragment variants and bounds concurrency", async
 test("withEntityFallbacks re-adds previews dropped by null metadata", () => {
   const entityPreview = {
     kind: "crew-pull-request",
-    href: `crew://pr?id=${"ab".repeat(32)}&owner=${"cd".repeat(32)}&d=buzz`,
-    provider: "Buzz",
-    title: `buzz #${"ab".repeat(4)}`,
+    href: `crew://pr?id=${"ab".repeat(32)}&owner=${"cd".repeat(32)}&d=crew`,
+    provider: "Crew",
+    title: `crew #${"ab".repeat(4)}`,
     typeLabel: "Review",
   };
 
@@ -218,16 +218,16 @@ test("withEntityFallbacks re-adds previews dropped by null metadata", () => {
 test("withEntityFallbacks keeps resolved previews and preserves order", () => {
   const first = {
     kind: "crew-repository",
-    href: `crew://repo?owner=${"cd".repeat(32)}&d=buzz`,
-    provider: "Buzz",
-    title: "buzz",
+    href: `crew://repo?owner=${"cd".repeat(32)}&d=crew`,
+    provider: "Crew",
+    title: "crew",
     typeLabel: "repo",
   };
   const second = {
     kind: "crew-issue",
-    href: `crew://issue?id=${"ef".repeat(32)}&owner=${"cd".repeat(32)}&d=buzz`,
-    provider: "Buzz",
-    title: `buzz #${"ef".repeat(4)}`,
+    href: `crew://issue?id=${"ef".repeat(32)}&owner=${"cd".repeat(32)}&d=crew`,
+    provider: "Crew",
+    title: `crew #${"ef".repeat(4)}`,
     typeLabel: "Task",
   };
   const resolvedSecond = {
@@ -247,7 +247,7 @@ test("entity fallback eligibility is kind-scoped", () => {
     isBuzzEntityPreview({
       ...preview,
       kind: "crew-repository",
-      href: `crew://repo?owner=${"cd".repeat(32)}&d=buzz`,
+      href: `crew://repo?owner=${"cd".repeat(32)}&d=crew`,
     }),
     true,
   );
@@ -276,11 +276,11 @@ function relayEvent({
   return { id, kind, pubkey, created_at: createdAt, content, tags, sig: "" };
 }
 
-test("Buzz PR metadata includes repository identity and trusted root context", async () => {
+test("Crew PR metadata includes repository identity and trusted root context", async () => {
   const owner = "cd".repeat(32);
   const attacker = "ef".repeat(32);
   const id = "ab".repeat(32);
-  const repoAddress = `30617:${owner}:buzz`;
+  const repoAddress = `30617:${owner}:crew`;
   const commit = "1234567".padEnd(40, "0");
   const events = [
     relayEvent({
@@ -288,8 +288,8 @@ test("Buzz PR metadata includes repository identity and trusted root context", a
       kind: 30617,
       pubkey: owner,
       tags: [
-        ["d", "buzz"],
-        ["name", "Buzz Desktop"],
+        ["d", "crew"],
+        ["name", "Crew Desktop"],
         ["default-branch", "main"],
       ],
     }),
@@ -354,28 +354,28 @@ test("Buzz PR metadata includes repository identity and trusted root context", a
       .slice(0, filter.limit);
 
   const result = await fetchBuzzEntityMetadata(
-    `crew://pr?id=${id}&owner=${owner}&d=buzz`,
+    `crew://pr?id=${id}&owner=${owner}&d=crew`,
     fetchEvents,
   );
-  assert.equal(result?.siteName, "Buzz Desktop");
+  assert.equal(result?.siteName, "Crew Desktop");
   assert.equal(result?.title, "Restore entity cards");
   assert.equal(result?.description, null);
   assert.equal(result?.faviconDataUrl, null);
   assert.equal(result?.imageDataUrl, null);
 });
 
-test("Buzz entity roots reject ambiguous repository tags", async () => {
+test("Crew entity roots reject ambiguous repository tags", async () => {
   const owner = "cd".repeat(32);
   const attacker = "ef".repeat(32);
-  const targetAddress = `30617:${owner}:buzz`;
+  const targetAddress = `30617:${owner}:crew`;
   const attackerAddress = `30617:${attacker}:other`;
   const repository = relayEvent({
     id: "01".repeat(32),
     kind: 30617,
     pubkey: owner,
     tags: [
-      ["d", "buzz"],
-      ["name", "Buzz Desktop"],
+      ["d", "crew"],
+      ["name", "Crew Desktop"],
       ["default-branch", "main"],
     ],
   });
@@ -396,7 +396,7 @@ test("Buzz entity roots reject ambiguous repository tags", async () => {
       ],
     });
     const result = await fetchBuzzEntityMetadata(
-      `crew://${type}?id=${id}&owner=${owner}&d=buzz`,
+      `crew://${type}?id=${id}&owner=${owner}&d=crew`,
       async (filter) =>
         filter.kinds?.includes(30617)
           ? [repository]
@@ -408,7 +408,7 @@ test("Buzz entity roots reject ambiguous repository tags", async () => {
   }
 });
 
-test("Buzz repository metadata stays image-less and exposes default branch", async () => {
+test("Crew repository metadata stays image-less and exposes default branch", async () => {
   const owner = "cd".repeat(32);
   const result = await fetchBuzzEntityMetadata(
     `crew://repo?owner=${owner}&d=relay-tools`,
@@ -436,7 +436,7 @@ test("Buzz repository metadata stays image-less and exposes default branch", asy
   assert.equal(result?.imageDomain, null);
 });
 
-test("Buzz project metadata resolves from the 30621 announcement", async () => {
+test("Crew project metadata resolves from the 30621 announcement", async () => {
   const owner = "cd".repeat(32);
   const result = await fetchBuzzEntityMetadata(
     `crew://project?owner=${owner}&d=pollinator`,
@@ -461,7 +461,7 @@ test("Buzz project metadata resolves from the 30621 announcement", async () => {
   assert.equal(result?.imageDataUrl, null);
 });
 
-test("Buzz project metadata declines a missing or invalid announcement", async () => {
+test("Crew project metadata declines a missing or invalid announcement", async () => {
   const owner = "cd".repeat(32);
   assert.equal(
     await fetchBuzzEntityMetadata(

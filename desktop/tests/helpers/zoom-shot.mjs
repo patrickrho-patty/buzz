@@ -27,7 +27,7 @@ mkdirSync(resolve(a.outdir), { recursive: true });
 
 const BASE = `http://127.0.0.1:${a.port}`;
 const DEFAULT_MOCK_PUBKEY = "deadbeef".repeat(8);
-const ONBOARDING_PREFIX = "buzz-onboarding-complete.v1:";
+const ONBOARDING_PREFIX = "crew-onboarding-complete.v1:";
 const TEST_PUBKEYS = [
   DEFAULT_MOCK_PUBKEY,
   "e5ebc6cdb579be112e336cc319b5989b4bb6af11786ea90dbe52b5f08d741b34",

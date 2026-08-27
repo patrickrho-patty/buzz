@@ -24,8 +24,8 @@ const DM_CHANNEL_ID = "f48efb06-0c93-5025-aac9-2e646bb6bfa8";
 // Mock bridge default pubkey — must match DEFAULT_MOCK_PUBKEY in bridge.ts.
 const MOCK_PUBKEY = "deadbeef".repeat(8);
 const DRAFT_STORE_KEY = `crew-drafts.v1:${MOCK_PUBKEY}`;
-const FONT_SIZE_STORAGE_KEY = "buzz.appearance.fontSize";
-const CONVERSATION_DENSITY_STORAGE_KEY = "buzz.appearance.conversationDensity";
+const FONT_SIZE_STORAGE_KEY = "crew.appearance.fontSize";
+const CONVERSATION_DENSITY_STORAGE_KEY = "crew.appearance.conversationDensity";
 
 // Fixed timestamps so draft ordering renders deterministically.
 const DRAFT_CREATED_AT_1 = "2026-07-01T10:00:00.000Z";

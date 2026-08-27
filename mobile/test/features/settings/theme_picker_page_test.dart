@@ -168,8 +168,8 @@ void main() {
     });
   });
 
-  group('Buzz accent behavior', () {
-    testWidgets('settings hides accent navigation for Buzz', (tester) async {
+  group('Crew accent behavior', () {
+    testWidgets('settings hides accent navigation for Crew', (tester) async {
       await _pumpPicker(
         tester,
         SettingsPage(
@@ -183,7 +183,7 @@ void main() {
       expect(find.text('Accent color'), findsNothing);
     });
 
-    testWidgets('settings restores accent navigation away from Buzz', (
+    testWidgets('settings restores accent navigation away from Crew', (
       tester,
     ) async {
       await _pumpPicker(

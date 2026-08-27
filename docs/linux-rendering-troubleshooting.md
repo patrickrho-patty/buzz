@@ -16,7 +16,7 @@ This guide covers the most common rendering failures on Linux and how to resolve
 
 **Affected distributions:** Fedora 40+ and any distro shipping Google's Noto Color Emoji in COLRv1 format (`Noto-COLRv1.ttf`). Issues [#2548](https://github.com/block/buzz/issues/2548), [#2982](https://github.com/block/buzz/issues/2982).
 
-**Symptom:** Buzz starts, the window appears briefly (or stays blank), then the process aborts with output like:
+**Symptom:** Crew starts, the window appears briefly (or stays blank), then the process aborts with output like:
 
 ```
 ././/include/c++/12/bits/stl_vector.h:1123: ... colrv1_configure_skpaint ...:
@@ -36,11 +36,11 @@ Assertion '__n < this->size()' failed.
 
 If you are on **Ubuntu 22.04 LTS or Debian 12**, upgrade to the latest **`.deb`/`.rpm`** package instead — native packages use the system WebKit and are unaffected by this change.
 
-**Workaround (before upgrading):** Add a fontconfig override that removes color-format fonts from Buzz's view:
+**Workaround (before upgrading):** Add a fontconfig override that removes color-format fonts from Crew's view:
 
 ```bash
-mkdir -p ~/.config/buzz-fontconfig
-cat > ~/.config/buzz-fontconfig/fonts.conf <<'XML'
+mkdir -p ~/.config/crew-fontconfig
+cat > ~/.config/crew-fontconfig/fonts.conf <<'XML'
 <?xml version="1.0"?>
 <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
 <fontconfig>
@@ -54,7 +54,7 @@ cat > ~/.config/buzz-fontconfig/fonts.conf <<'XML'
   </selectfont>
 </fontconfig>
 XML
-FONTCONFIG_FILE=~/.config/buzz-fontconfig/fonts.conf ./Buzz_*.AppImage
+FONTCONFIG_FILE=~/.config/crew-fontconfig/fonts.conf ./Buzz_*.AppImage
 ```
 
 **Native packages (`deb`/`rpm`):** The COLRv1 crash ([#2548](https://github.com/block/buzz/issues/2548), [#2982](https://github.com/block/buzz/issues/2982)) is AppImage-only — native packages use the system WebKit, which has a consistent FreeType ABI, and are not affected.
@@ -65,11 +65,11 @@ FONTCONFIG_FILE=~/.config/buzz-fontconfig/fonts.conf ./Buzz_*.AppImage
 
 **Affected hardware:** NVIDIA GPUs (proprietary and nouveau drivers) and AppImage installs on any GPU. Issue [#2338](https://github.com/block/buzz/issues/2338).
 
-**Symptom:** Buzz launches without any crash or assertion output, but the window is blank or invisible. The process is running (`ps aux | grep buzz`), but nothing renders.
+**Symptom:** Crew launches without any crash or assertion output, but the window is blank or invisible. The process is running (`ps aux | grep crew`), but nothing renders.
 
 **Root cause:** WebKitGTK's dmabuf zero-copy buffer path is incompatible with some GPU/driver/compositor combinations. The WebKit child process silently fails to paint.
 
-**Fix (shipped automatically starting with the first release containing [#3271](https://github.com/block/buzz/pull/3271) (v0.5.1), updated for [#3654](https://github.com/block/buzz/issues/3654)):** Buzz sets `WEBKIT_DMABUF_RENDERER_FORCE_SHM=1` automatically before WebKit initializes when it detects an NVIDIA GPU (`/sys/class/drm` vendor ID `0x10de`) or when running as an AppImage. That keeps SharedMemory in WebKit's transport set while skipping the hardware dmabuf path (upstream WebKitGTK; Debian/Ubuntu's NVIDIA dmabuf patch can bypass this, so the crash can persist there — [#3654](https://github.com/block/buzz/issues/3654) stays open for that path). `WEBKIT_DMABUF_RENDERER_FORCE_SHM` exists in WebKitGTK ≥ 2.44 (absent at 2.42); on older system WebKit the export is a silent no-op.
+**Fix (shipped automatically starting with the first release containing [#3271](https://github.com/block/buzz/pull/3271) (v0.5.1), updated for [#3654](https://github.com/block/buzz/issues/3654)):** Crew sets `WEBKIT_DMABUF_RENDERER_FORCE_SHM=1` automatically before WebKit initializes when it detects an NVIDIA GPU (`/sys/class/drm` vendor ID `0x10de`) or when running as an AppImage. That keeps SharedMemory in WebKit's transport set while skipping the hardware dmabuf path (upstream WebKitGTK; Debian/Ubuntu's NVIDIA dmabuf patch can bypass this, so the crash can persist there — [#3654](https://github.com/block/buzz/issues/3654) stays open for that path). `WEBKIT_DMABUF_RENDERER_FORCE_SHM` exists in WebKitGTK ≥ 2.44 (absent at 2.42); on older system WebKit the export is a silent no-op.
 
 **Do not use `WEBKIT_DISABLE_DMABUF_RENDERER=1` on current WebKitGTK** (2.52+): that variable no longer falls back to shared memory. It empties the transport mode, `AcceleratedBackingStore::create()` returns null, and the UI SIGSEGVs the first time compositing is needed (often on workspace switch). See [#3654](https://github.com/block/buzz/issues/3654).
 
@@ -78,7 +78,7 @@ FONTCONFIG_FILE=~/.config/buzz-fontconfig/fonts.conf ./Buzz_*.AppImage
 ```bash
 ./Buzz_*.AppImage --safe-rendering
 # or for a native install:
-buzz-desktop --safe-rendering
+crew-desktop --safe-rendering
 ```
 
 `--safe-rendering` is a per-launch flag — it is not remembered between runs. If it fixes your issue, you can make it permanent by setting the env vars yourself:
@@ -88,7 +88,7 @@ buzz-desktop --safe-rendering
 export WEBKIT_DMABUF_RENDERER_FORCE_SHM=1
 ```
 
-**Conflict detection:** If you set a WebKit variable in your environment and also pass `--safe-rendering`, Buzz will refuse to start and print exactly which variable conflicts. Unset the conflicting variable or drop the flag. Operators who previously exported `WEBKIT_DISABLE_DMABUF_RENDERER=0` to override the old heuristic can keep that — the module still treats that assignment as a user takeover.
+**Conflict detection:** If you set a WebKit variable in your environment and also pass `--safe-rendering`, Crew will refuse to start and print exactly which variable conflicts. Unset the conflicting variable or drop the flag. Operators who previously exported `WEBKIT_DISABLE_DMABUF_RENDERER=0` to override the old heuristic can keep that — the module still treats that assignment as a user takeover.
 
 ---
 
@@ -96,9 +96,9 @@ export WEBKIT_DMABUF_RENDERER_FORCE_SHM=1
 
 **Affected hardware:** AMD RDNA4 GPUs (RX 9000 series) with the `radv` driver. Issue [#2643](https://github.com/block/buzz/issues/2643).
 
-**Symptom:** The Buzz window is transparent or renders with graphical corruption on AMD RDNA4 hardware.
+**Symptom:** The Crew window is transparent or renders with graphical corruption on AMD RDNA4 hardware.
 
-**Workaround (recommended; FORCE_SHM swap not re-verified on RDNA4):** Set these three variables before launching Buzz. The reporter originally verified a three-var set that used `WEBKIT_DISABLE_DMABUF_RENDERER=1`; that var is the [#3654](https://github.com/block/buzz/issues/3654) crash on current WebKitGTK, so this recipe swaps in `WEBKIT_DMABUF_RENDERER_FORCE_SHM=1` instead. Please re-confirm on RDNA4 if you can.
+**Workaround (recommended; FORCE_SHM swap not re-verified on RDNA4):** Set these three variables before launching Crew. The reporter originally verified a three-var set that used `WEBKIT_DISABLE_DMABUF_RENDERER=1`; that var is the [#3654](https://github.com/block/buzz/issues/3654) crash on current WebKitGTK, so this recipe swaps in `WEBKIT_DMABUF_RENDERER_FORCE_SHM=1` instead. Please re-confirm on RDNA4 if you can.
 
 ```bash
 export GDK_BACKEND=x11
@@ -106,7 +106,7 @@ export WEBKIT_DMABUF_RENDERER_FORCE_SHM=1
 export WEBKIT_SKIA_ENABLE_CPU_RENDERING=1
 ./Buzz_*.AppImage
 # or for native:
-buzz-desktop
+crew-desktop
 ```
 
 - `WEBKIT_SKIA_ENABLE_CPU_RENDERING=1` forces Skia to use CPU rendering, bypassing the RDNA4 Skia/radv paint failure.
@@ -121,9 +121,9 @@ A dedicated fix for RDNA4 detection is being tracked in [#2643](https://github.c
 
 If none of the above match your situation:
 
-1. Run Buzz from a terminal and capture the output:
+1. Run Crew from a terminal and capture the output:
    ```bash
-   ./Buzz_*.AppImage 2>&1 | tee buzz-crash.log
+   ./Buzz_*.AppImage 2>&1 | tee crew-crash.log
    ```
 
 2. Check for a core dump:

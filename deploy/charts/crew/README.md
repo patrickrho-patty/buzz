@@ -1,6 +1,6 @@
-# Buzz Helm Chart
+# Crew Helm Chart
 
-[Buzz](https://github.com/block/buzz) is a Nostr-based messaging platform for human–agent collaboration: a single relay binary serving WebSocket + REST + web UI, backed by PostgreSQL, Redis, and S3-compatible object storage.
+[Crew](https://github.com/block/buzz) is a Nostr-based messaging platform for human–agent collaboration: a single relay binary serving WebSocket + REST + web UI, backed by PostgreSQL, Redis, and S3-compatible object storage.
 
 This chart has two operating profiles selected by values:
 
@@ -12,13 +12,13 @@ This chart has two operating profiles selected by values:
 ## Quickstart (eval only)
 
 ```sh
-helm install buzz oci://ghcr.io/block/buzz/charts/buzz --version 0.1.7 \
-  --create-namespace --namespace buzz \
+helm install crew oci://ghcr.io/block/buzz-push-gateway/charts/crew --version 0.1.7 \
+  --create-namespace --namespace crew \
   --set quickstart=true \
   --set postgresql.enabled=true \
   --set redis.enabled=true \
   --set minio.enabled=true \
-  --set relayUrl=wss://buzz.example.com \
+  --set relayUrl=wss://crew.example.com \
   --set ownerPubkey=<64-char-hex-pubkey>
 ```
 
@@ -54,7 +54,7 @@ The chart fails at `helm install` / `helm template` time with a clear message if
 
 ## S3 URL addressing
 
-Buzz uses one URL style for both media and Git/CAS object-store requests:
+Crew uses one URL style for both media and Git/CAS object-store requests:
 
 | `s3.addressingStyle` | Request shape | Use for |
 |---|---|---|
@@ -64,7 +64,7 @@ Buzz uses one URL style for both media and Git/CAS object-store requests:
 The chart always renders `s3.addressingStyle` as
 `CREW_S3_ADDRESSING_STYLE` and `s3.region` as `CREW_S3_REGION`. The region
 defaults to `us-east-1`, keeping bundled MinIO and the in-pod
-`buzz-admin deletions` workflow operable without an ambient `AWS_REGION`.
+`crew-admin deletions` workflow operable without an ambient `AWS_REGION`.
 Production providers must set their credential region explicitly when it
 differs. Existing releases that previously omitted `s3.region` will begin
 rendering `CREW_S3_REGION=us-east-1` after upgrade, even if an image or
@@ -138,7 +138,7 @@ extraVolumes:
 
 relay:
   command: [/opt/wrapper/wrapper]
-  args: [/usr/local/bin/buzz-relay]
+  args: [/usr/local/bin/crew-relay]
   extraVolumeMounts:
     - name: wrapper
       mountPath: /opt/wrapper
@@ -153,7 +153,7 @@ defaults; non-empty values override its entrypoint and arguments respectively.
 
 ## Device pairing relay
 
-The chart can run Buzz's stateless pairing WebSocket relay as an independent
+The chart can run Crew's stateless pairing WebSocket relay as an independent
 Deployment and Service using the same image as the main relay:
 
 ```yaml
@@ -162,16 +162,16 @@ pairingRelay:
   url: wss://pairing.example.com
 ```
 
-`pairingRelay.url` is advertised in the main relay's NIP-11 document so Buzz
+`pairingRelay.url` is advertised in the main relay's NIP-11 document so Crew
 clients connect directly to the dedicated endpoint. The chart does not create
 an Ingress or HTTPRoute for the pairing Service; route the public hostname to
-`<release>-buzz-pairing:5000` with your platform's ingress configuration.
+`<release>-crew-pairing:5000` with your platform's ingress configuration.
 
 ## HA (production)
 
 `replicaCount > 1` hard-requires Redis:
 
-- Redis (`redis.enabled=true`, `externalRedis.url`, or `REDIS_URL` in `existingSecret`) — for `buzz-pubsub` fan-out
+- Redis (`redis.enabled=true`, `externalRedis.url`, or `REDIS_URL` in `existingSecret`) — for `crew-pubsub` fan-out
 
 It does **not** require ReadWriteMany git storage. Git ref/object state is object-store-backed (each request hydrates an ephemeral repo from S3-compatible storage; writer serialization is the object-store pointer CAS — see `docs/git-on-object-storage.md`), and repo-name uniqueness lives in Postgres. Each replica can use its own `ReadWriteOnce` volume; no shared filesystem is needed.
 
@@ -205,9 +205,9 @@ default so long-lived WebSocket connections have time to drain.
 
 Schema migrations are embedded in the relay binary via `sqlx::migrate!` and run at startup, gated by `CREW_AUTO_MIGRATE` (default `true`). Multiple replicas race-safely behind a Postgres advisory lock. `helm upgrade` is the entire upgrade procedure.
 
-Migration 0032 is a hard compatibility boundary for relay versions that publish repaired channel rosters. The relay verifies the roster-fence trigger catalog and behavior before opening listeners and refuses to start if 0032 is missing or inert. Apply migrations before rolling the relay; for large installations, prefer a controlled `buzz-admin migrate` job with PostgreSQL lock monitoring before the code rollout.
+Migration 0032 is a hard compatibility boundary for relay versions that publish repaired channel rosters. The relay verifies the roster-fence trigger catalog and behavior before opening listeners and refuses to start if 0032 is missing or inert. Apply migrations before rolling the relay; for large installations, prefer a controlled `crew-admin migrate` job with PostgreSQL lock monitoring before the code rollout.
 
-If you prefer decoupling migrations from serving, set `migrate.autoMigrate=false`. **In that mode the chart does not run migrations for you** — you own running `buzz-admin migrate` (separate Pod / one-shot Job) against the database before every `helm install` / `helm upgrade`. Readiness probes only verify DB connectivity, not schema freshness, so a pod will appear healthy against an unmigrated schema and fail under load. A pre-upgrade Helm Job for this is on the chart roadmap; the values knob `migrate.preUpgradeJob.enabled` is reserved.
+If you prefer decoupling migrations from serving, set `migrate.autoMigrate=false`. **In that mode the chart does not run migrations for you** — you own running `crew-admin migrate` (separate Pod / one-shot Job) against the database before every `helm install` / `helm upgrade`. Readiness probes only verify DB connectivity, not schema freshness, so a pod will appear healthy against an unmigrated schema and fail under load. A pre-upgrade Helm Job for this is on the chart roadmap; the values knob `migrate.preUpgradeJob.enabled` is reserved.
 
 ## Backups
 
@@ -215,7 +215,7 @@ Save these. Losing any of them is data loss. See NOTES.txt printed by `helm inst
 
 1. `CREW_RELAY_PRIVATE_KEY` — relay identity. Rotating it = new identity (federation peers will not recognize the relay).
 2. PostgreSQL database — the canonical event store.
-3. S3 bucket — media blobs (chart default bucket: `buzz-media`).
+3. S3 bucket — media blobs (chart default bucket: `crew-media`).
 4. Git PVC — repo on-disk state served by the relay's git endpoint.
 5. Owner private key — held by the operator, not by this chart. Restore by re-installing with the same `ownerPubkey`.
 
@@ -239,7 +239,7 @@ Save these. Losing any of them is data loss. See NOTES.txt printed by `helm inst
 ## Releasing
 
 The chart is published to GHCR as an OCI artifact at
-`oci://ghcr.io/block/buzz/charts/buzz` by the `helm chart` workflow
+`oci://ghcr.io/block/buzz-push-gateway/charts/crew` by the `helm chart` workflow
 (`.github/workflows/helm-chart.yml`), versioned independently of the desktop app
 and the relay image via its own `chart-v*` tags. Every PR/`main` push still
 lints, unit-tests, and render-checks the chart; only a `chart-v*` tag publishes,
@@ -256,7 +256,7 @@ job fails loudly if the tag version and `Chart.yaml` version disagree.
 ```sh
 # Render every fixture
 for f in ci/*-values.yaml tests/fixtures/*-values.yaml; do
-  helm template buzz . -f "$f" >/dev/null && echo "ok: $f"
+  helm template crew . -f "$f" >/dev/null && echo "ok: $f"
 done
 
 # Unit tests

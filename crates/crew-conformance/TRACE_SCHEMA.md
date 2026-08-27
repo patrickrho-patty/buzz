@@ -1,4 +1,4 @@
-# Trace Schema (`buzz-conformance`)
+# Trace Schema (`crew-conformance`)
 
 Schema version: **1** (`SCHEMA_VERSION` in `src/lib.rs`).
 
@@ -98,7 +98,7 @@ exact spec line it grounds in.
   invalid, server_error }`. spec: `Inv_SanitizedErrors`, M6 mutation
   (line 778). The alphabet is **closed**: if `IngestError` ever grows a
   fourth variant, `sanitized_reason_for` (in
-  `crates/buzz-relay/src/conformance/mod.rs`) goes non-exhaustive and
+  `crates/crew-relay/src/conformance/mod.rs`) goes non-exhaustive and
   CI catches it.
 
 ### Coverage breach
@@ -131,18 +131,18 @@ normalized away the violation. The checker assumes you *did not*.
 
 | File | What it emits |
 |------|---------------|
-| `crates/buzz-relay/src/conformance/mod.rs` | helpers + `EmitGuard` + `sanitized_reason_for` |
-| `crates/buzz-relay/src/conformance/tracers.rs` | `NoopTracer` (prod default), `JsonlTracer` |
-| `crates/buzz-relay/src/handlers/ingest.rs` | `AuthCheck`, `WriteInsert`, `WriteInsertGlobal`, `WriteDuplicate`, outer-wrapper `SanitizedError` |
-| `crates/buzz-relay/src/handlers/req.rs` | **held back** — additive patch for integration onto Max's req.rs work |
+| `crates/crew-relay/src/conformance/mod.rs` | helpers + `EmitGuard` + `sanitized_reason_for` |
+| `crates/crew-relay/src/conformance/tracers.rs` | `NoopTracer` (prod default), `JsonlTracer` |
+| `crates/crew-relay/src/handlers/ingest.rs` | `AuthCheck`, `WriteInsert`, `WriteInsertGlobal`, `WriteDuplicate`, outer-wrapper `SanitizedError` |
+| `crates/crew-relay/src/handlers/req.rs` | **held back** — additive patch for integration onto Max's req.rs work |
 
 ## Where the checker lives
 
 | File | What it does |
 |------|--------------|
-| `crates/buzz-conformance/src/lib.rs` | schema + `Tracer` trait |
-| `crates/buzz-conformance/src/transitions.rs` | spec `Next` re-implementation |
-| `crates/buzz-conformance/src/checker.rs` | replay engine: `IllegalTransition` / `StateMismatch` / `NonInterference` / `CoverageBreach` |
+| `crates/crew-conformance/src/lib.rs` | schema + `Tracer` trait |
+| `crates/crew-conformance/src/transitions.rs` | spec `Next` re-implementation |
+| `crates/crew-conformance/src/checker.rs` | replay engine: `IllegalTransition` / `StateMismatch` / `NonInterference` / `CoverageBreach` |
 
 ## Failure modes — what makes the gate bite
 
@@ -159,5 +159,5 @@ normalized away the violation. The checker assumes you *did not*.
   scenario-required action never appeared, or the trace was empty.
 
 Each failure mode has a unit test in
-`crates/buzz-conformance/src/checker.rs::tests` proving the gate bites
+`crates/crew-conformance/src/checker.rs::tests` proving the gate bites
 when you'd want it to.

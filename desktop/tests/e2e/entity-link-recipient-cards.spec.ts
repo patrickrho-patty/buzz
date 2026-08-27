@@ -367,21 +367,21 @@ test("entity tooltip uses project context while relay metadata is delayed", asyn
     ({ issueId, owner }) => {
       window.__CREW_E2E_EMIT_MOCK_MESSAGE__?.({
         channelName: "general",
-        content: `Delayed issue: crew://issue?id=${issueId}&owner=${owner}&d=buzz`,
+        content: `Delayed issue: crew://issue?id=${issueId}&owner=${owner}&d=crew`,
       });
     },
     { issueId: ISSUE_ID, owner: DEFAULT_MOCK_PUBKEY },
   );
 
   const issueChip = page.getByRole("button", {
-    name: /Open issue .* in repository buzz/,
+    name: /Open issue .* in repository crew/,
   });
   await issueChip.hover();
   await expect(
     page
       .getByRole("tooltip")
       .locator('[data-crew-tooltip-metadata-content=""]'),
-  ).toHaveText("buzz · The complete Buzz community platform.");
+  ).toHaveText("crew · The complete Crew community platform.");
 });
 
 test("desktop composer shows entity card and send is not blocked by missing snapshot", async ({
@@ -429,7 +429,7 @@ test("desktop composer shows entity card and send is not blocked by missing snap
 test("reopening the same entity link reapplies its workspace state", async ({
   page,
 }) => {
-  const repoAddress = `30617:${DEFAULT_MOCK_PUBKEY}:buzz`;
+  const repoAddress = `30617:${DEFAULT_MOCK_PUBKEY}:crew`;
   await page.addInitScript(
     ({ issueId, issueSubject, prId, prSubject, repoAddress, owner }) => {
       const createdAt = Math.floor(Date.now() / 1000) - 60;
@@ -472,9 +472,9 @@ test("reopening the same entity link reapplies its workspace state", async ({
   await installMockBridge(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("open-projects-view")).toBeVisible();
-  const repoLink = `crew://repo?owner=${DEFAULT_MOCK_PUBKEY}&d=buzz&tab=prs`;
-  const prLink = `crew://pr?id=${PR_ID}&owner=${DEFAULT_MOCK_PUBKEY}&d=buzz`;
-  const issueLink = `crew://issue?id=${ISSUE_ID}&owner=${DEFAULT_MOCK_PUBKEY}&d=buzz`;
+  const repoLink = `crew://repo?owner=${DEFAULT_MOCK_PUBKEY}&d=crew&tab=prs`;
+  const prLink = `crew://pr?id=${PR_ID}&owner=${DEFAULT_MOCK_PUBKEY}&d=crew`;
+  const issueLink = `crew://issue?id=${ISSUE_ID}&owner=${DEFAULT_MOCK_PUBKEY}&d=crew`;
   const emitEntityLink = async (link: string) => {
     await page.waitForFunction(
       () => typeof window.__TAURI_INTERNALS__?.invoke === "function",
@@ -617,7 +617,7 @@ test("deleted top-level message links identify deletion and fall back to channel
 test("cold-start entity links drain after the React listener mounts", async ({
   page,
 }) => {
-  const href = `crew://repo?owner=${DEFAULT_MOCK_PUBKEY}&d=buzz&tab=prs`;
+  const href = `crew://repo?owner=${DEFAULT_MOCK_PUBKEY}&d=crew&tab=prs`;
   await installMockBridge(page, {
     pendingEntityDeepLinks: [{ id: "cold-start-project", href }],
   });

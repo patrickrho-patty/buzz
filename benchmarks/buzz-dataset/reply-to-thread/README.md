@@ -8,7 +8,7 @@ measures **where** the answer lands: in the user's thread, not as a new
 top-level channel message.
 
 > **The instruction deliberately says nothing about threading.** Threading is
-> the behavior under test, and it must come from `buzz-acp`'s production base
+> the behavior under test, and it must come from `crew-acp`'s production base
 > prompt rather than from the task prompt. Do not "fix" the instruction by
 > telling the agent to reply in-thread — that would make the task measure
 > instruction-following instead of product behavior.
@@ -16,14 +16,14 @@ top-level channel message.
 ## Environment
 
 `python:3.12-slim-bookworm`, no extra packages: the agent never runs in this
-container's shell. `BuzzOrchestraAgent` launches the real `buzz-acp` /
-`buzz-agent` stack against a dedicated relay, and the agent works entirely
-through Buzz. Agent timeout 300s; the manifest's `trial_budget` is the
+container's shell. `BuzzOrchestraAgent` launches the real `crew-acp` /
+`crew-agent` stack against a dedicated relay, and the agent works entirely
+through Crew. Agent timeout 300s; the manifest's `trial_budget` is the
 effective clock.
 
 ## Verifier
 
-Reads the post-agent `/logs/artifacts/buzz-evidence.json` snapshot (written by
+Reads the post-agent `/logs/artifacts/crew-evidence.json` snapshot (written by
 `BuzzContainerRuntime._collect_evidence` after the agent stops, so the agent
 cannot influence it). Every dimension is programmatic; `reward` is the
 conjunction of all of them.
@@ -56,10 +56,10 @@ reply-to-thread/
 
 ```bash
 just benchmark \
-  --path benchmarks/buzz-dataset/reply-to-thread \
+  --path benchmarks/crew-dataset/reply-to-thread \
   --attempts 1 \
-  --manifest benchmarks/harbor-buzz-orchestra/manifests/buzz-native-solo-luna.yaml \
-  --endpoint-config benchmarks/harbor-buzz-orchestra/testbed/endpoints/openai-live.json \
+  --manifest benchmarks/harbor-crew-orchestra/manifests/crew-native-solo-luna.yaml \
+  --endpoint-config benchmarks/harbor-crew-orchestra/testbed/endpoints/openai-live.json \
   --n-concurrent 1
 ```
 
@@ -67,5 +67,5 @@ just benchmark \
 shipped: the Oracle agent replaces `BuzzOrchestraAgent`, so no relay trial is
 provisioned and no evidence snapshot is exported. The verifier is covered
 instead by positive and negative fixture tests in
-`../harbor-buzz-orchestra/tests/test_reply_to_thread_verifier.py` (run from
-`benchmarks/harbor-buzz-orchestra`: `uv run --extra dev pytest -q`).
+`../harbor-crew-orchestra/tests/test_reply_to_thread_verifier.py` (run from
+`benchmarks/harbor-crew-orchestra`: `uv run --extra dev pytest -q`).

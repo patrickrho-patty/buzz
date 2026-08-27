@@ -36,23 +36,23 @@ function install(ls) {
 test("startup recovery removes disposable caches but preserves user state", () => {
   const ls = makeQuotaLocalStorage({ maxEntries: 6 });
   install(ls);
-  ls.store.set("buzz-channel-messages.v1:relay:chan", "big");
-  ls.store.set("buzz-channels.v1:relay", "big");
+  ls.store.set("crew-channel-messages.v1:relay:chan", "big");
+  ls.store.set("crew-channels.v1:relay", "big");
   ls.store.set("crew-timeline-skeleton-shape.v1:chan", "small");
   ls.store.set("crew-sidebar-skeleton-shape.v1:community:user", "small");
-  ls.store.set("buzz-user-labels.v1:relay", "small");
+  ls.store.set("crew-user-labels.v1:relay", "small");
   ls.store.set("buzz-communities", "keep");
 
   recoverLocalStorageQuotaOnStartup();
 
-  assert.equal(ls.getItem("buzz-channel-messages.v1:relay:chan"), null);
-  assert.equal(ls.getItem("buzz-channels.v1:relay"), null);
+  assert.equal(ls.getItem("crew-channel-messages.v1:relay:chan"), null);
+  assert.equal(ls.getItem("crew-channels.v1:relay"), null);
   assert.equal(ls.getItem("crew-timeline-skeleton-shape.v1:chan"), null);
   assert.equal(
     ls.getItem("crew-sidebar-skeleton-shape.v1:community:user"),
     null,
   );
-  assert.equal(ls.getItem("buzz-user-labels.v1:relay"), null);
+  assert.equal(ls.getItem("crew-user-labels.v1:relay"), null);
   assert.equal(ls.getItem("buzz-communities"), "keep");
   assert.equal(ls.getItem("crew-local-storage-quota-recovery.v1"), "1");
 });
@@ -60,11 +60,11 @@ test("startup recovery removes disposable caches but preserves user state", () =
 test("healthy startup preserves disposable caches", () => {
   const ls = makeQuotaLocalStorage({ maxEntries: 10 });
   install(ls);
-  ls.store.set("buzz-channel-messages.v1:relay:new", "snapshot");
+  ls.store.set("crew-channel-messages.v1:relay:new", "snapshot");
 
   recoverLocalStorageQuotaOnStartup();
 
-  assert.equal(ls.getItem("buzz-channel-messages.v1:relay:new"), "snapshot");
+  assert.equal(ls.getItem("crew-channel-messages.v1:relay:new"), "snapshot");
   assert.equal(ls.getItem("crew-local-storage-quota-recovery.v1"), "1");
 });
 
@@ -86,11 +86,11 @@ test("startup recovery runs only once", () => {
   install(ls);
 
   recoverLocalStorageQuotaOnStartup();
-  ls.store.set("buzz-channel-messages.v1:relay:new", "new snapshot");
+  ls.store.set("crew-channel-messages.v1:relay:new", "new snapshot");
   recoverLocalStorageQuotaOnStartup();
 
   assert.equal(
-    ls.getItem("buzz-channel-messages.v1:relay:new"),
+    ls.getItem("crew-channel-messages.v1:relay:new"),
     "new snapshot",
   );
 });
@@ -104,10 +104,10 @@ test("startup recovery retries after marker write fails", () => {
   assert.equal(ls.getItem("crew-local-storage-quota-recovery.v1"), null);
 
   ls.store.delete("buzz-communities");
-  ls.store.set("buzz-channel-messages.v1:relay:chan", "big");
+  ls.store.set("crew-channel-messages.v1:relay:chan", "big");
   recoverLocalStorageQuotaOnStartup();
 
-  assert.equal(ls.getItem("buzz-channel-messages.v1:relay:chan"), null);
+  assert.equal(ls.getItem("crew-channel-messages.v1:relay:chan"), null);
   assert.equal(ls.getItem("crew-local-storage-quota-recovery.v1"), "1");
 });
 
@@ -117,9 +117,9 @@ test("global cache byte budget evicts only oldest entries needed", () => {
   ls.store.set("buzz-communities", "keep");
   const snapshot = (updatedAt) =>
     JSON.stringify({ updatedAt, payload: "x".repeat(400_000) });
-  const oldestKey = "buzz-channel-messages.v1:relay:oldest";
-  const newerKey = "buzz-channels.v1:relay-newer";
-  const newestKey = "buzz-channel-messages.v1:relay:newest";
+  const oldestKey = "crew-channel-messages.v1:relay:oldest";
+  const newerKey = "crew-channels.v1:relay-newer";
+  const newestKey = "crew-channel-messages.v1:relay:newest";
 
   assert.equal(setLocalStorageItemWithRecovery(oldestKey, snapshot(1)), true);
   assert.equal(setLocalStorageItemWithRecovery(newerKey, snapshot(2)), true);
@@ -139,22 +139,22 @@ test("global cache byte budget spans relays and preserves durable state", () => 
 
   assert.equal(
     setLocalStorageItemWithRecovery(
-      "buzz-channel-messages.v1:relay-one:chan",
+      "crew-channel-messages.v1:relay-one:chan",
       largeSnapshot,
     ),
     true,
   );
   assert.equal(
     setLocalStorageItemWithRecovery(
-      "buzz-channel-messages.v1:relay-two:chan",
+      "crew-channel-messages.v1:relay-two:chan",
       largeSnapshot,
     ),
     true,
   );
 
-  assert.equal(ls.getItem("buzz-channel-messages.v1:relay-one:chan"), null);
+  assert.equal(ls.getItem("crew-channel-messages.v1:relay-one:chan"), null);
   assert.equal(
-    ls.getItem("buzz-channel-messages.v1:relay-two:chan"),
+    ls.getItem("crew-channel-messages.v1:relay-two:chan"),
     largeSnapshot,
   );
   assert.equal(ls.getItem("buzz-communities"), "keep");
@@ -163,7 +163,7 @@ test("global cache byte budget spans relays and preserves durable state", () => 
 test("rejects a single cache entry larger than the global byte budget", () => {
   const ls = makeQuotaLocalStorage({ maxEntries: 10 });
   install(ls);
-  const key = "buzz-channel-messages.v1:relay:oversized";
+  const key = "crew-channel-messages.v1:relay:oversized";
   ls.store.set(key, "previous snapshot");
 
   assert.equal(
@@ -183,13 +183,13 @@ test("writes normally when under quota", () => {
 test("evicts pure caches and retries on quota failure", () => {
   const ls = makeQuotaLocalStorage({ maxEntries: 2 });
   install(ls);
-  ls.store.set("buzz-channel-messages.v1:relay:chan", "big");
-  ls.store.set("buzz-channels.v1:relay", "big");
+  ls.store.set("crew-channel-messages.v1:relay:chan", "big");
+  ls.store.set("crew-channels.v1:relay", "big");
 
   assert.equal(setLocalStorageItemWithRecovery("k", "v"), true);
   assert.equal(ls.getItem("k"), "v");
-  assert.equal(ls.getItem("buzz-channel-messages.v1:relay:chan"), null);
-  assert.equal(ls.getItem("buzz-channels.v1:relay"), null);
+  assert.equal(ls.getItem("crew-channel-messages.v1:relay:chan"), null);
+  assert.equal(ls.getItem("crew-channels.v1:relay"), null);
 });
 
 test("returns false when eviction frees nothing", () => {
@@ -213,8 +213,8 @@ test("crew-observed-unread.v1: prefix participates in LRU eviction and durable s
   const snapshot = (updatedAt) =>
     JSON.stringify({ updatedAt, payload: "x".repeat(400_000) });
   const observedKey = "crew-observed-unread.v1:wss://relay.example.com:pk1";
-  const olderKey = "buzz-channel-messages.v1:relay:older";
-  const newestKey = "buzz-channel-messages.v1:relay:newest";
+  const olderKey = "crew-channel-messages.v1:relay:older";
+  const newestKey = "crew-channel-messages.v1:relay:newest";
 
   // Seed observed-unread (oldest updatedAt=1) and a sibling channel-messages entry (updatedAt=2).
   assert.equal(setLocalStorageItemWithRecovery(observedKey, snapshot(1)), true);

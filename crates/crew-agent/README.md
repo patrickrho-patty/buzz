@@ -1,16 +1,16 @@
-# buzz-agent
+# crew-agent
 
 > Minimal, unbreakable ACP-compliant LLM agent. Stdio in, tool calls out. Non-streaming. No persistence. No cleverness.
 
-[ACP](https://agentclientprotocol.com) is the Agent Client Protocol — JSON-RPC 2.0 over stdio between a client (Zed, JetBrains, buzz-acp, …) and an agent. [MCP](https://modelcontextprotocol.io) is how the agent talks to its tools.
+[ACP](https://agentclientprotocol.com) is the Agent Client Protocol — JSON-RPC 2.0 over stdio between a client (Zed, JetBrains, crew-acp, …) and an agent. [MCP](https://modelcontextprotocol.io) is how the agent talks to its tools.
 
-`buzz-agent` is the agent.
+`crew-agent` is the agent.
 
 ## What It Is
 
 ```
         +--------+   stdio (JSON-RPC 2.0)   +---------------+
-        | client | <----------------------> |  buzz-agent |
+        | client | <----------------------> |  crew-agent |
         +--------+        ACP frames        +---------------+
                                               │            │
                                               │            │ rmcp (stdio)
@@ -35,32 +35,32 @@ The agent's **output is its tool calls**. Generated text is forwarded to the cli
 
 ```bash
 # Build
-cargo build --release -p buzz-agent
+cargo build --release -p crew-agent
 
 # Run against Anthropic
 CREW_AGENT_PROVIDER=anthropic \
 ANTHROPIC_API_KEY=sk-ant-... \
 ANTHROPIC_MODEL=claude-sonnet-4-5 \
-  ./target/release/buzz-agent
+  ./target/release/crew-agent
 
 # Or any OpenAI-compatible endpoint
 CREW_AGENT_PROVIDER=openai \
 OPENAI_COMPAT_API_KEY=sk-... \
 OPENAI_COMPAT_MODEL=gpt-5 \
 OPENAI_COMPAT_BASE_URL=https://api.openai.com/v1 \
-  ./target/release/buzz-agent
+  ./target/release/crew-agent
 
 # Or OpenRouter
 CREW_AGENT_PROVIDER=openrouter \
 OPENROUTER_API_KEY=sk-or-v1-... \
 OPENROUTER_MODEL=anthropic/claude-sonnet-4.5 \
-  ./target/release/buzz-agent
+  ./target/release/crew-agent
 
 # Or Databricks model serving via OAuth 2.0 PKCE
 CREW_AGENT_PROVIDER=databricks \
 DATABRICKS_HOST=https://dbc-...cloud.databricks.com \
 DATABRICKS_MODEL=goose-claude-4-6-sonnet \
-  ./target/release/buzz-agent
+  ./target/release/crew-agent
 ```
 
 That's the whole setup. The agent reads JSON-RPC frames from stdin, writes them to stdout, and logs to stderr.
@@ -79,7 +79,7 @@ A complete round-trip. Lines starting with `→` are client→agent (stdin); `�
       "promptCapabilities":{"image":false,"audio":false,"embeddedContext":false},
       "mcpCapabilities":{"http":false,"sse":false}
     },
-    "agentInfo":{"name":"buzz-agent","version":"0.1.0"}
+    "agentInfo":{"name":"crew-agent","version":"0.1.0"}
   }}
 
 // 2. Open a session. The client passes the MCP servers to spawn.
@@ -164,17 +164,17 @@ Everything is environment variables. No flags, no config files. (We are a subpro
 | `CREW_AGENT_MAX_LINE_BYTES` | `4194304` | 4 MiB. Hard cap on inbound JSON-RPC frames. |
 | `CREW_AGENT_MAX_HISTORY_BYTES` | `1048576` | 1 MiB. Old turns are evicted past this. |
 | `CREW_AGENT_MAX_TOOL_RESULT_TEXT_BYTES` | `51200` | 50 KiB. Per-result cap on tool-output text; oversize is middle-elided (head + tail kept) with an inline marker. Images are exempt. |
-| `CREW_AGENT_REQUIRE_REPLY` | `0` (`1` on mesh) | `1` enables the [reply guard](#reply-guard) — remind the model to publish when a turn is about to end with nothing posted to Buzz. Desktop defaults it to `1` for Buzz shared-compute agents. |
+| `CREW_AGENT_REQUIRE_REPLY` | `0` (`1` on mesh) | `1` enables the [reply guard](#reply-guard) — remind the model to publish when a turn is about to end with nothing posted to Crew. Desktop defaults it to `1` for Crew shared-compute agents. |
 
 
 ## Reply Guard
 
-Off by default, except on Buzz shared-compute (mesh) agents, where Buzz Desktop
+Off by default, except on Crew shared-compute (mesh) agents, where Crew Desktop
 sets `CREW_AGENT_REQUIRE_REPLY=1` automatically. With it enabled, a turn that is
-about to end without any recognized attempt to post to Buzz gets a reminder that
+about to end without any recognized attempt to post to Crew gets a reminder that
 its assistant text is invisible to humans, and is rerolled.
 
-This exists because a Buzz agent's reasoning and tool output are not shown to
+This exists because a Crew agent's reasoning and tool output are not shown to
 anyone. A turn that does real work and never posts is a silent failure — the
 requester waits on a result that was produced and thrown away.
 
@@ -195,7 +195,7 @@ that:
 - resolves to a registered, non-hook tool (a hallucinated tool name is rejected
   at preflight and never runs, so it must not disarm the guard),
 - whose qualified name ends in `__shell` — i.e. the bare tool name is exactly
-  `shell`, which is `buzz-dev-mcp`'s shell tool and any other server's, and
+  `shell`, which is `crew-dev-mcp`'s shell tool and any other server's, and
 - whose `command` argument contains `messages send` or `reactions add`.
 
 `messages send` also covers `messages send-diff`. Reactions count because the
@@ -214,7 +214,7 @@ JSON to the model, louder feedback than a reminder.
 
 **Known limits**, both deliberate. A command assembled at runtime (`$CMD`) or
 buried in a wrapper script is missed, so that turn is reminded despite having
-posted. Text that merely quotes a send (`echo "buzz messages send"`) matches, so
+posted. Text that merely quotes a send (`echo "crew messages send"`) matches, so
 that turn is not reminded. Missing a real post is the expensive direction, and
 substring matching is the forgiving one there. Neither edge is pinned by a test;
 the matcher is free to improve.
@@ -229,7 +229,7 @@ lifecycle hook — see [MCP_DRIVEN_HOOKS.md](../../docs/MCP_DRIVEN_HOOKS.md).
 
 ## Providers
 
-`buzz-agent` speaks a few HTTP dialects. Pick with `CREW_AGENT_PROVIDER`.
+`crew-agent` speaks a few HTTP dialects. Pick with `CREW_AGENT_PROVIDER`.
 
 | Provider | `CREW_AGENT_PROVIDER` | Endpoint (auto) | Tested with |
 |---|---|---|---|
@@ -366,13 +366,13 @@ One reader, one writer, up to 8 concurrent prompt tasks (one per session).
 ## Building
 
 ```bash
-cargo build --release -p buzz-agent
+cargo build --release -p crew-agent
 ```
 
 ## Testing
 
 ```bash
-cargo test -p buzz-agent
+cargo test -p crew-agent
 ```
 
 Test strategy is **real subprocess, no mocks**:

@@ -12,14 +12,14 @@ function run(value) {
   return tree.children[0].children;
 }
 
-test("turns every bare Buzz entity permalink family into a chip node", () => {
+test("turns every bare Crew entity permalink family into a chip node", () => {
   const owner = "ab".repeat(32);
   const id = "cd".repeat(32);
   const links = [
-    `crew://repo?owner=${owner}&d=buzz`,
+    `crew://repo?owner=${owner}&d=crew`,
     `crew://project?owner=${owner}&d=onboarding`,
-    `crew://pr?id=${id}&owner=${owner}&d=buzz`,
-    `crew://issue?id=${id}&owner=${owner}&d=buzz`,
+    `crew://pr?id=${id}&owner=${owner}&d=crew`,
+    `crew://issue?id=${id}&owner=${owner}&d=crew`,
   ];
   for (const link of links) {
     const children = run(link);
@@ -29,7 +29,7 @@ test("turns every bare Buzz entity permalink family into a chip node", () => {
 });
 
 test("keeps sentence punctuation outside entity chip nodes", () => {
-  const link = `crew://repo?owner=${"ab".repeat(32)}&d=buzz`;
+  const link = `crew://repo?owner=${"ab".repeat(32)}&d=crew`;
   const children = run(`${link}.`);
   assert.equal(children[0].value, link);
   assert.equal(children[1].value, ".");

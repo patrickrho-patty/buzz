@@ -70,7 +70,7 @@ void main() {
         const code =
             'nostrpair://62287897da61e3fa294b4570575f7db8bea147d6631150f2e4656714c645fb1e'
             '?secret=abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789'
-            '&relay=wss%3A%2F%2Fpairing.buzz.xyz&v=1';
+            '&relay=wss%3A%2F%2Fpairing.crew.xyz&v=1';
 
         await container.read(pairingProvider.notifier).pair(code);
 
@@ -96,7 +96,7 @@ void main() {
       expect(fakeAuth.lastCommunity, isNull);
     });
 
-    test('accepts buzz scheme prefix', () async {
+    test('accepts crew scheme prefix', () async {
       container = createContainer();
 
       final code = 'crew://${_encodePairingCode()}';
@@ -206,7 +206,7 @@ void main() {
         pairingCode =
             'nostrpair://${source.public}'
             '?secret=$sessionSecretHex'
-            '&relay=wss%3A%2F%2Fpairing.buzz.xyz&v=1';
+            '&relay=wss%3A%2F%2Fpairing.crew.xyz&v=1';
         validation = Completer<void>();
         importAuth = FakeAuthNotifier();
         authorizer = _FakeSensitiveActionAuthorizer();
@@ -393,7 +393,7 @@ void main() {
         recoveryCode =
             'nostrpair://${source.public}'
             '?secret=$sessionSecretHex'
-            '&relay=wss%3A%2F%2Fpairing.buzz.xyz&v=1&mode=recover';
+            '&relay=wss%3A%2F%2Fpairing.crew.xyz&v=1&mode=recover';
         authorizer = _FakeSensitiveActionAuthorizer();
         now = DateTime.utc(2026, 8, 6);
         notifier = PairingNotifier(

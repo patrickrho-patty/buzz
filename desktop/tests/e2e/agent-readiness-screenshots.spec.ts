@@ -160,7 +160,7 @@ test.describe("agent readiness gate screenshots", () => {
   test("02-create-buzzagent-automatic-model", async ({ page }) => {
     await installMockBridge(page);
     await openCreateDialog(page);
-    await selectProvider(page, "Buzz shared compute");
+    await selectProvider(page, "Crew shared compute");
 
     await expect(page.locator("#persona-model")).toContainText("Automatic");
     await expect(page.getByTestId("persona-dialog-submit")).toBeEnabled();
@@ -232,15 +232,15 @@ test.describe("agent readiness gate screenshots", () => {
       acpRuntimesCatalog: [
         {
           id: "crew-agent",
-          label: "Buzz Agent",
+          label: "Crew Agent",
           avatar_url: "",
           availability: "available",
           command: "crew-agent",
           binary_path: "/usr/local/bin/crew-agent",
           default_args: [],
           mcp_command: "crew-dev-mcp",
-          install_hint: "Ships with the Buzz desktop app.",
-          install_instructions_url: "https://github.com/block/buzz",
+          install_hint: "Ships with the Crew desktop app.",
+          install_instructions_url: "https://github.com/block/crew",
           can_auto_install: false,
           underlying_cli_path: null,
         },

@@ -436,18 +436,18 @@ void main() {
       testWidgets('renders markdown link', (tester) async {
         await tester.pumpWidget(
           _testable(
-            const MessageContent(content: 'Check [Buzz](https://example.com)'),
+            const MessageContent(content: 'Check [Crew](https://example.com)'),
           ),
         );
 
         final allText = _allRichText(tester);
-        expect(allText, contains('Buzz'));
+        expect(allText, contains('Crew'));
         // Should not show raw markdown syntax.
-        expect(allText, isNot(contains('[Buzz]')));
+        expect(allText, isNot(contains('[Crew]')));
         expect(allText, isNot(contains('(https://example.com)')));
       });
 
-      testWidgets('renders and routes a buzz message link', (tester) async {
+      testWidgets('renders and routes a crew message link', (tester) async {
         const url =
             'crew://message?channel=580ca78b-9dae-46f3-8854-bd671853ba32&id=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb&thread=dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd';
 
@@ -482,8 +482,8 @@ void main() {
           _testable(const MessageContent(content: 'See $url now')),
         );
 
-        expect(find.byKey(ValueKey('buzz-link-chip:$url')), findsOneWidget);
-        await tester.tap(find.byKey(ValueKey('buzz-link-chip:$url')));
+        expect(find.byKey(ValueKey('crew-link-chip:$url')), findsOneWidget);
+        await tester.tap(find.byKey(ValueKey('crew-link-chip:$url')));
         await tester.pump();
 
         final container = ProviderScope.containerOf(
@@ -499,7 +499,7 @@ void main() {
         );
       });
 
-      testWidgets('keeps Markdown delimiters outside bare Buzz links', (
+      testWidgets('keeps Markdown delimiters outside bare Crew links', (
         tester,
       ) async {
         const url =
@@ -509,9 +509,9 @@ void main() {
           _testable(const MessageContent(content: '**$url**. and _${url}_')),
         );
 
-        expect(find.byKey(ValueKey('buzz-link-chip:$url')), findsNWidgets(2));
+        expect(find.byKey(ValueKey('crew-link-chip:$url')), findsNWidgets(2));
 
-        await tester.tap(find.byKey(ValueKey('buzz-link-chip:$url')).first);
+        await tester.tap(find.byKey(ValueKey('crew-link-chip:$url')).first);
         await tester.pump();
         final container = ProviderScope.containerOf(
           tester.element(find.byType(MessageContent)),
@@ -542,12 +542,12 @@ void main() {
           ),
         );
 
-        expect(find.byKey(ValueKey('buzz-link-chip:$url')), findsNWidgets(4));
+        expect(find.byKey(ValueKey('crew-link-chip:$url')), findsNWidgets(4));
         final container = ProviderScope.containerOf(
           tester.element(find.byType(MessageContent)),
         );
         for (final link
-            in find.byKey(ValueKey('buzz-link-chip:$url')).evaluate()) {
+            in find.byKey(ValueKey('crew-link-chip:$url')).evaluate()) {
           await tester.tap(find.byWidget(link.widget));
           await tester.pump();
           expect(
@@ -562,7 +562,7 @@ void main() {
         }
       });
 
-      testWidgets('excludes sentence punctuation from bare Buzz links', (
+      testWidgets('excludes sentence punctuation from bare Crew links', (
         tester,
       ) async {
         const messageUrl =
@@ -577,13 +577,13 @@ void main() {
         );
 
         expect(
-          find.byKey(ValueKey('buzz-link-chip:$messageUrl')),
+          find.byKey(ValueKey('crew-link-chip:$messageUrl')),
           findsOneWidget,
         );
         expect(find.text(joinUrl), findsOneWidget);
         expect(_allRichText(tester), contains('See \u{FFFC}. Then \u{FFFC}!'));
 
-        await tester.tap(find.byKey(ValueKey('buzz-link-chip:$messageUrl')));
+        await tester.tap(find.byKey(ValueKey('crew-link-chip:$messageUrl')));
         await tester.pump();
         final container = ProviderScope.containerOf(
           tester.element(find.byType(MessageContent)),
@@ -609,7 +609,7 @@ void main() {
         );
       });
 
-      testWidgets('renders and routes autolinked Buzz thread links', (
+      testWidgets('renders and routes autolinked Crew thread links', (
         tester,
       ) async {
         const url =
@@ -619,8 +619,8 @@ void main() {
           _testable(const MessageContent(content: '<$url>')),
         );
 
-        expect(find.byKey(ValueKey('buzz-link-chip:$url')), findsOneWidget);
-        await tester.tap(find.byKey(ValueKey('buzz-link-chip:$url')));
+        expect(find.byKey(ValueKey('crew-link-chip:$url')), findsOneWidget);
+        await tester.tap(find.byKey(ValueKey('crew-link-chip:$url')));
         await tester.pump();
 
         final container = ProviderScope.containerOf(
@@ -638,7 +638,7 @@ void main() {
         );
       });
 
-      testWidgets('renders and routes bare Buzz join links', (tester) async {
+      testWidgets('renders and routes bare Crew join links', (tester) async {
         const url =
             'crew://join?relay=wss%3A%2F%2Frelay.example.com&code=invite-1';
 
@@ -662,15 +662,15 @@ void main() {
         );
       });
 
-      testWidgets('renders and routes bare Buzz channel links', (tester) async {
+      testWidgets('renders and routes bare Crew channel links', (tester) async {
         const url = 'crew://channel/580ca78b-9dae-46f3-8854-bd671853ba32';
 
         await tester.pumpWidget(
           _testable(const MessageContent(content: 'See $url now')),
         );
 
-        expect(find.byKey(ValueKey('buzz-link-chip:$url')), findsOneWidget);
-        await tester.tap(find.byKey(ValueKey('buzz-link-chip:$url')));
+        expect(find.byKey(ValueKey('crew-link-chip:$url')), findsOneWidget);
+        await tester.tap(find.byKey(ValueKey('crew-link-chip:$url')));
         await tester.pump();
 
         final container = ProviderScope.containerOf(
@@ -684,7 +684,7 @@ void main() {
         );
       });
 
-      testWidgets('renders and routes labeled Buzz channel links', (
+      testWidgets('renders and routes labeled Crew channel links', (
         tester,
       ) async {
         const url = 'crew://channel/580ca78b-9dae-46f3-8854-bd671853ba32';
@@ -707,7 +707,7 @@ void main() {
         );
       });
 
-      testWidgets('routes rendered Buzz channel links through callback', (
+      testWidgets('routes rendered Crew channel links through callback', (
         tester,
       ) async {
         const channelId = '580ca78b-9dae-46f3-8854-bd671853ba32';
@@ -733,7 +733,7 @@ void main() {
         expect(container.read(pendingDeepLinkProvider), isNull);
       });
 
-      testWidgets('renders and routes autolinked Buzz channel links', (
+      testWidgets('renders and routes autolinked Crew channel links', (
         tester,
       ) async {
         const url = 'crew://channel/580ca78b-9dae-46f3-8854-bd671853ba32';
@@ -742,7 +742,7 @@ void main() {
           _testable(const MessageContent(content: '<$url>')),
         );
 
-        await tester.tap(find.byKey(ValueKey('buzz-link-chip:$url')));
+        await tester.tap(find.byKey(ValueKey('crew-link-chip:$url')));
         await tester.pump();
 
         final container = ProviderScope.containerOf(
@@ -756,7 +756,7 @@ void main() {
         );
       });
 
-      testWidgets('leaves malformed Buzz channel forms as plain text', (
+      testWidgets('leaves malformed Crew channel forms as plain text', (
         tester,
       ) async {
         const url =
@@ -1690,8 +1690,8 @@ Photos
       });
     });
 
-    group('Buzz permalink chips', () {
-      testWidgets('keeps authored Buzz labels as ordinary links', (
+    group('Crew permalink chips', () {
+      testWidgets('keeps authored Crew labels as ordinary links', (
         tester,
       ) async {
         final owner = 'ab' * 32;
@@ -1700,7 +1700,7 @@ Photos
         final links = {
           'Open message': 'crew://message?channel=$channelId&id=$id',
           'Open channel': 'crew://channel/$channelId',
-          'Release candidate': 'crew://pr?id=$id&owner=$owner&d=buzz',
+          'Release candidate': 'crew://pr?id=$id&owner=$owner&d=crew',
         };
 
         await tester.pumpWidget(
@@ -1716,14 +1716,14 @@ Photos
 
         for (final entry in links.entries) {
           expect(
-            find.byKey(ValueKey('buzz-link-chip:${entry.value}')),
+            find.byKey(ValueKey('crew-link-chip:${entry.value}')),
             findsNothing,
           );
           expect(find.text(entry.key), findsOneWidget);
         }
       });
 
-      testWidgets('preserves formatting in authored Buzz labels', (
+      testWidgets('preserves formatting in authored Crew labels', (
         tester,
       ) async {
         const channelId = '580ca78b-9dae-46f3-8854-bd671853ba32';
@@ -1748,9 +1748,9 @@ Photos
           final urls = [
             'crew://message?channel=$channelId&id=$id',
             'crew://channel/$channelId',
-            'crew://repo?owner=$owner&d=buzz',
-            'crew://pr?id=$id&owner=$owner&d=buzz',
-            'crew://issue?id=$id&owner=$owner&d=buzz',
+            'crew://repo?owner=$owner&d=crew',
+            'crew://pr?id=$id&owner=$owner&d=crew',
+            'crew://issue?id=$id&owner=$owner&d=crew',
           ];
           await tester.pumpWidget(
             _testable(
@@ -1763,12 +1763,12 @@ Photos
           await tester.pump();
 
           for (final url in urls) {
-            expect(find.byKey(ValueKey('buzz-link-chip:$url')), findsOneWidget);
+            expect(find.byKey(ValueKey('crew-link-chip:$url')), findsOneWidget);
           }
           expect(find.text('engineering · cdcdcdcd'), findsOneWidget);
           expect(find.text('engineering'), findsOneWidget);
-          expect(find.text('buzz'), findsOneWidget);
-          expect(find.text('buzz · cdcdcdcd'), findsNWidgets(2));
+          expect(find.text('crew'), findsOneWidget);
+          expect(find.text('crew · cdcdcdcd'), findsNWidgets(2));
           expect(find.byIcon(LucideIcons.messageSquare), findsOneWidget);
           expect(find.byIcon(LucideIcons.hash), findsOneWidget);
           expect(find.byIcon(LucideIcons.folderGit2), findsOneWidget);
@@ -1781,11 +1781,11 @@ Photos
             findsOneWidget,
           );
           expect(
-            find.bySemanticsLabel('Pull request cdcdcdcd in repository buzz'),
+            find.bySemanticsLabel('Pull request cdcdcdcd in repository crew'),
             findsOneWidget,
           );
           for (final url in urls.skip(2)) {
-            final chipKey = ValueKey('buzz-link-chip:$url');
+            final chipKey = ValueKey('crew-link-chip:$url');
             final ignoredChip = find.ancestor(
               of: find.byKey(chipKey),
               matching: find.byWidgetPredicate(

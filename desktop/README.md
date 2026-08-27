@@ -1,4 +1,4 @@
-# Buzz
+# Crew
 
 Desktop chat shell with:
 

@@ -8,8 +8,8 @@ const THEME_STORAGE_KEY = "buzz-theme";
 const GLASS_BACKGROUND_STORAGE_KEY = "buzz-glass-background";
 const GLASS_OPACITY_STORAGE_KEY = "buzz-glass-opacity";
 const PROMINENT_ACTIVE_TAB_STORAGE_KEY = "buzz-prominent-active-tab";
-const CONVERSATION_DENSITY_STORAGE_KEY = "buzz.appearance.conversationDensity";
-const FONT_SIZE_STORAGE_KEY = "buzz.appearance.fontSize";
+const CONVERSATION_DENSITY_STORAGE_KEY = "crew.appearance.conversationDensity";
+const FONT_SIZE_STORAGE_KEY = "crew.appearance.fontSize";
 const MOCK_PUBKEY = "deadbeef".repeat(8);
 const GENERAL_CHANNEL_ID = "9a1657ac-f7aa-5db0-b632-d8bbeb6dfb50";
 
@@ -31,7 +31,7 @@ async function seedIconChannelSection(page: Page) {
   await page.addInitScript(
     ({ channelId, pubkey }) => {
       window.localStorage.setItem(
-        `buzz-channel-sections.v1:${pubkey}`,
+        `crew-channel-sections.v1:${pubkey}`,
         JSON.stringify({
           version: 1,
           sections: [
@@ -299,7 +299,7 @@ async function expectBuzzGradientPaint(
     };
   });
 
-  expect(paint.theme).toBe(mode === "light" ? "buzz" : "crew-dark");
+  expect(paint.theme).toBe(mode === "light" ? "crew" : "crew-dark");
   expect(paint.isDark).toBe(mode === "dark");
   expect(paint.surfaceImage).toBe("none");
   expect(paint.lightImage).not.toBe("");
@@ -337,8 +337,8 @@ async function expectBuzzSettingsPalette(page: Page, mode: "light" | "dark") {
 
 async function expectAppliedBuzzTheme(
   page: Page,
-  themeName: "buzz" | "crew-dark",
-  storedTheme: "buzz" | "crew-dark" = themeName,
+  themeName: "crew" | "crew-dark",
+  storedTheme: "crew" | "crew-dark" = themeName,
 ) {
   const isDark = themeName === "crew-dark";
   await expect
@@ -385,8 +385,8 @@ async function emitNativeThemeChange(page: Page, theme: "light" | "dark") {
   }, theme);
 }
 
-test("buzz light sidebar gradient", async ({ page }) => {
-  await seedTheme(page, "buzz");
+test("crew light sidebar gradient", async ({ page }) => {
+  await seedTheme(page, "crew");
   await installMockBridge(page);
   await openChannel(page);
   await expectBuzzGradientPaint(page, "light");
@@ -400,7 +400,7 @@ test("buzz light sidebar gradient", async ({ page }) => {
     .screenshot({ path: `${SHOTS}/01-crew-light-sidebar.png` });
 });
 
-test("buzz dark sidebar gradient", async ({ page }) => {
+test("crew dark sidebar gradient", async ({ page }) => {
   await seedTheme(page, "crew-dark");
   await installMockBridge(page);
   await openChannel(page);
@@ -422,7 +422,7 @@ test("buzz dark sidebar gradient", async ({ page }) => {
 test("custom section icon and name align with channel columns", async ({
   page,
 }) => {
-  await seedTheme(page, "buzz");
+  await seedTheme(page, "crew");
   await seedIconChannelSection(page);
   await installMockBridge(page);
   await openChannel(page);
@@ -545,7 +545,7 @@ test("appearance groups theme and preferences into labeled rows", async ({
   await themeStyleTrigger.click();
   await expect(themeStyleTrigger).toHaveAttribute("aria-expanded", "true");
   await expect(themeStyleOptions).toBeVisible();
-  await themeCard.getByTestId("theme-option-buzz").click();
+  await themeCard.getByTestId("theme-option-crew").click();
   await expect(themeStyleTrigger).toHaveAttribute("aria-expanded", "true");
   await expect(themeStyleOptions).toBeVisible();
   await expect(
@@ -644,7 +644,7 @@ test("appearance groups theme and preferences into labeled rows", async ({
 test("app font size and conversation density apply independently", async ({
   page,
 }) => {
-  await seedTheme(page, "buzz");
+  await seedTheme(page, "crew");
   await installMockBridge(page);
   await openAppearance(page, "light");
 
@@ -748,7 +748,7 @@ test("app font size and conversation density apply independently", async ({
   await expect(comfortable).toHaveAttribute("aria-pressed", "true");
   await expect(defaultSize).toHaveAttribute("aria-pressed", "true");
   await expect(densityDescription).toHaveText(
-    "Spacing in conversations and Markdown content across Buzz",
+    "Spacing in conversations and Markdown content across Crew",
   );
   await expect(fontSizeDescription).toHaveText(
     "Applies across conversations and interface text",
@@ -1147,29 +1147,29 @@ test("app font size and conversation density apply independently", async ({
   });
 });
 
-test("appearance picker — system tab (Buzz follows OS)", async ({ page }) => {
-  await seedTheme(page, "buzz");
+test("appearance picker — system tab (Crew follows OS)", async ({ page }) => {
+  await seedTheme(page, "crew");
   await installMockBridge(page);
   const panel = await openAppearance(page, "system");
   await panel.screenshot({ path: `${SHOTS}/03-picker-system.png` });
 });
 
-test("appearance picker — light tab (Buzz)", async ({ page }) => {
-  await seedTheme(page, "buzz");
+test("appearance picker — light tab (Crew)", async ({ page }) => {
+  await seedTheme(page, "crew");
   await installMockBridge(page);
   const panel = await openAppearance(page, "light");
   await panel.screenshot({ path: `${SHOTS}/04-picker-light.png` });
 });
 
-test("appearance picker — dark tab (Buzz Dark)", async ({ page }) => {
+test("appearance picker — dark tab (Crew Dark)", async ({ page }) => {
   await seedTheme(page, "crew-dark");
   await installMockBridge(page);
   const panel = await openAppearance(page, "dark");
   await panel.screenshot({ path: `${SHOTS}/05-picker-dark.png` });
 });
 
-test("settings nav uses Buzz active pill + hover (light)", async ({ page }) => {
-  await seedTheme(page, "buzz");
+test("settings nav uses Crew active pill + hover (light)", async ({ page }) => {
+  await seedTheme(page, "crew");
   await installMockBridge(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await page.getByTestId("open-settings").click();
@@ -1181,7 +1181,7 @@ test("settings nav uses Buzz active pill + hover (light)", async ({ page }) => {
   await expect(profileRow).toHaveAttribute("data-active", "true");
   await expect(profileRow).toHaveCSS("font-weight", "600");
   const selectedLabelBox = await profileLabel.boundingBox();
-  // Appearance is the active section here; its nav row should carry the Buzz
+  // Appearance is the active section here; its nav row should carry the Crew
   // white active pill (data-active=true), matching the Left Nav treatment.
   await page.getByTestId("settings-nav-appearance").click();
   await expect(profileRow).toHaveCSS("font-weight", "400");
@@ -1199,7 +1199,7 @@ test("settings nav uses Buzz active pill + hover (light)", async ({ page }) => {
   await sidebar.screenshot({ path: `${SHOTS}/06-settings-nav-light.png` });
 });
 
-test("settings nav uses Buzz active pill + hover (dark)", async ({ page }) => {
+test("settings nav uses Crew active pill + hover (dark)", async ({ page }) => {
   await seedTheme(page, "crew-dark");
   await installMockBridge(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
@@ -1223,7 +1223,7 @@ test("settings nav uses Buzz active pill + hover (dark)", async ({ page }) => {
 test("prominent active tab is opt-in and switches selection surfaces", async ({
   page,
 }) => {
-  await seedTheme(page, "buzz");
+  await seedTheme(page, "crew");
   await installMockBridge(page);
   await openAppearance(page, "light");
 
@@ -1283,7 +1283,7 @@ test("prominent active tab is opt-in and switches selection surfaces", async ({
 test("prominent channel and direct-message rows share one flat active state", async ({
   page,
 }) => {
-  await seedTheme(page, "buzz");
+  await seedTheme(page, "crew");
   await page.addInitScript(
     ({ key }) => window.localStorage.setItem(key, "true"),
     { key: PROMINENT_ACTIVE_TAB_STORAGE_KEY },
@@ -1324,7 +1324,7 @@ for (const { activeSurface, hoverSurface, mode, theme } of [
     activeSurface: "rgba(0, 0, 0, 0.07)",
     hoverSurface: "rgba(0, 0, 0, 0.04)",
     mode: "light" as const,
-    theme: "buzz",
+    theme: "crew",
   },
   {
     activeSurface: "rgba(255, 255, 255, 0.16)",
@@ -1375,7 +1375,7 @@ for (const { mode, theme } of [
   { mode: "light" as const, theme: "github-light" },
   { mode: "dark" as const, theme: "github-dark" },
 ]) {
-  test(`${theme} ignores the Buzz prominent preference`, async ({ page }) => {
+  test(`${theme} ignores the Crew prominent preference`, async ({ page }) => {
     await seedTheme(page, theme);
     await page.addInitScript(
       ({ key }) => window.localStorage.setItem(key, "true"),
@@ -1429,7 +1429,7 @@ for (const { mode, theme } of [
 test("settings content uses the same inset surface as the main app", async ({
   page,
 }) => {
-  await seedTheme(page, "buzz");
+  await seedTheme(page, "crew");
   await installMockBridge(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
   const searchBox = await page.getByTestId("open-search").boundingBox();
@@ -1508,18 +1508,18 @@ test("settings content uses the same inset surface as the main app", async ({
   });
 });
 
-test("appearance hides accent picker under Buzz", async ({ page }) => {
-  await seedTheme(page, "buzz");
+test("appearance hides accent picker under Crew", async ({ page }) => {
+  await seedTheme(page, "crew");
   await installMockBridge(page);
   const panel = await openAppearance(page, "light");
-  // The accent picker is hidden while a Buzz theme is active. Its neutral
+  // The accent picker is hidden while a Crew theme is active. Its neutral
   // swatch testid must not be present.
   await expect(page.getByTestId("accent-color-neutral")).toHaveCount(0);
   await panel.screenshot({ path: `${SHOTS}/10-appearance-no-accent.png` });
 });
 
 test("glass background keeps the content panel solid", async ({ page }) => {
-  await seedTheme(page, "buzz");
+  await seedTheme(page, "crew");
   await page.addInitScript(() => {
     (window as typeof window & { isTauri?: boolean }).isTauri = true;
     Object.defineProperty(navigator, "platform", {
@@ -1653,7 +1653,7 @@ test("glass background keeps the content panel solid", async ({ page }) => {
 });
 
 test("glass background is unavailable on Linux", async ({ page }) => {
-  await seedTheme(page, "buzz");
+  await seedTheme(page, "crew");
   await page.addInitScript((storageKey) => {
     window.localStorage.setItem(storageKey, "true");
     (window as typeof window & { isTauri?: boolean }).isTauri = true;
@@ -1663,7 +1663,7 @@ test("glass background is unavailable on Linux", async ({ page }) => {
     });
     Object.defineProperty(navigator, "userAgent", {
       configurable: true,
-      get: () => "Buzz Desktop Linux",
+      get: () => "Crew Desktop Linux",
     });
   }, GLASS_BACKGROUND_STORAGE_KEY);
   await installMockBridge(page);
@@ -1695,7 +1695,7 @@ test("glass background is unavailable on Linux", async ({ page }) => {
     .toBe("true");
 });
 
-test("non-Buzz glass preserves the selected theme sidebar tint", async ({
+test("non-Crew glass preserves the selected theme sidebar tint", async ({
   page,
 }) => {
   await seedTheme(page, "rose-pine-dawn");
@@ -1740,10 +1740,10 @@ test("non-Buzz glass preserves the selected theme sidebar tint", async ({
   expect(tint.actual).toBe(tint.expected);
 });
 
-test("accent picker reveals/hides when toggling Buzz", async ({ page }) => {
-  // Start on a non-Buzz theme so the accent picker is present, then select the
-  // Buzz tile — the picker should animate out and unmount. Reselecting a
-  // non-Buzz tile brings it back. Asserts the presence toggle (the motion
+test("accent picker reveals/hides when toggling Crew", async ({ page }) => {
+  // Start on a non-Crew theme so the accent picker is present, then select the
+  // Crew tile — the picker should animate out and unmount. Reselecting a
+  // non-Crew tile brings it back. Asserts the presence toggle (the motion
   // wrapper) works end to end.
   await seedTheme(page, "github-light");
   await page.addInitScript(() => {
@@ -1768,16 +1768,16 @@ test("accent picker reveals/hides when toggling Buzz", async ({ page }) => {
     "glass-background-row",
   ]);
 
-  // Switch to Buzz — picker should leave (allow the exit animation to settle).
+  // Switch to Crew — picker should leave (allow the exit animation to settle).
   await page.getByTestId("theme-style-trigger").click();
-  await page.getByTestId("theme-option-buzz").click();
+  await page.getByTestId("theme-option-crew").click();
   await expect(page.getByTestId("theme-style-trigger")).toHaveAttribute(
     "aria-expanded",
     "true",
   );
   await expect(page.getByTestId("accent-color-neutral")).toHaveCount(0);
 
-  // Back to a non-Buzz theme — picker returns.
+  // Back to a non-Crew theme — picker returns.
   await page.getByTestId("theme-option-github-light").click();
   await expect(page.getByTestId("accent-color-neutral")).toBeVisible();
   await expect(page.getByTestId("theme-style-trigger")).toHaveAttribute(
@@ -1819,13 +1819,13 @@ test("accent picker reveals/hides when toggling Buzz", async ({ page }) => {
   });
 });
 
-test("Buzz light and dark modes apply live without a reload", async ({
+test("Crew light and dark modes apply live without a reload", async ({
   page,
 }) => {
-  await seedTheme(page, "buzz");
+  await seedTheme(page, "crew");
   await installMockBridge(page);
   await openAppearance(page, "light");
-  await expectAppliedBuzzTheme(page, "buzz");
+  await expectAppliedBuzzTheme(page, "crew");
   const lightGradient = await expectBuzzGradientPaint(page, "light");
 
   await page.getByTestId("appearance-mode-dark").click();
@@ -1834,19 +1834,19 @@ test("Buzz light and dark modes apply live without a reload", async ({
   expect(darkGradient).not.toBe(lightGradient);
 
   await page.getByTestId("appearance-mode-light").click();
-  await expectAppliedBuzzTheme(page, "buzz");
+  await expectAppliedBuzzTheme(page, "crew");
   await expectBuzzGradientPaint(page, "light");
 
   // Exercise the overlap that previously let a slower, stale theme load win.
   await page.getByTestId("appearance-mode-dark").click();
   await page.getByTestId("appearance-mode-light").click();
-  await expectAppliedBuzzTheme(page, "buzz");
+  await expectAppliedBuzzTheme(page, "crew");
 });
 
-test("Buzz follows native system theme changes without a reload", async ({
+test("Crew follows native system theme changes without a reload", async ({
   page,
 }) => {
-  await seedTheme(page, "buzz");
+  await seedTheme(page, "crew");
   await page.addInitScript(() => {
     (window as typeof window & { isTauri?: boolean }).isTauri = true;
   });
@@ -1854,10 +1854,10 @@ test("Buzz follows native system theme changes without a reload", async ({
   await openAppearance(page, "system");
 
   await emitNativeThemeChange(page, "dark");
-  await expectAppliedBuzzTheme(page, "crew-dark", "buzz");
+  await expectAppliedBuzzTheme(page, "crew-dark", "crew");
   await expectBuzzGradientPaint(page, "dark");
 
   await emitNativeThemeChange(page, "light");
-  await expectAppliedBuzzTheme(page, "buzz", "buzz");
+  await expectAppliedBuzzTheme(page, "crew", "crew");
   await expectBuzzGradientPaint(page, "light");
 });

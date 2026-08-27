@@ -72,7 +72,7 @@ void main() {
     );
   });
 
-  testWidgets('keeps the Buzz backdrop behind the scalable Home screen', (
+  testWidgets('keeps the Crew backdrop behind the scalable Home screen', (
     tester,
   ) async {
     const gradient = LinearGradient(

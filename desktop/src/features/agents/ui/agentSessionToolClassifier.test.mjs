@@ -10,13 +10,13 @@ import {
 test("tokenizeShellCommand preserves quoted strings and command separators", () => {
   assert.deepEqual(
     tokenizeShellCommand(
-      'echo "hello world" | buzz messages send --content - --channel agents; buzz feed get',
+      'echo "hello world" | crew messages send --content - --channel agents; crew feed get',
     ),
     [
       "echo",
       "hello world",
       "|",
-      "buzz",
+      "crew",
       "messages",
       "send",
       "--content",
@@ -24,7 +24,7 @@ test("tokenizeShellCommand preserves quoted strings and command separators", () 
       "--channel",
       "agents",
       ";",
-      "buzz",
+      "crew",
       "feed",
       "get",
     ],
@@ -33,7 +33,7 @@ test("tokenizeShellCommand preserves quoted strings and command separators", () 
 
 test("parseBuzzCliCommand returns null preview for echo-piped stdin sends", () => {
   const descriptor = parseBuzzCliCommand(
-    'echo "Permission wired" | buzz messages send --channel agents --content -',
+    'echo "Permission wired" | crew messages send --channel agents --content -',
   );
 
   assert.equal(descriptor?.renderClass, "message");
@@ -44,7 +44,7 @@ test("parseBuzzCliCommand returns null preview for echo-piped stdin sends", () =
 
 test("parseBuzzCliCommand returns null preview for printf-piped stdin sends", () => {
   const descriptor = parseBuzzCliCommand(
-    "printf 'hello\\n\\nworld\\n' | buzz messages send --channel a6e0737c-4205-4bcc-9741-2aad800e613f --content -",
+    "printf 'hello\\n\\nworld\\n' | crew messages send --channel a6e0737c-4205-4bcc-9741-2aad800e613f --content -",
   );
 
   assert.equal(descriptor?.renderClass, "message");
@@ -53,7 +53,7 @@ test("parseBuzzCliCommand returns null preview for printf-piped stdin sends", ()
 
 test("parseBuzzCliCommand returns null preview for heredoc/cat stdin sends", () => {
   const descriptor = parseBuzzCliCommand(
-    'buzz messages send --channel some-uuid --content "$(cat /tmp/file)"',
+    'crew messages send --channel some-uuid --content "$(cat /tmp/file)"',
   );
 
   assert.equal(descriptor?.renderClass, "message");
@@ -62,7 +62,7 @@ test("parseBuzzCliCommand returns null preview for heredoc/cat stdin sends", () 
 
 test("parseBuzzCliCommand returns null preview for --content with embedded command substitution", () => {
   const descriptor = parseBuzzCliCommand(
-    'buzz messages send --channel some-uuid --content "prefix $(cat /tmp/f)"',
+    'crew messages send --channel some-uuid --content "prefix $(cat /tmp/f)"',
   );
 
   assert.equal(descriptor?.renderClass, "message");
@@ -71,7 +71,7 @@ test("parseBuzzCliCommand returns null preview for --content with embedded comma
 
 test("parseBuzzCliCommand returns null preview for --content with a bare variable", () => {
   const descriptor = parseBuzzCliCommand(
-    'buzz messages send --channel some-uuid --content "$MESSAGE"',
+    'crew messages send --channel some-uuid --content "$MESSAGE"',
   );
 
   assert.equal(descriptor?.renderClass, "message");
@@ -80,7 +80,7 @@ test("parseBuzzCliCommand returns null preview for --content with a bare variabl
 
 test("parseBuzzCliCommand returns null preview for --content with a prefixed variable", () => {
   const descriptor = parseBuzzCliCommand(
-    'buzz messages send --channel some-uuid --content "prefix $MESSAGE"',
+    'crew messages send --channel some-uuid --content "prefix $MESSAGE"',
   );
 
   assert.equal(descriptor?.renderClass, "message");
@@ -89,7 +89,7 @@ test("parseBuzzCliCommand returns null preview for --content with a prefixed var
 
 test("parseBuzzCliCommand preserves inline --content for sends", () => {
   const descriptor = parseBuzzCliCommand(
-    'buzz messages send --channel agents --content "Hello from inline"',
+    'crew messages send --channel agents --content "Hello from inline"',
   );
 
   assert.equal(descriptor?.renderClass, "message");
@@ -98,7 +98,7 @@ test("parseBuzzCliCommand preserves inline --content for sends", () => {
 
 test("parseBuzzCliCommand preserves --content=inline for sends", () => {
   const descriptor = parseBuzzCliCommand(
-    "buzz messages send --channel agents --content=Acknowledged",
+    "crew messages send --channel agents --content=Acknowledged",
   );
 
   assert.equal(descriptor?.renderClass, "message");
@@ -107,9 +107,9 @@ test("parseBuzzCliCommand preserves --content=inline for sends", () => {
 
 test("parseBuzzCliCommand never surfaces --channel as preview for sends", () => {
   const commands = [
-    "printf 'msg' | buzz messages send --channel my-uuid --content -",
-    'buzz messages send --channel my-uuid --content "$(cat /tmp/f)"',
-    "buzz messages send --channel my-uuid --content -",
+    "printf 'msg' | crew messages send --channel my-uuid --content -",
+    'crew messages send --channel my-uuid --content "$(cat /tmp/f)"',
+    "crew messages send --channel my-uuid --content -",
   ];
 
   for (const cmd of commands) {
@@ -158,12 +158,12 @@ test("classifyTool promotes supporting-file load_skill to skill-read file descri
   assert.equal(descriptor.groupKey, "skill:load-file");
 });
 
-test("classifyTool promotes buzz CLI shell commands to relay operations", () => {
+test("classifyTool promotes crew CLI shell commands to relay operations", () => {
   const descriptor = classifyTool({
     title: "Shell",
     toolName: "dev__shell",
     crewToolName: null,
-    args: { command: "buzz channels get --channel crew-agent-observability" },
+    args: { command: "crew channels get --channel crew-agent-observability" },
     result: "{}",
     isError: false,
   });

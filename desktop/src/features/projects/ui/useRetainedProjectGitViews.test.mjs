@@ -37,18 +37,18 @@ const OWNER = "a".repeat(64);
 const REVIEW_A_ID = "b".repeat(64);
 
 const repository = {
-  id: `${OWNER}:buzz`,
-  dtag: "buzz",
-  name: "buzz",
+  id: `${OWNER}:crew`,
+  dtag: "crew",
+  name: "crew",
   description: "",
-  cloneUrls: ["https://example.com/buzz.git"],
+  cloneUrls: ["https://example.com/crew.git"],
   webUrl: null,
   owner: OWNER,
   contributors: [],
   createdAt: 0,
   status: "open",
   defaultBranch: "main",
-  repoAddress: `30617:${OWNER}:buzz`,
+  repoAddress: `30617:${OWNER}:crew`,
   channelId: "trusted-repository-channel",
 };
 
@@ -117,7 +117,7 @@ function productionConsumers({ activeRepoPullRequest, selectedPullRequest }) {
   const agent = buildProjectDetailAgentContext({
     activeTab: "prs",
     branch: "feature-a",
-    project: { name: "buzz" },
+    project: { name: "crew" },
     repository: {
       name: repository.name,
       repoAddress: repository.repoAddress,

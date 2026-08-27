@@ -65,7 +65,7 @@ void main() {
     const posterUrl = 'https://relay.example/media/poster.png';
     const animationUrl = 'https://relay.example/media/animation.png';
     final animatedUrl =
-        '$posterUrl#buzz-anim=${Uri.encodeComponent(animationUrl)}';
+        '$posterUrl#crew-anim=${Uri.encodeComponent(animationUrl)}';
 
     await tester.pumpWidget(subject(animatedUrl, backgroundColor: Colors.red));
 

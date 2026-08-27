@@ -524,7 +524,7 @@ test("rehypeImageGallery: leaves a single trailing image in the text flow", () =
 // schemes (returns `""`) before our `a` component override can see them,
 // which would break copy → paste → click for `crew://message?…` links and
 // `crew://pr|issue|repo?…` entity links end-to-end. We pass a custom
-// `urlTransform` (`crewDeepLinkUrlTransform`) that preserves valid Buzz
+// `urlTransform` (`crewDeepLinkUrlTransform`) that preserves valid Crew
 // deep links and delegates everything else to `defaultUrlTransform`.
 //
 // This test renders real `<ReactMarkdown>` with the production transform
@@ -942,9 +942,9 @@ function nudgeBody(agentPubkey) {
     "**Fizz** needs configuration before it can respond:",
     "- set `ANTHROPIC_API_KEY` in Edit Agent → Environment variables",
     "",
-    "Open Edit Agent in the Buzz app to set these.",
+    "Open Edit Agent in the Crew app to set these.",
     "",
-    "```buzz:config-nudge",
+    "```crew:config-nudge",
     JSON.stringify({
       agent_name: "Fizz",
       agent_pubkey: agentPubkey,
@@ -1068,7 +1068,7 @@ test("nudgeGuard_noSentinel_proseRenderedCardAbsent", () => {
   );
 });
 
-test("bare Buzz permalinks render cohesive icon-prefixed chips", () => {
+test("bare Crew permalinks render cohesive icon-prefixed chips", () => {
   const channelId = "580ca78b-9dae-46f3-8854-bd671853ba32";
   const messageLink = `crew://message?channel=${channelId}&id=${EVENT_HEX}`;
   const compatibilityMessageLink = `crew://channel/${channelId}/${EVENT_HEX}`;
@@ -1228,7 +1228,7 @@ test("inline message chips omit fetched metadata and the event hash", () => {
   assert.doesNotMatch(visibleText, /·/);
 });
 
-test("authored Buzz permalink labels remain ordinary links", () => {
+test("authored Crew permalink labels remain ordinary links", () => {
   const channelId = "580ca78b-9dae-46f3-8854-bd671853ba32";
   const links = [
     `[the message](crew://message?channel=${channelId}&id=${EVENT_HEX})`,
@@ -1268,7 +1268,7 @@ test("authored Buzz permalink labels remain ordinary links", () => {
   assert.equal((html.match(/underline-offset-4/g) ?? []).length, 4);
 });
 
-test("bare Buzz permalinks shorten unavailable channel identifiers", () => {
+test("bare Crew permalinks shorten unavailable channel identifiers", () => {
   const channelId = "580ca78b-9dae-46f3-8854-bd671853ba32";
   const markdown = renderCachedMarkdown({
     components: createMarkdownComponents(true, false),
@@ -1395,7 +1395,7 @@ test("agent mentions retain the bot treatment instead of the human icon", () => 
   assert.doesNotMatch(html, />@alice</);
 });
 
-test("renderEntityLinkAnchor renders Buzz entity links as chips", () => {
+test("renderEntityLinkAnchor renders Crew entity links as chips", () => {
   const prLink = `crew://pr?id=${EVENT_HEX}&owner=${OWNER_HEX}&d=crew-world`;
   const el = renderEntityLinkAnchor({
     children: "PR · abc123",

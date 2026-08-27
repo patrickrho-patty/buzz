@@ -161,7 +161,7 @@ test("focus and split preserve reading context and interaction ownership", async
 }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.addInitScript(() => {
-    localStorage.setItem("buzz.channels.threadViewMode", "focus");
+    localStorage.setItem("crew.channels.threadViewMode", "focus");
   });
   await installMockBridge(page, {
     managedAgents: [

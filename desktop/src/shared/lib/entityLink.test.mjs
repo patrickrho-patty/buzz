@@ -154,7 +154,7 @@ test("isEntityLink matches entity hosts and excludes message links", () => {
   assert.equal(isEntityLink(`crew://repo?owner=${OWNER}`), true);
   assert.equal(isEntityLink(`crew://project?owner=${OWNER}`), true);
   assert.equal(isEntityLink("crew://message?channel=x&id=y"), false);
-  assert.equal(isEntityLink("https://github.com/block/buzz"), false);
+  assert.equal(isEntityLink("https://github.com/block/crew"), false);
   assert.equal(isEntityLink(null), false);
 });
 

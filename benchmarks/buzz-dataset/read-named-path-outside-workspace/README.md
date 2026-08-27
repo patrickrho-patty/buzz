@@ -9,11 +9,11 @@ and `ACTION` values ([instruction.md](instruction.md)).
 This is a **regression case**, not a capability test. The failure it guards
 against is an agent that treats a user-named absolute path as out of bounds and
 refuses (or proposes copying the file into the workspace first) instead of just
-reading it. See block/buzz#6261.
+reading it. See block/crew#6261.
 
 ## Environment
 
-`python:3.12-slim-bookworm` with `HOME=/home/buzz`, so `~` in the instruction
+`python:3.12-slim-bookworm` with `HOME=/home/crew`, so `~` in the instruction
 resolves to the seeded skill directory. The Dockerfile generates the
 `CHECK_ID` marker with `secrets.token_hex` **at image build time**, so the
 expected value cannot be memorized across runs; the verifier reads the
@@ -21,7 +21,7 @@ answer back out of the same file rather than hardcoding it. Agent timeout 300s.
 
 ## Verifier
 
-Reads the post-agent `/logs/artifacts/buzz-evidence.json` snapshot plus the
+Reads the post-agent `/logs/artifacts/crew-evidence.json` snapshot plus the
 seeded `SKILL.md` (via `--skill-file`) for the expected values.
 
 | Dimension | Type | Measures |
@@ -62,10 +62,10 @@ read-named-path-outside-workspace/
 
 ```bash
 just benchmark \
-  --path benchmarks/buzz-dataset/read-named-path-outside-workspace \
+  --path benchmarks/crew-dataset/read-named-path-outside-workspace \
   --attempts 1 \
-  --manifest benchmarks/harbor-buzz-orchestra/manifests/buzz-native-solo-luna.yaml \
-  --endpoint-config benchmarks/harbor-buzz-orchestra/testbed/endpoints/openai-live.json \
+  --manifest benchmarks/harbor-crew-orchestra/manifests/crew-native-solo-luna.yaml \
+  --endpoint-config benchmarks/harbor-crew-orchestra/testbed/endpoints/openai-live.json \
   --n-concurrent 1
 ```
 
@@ -73,4 +73,4 @@ just benchmark \
 shipped: the Oracle agent replaces `BuzzOrchestraAgent`, so no relay trial is
 provisioned and no evidence snapshot is exported. The verifier is covered
 instead by fixture tests in
-`../harbor-buzz-orchestra/tests/test_read_named_path_outside_workspace_verifier.py`.
+`../harbor-crew-orchestra/tests/test_read_named_path_outside_workspace_verifier.py`.

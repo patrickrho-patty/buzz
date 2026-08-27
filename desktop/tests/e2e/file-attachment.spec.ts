@@ -520,7 +520,7 @@ test("dropping a file on the channel column attaches it to the composer", async 
   );
 });
 
-for (const theme of ["buzz", "crew-dark", "github-light", "github-dark"]) {
+for (const theme of ["crew", "crew-dark", "github-light", "github-dark"]) {
   test(`drop prompt has accessible text contrast in ${theme}`, async ({
     page,
   }) => {

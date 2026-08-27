@@ -8,7 +8,7 @@ const FORUM_THREAD_ID = "mock-forum-release-thread";
 const FORUM_DEEPLINK_REPLY_ID = "mock-forum-release-deeplink";
 
 // Mock-mode current-user pubkey (DEFAULT_MOCK_IDENTITY). Custom channel
-// sections persist under buzz-channel-sections.v1:<pubkey>, so shot 6 seeds two
+// sections persist under crew-channel-sections.v1:<pubkey>, so shot 6 seeds two
 // sections for this key before the app boots.
 const MOCK_PUBKEY = "deadbeef".repeat(8);
 const SECTION_TOP = { id: "sec-top", name: "Priority", order: 0 };
@@ -18,7 +18,7 @@ async function seedChannelSections(page: Page) {
   await page.addInitScript(
     ({ pubkey, sections }) => {
       window.localStorage.setItem(
-        `buzz-channel-sections.v1:${pubkey}`,
+        `crew-channel-sections.v1:${pubkey}`,
         JSON.stringify({ version: 1, sections, assignments: {} }),
       );
     },

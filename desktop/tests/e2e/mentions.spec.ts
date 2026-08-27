@@ -381,7 +381,7 @@ test("duplicate owned agents preserve provenance and exact pubkey selection", as
   await expect(relayRow).toContainText("agent");
   await expect(
     relayRow.getByTestId("mention-agent-provenance"),
-  ).toHaveAttribute("aria-label", "From another Buzz setup");
+  ).toHaveAttribute("aria-label", "From another Crew setup");
   await expect(
     relayRow.getByText("Other setup", { exact: true }),
   ).toBeVisible();
@@ -468,7 +468,7 @@ test("duplicate owned agents preserve provenance and exact pubkey selection", as
   ).toHaveCount(0);
   await expect(remoteSidebarMarker).toHaveAttribute(
     "aria-label",
-    "From another Buzz setup",
+    "From another Crew setup",
   );
   await expect(remoteSidebarMarker).toHaveText("Other setup");
   const remoteSidebarRow = page.getByTestId(`sidebar-member-${relayPubkey}`);
@@ -560,7 +560,7 @@ test("thread autocomplete keeps multiple long names readable in a narrow panel",
   });
   await page.setViewportSize({ width: 900, height: 640 });
   await page.addInitScript(() => {
-    window.sessionStorage.setItem("buzz.desktop.thread-panel-width", "300");
+    window.sessionStorage.setItem("crew.desktop.thread-panel-width", "300");
   });
   await page.goto("/");
   await page.getByTestId("channel-general").click();
@@ -3112,7 +3112,7 @@ test("profile popover wave sends a direct message for a human profile", async ({
       expect.objectContaining({
         command: "send_channel_message",
         payload: expect.objectContaining({
-          content: expect.stringContaining("<!-- buzz:wave:v1 -->"),
+          content: expect.stringContaining("<!-- crew:wave:v1 -->"),
         }),
       }),
     ]),

@@ -3065,9 +3065,9 @@ void main() {
       final urls = [
         'crew://message?channel=$channelId&id=$id',
         'crew://channel/$channelId',
-        'crew://repo?owner=$owner&d=buzz',
-        'crew://pr?id=$id&owner=$owner&d=buzz',
-        'crew://issue?id=$id&owner=$owner&d=buzz',
+        'crew://repo?owner=$owner&d=crew',
+        'crew://pr?id=$id&owner=$owner&d=crew',
+        'crew://issue?id=$id&owner=$owner&d=crew',
       ];
       await tester.pumpWidget(
         _buildComposeBar(
@@ -3098,27 +3098,27 @@ void main() {
           (widget) =>
               widget.key is ValueKey<String> &&
               (widget.key! as ValueKey<String>).value.startsWith(
-                'composer-buzz-link-chip:',
+                'composer-crew-link-chip:',
               ),
         ),
         findsNWidgets(5),
       );
       expect(
         find.byKey(
-          const ValueKey('composer-buzz-link-chip:engineering · cdcdcdcd'),
+          const ValueKey('composer-crew-link-chip:engineering · cdcdcdcd'),
         ),
         findsOneWidget,
       );
       expect(
-        find.byKey(const ValueKey('composer-buzz-link-chip:engineering')),
+        find.byKey(const ValueKey('composer-crew-link-chip:engineering')),
         findsOneWidget,
       );
       expect(
-        find.byKey(const ValueKey('composer-buzz-link-chip:buzz')),
+        find.byKey(const ValueKey('composer-crew-link-chip:crew')),
         findsOneWidget,
       );
       expect(
-        find.byKey(const ValueKey('composer-buzz-link-chip:buzz · cdcdcdcd')),
+        find.byKey(const ValueKey('composer-crew-link-chip:crew · cdcdcdcd')),
         findsNWidgets(2),
       );
       expect(
@@ -3145,11 +3145,11 @@ void main() {
       await tester.pump();
 
       expect(
-        find.byKey(const ValueKey('composer-buzz-link-chip:my_repo')),
+        find.byKey(const ValueKey('composer-crew-link-chip:my_repo')),
         findsOneWidget,
       );
       expect(
-        find.byKey(const ValueKey('composer-buzz-link-chip:my')),
+        find.byKey(const ValueKey('composer-crew-link-chip:my')),
         findsNothing,
       );
       expect(

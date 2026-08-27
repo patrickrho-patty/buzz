@@ -46,7 +46,7 @@ void main() {
     const posterUrl = 'https://relay.example/media/poster.png';
     const animationUrl = 'https://relay.example/media/animation.png';
     final profileUrl =
-        '$posterUrl#buzz-anim=${Uri.encodeComponent(animationUrl)}';
+        '$posterUrl#crew-anim=${Uri.encodeComponent(animationUrl)}';
     final animationResponse = Completer<http.Response>();
     final client = http_testing.MockClient(
       (request) => request.url.toString() == animationUrl

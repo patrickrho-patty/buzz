@@ -11,7 +11,7 @@ operators don't read more into a green run than is there.
 ## Scope
 
 The harness is wired only at the **ingest/auth/read accept-reject
-boundary** in `crates/buzz-relay/src/handlers/{ingest,req,event}.rs`.
+boundary** in `crates/crew-relay/src/handlers/{ingest,req,event}.rs`.
 That boundary was chosen because:
 
 1. It is where tenant-derived decisions become observable behavior.
@@ -91,10 +91,10 @@ on every PR:
 # 1. Schema + checker unit tests (9 tests). Cover the transition rules
 #    directly — every `TraceAction` variant has a passing case and at
 #    least one mutation-class bite case.
-cargo test -p buzz-conformance --lib
+cargo test -p crew-conformance --lib
 
 # 2. Replay fixtures (5 tests). Three JSONL traces in
-#    crates/buzz-conformance/tests/fixtures/ are committed for reviewer
+#    crates/crew-conformance/tests/fixtures/ are committed for reviewer
 #    visibility. The test reconstructs each from typed Rust, asserts
 #    the committed file matches byte-for-byte (so a schema-change PR
 #    must update the fixtures), then replays through `check_trace`:
@@ -104,14 +104,14 @@ cargo test -p buzz-conformance --lib
 #    - bad_coverage_breach.jsonl        → CoverageBreach
 #
 #    To intentionally refresh fixtures after a schema bump:
-#    CREW_CONFORMANCE_UPDATE=1 cargo test -p buzz-conformance --test replay_fixtures
-cargo test -p buzz-conformance --test replay_fixtures
+#    CREW_CONFORMANCE_UPDATE=1 cargo test -p crew-conformance --test replay_fixtures
+cargo test -p crew-conformance --test replay_fixtures
 
 # 3. EmitGuard coverage-breach self-test (2 tests in
-#    crates/buzz-relay/src/conformance/mod.rs). Proves the Drop guard
+#    crates/crew-relay/src/conformance/mod.rs). Proves the Drop guard
 #    records `ImplBug` when no emit reaches the tracer, and stays
 #    silent when an emit did. The seam-name string flows through.
-cargo test -p buzz-relay --lib conformance::
+cargo test -p crew-relay --lib conformance::
 
 # Together: 9 + 5 + 2 = 16 tests; mutate-bite proven for the NI,
 # IllegalTransition, and CoverageBreach gates. The integration replay

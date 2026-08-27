@@ -251,7 +251,7 @@ test("automatically shows community join requirements near the community URL", a
 
   const ageConfirmation = page.getByLabel("I am 18 years of age or older.");
   const agreementConfirmation = page.getByLabel(
-    "I agree to the Buzz Terms of Service and Privacy Policy.",
+    "I agree to the Crew Terms of Service and Privacy Policy.",
   );
   await expect(ageConfirmation).toBeVisible();
   await expect(agreementConfirmation).toBeVisible();
@@ -426,7 +426,7 @@ test("channel owner can delete from the context menu", async ({ page }) => {
   await expect(page.getByTestId("stream-list")).not.toContainText("general");
 });
 
-for (const theme of ["buzz", "github-light", "catppuccin-mocha"]) {
+for (const theme of ["crew", "github-light", "catppuccin-mocha"]) {
   test(`uses the continuous sidebar surface in ${theme}`, async ({ page }) => {
     await loadTheme(page, theme);
 
@@ -504,7 +504,7 @@ for (const theme of ["buzz", "github-light", "catppuccin-mocha"]) {
   });
 }
 
-test("aligns the sidebar search with the channel title outside the Buzz theme", async ({
+test("aligns the sidebar search with the channel title outside the Crew theme", async ({
   page,
 }) => {
   await loadTheme(page, "github-light");

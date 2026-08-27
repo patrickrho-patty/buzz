@@ -1882,7 +1882,7 @@ void main() {
       const posterUrl = 'https://relay.example/media/alice-poster.png';
       const animationUrl = 'https://relay.example/media/alice-avatar.png';
       final profileUrl =
-          '$posterUrl#buzz-anim=${Uri.encodeComponent(animationUrl)}';
+          '$posterUrl#crew-anim=${Uri.encodeComponent(animationUrl)}';
       final mediaClient = http_testing.MockClient(
         (_) async => http.Response.bytes(_transparentPng, 200),
       );
@@ -4510,7 +4510,7 @@ void main() {
         const posterUrl = 'https://relay.example/media/alice-poster.png';
         const animationUrl = 'https://relay.example/media/alice-avatar.png';
         final profileUrl =
-            '$posterUrl#buzz-anim=${Uri.encodeComponent(animationUrl)}';
+            '$posterUrl#crew-anim=${Uri.encodeComponent(animationUrl)}';
         final animationResponse = Completer<http.Response>();
         final mediaClient = http_testing.MockClient(
           (request) => request.url.toString() == animationUrl

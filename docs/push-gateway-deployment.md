@@ -1,6 +1,6 @@
-# Buzz Push Gateway deployment
+# Crew Push Gateway deployment
 
-`buzz-push-gateway` is the standalone public APNs last hop intended for `push.buzz.xyz`. Build it with `Dockerfile.push-gateway`; do not run it in the relay image or give relays APNs credentials.
+`crew-push-gateway` is the standalone public APNs last hop intended for `push.buzz.xyz`. Build it with `Dockerfile.push-gateway`; do not run it in the relay image or give relays APNs credentials.
 
 ## Network and health
 
@@ -16,17 +16,17 @@
 | `CREW_PUSH_PUBLIC_DELIVERY_URL` | Exact externally signed URL, normally `https://push.buzz.xyz/v1/deliveries/apns`. |
 | `CREW_PUSH_MAX_GRANT_LIFETIME_SECONDS` | Maximum delegation capability lifetime (`1..=31536000`). |
 | `CREW_PUSH_MAX_INSTALLATION_LIFETIME_SECONDS` | Maximum encrypted-token installation lifetime (default 90 days, max one year). Clients must renew before expiry. |
-| `CREW_PUSH_ENABLED_PROFILES` | Comma-separated `buzz-ios-production` and/or `buzz-ios-sandbox`. |
+| `CREW_PUSH_ENABLED_PROFILES` | Comma-separated `crew-ios-production` and/or `crew-ios-sandbox`. |
 | `CREW_PUSH_APP_ATTEST_APP_ID` | Exact Apple App Attest application identifier (`TEAMID.bundle-id`). |
 | `CREW_PUSH_APP_ATTEST_ROOT_CERT_PATH` | Read-only mounted Apple App Attest root certificate PEM. |
 | `CREW_PUSH_APNS_KEY_PATH` | Read-only mounted Apple APNs `.p8` provider key. |
 | `CREW_PUSH_APNS_KEY_ID` | APNs provider key id. |
 | `CREW_PUSH_APNS_TEAM_ID` | Apple developer team id. |
-| `CREW_PUSH_APNS_TOPIC` | Buzz iOS bundle id. |
+| `CREW_PUSH_APNS_TOPIC` | Crew iOS bundle id. |
 | `CREW_PUSH_GRANT_KEYS` | Capability AEAD keyring, `id:base64-32-bytes[,predecessor...]`; current key first. |
 | `CREW_PUSH_TOKEN_KEYS` | Independent token-custody AEAD keyring in the same format. Never reuse grant keys. |
 
-Optional endpoint quota policy variables are `CREW_PUSH_ENDPOINT_QUOTA_WINDOW_SECONDS` (default `10`, max `86400`) and `CREW_PUSH_ENDPOINT_QUOTA_MAX_DELIVERIES` (default `10`, max `10000`). These are Buzz policy hypotheses, not Apple-published limits; tune under load while retaining a hard ceiling.
+Optional endpoint quota policy variables are `CREW_PUSH_ENDPOINT_QUOTA_WINDOW_SECONDS` (default `10`, max `86400`) and `CREW_PUSH_ENDPOINT_QUOTA_MAX_DELIVERIES` (default `10`, max `10000`). These are Crew policy hypotheses, not Apple-published limits; tune under load while retaining a hard ceiling.
 
 ## Secret and key rotation rules
 
@@ -36,7 +36,7 @@ The gateway stores APNs tokens encrypted in PostgreSQL. Database backups therefo
 
 ## PostgreSQL and replicas
 
-All replicas must share one PostgreSQL database. Delivery authority, replay admission, and endpoint quota reservation are transactional there, so replica count does not multiply the abuse ceiling. The gateway owns a scoped migration history under `crates/buzz-push-gateway/migrations`; it creates only the six `push_gateway_*` authority tables plus SQLx's migration-history table and never runs relay migrations.
+All replicas must share one PostgreSQL database. Delivery authority, replay admission, and endpoint quota reservation are transactional there, so replica count does not multiply the abuse ceiling. The gateway owns a scoped migration history under `crates/crew-push-gateway/migrations`; it creates only the six `push_gateway_*` authority tables plus SQLx's migration-history table and never runs relay migrations.
 
 The Helm chart runs a single pre-install/pre-upgrade migration Job using `migration.existingSecret`; that secret contains a DDL-capable `DATABASE_URL`. The URL MUST name a dedicated gateway database, not the relay database: SQLx stores its `_sqlx_migrations` history in `public`, so sharing a database would collide with another application's migration history. `migration.runtimeDatabaseRole` names an existing LOGIN role (the default is `buzz_push_gateway_runtime`) used by runtime `DATABASE_URL`. After scoped migrations, the Job revokes database `CREATE` from that role and schema `CREATE` from both `PUBLIC` and the role, then grants only database `CONNECT`, schema `USAGE`, and `SELECT, INSERT, UPDATE, DELETE` on the six gateway tables. The migration role must own the database/schema objects or otherwise be allowed to issue those grants; it is never provided to runtime replicas. Readiness rejects an empty/partial schema, missing DML, or a runtime role that retains database/schema `CREATE`. Helm waits for the migration hook before updating replicas, so rolling deployments never race unconditional startup migration. Readiness must be removed from load-balancer service endpoints before terminating a pod.
 
@@ -99,23 +99,23 @@ gh attestation verify \
   --owner block
 ```
 
-Only after that command succeeds, set the exact digest as `image.digest`; the chart then renders `ghcr.io/block/buzz-push-gateway@sha256:...` and ignores the mutable tag. `values-production.yaml` is an intentionally invalid production-input contract: deployment CI must inject this verified `image.digest`, the provisioned Apple application identifier, an environment-owned Gateway parent reference, and the actual PostgreSQL network. Schema validation rejects the artifact when any remains empty; the render guard proves both rejection and a fully injected render.
+Only after that command succeeds, set the exact digest as `image.digest`; the chart then renders `ghcr.io/block/buzz@sha256:...` and ignores the mutable tag. `values-production.yaml` is an intentionally invalid production-input contract: deployment CI must inject this verified `image.digest`, the provisioned Apple application identifier, an environment-owned Gateway parent reference, and the actual PostgreSQL network. Schema validation rejects the artifact when any remains empty; the render guard proves both rejection and a fully injected render.
 
 Network policy keeps APNs HTTPS and PostgreSQL egress in separate CIDR lists. APNs currently requires broad TCP/443 reachability; `networkPolicy.postgresEgressCidrs` must be narrowed to the production database network, and the DNS namespace/pod selectors must match the cluster DNS deployment. The sample private CIDR is not a claim about the production topology.
 
-Kubernetes does not restart pods when referenced Secret bytes change. AEAD or APNs credential rotation therefore requires an explicit rolling restart after the secret manager update (for example, `kubectl rollout restart deployment/<release>-buzz-push-gateway`) and readiness verification before removing predecessor keys. Service-account token automount is disabled.
+Kubernetes does not restart pods when referenced Secret bytes change. AEAD or APNs credential rotation therefore requires an explicit rolling restart after the secret manager update (for example, `kubectl rollout restart deployment/<release>-crew-push-gateway`) and readiness verification before removing predecessor keys. Service-account token automount is disabled.
 
 ## Gateway chart release
 
 The gateway chart has a collision-free release lane separate from the main
-`buzz` chart. To publish version `X.Y.Z`, update both `version` and `appVersion`
-in `deploy/charts/buzz-push-gateway/Chart.yaml`, validate the chart, and open a
+`crew` chart. To publish version `X.Y.Z`, update both `version` and `appVersion`
+in `deploy/charts/crew-push-gateway/Chart.yaml`, validate the chart, and open a
 same-repository PR whose branch is exactly `push-chart-release/X.Y.Z`:
 
 ```bash
-deploy/charts/buzz-push-gateway/tests/render.sh
+deploy/charts/crew-push-gateway/tests/render.sh
 git switch -c push-chart-release/X.Y.Z
-git add deploy/charts/buzz-push-gateway/Chart.yaml
+git add deploy/charts/crew-push-gateway/Chart.yaml
 git commit -m "release: push gateway chart X.Y.Z"
 git push -u origin push-chart-release/X.Y.Z
 ```
@@ -125,5 +125,5 @@ creates `push-chart-vX.Y.Z` and dispatches
 `.github/workflows/push-gateway-helm-chart.yml` with that immutable tag and bare
 version. The publisher verifies the checked-out commit is the tag target and the
 chart version equals `X.Y.Z` before pushing
-`oci://ghcr.io/block/buzz/charts/buzz-push-gateway`. A manually pushed
+`oci://ghcr.io/block/buzz-push-gateway/charts/crew-push-gateway`. A manually pushed
 `push-chart-vX.Y.Z` tag is the documented rescue path and runs the same checks.

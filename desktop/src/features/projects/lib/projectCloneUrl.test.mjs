@@ -67,14 +67,14 @@ test("effectiveCloneUrls returns empty when no default can be derived", () => {
 });
 
 test("projectRepoHost recognizes a canonical repository on the relay", () => {
-  assert.deepEqual(projectRepoHost(`${ORIGIN}/git/${OWNER}/buzz`, ORIGIN), {
+  assert.deepEqual(projectRepoHost(`${ORIGIN}/git/${OWNER}/crew`, ORIGIN), {
     kind: "crew",
   });
 });
 
 test("projectRepoHost identifies an external repository by host", () => {
   assert.deepEqual(
-    projectRepoHost("https://github.com/block/buzz.git", ORIGIN),
+    projectRepoHost("https://github.com/block/crew.git", ORIGIN),
     { kind: "external", host: "github.com" },
   );
 });
@@ -88,7 +88,7 @@ test("projectRepoHost treats a non-repository relay path as external", () => {
 
 test("projectRepoHost fails closed while either URL is unresolved", () => {
   assert.deepEqual(projectRepoHost(null, ORIGIN), { kind: "unresolved" });
-  assert.deepEqual(projectRepoHost(`${ORIGIN}/git/${OWNER}/buzz`, null), {
+  assert.deepEqual(projectRepoHost(`${ORIGIN}/git/${OWNER}/crew`, null), {
     kind: "unresolved",
   });
   assert.deepEqual(projectRepoHost("not a URL", ORIGIN), {
@@ -99,7 +99,7 @@ test("projectRepoHost fails closed while either URL is unresolved", () => {
 test("projectRepoHostForProject recognizes an implicit relay repository", () => {
   assert.deepEqual(
     projectRepoHostForProject(
-      { cloneUrls: [], dtag: "buzz", owner: OWNER },
+      { cloneUrls: [], dtag: "crew", owner: OWNER },
       ORIGIN,
     ),
     { kind: "crew" },
@@ -110,45 +110,45 @@ test("repositoryDisplayPath renders an external repo as host/path without .git",
   assert.equal(
     repositoryDisplayPath(
       {
-        cloneUrls: ["https://github.com/block/buzz.git"],
-        dtag: "buzz",
+        cloneUrls: ["https://github.com/block/crew.git"],
+        dtag: "crew",
         owner: OWNER,
       },
       ORIGIN,
     ),
-    "github.com/block/buzz",
+    "github.com/block/crew",
   );
 });
 
 test("repositoryDisplayPath renders a relay-hosted repo as owner/repo", () => {
   assert.equal(
     repositoryDisplayPath(
-      { cloneUrls: [], dtag: "buzz", owner: OWNER },
+      { cloneUrls: [], dtag: "crew", owner: OWNER },
       ORIGIN,
       "thomas",
     ),
-    "thomas/buzz",
+    "thomas/crew",
   );
 });
 
 test("repositoryDisplayPath falls back to a shortened pubkey owner", () => {
   assert.equal(
     repositoryDisplayPath(
-      { cloneUrls: [], dtag: "buzz", owner: OWNER },
+      { cloneUrls: [], dtag: "crew", owner: OWNER },
       ORIGIN,
     ),
-    `${"a".repeat(8)}…/buzz`,
+    `${"a".repeat(8)}…/crew`,
   );
 });
 
 test("repositoryDisplayPath fails closed without a resolvable clone URL", () => {
   assert.equal(
-    repositoryDisplayPath({ cloneUrls: [], dtag: "buzz", owner: OWNER }, null),
+    repositoryDisplayPath({ cloneUrls: [], dtag: "crew", owner: OWNER }, null),
     null,
   );
   assert.equal(
     repositoryDisplayPath(
-      { cloneUrls: ["not a URL"], dtag: "buzz", owner: OWNER },
+      { cloneUrls: ["not a URL"], dtag: "crew", owner: OWNER },
       ORIGIN,
     ),
     null,

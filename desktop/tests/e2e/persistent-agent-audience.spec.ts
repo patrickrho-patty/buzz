@@ -11,12 +11,12 @@ const AGENT_B = "b".repeat(64);
 const THREAD_ROOT_ID = "mock-general-welcome";
 const SCOPE = `${OWNER}:${CHANNEL_ID}:thread:${THREAD_ROOT_ID}`;
 
-async function seedAudience(page: Page, pubkeys: string[], theme = "buzz") {
+async function seedAudience(page: Page, pubkeys: string[], theme = "crew") {
   await page.addInitScript(
     ({ audience, scope, selectedTheme }) => {
-      window.localStorage.setItem("buzz:keep-addressed-agents-active", "1");
+      window.localStorage.setItem("crew:keep-addressed-agents-active", "1");
       window.localStorage.setItem(
-        "buzz:persistent-agent-audiences:v2",
+        "crew:persistent-agent-audiences:v2",
         JSON.stringify({ [scope]: audience }),
       );
       window.localStorage.setItem("buzz-theme", selectedTheme);
@@ -101,7 +101,7 @@ test("first thread open inherits explicitly addressed agents in authored order",
   page,
 }) => {
   await page.addInitScript(() => {
-    window.localStorage.setItem("buzz:keep-addressed-agents-active", "1");
+    window.localStorage.setItem("crew:keep-addressed-agents-active", "1");
   });
   await installAudienceFixtures(page);
   await openGeneral(page);
@@ -122,7 +122,7 @@ test("first thread open inherits explicitly addressed agents in authored order",
       page.evaluate(
         ({ owner, channelId, rootId }) => {
           const stored = JSON.parse(
-            localStorage.getItem("buzz:persistent-agent-audiences:v2") ?? "{}",
+            localStorage.getItem("crew:persistent-agent-audiences:v2") ?? "{}",
           );
           return stored[`${owner}:${channelId}:thread:${rootId}`] ?? null;
         },
@@ -258,7 +258,7 @@ test("persistent agents restore through the native inline mention UI", async ({
       page.evaluate(
         ({ scope }) => {
           const stored = JSON.parse(
-            localStorage.getItem("buzz:persistent-agent-audiences:v2") ?? "{}",
+            localStorage.getItem("crew:persistent-agent-audiences:v2") ?? "{}",
           );
           return stored[scope] ?? [];
         },
@@ -273,7 +273,7 @@ test("persistent agents restore through the native inline mention UI", async ({
   await expect(input.locator(".agent-mention-highlight")).toHaveCount(1);
 });
 
-for (const theme of ["buzz", "crew-dark"]) {
+for (const theme of ["crew", "crew-dark"]) {
   test(`captures native persistent mentions in ${theme}`, async ({ page }) => {
     await seedAudience(page, [AGENT_A, AGENT_B], theme);
     await installAudienceFixtures(page);

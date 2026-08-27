@@ -44,7 +44,7 @@ const claudeRuntime = {
 const crewAgentRuntime = {
   ...gooseRuntime,
   id: "crew-agent",
-  label: "Buzz Agent",
+  label: "Crew Agent",
   command: "crew-agent-cmd",
   mcpCommand: null,
 };
@@ -181,7 +181,7 @@ test("no backend intent is byte-identical to the pre-intent mapping", async () =
   });
 });
 
-test("Buzz shared compute definition carries native provider and auto model", async () => {
+test("Crew shared compute definition carries native provider and auto model", async () => {
   const input = await buildInstanceInputForDefinition(
     persona({
       runtime: "crew-agent",

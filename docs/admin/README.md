@@ -1,6 +1,6 @@
 # Read-only deployment moderation dashboard
 
-Buzz can expose a private, deployment-wide read-only dashboard from the existing
+Crew can expose a private, deployment-wide read-only dashboard from the existing
 relay process. It shows open moderation reports and recent product feedback.
 
 Configure `CREW_ADMIN_HOST` to activate the dashboard. A private ingress limits
@@ -10,7 +10,7 @@ Required configuration:
 
 ```text
 CREW_ADMIN_HOST=admin.example.com
-CREW_ADMIN_WEB_DIR=/srv/buzz/admin-web
+CREW_ADMIN_WEB_DIR=/srv/crew/admin-web
 ```
 
 The relay requires the configured admin host and matching browser origin.

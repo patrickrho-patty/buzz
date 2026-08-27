@@ -27,7 +27,7 @@ function createMemoryStorage(initial = {}) {
   };
 }
 
-test("migrateLegacyCommunityStorage promotes current Buzz workspace state", () => {
+test("migrateLegacyCommunityStorage promotes current Crew workspace state", () => {
   const storage = createMemoryStorage({
     "crew-workspaces": '[{"id":"current"}]',
     "crew-active-workspace-id": "current",
@@ -55,7 +55,7 @@ test("migrateLegacyCommunityStorage does not overwrite new community state", () 
 
 test("signed-build relay defaults auto-connect during first-run onboarding", () => {
   assert.equal(
-    shouldAutoConnectDefaultRelay("wss://buzz.block.builderlab.xyz"),
+    shouldAutoConnectDefaultRelay("wss://crew.block.builderlab.xyz"),
     true,
   );
   assert.equal(shouldAutoConnectDefaultRelay("ws://localhost:3000"), false);

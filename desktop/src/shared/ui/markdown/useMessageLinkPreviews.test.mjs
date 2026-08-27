@@ -27,12 +27,12 @@ function snapshotTag(href, title, siteName) {
   ];
 }
 
-test("relay-resolved Buzz entities beat conflicting sender snapshots in content order", () => {
+test("relay-resolved Crew entities beat conflicting sender snapshots in content order", () => {
   const content = `${ENTITY_HREF} then ${EXTERNAL_HREF}`;
   const candidates = extractSupportedLinkPreviews(content, RELAY_ORIGIN);
   const snapshots = parseLinkPreviewSnapshots(
     [
-      snapshotTag(ENTITY_HREF, "Forged sender title", "Definitely Real Buzz"),
+      snapshotTag(ENTITY_HREF, "Forged sender title", "Definitely Real Crew"),
       snapshotTag(EXTERNAL_HREF, "External story", "Example"),
     ],
     content,
@@ -52,7 +52,7 @@ test("relay-resolved Buzz entities beat conflicting sender snapshots in content 
       {
         href: ENTITY_HREF,
         title: "Relay-authenticated PR title",
-        provider: "Buzz",
+        provider: "Crew",
       },
       {
         href: EXTERNAL_HREF,

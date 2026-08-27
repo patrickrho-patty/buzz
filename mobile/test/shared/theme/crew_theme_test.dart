@@ -4,18 +4,18 @@ import 'package:crew/shared/theme/theme.dart';
 import 'package:crew/shared/widgets/frosted_app_bar.dart';
 
 void main() {
-  group('Buzz theme catalog entries', () {
+  group('Crew theme catalog entries', () {
     test('both halves are in the catalog', () {
       expect(findTheme(crewThemeName), isNotNull);
       expect(findTheme(crewDarkThemeName), isNotNull);
     });
 
     test('borrow the GitHub palettes', () {
-      final buzz = findTheme(crewThemeName)!;
+      final crew = findTheme(crewThemeName)!;
       final github = findTheme('github-light')!;
-      expect(buzz.bg, github.bg);
-      expect(buzz.fg, github.fg);
-      expect(buzz.comment, github.comment);
+      expect(crew.bg, github.bg);
+      expect(crew.fg, github.fg);
+      expect(crew.comment, github.comment);
 
       final crewDark = findTheme(crewDarkThemeName)!;
       final githubDark = findTheme('github-dark')!;
@@ -77,7 +77,7 @@ void main() {
     });
 
     test(
-      'fallbacks expose the effective Buzz theme for gradient selection',
+      'fallbacks expose the effective Crew theme for gradient selection',
       () {
         final coerced = resolveSchemes('nord', ThemeMode.light);
         expect(coerced.lightTheme?.name, crewThemeName);
@@ -103,7 +103,7 @@ void main() {
   });
 
   group('crewTopSectionGradient', () {
-    test('is null for non-Buzz themes', () {
+    test('is null for non-Crew themes', () {
       expect(crewTopSectionGradient('github-light', Brightness.light), isNull);
       expect(crewTopSectionGradient('nord', Brightness.dark), isNull);
     });
@@ -192,7 +192,7 @@ void main() {
       expect(decoration.color, isNull);
     });
 
-    testWidgets('non-Buzz themes keep the frosted surface fill', (
+    testWidgets('non-Crew themes keep the frosted surface fill', (
       tester,
     ) async {
       await tester.pumpWidget(harness(AppTheme.light()));
@@ -202,7 +202,7 @@ void main() {
       expect(decoration.color, isNotNull);
     });
 
-    testWidgets('Buzz section labels use 80% neutral foreground', (
+    testWidgets('Crew section labels use 80% neutral foreground', (
       tester,
     ) async {
       await tester.pumpWidget(
@@ -223,7 +223,7 @@ void main() {
       );
     });
 
-    testWidgets('navigation roles inherit non-Buzz theme tokens', (
+    testWidgets('navigation roles inherit non-Crew theme tokens', (
       tester,
     ) async {
       const primaryForeground = Color(0xFF123456);
@@ -257,7 +257,7 @@ void main() {
   });
 
   group('isCrewTheme', () {
-    test('matches only the Buzz pair', () {
+    test('matches only the Crew pair', () {
       expect(isCrewTheme(crewThemeName), isTrue);
       expect(isCrewTheme(crewDarkThemeName), isTrue);
       expect(isCrewTheme('github-light'), isFalse);

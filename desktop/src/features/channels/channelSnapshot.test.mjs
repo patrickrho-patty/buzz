@@ -260,7 +260,7 @@ test("remove clears every identity snapshot for that relay", () => {
 test("cache write evicts disposable entries and retries at quota", () => {
   const original = window.localStorage;
   const storage = new Map([
-    ["buzz-channel-messages.v1:relay:old", "big"],
+    ["crew-channel-messages.v1:relay:old", "big"],
     ["crew-timeline-skeleton-shape.v1:old", "small"],
   ]);
   window.localStorage = {
@@ -283,7 +283,7 @@ test("cache write evicts disposable entries and retries at quota", () => {
       channels: [makeChannel()],
       hash: HASH,
     });
-    assert.equal(storage.has("buzz-channel-messages.v1:relay:old"), false);
+    assert.equal(storage.has("crew-channel-messages.v1:relay:old"), false);
     assert.equal(storage.has("crew-timeline-skeleton-shape.v1:old"), false);
   } finally {
     window.localStorage = original;

@@ -8,10 +8,10 @@ const RELAY_UNREACHABLE = "relay unreachable: connection refused";
 const MOCK_AVATAR_DATA_URL =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAE0lEQVR4nGOQ2rrsPz7MMDIUAACluJ0BkoZ9dQAAAABJRU5ErkJggg==";
 
-// Self-profile cache key: buzz-self-profile.v1:<relay>:<pubkey>
+// Self-profile cache key: crew-self-profile.v1:<relay>:<pubkey>
 const MOCK_PUBKEY = "deadbeef".repeat(8);
 const MOCK_RELAY_URL = "ws://localhost:3000";
-const SELF_PROFILE_CACHE_KEY = `buzz-self-profile.v1:${MOCK_RELAY_URL}:${MOCK_PUBKEY}`;
+const SELF_PROFILE_CACHE_KEY = `crew-self-profile.v1:${MOCK_RELAY_URL}:${MOCK_PUBKEY}`;
 
 async function settle(page: import("@playwright/test").Page) {
   await page.evaluate(() =>

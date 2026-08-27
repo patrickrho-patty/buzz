@@ -141,8 +141,8 @@ test("round-trips and reopens structured message-text conditions", async ({
   page,
 }) => {
   const name = `message_condition_${Date.now()}`;
-  const text = 'deploy "buzz"\\path';
-  const expression = 'str_ends_with(trigger_text, "deploy \\"buzz\\"\\\\path")';
+  const text = 'deploy "crew"\\path';
+  const expression = 'str_ends_with(trigger_text, "deploy \\"crew\\"\\\\path")';
   const dialog = await openCreateWorkflow(page, name);
 
   await dialog.getByText("ends with", { exact: true }).click();

@@ -25,7 +25,7 @@ void main() {
     for (final payload in [
       {
         'version': 2,
-        'theme': 'buzz',
+        'theme': 'crew',
         'accent': '#3b82f6',
         'followSystem': true,
       },
@@ -37,7 +37,7 @@ void main() {
       },
       {
         'version': 1,
-        'theme': 'buzz',
+        'theme': 'crew',
         'accent': '#000000',
         'followSystem': true,
       },

@@ -125,7 +125,7 @@ test("real markdown-it parsing materializes a restored message link", () => {
   assert.match(html, /data-href="crew:\/\/message\?channel=.*&amp;id=/);
 });
 
-test("real markdown-it parsing materializes mixed Buzz permalink chips", () => {
+test("real markdown-it parsing materializes mixed Crew permalink chips", () => {
   const md = new MarkdownIt();
   registerComposerMessageLinkMarkdownIt(md, {
     resolveChannelName: (channelId) =>
@@ -158,7 +158,7 @@ test("markdown parsing resumes after markdown-it consumes the crew prefix", () =
   const state = {
     pending: "See crew",
     src: `See ${HREF}`,
-    pos: "See buzz".length,
+    pos: "See crew".length,
     push: () => {
       token = { meta: null };
       return token;

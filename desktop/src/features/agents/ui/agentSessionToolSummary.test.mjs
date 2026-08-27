@@ -23,7 +23,7 @@ function makeTool(overrides = {}) {
   };
 }
 
-test("buildCompactToolSummary formats Buzz send_message preview", () => {
+test("buildCompactToolSummary formats Crew send_message preview", () => {
   const summary = buildCompactToolSummary(
     makeTool({
       toolName: "send_message",
@@ -39,13 +39,13 @@ test("buildCompactToolSummary formats Buzz send_message preview", () => {
   assert.equal(summary.presentation, "message");
 });
 
-test("buildCompactToolSummary treats buzz messages send commands as messages", () => {
+test("buildCompactToolSummary treats crew messages send commands as messages", () => {
   const summary = buildCompactToolSummary(
     makeTool({
       toolName: "crew-dev-mcp__shell",
       args: {
         command:
-          'buzz --format compact messages send --channel channel-1 --content "@Ned are you working"',
+          'crew --format compact messages send --channel channel-1 --content "@Ned are you working"',
       },
     }),
   );
@@ -192,12 +192,12 @@ test("buildCompactToolSummary uses running and failed labels", () => {
   );
 });
 
-test("buildCompactToolSummary promotes non-send buzz CLI commands to relay ops", () => {
+test("buildCompactToolSummary promotes non-send crew CLI commands to relay ops", () => {
   const summary = buildCompactToolSummary(
     makeTool({
       toolName: "shell",
       args: {
-        command: "buzz channels get --channel channel-1",
+        command: "crew channels get --channel channel-1",
       },
     }),
   );
@@ -207,12 +207,12 @@ test("buildCompactToolSummary promotes non-send buzz CLI commands to relay ops",
   assert.equal(summary.preview, "channel-1");
   assert.deepEqual(summary.action, { verb: "Read", object: "channel-1" });
   assert.equal(summary.presentation, "inline");
-  assert.equal(summary.shellContent, "buzz channels get --channel channel-1");
+  assert.equal(summary.shellContent, "crew channels get --channel channel-1");
 });
 
-test("buildCompactToolSummary exposes shellContent for shell-sourced buzz CLI reads", () => {
+test("buildCompactToolSummary exposes shellContent for shell-sourced crew CLI reads", () => {
   const command =
-    "sleep 45; buzz messages thread --channel channel-uuid --event abc | tail -n 20";
+    "sleep 45; crew messages thread --channel channel-uuid --event abc | tail -n 20";
   const summary = buildCompactToolSummary(
     makeTool({
       toolName: "shell",
@@ -232,7 +232,7 @@ test("buildCompactToolSummary exposes shellContent for shell-sourced buzz CLI re
   });
 });
 
-test("buildCompactToolSummary derives structured actions for native Buzz MCP tools", () => {
+test("buildCompactToolSummary derives structured actions for native Crew MCP tools", () => {
   const summary = buildCompactToolSummary(
     makeTool({
       toolName: "get_channel",

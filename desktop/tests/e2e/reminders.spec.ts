@@ -255,7 +255,7 @@ function aliceReminderContent() {
 // Inbox nav item's `(1)` count. The count is gated behind `homeBadgeEnabled`,
 // so seed that setting on before installMockBridge (addInitScript runs at
 // document start, ahead of the app reading localStorage).
-const NOTIFICATION_SETTINGS_KEY = `buzz-notification-settings.v2:${MOCK_PUBKEY}`;
+const NOTIFICATION_SETTINGS_KEY = `crew-notification-settings.v2:${MOCK_PUBKEY}`;
 
 test.describe("reminders nav badge", () => {
   test.beforeEach(async ({ page }) => {

@@ -326,7 +326,7 @@ void main() {
     );
   });
 
-  testWidgets('keeps the Buzz background fixed behind the channels list', (
+  testWidgets('keeps the Crew background fixed behind the channels list', (
     tester,
   ) async {
     await tester.pumpWidget(

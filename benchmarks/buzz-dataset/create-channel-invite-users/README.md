@@ -16,9 +16,9 @@ nobody else.
 ## Environment
 
 `python:3.12-slim-bookworm`, no extra packages: the agent never runs in this
-container's shell. `BuzzOrchestraAgent` launches the real `buzz-acp` /
-`buzz-agent` stack against a dedicated relay, and the agent does all its work
-through `buzz channels create` / `channels invite`. Agent timeout 300s.
+container's shell. `BuzzOrchestraAgent` launches the real `crew-acp` /
+`crew-agent` stack against a dedicated relay, and the agent does all its work
+through `crew channels create` / `channels invite`. Agent timeout 300s.
 
 Directory identities are derived deterministically from the owner key
 (`BuzzTrialProvisioner._stable_credential`) without persisting any secret, and
@@ -27,7 +27,7 @@ and pubkeys are stable across trials.
 
 ## Verifier
 
-Reads the post-agent `/logs/artifacts/buzz-evidence.json` snapshot. The
+Reads the post-agent `/logs/artifacts/crew-evidence.json` snapshot. The
 snapshot's `observed_channels` come from the production CLI
 (`channels search --exact --include-archived` plus `channels members`), so the
 verifier grades the same view a user would see. Every dimension is
@@ -63,10 +63,10 @@ size drifts from 60.
 
 ```bash
 just benchmark \
-  --path benchmarks/buzz-dataset/create-channel-invite-users \
+  --path benchmarks/crew-dataset/create-channel-invite-users \
   --attempts 1 \
-  --manifest benchmarks/harbor-buzz-orchestra/manifests/buzz-native-solo-luna.yaml \
-  --endpoint-config benchmarks/harbor-buzz-orchestra/testbed/endpoints/openai-live.json \
+  --manifest benchmarks/harbor-crew-orchestra/manifests/crew-native-solo-luna.yaml \
+  --endpoint-config benchmarks/harbor-crew-orchestra/testbed/endpoints/openai-live.json \
   --n-concurrent 1
 ```
 
@@ -74,4 +74,4 @@ just benchmark \
 shipped: the Oracle agent replaces `BuzzOrchestraAgent`, so no relay trial is
 provisioned and no evidence snapshot is exported. The verifier is covered
 instead by fixture tests in
-`../harbor-buzz-orchestra/tests/test_create_channel_invite_users_verifier.py`.
+`../harbor-crew-orchestra/tests/test_create_channel_invite_users_verifier.py`.

@@ -60,7 +60,7 @@ async function setRelayConnectionState(
   }, state);
 }
 
-const HOME_SEEN_STORAGE_KEY_PREFIX = "buzz-home-feed-seen.v1:";
+const HOME_SEEN_STORAGE_KEY_PREFIX = "crew-home-feed-seen.v1:";
 const COMMUNITY_ONBOARDING_TRANSACTION_STORAGE_KEY =
   "buzz-community-onboarding-transaction.v1";
 const ONE_PIXEL_PNG_BASE64 =
@@ -91,7 +91,7 @@ async function seedOnboardingCompletion(page: Page, pubkey: string) {
       window.localStorage.setItem(storageKey, "true");
     },
     {
-      storageKey: `buzz-onboarding-complete.v1:${pubkey}`,
+      storageKey: `crew-onboarding-complete.v1:${pubkey}`,
     },
   );
 }
@@ -101,7 +101,7 @@ async function seedCommunityProfileStage(page: Page, id: string) {
   await page.addInitScript(
     ({ pubkey, transactionId, transactionStorageKey }) => {
       window.localStorage.setItem(
-        `buzz-machine-onboarding-complete.v2:${pubkey}`,
+        `crew-machine-onboarding-complete.v2:${pubkey}`,
         "true",
       );
       const timestamp = new Date().toISOString();
@@ -714,7 +714,7 @@ test("fresh existing-identity path leads with private-key recovery", async ({
     page.getByRole("heading", { name: "Enter your private key" }),
   ).toBeVisible();
   await expect(
-    page.getByText("Paste your private key to sign in to Buzz."),
+    page.getByText("Paste your private key to sign in to Crew."),
   ).toBeVisible();
   await expect(page.getByTestId("nostr-import-card")).toBeVisible();
   await expect(page.getByTestId("nostr-import-file-button")).toHaveText(
@@ -787,7 +787,7 @@ test("fresh existing-identity path leads with private-key recovery", async ({
   const phoneDialog = page.getByTestId("phone-recovery-dialog");
   await expect(phoneDialog).toBeVisible();
   await expect(
-    phoneDialog.getByRole("heading", { name: "Use your Buzz identity" }),
+    phoneDialog.getByRole("heading", { name: "Use your Crew identity" }),
   ).toBeVisible();
   await expect(phoneDialog.getByTestId("identity-recovery-qr")).toBeVisible();
   await expect(page.getByTestId("nostr-import-card")).toBeVisible();
@@ -1037,7 +1037,7 @@ test("non-local runtime override keeps community selection without release flag"
   await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
   await page.addInitScript((pubkey) => {
     window.localStorage.setItem(
-      `buzz-machine-onboarding-complete.v2:${pubkey}`,
+      `crew-machine-onboarding-complete.v2:${pubkey}`,
       "true",
     );
   }, BLANK_TYLER_IDENTITY.pubkey);
@@ -1062,7 +1062,7 @@ test("non-local default auto-connects when the release flag is enabled", async (
   await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
   await page.addInitScript((pubkey) => {
     window.localStorage.setItem(
-      `buzz-machine-onboarding-complete.v2:${pubkey}`,
+      `crew-machine-onboarding-complete.v2:${pubkey}`,
       "true",
     );
   }, BLANK_TYLER_IDENTITY.pubkey);
@@ -1103,7 +1103,7 @@ test("first-community choices route join, create, owner, and member intents", as
   await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
   await page.addInitScript((pubkey) => {
     window.localStorage.setItem(
-      `buzz-machine-onboarding-complete.v2:${pubkey}`,
+      `crew-machine-onboarding-complete.v2:${pubkey}`,
       "true",
     );
   }, BLANK_TYLER_IDENTITY.pubkey);
@@ -1173,7 +1173,7 @@ test("first-community owner can connect an existing hosted community", async ({
   await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
   await page.addInitScript((pubkey) => {
     window.localStorage.setItem(
-      `buzz-machine-onboarding-complete.v2:${pubkey}`,
+      `crew-machine-onboarding-complete.v2:${pubkey}`,
       "true",
     );
   }, BLANK_TYLER_IDENTITY.pubkey);
@@ -1189,7 +1189,7 @@ test("first-community owner can connect an existing hosted community", async ({
         {
           id: "owned-community",
           name: "North Star",
-          normalized_host: "north-star.communities.buzz.xyz",
+          normalized_host: "north-star.communities.crew.xyz",
         },
       ],
     },
@@ -1220,7 +1220,7 @@ test("first-community owner can connect an existing hosted community", async ({
         window.localStorage.getItem("buzz-community-onboarding-transaction.v1"),
       ),
     )
-    .toContain("wss://north-star.communities.buzz.xyz");
+    .toContain("wss://north-star.communities.crew.xyz");
   await page.getByTestId("community-profile-back").click();
   await expect(
     page.getByRole("heading", { name: "Choose a community" }),
@@ -1244,7 +1244,7 @@ test("first-community owner can create and connect a hosted community", async ({
   await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
   await page.addInitScript((pubkey) => {
     window.localStorage.setItem(
-      `buzz-machine-onboarding-complete.v2:${pubkey}`,
+      `crew-machine-onboarding-complete.v2:${pubkey}`,
       "true",
     );
   }, BLANK_TYLER_IDENTITY.pubkey);
@@ -1262,7 +1262,7 @@ test("first-community owner can create and connect a hosted community", async ({
   await page.getByTestId("community-choice-create").click();
   await page.getByRole("button", { name: "Sign in to continue" }).click();
   await expect(
-    page.getByRole("heading", { name: "Finish connecting Buzz" }),
+    page.getByRole("heading", { name: "Finish connecting Crew" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Connect and continue" }).click();
   const createSurface = page.getByTestId("hosted-community-create-surface");
@@ -1309,7 +1309,7 @@ test("first-community owner can create and connect a hosted community", async ({
         window.localStorage.getItem("buzz-community-onboarding-transaction.v1"),
       ),
     )
-    .toContain("wss://bee-lab.communities.buzz.xyz");
+    .toContain("wss://bee-lab.communities.crew.xyz");
 });
 
 test("hosted community address line stays within the card for a long name", async ({
@@ -1318,7 +1318,7 @@ test("hosted community address line stays within the card for a long name", asyn
   await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
   await page.addInitScript((pubkey) => {
     window.localStorage.setItem(
-      `buzz-machine-onboarding-complete.v2:${pubkey}`,
+      `crew-machine-onboarding-complete.v2:${pubkey}`,
       "true",
     );
   }, BLANK_TYLER_IDENTITY.pubkey);
@@ -1338,7 +1338,7 @@ test("hosted community address line stays within the card for a long name", asyn
   await page.getByTestId("community-choice-create").click();
   await page.getByRole("button", { name: "Sign in to continue" }).click();
   await expect(
-    page.getByRole("heading", { name: "Finish connecting Buzz" }),
+    page.getByRole("heading", { name: "Finish connecting Crew" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Connect and continue" }).click();
 
@@ -1379,7 +1379,7 @@ test("first-community reports a created community without a relay address", asyn
   await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
   await page.addInitScript((pubkey) => {
     window.localStorage.setItem(
-      `buzz-machine-onboarding-complete.v2:${pubkey}`,
+      `crew-machine-onboarding-complete.v2:${pubkey}`,
       "true",
     );
   }, BLANK_TYLER_IDENTITY.pubkey);
@@ -1420,7 +1420,7 @@ test("first-community X cancels a pending sign-in", async ({ page }) => {
   await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
   await page.addInitScript((pubkey) => {
     window.localStorage.setItem(
-      `buzz-machine-onboarding-complete.v2:${pubkey}`,
+      `crew-machine-onboarding-complete.v2:${pubkey}`,
       "true",
     );
   }, BLANK_TYLER_IDENTITY.pubkey);
@@ -1456,7 +1456,7 @@ test("first-community owner can replace a mismatched account identity", async ({
   await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
   await page.addInitScript((pubkey) => {
     window.localStorage.setItem(
-      `buzz-machine-onboarding-complete.v2:${pubkey}`,
+      `crew-machine-onboarding-complete.v2:${pubkey}`,
       "true",
     );
   }, BLANK_TYLER_IDENTITY.pubkey);
@@ -1480,7 +1480,7 @@ test("first-community owner can replace a mismatched account identity", async ({
   await page.getByTestId("community-choice-create").click();
   await expect(
     page.getByRole("heading", {
-      name: "This account uses a different Buzz identity",
+      name: "This account uses a different Crew identity",
     }),
   ).toBeVisible();
   await page
@@ -1505,7 +1505,7 @@ test("first-community explains when the local identity belongs to another accoun
   await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
   await page.addInitScript((pubkey) => {
     window.localStorage.setItem(
-      `buzz-machine-onboarding-complete.v2:${pubkey}`,
+      `crew-machine-onboarding-complete.v2:${pubkey}`,
       "true",
     );
   }, BLANK_TYLER_IDENTITY.pubkey);
@@ -1533,11 +1533,11 @@ test("first-community explains when the local identity belongs to another accoun
     .click();
   await expect(
     page.getByText(
-      "This device's Buzz identity belongs to a different Builderlab account and can't be moved from here. Sign out, then sign in with the account that already owns this identity.",
+      "This device's Crew identity belongs to a different Builderlab account and can't be moved from here. Sign out, then sign in with the account that already owns this identity.",
     ),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Finish connecting Buzz" }),
+    page.getByRole("heading", { name: "Finish connecting Crew" }),
   ).toBeVisible();
 });
 
@@ -1547,7 +1547,7 @@ test("back clears Builderlab auth before returning to first-community choices", 
   await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
   await page.addInitScript((pubkey) => {
     window.localStorage.setItem(
-      `buzz-machine-onboarding-complete.v2:${pubkey}`,
+      `crew-machine-onboarding-complete.v2:${pubkey}`,
       "true",
     );
   }, BLANK_TYLER_IDENTITY.pubkey);
@@ -1580,7 +1580,7 @@ test("first-community shows the scenario cards for localhost", async ({
   await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
   await page.addInitScript((pubkey) => {
     window.localStorage.setItem(
-      `buzz-machine-onboarding-complete.v2:${pubkey}`,
+      `crew-machine-onboarding-complete.v2:${pubkey}`,
       "true",
     );
   }, BLANK_TYLER_IDENTITY.pubkey);
@@ -1664,7 +1664,7 @@ test("first-community direct join reaches profile", async ({ page }) => {
   await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
   await page.addInitScript((pubkey) => {
     window.localStorage.setItem(
-      `buzz-machine-onboarding-complete.v2:${pubkey}`,
+      `crew-machine-onboarding-complete.v2:${pubkey}`,
       "true",
     );
   }, BLANK_TYLER_IDENTITY.pubkey);
@@ -1678,7 +1678,7 @@ test("first-community direct join reaches profile", async ({ page }) => {
   await page.getByRole("button", { name: /Join a community/ }).click();
   await page
     .getByTestId("invite-redeem-input")
-    .fill("wss://onboarding.communities.buzz.xyz");
+    .fill("wss://onboarding.communities.crew.xyz");
   await page.getByTestId("invite-redeem-submit").click();
 
   await expect(
@@ -1717,7 +1717,7 @@ test("community onboarding reuses an existing relay profile", async ({
   await page.addInitScript(
     ({ pubkey, transactionStorageKey }) => {
       window.localStorage.setItem(
-        `buzz-machine-onboarding-complete.v2:${pubkey}`,
+        `crew-machine-onboarding-complete.v2:${pubkey}`,
         "true",
       );
       const timestamp = new Date().toISOString();
@@ -1727,7 +1727,7 @@ test("community onboarding reuses an existing relay profile", async ({
           id: "txn-existing-profile",
           source: "add-community",
           stage: "profile",
-          relayUrl: "wss://onboarding.communities.buzz.xyz",
+          relayUrl: "wss://onboarding.communities.crew.xyz",
           communityName: "Onboarding",
           communityId: "e2e-default-community",
           createdAt: timestamp,
@@ -1744,7 +1744,7 @@ test("community onboarding reuses an existing relay profile", async ({
     page,
     { profileHasEvent: true },
     {
-      relayWsUrl: "wss://onboarding.communities.buzz.xyz",
+      relayWsUrl: "wss://onboarding.communities.crew.xyz",
       skipOnboardingSeed: true,
     },
   );
@@ -1790,7 +1790,7 @@ test("first-community direct join cancel returns to request access", async ({
   await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
   await page.addInitScript((pubkey) => {
     window.localStorage.setItem(
-      `buzz-machine-onboarding-complete.v2:${pubkey}`,
+      `crew-machine-onboarding-complete.v2:${pubkey}`,
       "true",
     );
   }, BLANK_TYLER_IDENTITY.pubkey);
@@ -1808,7 +1808,7 @@ test("first-community direct join cancel returns to request access", async ({
   await page.getByRole("button", { name: /Join a community/ }).click();
   await page
     .getByTestId("invite-redeem-input")
-    .fill("wss://onboarding.communities.buzz.xyz");
+    .fill("wss://onboarding.communities.crew.xyz");
   await page.getByTestId("invite-redeem-submit").click();
   await expect(page.getByText("Connecting securely…")).toBeVisible();
   await page.getByRole("button", { name: "Cancel" }).click();
@@ -1838,7 +1838,7 @@ test("canceling a join to an existing inactive community preserves it", async ({
   await page.addInitScript(
     ({ pubkey, relayUrl }) => {
       window.localStorage.setItem(
-        `buzz-machine-onboarding-complete.v2:${pubkey}`,
+        `crew-machine-onboarding-complete.v2:${pubkey}`,
         "true",
       );
       const timestamp = new Date().toISOString();
@@ -1866,7 +1866,7 @@ test("canceling a join to an existing inactive community preserves it", async ({
     },
     {
       pubkey: BLANK_TYLER_IDENTITY.pubkey,
-      relayUrl: "wss://onboarding.communities.buzz.xyz",
+      relayUrl: "wss://onboarding.communities.crew.xyz",
     },
   );
   await installMockBridge(
@@ -1888,7 +1888,7 @@ test("canceling a join to an existing inactive community preserves it", async ({
         id: "existing-community-join",
         source: "add-community",
         stage: "connecting",
-        relayUrl: "wss://onboarding.communities.buzz.xyz",
+        relayUrl: "wss://onboarding.communities.crew.xyz",
         communityName: "Existing",
         createdAt: timestamp,
         updatedAt: timestamp,
@@ -1919,7 +1919,7 @@ test("connected first-community profile keeps Back bottom-left and balances the 
   await page.addInitScript(
     ({ pubkey, transactionStorageKey }) => {
       window.localStorage.setItem(
-        `buzz-machine-onboarding-complete.v2:${pubkey}`,
+        `crew-machine-onboarding-complete.v2:${pubkey}`,
         "true",
       );
       const timestamp = new Date().toISOString();
@@ -2806,7 +2806,7 @@ test("membership denial on community profile save offers recovery", async ({
   await page.addInitScript(
     ({ pubkey, transactionStorageKey }) => {
       window.localStorage.setItem(
-        `buzz-machine-onboarding-complete.v2:${pubkey}`,
+        `crew-machine-onboarding-complete.v2:${pubkey}`,
         "true",
       );
       const timestamp = new Date().toISOString();
@@ -2935,7 +2935,7 @@ test("no-event profile cached then reloaded still sees onboarding", async ({
   // Seed a stale v1 cache entry WITHOUT hasProfileEvent (simulating a cache
   // written by the old code path or a no-event fallback). updatedAt > 0 so
   // the seed is eligible, but hasProfileEvent is absent → conservative false.
-  const SELF_PROFILE_CACHE_KEY = `buzz-self-profile.v1:ws://localhost:3000:${TEST_IDENTITIES.tyler.pubkey}`;
+  const SELF_PROFILE_CACHE_KEY = `crew-self-profile.v1:ws://localhost:3000:${TEST_IDENTITIES.tyler.pubkey}`;
   await page.addInitScript(
     ({ key, cache }) => {
       window.localStorage.setItem(key, JSON.stringify(cache));
@@ -3218,7 +3218,7 @@ test("first-run onboarding posts the live Fizz kickoff", async ({ page }) => {
   // Greeted by the name typed above — the @mention pill also files the opener
   // into the new user's Inbox mentions feed.
   await expect(page.getByTestId("message-timeline")).toContainText(
-    "Hi Morty QA, I'm Fizz. Welcome to Buzz.",
+    "Hi Morty QA, I'm Fizz. Welcome to Crew.",
   );
   await expect(page.getByTestId("message-timeline")).toContainText(
     "Honey and Pollen, introduce yourselves",
@@ -3242,7 +3242,7 @@ test("first-run onboarding lands before Welcome team bootstrap completes", async
   await expectPrivateWelcomeLanding(page);
   await expect(page.getByTestId("app-loading-gate")).toHaveCount(0);
   await expect(page.getByTestId("message-timeline")).toContainText(
-    "Hi Morty QA, I'm Fizz. Welcome to Buzz.",
+    "Hi Morty QA, I'm Fizz. Welcome to Crew.",
   );
   await page.waitForTimeout(1_500);
   expect(await commandCount(page, "create_managed_agent")).toBe(3);
@@ -4106,7 +4106,7 @@ test("denied on relay A then paste relay B invite URL switches community to B", 
   await expect(page.getByText("I am 18 years of age or older.")).toBeVisible();
   await page.getByLabel("I am 18 years of age or older.").check();
   await page
-    .getByLabel("I agree to the Buzz Terms of Service and Privacy Policy.")
+    .getByLabel("I agree to the Crew Terms of Service and Privacy Policy.")
     .check();
   await page.getByTestId("invite-redeem-submit").click();
 

@@ -56,7 +56,7 @@ async function openBuzzProject(page: import("@playwright/test").Page) {
   await page.getByTestId("projects-section-projects").click();
   const projectEntry = page
     .locator(
-      '[data-testid="project-card-buzz"], [data-testid="project-row-buzz"]',
+      '[data-testid="project-card-crew"], [data-testid="project-row-crew"]',
     )
     .first();
   await expect(projectEntry).toBeVisible({ timeout: 10_000 });
@@ -138,7 +138,7 @@ test("submitted project context stays compact and expandable", async ({
 test("sidebar project add flow browses before creating", async ({ page }) => {
   await installMockBridge(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await expect(page.getByTestId("sidebar-project-buzz")).toHaveCount(0);
+  await expect(page.getByTestId("sidebar-project-crew")).toHaveCount(0);
   await page.getByTestId("sidebar-projects-section-label").hover();
   await page.getByTestId("sidebar-projects-create").click();
 
@@ -155,13 +155,13 @@ test("sidebar project add flow browses before creating", async ({ page }) => {
   await page.getByRole("button", { name: "Back to projects" }).click();
   await expect(browser).toBeVisible();
 
-  await search.fill("buzz");
-  await browser.getByTestId("project-browser-result-buzz").click();
+  await search.fill("crew");
+  await browser.getByTestId("project-browser-result-crew").click();
   await expect(browser).toBeHidden();
   await expect(
     page.getByRole("navigation", { name: "Project breadcrumb" }),
-  ).toContainText("buzz");
-  const addedProject = page.getByTestId("sidebar-project-buzz");
+  ).toContainText("crew");
+  const addedProject = page.getByTestId("sidebar-project-crew");
   await expect(addedProject).toBeVisible();
   await addedProject.click({ button: "right" });
   await page.getByRole("menuitem", { name: "Remove from sidebar" }).click();
@@ -230,7 +230,7 @@ test("restricted repositories keep event work visible and offer access help", as
   await expect(chatPanel.getByTestId("message-composer")).toBeVisible();
 });
 
-test("repository pages show a centered Buzz loader while fetching", async ({
+test("repository pages show a centered Crew loader while fetching", async ({
   page,
 }) => {
   await installMockBridge(page, { projectRepoSnapshotDelayMs: 750 });
@@ -327,7 +327,7 @@ test("projects v3 workspace screenshot states", async ({ page }) => {
   await expect(projectContextCard).toBeVisible();
   await expect(projectContextCard).toHaveCSS("border-radius", "16px");
   const repositoryHeading = repositoryActionsPanel.getByRole("heading", {
-    name: "buzz",
+    name: "crew",
     exact: true,
   });
   await expect(repositoryHeading).toBeVisible();
@@ -641,7 +641,7 @@ test("projects v3 workspace screenshot states", async ({ page }) => {
   const agentContext = agentChatPanel.getByTestId("project-agent-context");
   await expect(agentContext).toBeVisible();
   await expect(agentContext).toContainText("Overview");
-  await expect(agentContext).not.toContainText("Buzz /");
+  await expect(agentContext).not.toContainText("Crew /");
   // The context rail reveals the chat panel with a width transition; measure
   // only after it settles or the panel's unclipped box overhangs the rail.
   await waitForAnimations(page);
@@ -819,7 +819,7 @@ test("projects v3 workspace screenshot states", async ({ page }) => {
   await expect(localSourceTrigger).toBeVisible();
   await expect(
     repositoryActionsPanel.getByTestId("project-repository-local-path"),
-  ).toHaveText("…/buzz/REPOS/buzz");
+  ).toHaveText("…/crew/REPOS/crew");
   await expect(
     repositoryActionsPanel.getByRole("button", {
       name: "Open",
@@ -1177,7 +1177,7 @@ test("projects v3 workspace screenshot states", async ({ page }) => {
 
 test("projects v3 work-item list metadata", async ({ page }) => {
   await page.addInitScript(() => {
-    window.localStorage.setItem("buzz.projects.viewMode", "list");
+    window.localStorage.setItem("crew.projects.viewMode", "list");
   });
   await installMockBridge(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
@@ -1219,7 +1219,7 @@ test("projects v3 work-item list metadata", async ({ page }) => {
   const pullRequestRow = page.getByTestId(/^projects-pr-row-/).first();
   await expect(pullRequestRow).toBeVisible();
   await expectSinglePrimaryTextColumn(pullRequestRow);
-  await expect(pullRequestRow).toContainText(/relay-tools|buzz|design-system/);
+  await expect(pullRequestRow).toContainText(/relay-tools|crew|design-system/);
   await waitForAnimations(page);
   await page.screenshot({ path: `${SHOTS}/05-pr-list-metadata.png` });
 
@@ -1229,7 +1229,7 @@ test("projects v3 work-item list metadata", async ({ page }) => {
   const issueRow = page.getByTestId(/^projects-issue-row-/).first();
   await expect(issueRow).toBeVisible();
   await expectSinglePrimaryTextColumn(issueRow);
-  await expect(issueRow).toContainText(/relay-tools|buzz|design-system/);
+  await expect(issueRow).toContainText(/relay-tools|crew|design-system/);
   await waitForAnimations(page);
   await page.screenshot({ path: `${SHOTS}/06-issue-list-metadata.png` });
 

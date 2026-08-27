@@ -1,6 +1,6 @@
-# Buzz Mobile
+# Crew Mobile
 
-Flutter mobile client for Buzz.
+Flutter mobile client for Crew.
 
 ## Setup
 
@@ -22,9 +22,9 @@ cd mobile && flutter run
 ### Worktree-aware debug identity
 
 Debug builds produced from a git worktree get a unique app identifier keyed
-to the **worktree directory name** (`com.buzz.buzzMobile.<slug>` on iOS,
+to the **worktree directory name** (`com.crew.buzzMobile.<slug>` on iOS,
 `xyz.block.crew.mobile.<slug>` on Android) plus a display-only branch label
-in the app name (`Buzz (my-branch)`, or a short SHA when the worktree is
+in the app name (`Crew (my-branch)`, or a short SHA when the worktree is
 detached). Because the identifier follows the directory rather than the
 branch, one worktree keeps exactly one installed app — and its login state —
 across branch switches, and builds from multiple worktrees install side by
@@ -46,21 +46,21 @@ over the generated worktree values by creating the gitignored
 `mobile/android/AppOverrides.properties`:
 
 ```properties
-appName=Buzz Pairing
+appName=Crew Pairing
 applicationIdSuffix=.device_pairing_e2e1
 ```
 
 These values are consumed by the debug build type only. The standard
 `just mobile-build-android` command can still be used; regenerating
 `worktree.properties` does not overwrite `AppOverrides.properties`. Release
-and profile builds keep the production `Buzz` name and application ID.
+and profile builds keep the production `Crew` name and application ID.
 
 For direct Xcode / Android Studio / `flutter run` development, run
 `./scripts/mobile-worktree-overrides.sh` from the repo root once per branch
 switch to refresh the display label (the install identity never changes);
 the persisted files are then picked up by any subsequent build. In the main
 checkout the script is a no-op that removes stale override files, restoring
-the plain `Buzz` identity.
+the plain `Crew` identity.
 
 To remove leftover worktree-suffixed installs from booted iOS simulators and
 connected Android emulators, run `just mobile-clean` (add `--dry-run` via

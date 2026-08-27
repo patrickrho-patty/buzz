@@ -192,7 +192,7 @@ test.describe("config bridge screenshots", () => {
     await expect(panel.getByText("gpt-4o-mini", { exact: true })).toHaveCount(
       0,
     );
-    await expect(panel.getByText("Set in Buzz")).toHaveCount(0);
+    await expect(panel.getByText("Set in Crew")).toHaveCount(0);
     await settleAnimations(panel);
 
     await panel.screenshot({ path: `${SHOTS}/01-folded-config-panel.png` });
@@ -291,14 +291,14 @@ test.describe("config bridge screenshots", () => {
       managedAgents: [
         {
           pubkey: CREW_AGENT_PUBKEY,
-          name: "Buzz Agent",
+          name: "Crew Agent",
           status: "running" as const,
           channelNames: ["agents"],
         },
       ],
     });
 
-    const panel = await openAgentProfileFromChannel(page, "Buzz Agent", {
+    const panel = await openAgentProfileFromChannel(page, "Crew Agent", {
       anchorText: "MCP servers",
       tab: "Runtime",
     });

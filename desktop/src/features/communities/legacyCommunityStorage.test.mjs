@@ -70,7 +70,7 @@ test("applyLegacyCommunityStorage seeds missing communities and active community
   assert.equal(storage.getItem("buzz-active-community-id"), "legacy-community");
 });
 
-test("applyLegacyCommunityStorage preserves existing non-local Buzz communities", () => {
+test("applyLegacyCommunityStorage preserves existing non-local Crew communities", () => {
   const storage = createMemoryStorage({
     "buzz-communities": currentCommunities,
     "buzz-active-community-id": "current-community",
@@ -149,5 +149,5 @@ test("applyLegacyCommunityStorage migrates onboarding completion keys", () => {
     storage,
   );
 
-  assert.equal(storage.getItem("buzz-onboarding-complete.v1:abc123"), "true");
+  assert.equal(storage.getItem("crew-onboarding-complete.v1:abc123"), "true");
 });

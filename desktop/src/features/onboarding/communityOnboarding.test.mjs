@@ -148,7 +148,7 @@ test("completion is scoped by relay and pubkey and preserves legacy gate", () =>
     ),
     "true",
   );
-  assert.equal(storage.getItem("buzz-onboarding-complete.v1:pubkey"), "true");
+  assert.equal(storage.getItem("crew-onboarding-complete.v1:pubkey"), "true");
 });
 
 // ── shouldSkipCommunityOnboarding ────────────────────────────────────────────

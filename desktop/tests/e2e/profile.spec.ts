@@ -594,10 +594,10 @@ test("shows profile save feedback as a toast", async ({ page }) => {
 });
 
 test("nests the avatar edit button in a clipped notch", async ({ page }) => {
-  // Under the Buzz default theme the settings nav overrides `--sidebar-active`
+  // Under the Crew default theme the settings nav overrides `--sidebar-active`
   // (white pill on the gradient) while the avatar edit button deliberately
   // keeps the root accent-driven token, so the shared-token comparison below
-  // only holds outside the Buzz theme.
+  // only holds outside the Crew theme.
   await page.addInitScript(() => {
     window.localStorage.setItem("buzz-theme", "github-light");
   });
@@ -780,7 +780,7 @@ test("uploads local profile avatar files before saving", async ({ page }) => {
   await expect(page.getByTestId("profile-avatar-url")).toHaveValue("");
 
   const pastedAvatarUrl = await page.evaluate(
-    () => new URL("/buzz.svg", window.location.href).href,
+    () => new URL("/crew.svg", window.location.href).href,
   );
   await page.getByTestId("profile-avatar-url").click();
   await page.keyboard.insertText(pastedAvatarUrl);
@@ -2416,8 +2416,8 @@ test("opens settings with the keyboard shortcut and updates theme", async ({
   ).toBeVisible();
   await page.getByTestId("settings-nav-appearance").click();
 
-  // Default is Buzz in System mode; Playwright's default color scheme is
-  // light, so the app boots with the light Buzz theme.
+  // Default is Crew in System mode; Playwright's default color scheme is
+  // light, so the app boots with the light Crew theme.
   await expect
     .poll(() =>
       page.evaluate(() => document.documentElement.classList.contains("light")),
@@ -2493,7 +2493,7 @@ test("supports webview zoom keyboard shortcuts", async ({ page }) => {
       textRemSize: getComputedStyle(document.documentElement)
         .getPropertyValue("--crew-type-rem")
         .trim(),
-      storedScale: localStorage.getItem("buzz:text-scale"),
+      storedScale: localStorage.getItem("crew:text-scale"),
       webviewZoom: (window as Window & { __CREW_E2E_WEBVIEW_ZOOM__?: number })
         .__CREW_E2E_WEBVIEW_ZOOM__,
     }));
@@ -2593,7 +2593,7 @@ test("storage clear resets composed font size and keyboard zoom across windows",
         textRemSize: getComputedStyle(document.documentElement)
           .getPropertyValue("--crew-type-rem")
           .trim(),
-        textScale: localStorage.getItem("buzz:text-scale"),
+        textScale: localStorage.getItem("crew:text-scale"),
       })),
     )
     .toEqual({
@@ -2614,7 +2614,7 @@ test("storage clear resets composed font size and keyboard zoom across windows",
         textRemSize: getComputedStyle(document.documentElement)
           .getPropertyValue("--crew-type-rem")
           .trim(),
-        textScale: localStorage.getItem("buzz:text-scale"),
+        textScale: localStorage.getItem("crew:text-scale"),
       })),
     )
     .toEqual({
@@ -2632,7 +2632,7 @@ test("storage clear resets composed font size and keyboard zoom across windows",
         textRemSize: getComputedStyle(document.documentElement)
           .getPropertyValue("--crew-type-rem")
           .trim(),
-        textScale: localStorage.getItem("buzz:text-scale"),
+        textScale: localStorage.getItem("crew:text-scale"),
       })),
     )
     .toEqual({ textRemSize: "14.4px", textScale: "0.9" });

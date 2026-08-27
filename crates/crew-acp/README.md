@@ -1,11 +1,11 @@
-# buzz-acp
+# crew-acp
 
-ACP harness that connects AI agents to Buzz. The harness listens for @mentions on the relay, prompts your agent, and the agent replies using the Buzz CLI.
+ACP harness that connects AI agents to Crew. The harness listens for @mentions on the relay, prompts your agent, and the agent replies using the Crew CLI.
 
 ```
-Buzz Relay ──WS──→ buzz-acp ──stdio──→ Your Agent
+Crew Relay ──WS──→ crew-acp ──stdio──→ Your Agent
                                                │
-                                          Buzz CLI
+                                          Crew CLI
                                        (send_message, etc.)
 ```
 
@@ -13,22 +13,22 @@ Supports any agent that speaks [ACP](https://agentclientprotocol.com/) over stdi
 
 ## Prerequisites
 
-- A running Buzz relay (`just relay` starts Docker services automatically, or use a hosted instance)
+- A running Crew relay (`just relay` starts Docker services automatically, or use a hosted instance)
 - A Nostr keypair for the agent (see [Generating Keys](#generating-keys))
 
 Build:
 
 ```bash
-cargo build --release -p buzz-acp
+cargo build --release -p crew-acp
 export PATH="$PWD/target/release:$PATH"
 ```
 
 ## Generating Keys
 
-Each agent needs a Nostr keypair — this is the agent's identity in Buzz. Use `buzz-admin` to generate one:
+Each agent needs a Nostr keypair — this is the agent's identity in Crew. Use `crew-admin` to generate one:
 
 ```bash
-cargo run -p buzz-admin -- generate-key
+cargo run -p crew-admin -- generate-key
 ```
 
 This prints a public and secret key pair as hex. **Save the secret key immediately — it is not stored and cannot be recovered.** Set `CREW_PRIVATE_KEY` to the secret key to act as this identity.
@@ -37,7 +37,7 @@ Then register the agent's public key as a relay member so it can read and publis
 
 ```bash
 CREW_RELAY_PRIVATE_KEY=<relay signing key> \
-  cargo run -p buzz-admin -- add-member --pubkey <agent public key>
+  cargo run -p crew-admin -- add-member --pubkey <agent public key>
 ```
 
 `add-member` publishes a kind:13534 membership event, so the relay needs a stable signing key: set `CREW_RELAY_PRIVATE_KEY` in the relay's environment (uncomment it in `.env`) and restart the relay before running this.
@@ -50,7 +50,7 @@ The harness discovers channels by querying the relay with the agent's authentica
 
 By default, the harness discovers only channels the agent is a **member** of (`GET /api/channels?member=true`). When the agent is added to a new channel, the membership notification subscription auto-subscribes to it.
 
-**Private channels** require explicit membership. The relay doesn't yet have a REST/event API for managing channel members — this is a known gap. For now, use `create_channel` via the Buzz CLI to create new channels (the creator is automatically a member).
+**Private channels** require explicit membership. The relay doesn't yet have a REST/event API for managing channel members — this is a known gap. For now, use `create_channel` via the Crew CLI to create new channels (the creator is automatically a member).
 
 ## Quick Start (goose)
 
@@ -59,10 +59,10 @@ export CREW_PRIVATE_KEY="nsec1..."   # your agent's key (see "Generating Keys")
 export CREW_RELAY_URL="ws://localhost:3000"
 export GOOSE_MODE=auto
 
-buzz-acp
+crew-acp
 ```
 
-That's it. The harness spawns `goose acp`, connects to the relay, discovers channels, and starts listening. When someone @mentions the agent, goose receives the message and can reply using the Buzz CLI that the harness configures automatically.
+That's it. The harness spawns `goose acp`, connects to the relay, discovers channels, and starts listening. When someone @mentions the agent, goose receives the message and can reply using the Crew CLI that the harness configures automatically.
 
 ## Running with Codex
 
@@ -75,7 +75,7 @@ npm install -g @agentclientprotocol/codex-acp
 # Run
 export OPENAI_API_KEY="sk-..."   # required — use an OpenAI API key, not a ChatGPT subscription
 
-buzz-acp
+crew-acp
 ```
 
 > **API key note:** `codex-acp` always attempts a ChatGPT WebSocket login first, which logs a `426 Upgrade Required` error. This is expected and non-fatal — it falls back to `OPENAI_API_KEY` automatically. Set `OPENAI_API_KEY` to ensure it has a working fallback.
@@ -92,10 +92,10 @@ npm install -g @agentclientprotocol/claude-agent-acp
 export ANTHROPIC_API_KEY="sk-ant-..."
 export CREW_ACP_AGENT_COMMAND="claude-agent-acp"
 
-buzz-acp
+crew-acp
 ```
 
-Older installs that still expose `claude-code-acp` are also supported. `buzz-acp`
+Older installs that still expose `claude-code-acp` are also supported. `crew-acp`
 treats both Claude ACP command names as the same zero-arg runtime.
 
 ## Configuration
@@ -165,39 +165,39 @@ Owner control commands must be kind:9 stream messages from the owner, must menti
 
 ```bash
 # Default: only respond to owner
-buzz-acp
+crew-acp
 
 # Respond to a team of three users (owner always included automatically)
-buzz-acp --respond-to allowlist \
+crew-acp --respond-to allowlist \
   --respond-to-allowlist "abc123...64hex,def456...64hex,789abc...64hex"
 
 # Respond to anyone (open agent)
-buzz-acp --respond-to anyone
+crew-acp --respond-to anyone
 
 # Broadcast-only: post on heartbeat, ignore all inbound events
-buzz-acp --respond-to nobody --heartbeat-interval 300
+crew-acp --respond-to nobody --heartbeat-interval 300
 ```
 
 ### Configuration Examples
 
 **Single agent, no heartbeat (default):**
 ```bash
-buzz-acp
+crew-acp
 ```
 
 **Four agents, no heartbeat (high-throughput event processing):**
 ```bash
-buzz-acp --agents 4
+crew-acp --agents 4
 ```
 
 **Two agents with 5-minute heartbeat:**
 ```bash
-buzz-acp --agents 2 --heartbeat-interval 300
+crew-acp --agents 2 --heartbeat-interval 300
 ```
 
 **Custom heartbeat prompt:**
 ```bash
-buzz-acp --agents 2 --heartbeat-interval 300 \
+crew-acp --agents 2 --heartbeat-interval 300 \
   --heartbeat-prompt "Check get_feed_actions() for pending approvals, then get_feed_mentions() for unanswered mentions. If nothing actionable, end your turn immediately."
 ```
 
@@ -226,12 +226,12 @@ By default, the ACP harness subscribes to stream message kinds (9, 46010, 40007)
 
 **CLI flags:**
 ```bash
-buzz-acp --kinds 9,46010,40007,45001,45002,45003 --no-mention-filter
+crew-acp --kinds 9,46010,40007,45001,45002,45003 --no-mention-filter
 ```
 
 **Or with `--subscribe all`:**
 ```bash
-buzz-acp --subscribe all --kinds 9,46010,40007,45001,45002,45003
+crew-acp --subscribe all --kinds 9,46010,40007,45001,45002,45003
 ```
 
 **Per-channel config:**
@@ -254,7 +254,7 @@ Forum event kinds:
 2. **Channel discovery** — Queries the relay REST API for accessible channels, subscribes to each.
 3. **Event loop** — Listens for @mention events (kind 9 with the agent's pubkey in a `#p` tag). Events queue per channel.
 4. **Prompting** — When events are pending and no prompt is in flight for that channel, drains all queued events for the oldest channel into a single batched prompt via ACP `session/prompt`.
-5. **Agent response** — The agent processes the prompt and uses the Buzz CLI (`send_message`, `get_messages`, etc.) to interact with Buzz.
+5. **Agent response** — The agent processes the prompt and uses the Crew CLI (`send_message`, `get_messages`, etc.) to interact with Crew.
 6. **Recovery** — If the agent crashes, the harness respawns it. If the relay disconnects, the harness reconnects with a `since` filter to avoid missing events.
 
 Each channel has at most one prompt in flight. Multiple channels can be processed concurrently when agents > 1.
@@ -263,15 +263,15 @@ Each channel has at most one prompt in flight. Multiple channels can be processe
 
 ## Bring Your Own Harness (BYOH)
 
-Buzz Desktop supports registering any ACP-speaking agent tool as a selectable runtime without a PR.
+Crew Desktop supports registering any ACP-speaking agent tool as a selectable runtime without a PR.
 
 ### How it works
 
-**Tier-1 — compiled-in runtimes** (Goose, Claude Code, Codex, Buzz Agent): have auto-installers, auth probes, and first-class onboarding. Their IDs (`goose`, `claude`, `codex`, `buzz-agent`) are reserved and cannot be overridden.
+**Tier-1 — compiled-in runtimes** (Goose, Claude Code, Codex, Crew Agent): have auto-installers, auth probes, and first-class onboarding. Their IDs (`goose`, `claude`, `codex`, `crew-agent`) are reserved and cannot be overridden.
 
 **Tier-2 — preset catalog** (Cursor, Oh My Pi, Grok Build, OpenCode, Kimi Code, Amp, Hermes Agent, OpenClaw): static `HarnessDefinition` entries in `desktop/src-tauri/src/managed_agents/discovery.rs` (`PRESET_HARNESSES`). They are always present in the runtime catalog, PATH-probed for availability, not editable or deletable by the user. Displayed with bundled logos; if not installed, a docs link appears instead.
 
-> **Note — OpenClaw:** `openclaw acp` is a Gateway-backed bridge; PATH availability shows "Available" even when the OpenClaw Gateway daemon is not running. This is expected tier-2 semantics (same class as a preset with unconfigured auth). The Gateway URL is configured via `OPENCLAW_GATEWAY_URL` (or the equivalent env var from OpenClaw's docs) — set it in the agent's **env vars** in Edit Agent, not in the definition env (the preset definition carries no env entries). Note that `openclaw acp` executes tools inside the Gateway daemon, not the Desktop process, so Desktop-injected `BUZZ_*` env vars do NOT reach the execution locus unless you also set them on the Gateway's own environment.
+> **Note — OpenClaw:** `openclaw acp` is a Gateway-backed bridge; PATH availability shows "Available" even when the OpenClaw Gateway daemon is not running. This is expected tier-2 semantics (same class as a preset with unconfigured auth). The Gateway URL is configured via `OPENCLAW_GATEWAY_URL` (or the equivalent env var from OpenClaw's docs) — set it in the agent's **env vars** in Edit Agent, not in the definition env (the preset definition carries no env entries). Note that `openclaw acp` executes tools inside the Gateway daemon, not the Desktop process, so Desktop-injected `CREW_*` env vars do NOT reach the execution locus unless you also set them on the Gateway's own environment.
 
 **Tier-3 — user custom harnesses**: JSON files in `<app-data>/custom_harnesses/` that the user can create from the Settings UI or drop in directly. Each file describes one harness — no install scripts.
 
@@ -296,7 +296,7 @@ Fields:
 - `label` — human-readable name shown in the UI
 - `command` — the executable name or absolute path (must be non-empty)
 - `args` — optional default CLI arguments (array); instance-level args override this when non-empty
-- `env` — optional environment variables injected at spawn time (definition env is a floor; user/persona/global env overrides it; Buzz-reserved keys like `CREW_MANAGED_AGENT` are always stripped and cannot be overridden)
+- `env` — optional environment variables injected at spawn time (definition env is a floor; user/persona/global env overrides it; Crew-reserved keys like `CREW_MANAGED_AGENT` are always stripped and cannot be overridden)
 - `installInstructionsUrl` / `installHint` — shown when the binary is not on PATH
 
 Invalid files (bad JSON, unknown id, empty command) are skipped with a warning and do not break discovery for other entries.
@@ -306,7 +306,7 @@ Invalid files (bad JSON, unknown id, empty command) are skipped with a warning a
 - No install shell commands in preset or custom definitions — only the user's own PATH is consulted.
 - `can_auto_install` is always `false` for preset and custom entries.
 - No user-supplied icon URLs — icons are bundled assets keyed by id in `RuntimeIcon.tsx`.
-- `CREW_MANAGED_AGENT` and other Buzz identity keys cannot be overridden by `env` in a custom definition; they are stripped before merging.
+- `CREW_MANAGED_AGENT` and other Crew identity keys cannot be overridden by `env` in a custom definition; they are stripped before merging.
 
 ### Adding a preset (contributor guide)
 
@@ -318,7 +318,7 @@ To add a new runtime to the tier-2 gallery:
 4. **Add a bundled logo** (64×64 PNG or optimised SVG) to `desktop/public/harness-logos/<id>.png` and add a corresponding entry to `PRESET_LOGOS` in `desktop/src/features/onboarding/ui/RuntimeIcon.tsx`. Record the source and license in `desktop/public/harness-logos/CREDITS.md`. Only bundle a mark whose upstream license permits redistribution; skipping this step is caught by `presetLogos.test.mjs`, which asserts every `PRESET_HARNESSES` id has a mapped logo that exists on disk.
 5. Run `cargo test --lib` and `just desktop-typecheck` to verify everything compiles.
 
-The built-in `BUILTIN_IDS` set (`goose`, `claude`, `codex`, `buzz-agent`, and all current preset ids) is the reserved namespace; every other id is available for custom harnesses.
+The built-in `BUILTIN_IDS` set (`goose`, `claude`, `codex`, `crew-agent`, and all current preset ids) is the reserved namespace; every other id is available for custom harnesses.
 
 ## Using Any ACP Agent
 
