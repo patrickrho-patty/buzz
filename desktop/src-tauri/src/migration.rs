@@ -23,6 +23,9 @@ use crate::util::replace_with_symlink;
 
 const CANONICAL_DEV_IDENTIFIER: &str = "xyz.patty.crew.app.dev";
 const CANONICAL_RELEASE_IDENTIFIER: &str = "xyz.patty.crew.app";
+
+mod migration_legacy;
+use migration_legacy::{legacy_app_data_dir, legacy_sprout_app_data_dir, LEGACY_GRIDDLE_DEV_IDENTIFIER, LEGACY_GRIDDLE_RELEASE_IDENTIFIER, LEGACY_SPROUT_DEV_IDENTIFIER, LEGACY_SPROUT_RELEASE_IDENTIFIER};
 const LEGACY_GRIDDLE_DEV_IDENTIFIER: &str = "xyz.patty.griddle.app.dev";
 const LEGACY_GRIDDLE_RELEASE_IDENTIFIER: &str = "xyz.patty.griddle.app";
 const LEGACY_SPROUT_DEV_IDENTIFIER: &str = "xyz.block.sprout.app.dev";
@@ -59,34 +62,7 @@ fn canonical_dev_data_dir(current: &Path) -> Option<PathBuf> {
     current.parent().map(|p| p.join(CANONICAL_DEV_IDENTIFIER))
 }
 
-pub(crate) fn legacy_app_data_dir(current: &Path) -> Option<PathBuf> {
-    let name = current.file_name()?.to_str()?;
-    let legacy_name = if name.starts_with(CANONICAL_DEV_IDENTIFIER) {
-        name.replacen(CANONICAL_DEV_IDENTIFIER, LEGACY_GRIDDLE_DEV_IDENTIFIER, 1)
-    } else if name.starts_with(CANONICAL_RELEASE_IDENTIFIER) {
-        name.replacen(CANONICAL_RELEASE_IDENTIFIER, LEGACY_GRIDDLE_RELEASE_IDENTIFIER, 1)
-    } else {
-        return None;
-    };
-    current.parent().map(|parent| parent.join(legacy_name))
-}
 
-pub(crate) fn legacy_sprout_app_data_dir(current: &Path) -> Option<PathBuf> {
-    let name = current.file_name()?.to_str()?;
-    // Very old installs that never ran the Griddle migration still have Sprout data
-    let legacy_name = if name.starts_with(CANONICAL_DEV_IDENTIFIER) {
-        name.replacen(CANONICAL_DEV_IDENTIFIER, LEGACY_SPROUT_DEV_IDENTIFIER, 1)
-    } else if name.starts_with(CANONICAL_RELEASE_IDENTIFIER) {
-        name.replacen(CANONICAL_RELEASE_IDENTIFIER, LEGACY_SPROUT_RELEASE_IDENTIFIER, 1)
-    } else if name.starts_with(LEGACY_GRIDDLE_DEV_IDENTIFIER) {
-        name.replacen(LEGACY_GRIDDLE_DEV_IDENTIFIER, LEGACY_SPROUT_DEV_IDENTIFIER, 1)
-    } else if name.starts_with(LEGACY_GRIDDLE_RELEASE_IDENTIFIER) {
-        name.replacen(LEGACY_GRIDDLE_RELEASE_IDENTIFIER, LEGACY_SPROUT_RELEASE_IDENTIFIER, 1)
-    } else {
-        return None;
-    };
-    current.parent().map(|parent| parent.join(legacy_name))
-}
 
 fn copy_dir_all(src: &Path, dst: &Path) -> std::io::Result<()> {
     std::fs::create_dir_all(dst)?;
