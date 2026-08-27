@@ -275,7 +275,7 @@ INSERT INTO _operator_global_tables (table_name, reason) VALUES
 -- transaction cannot commit behind the fence and no new writer can slip ahead.
 CREATE FUNCTION community_deletion_lock_key(target UUID) RETURNS BIGINT
 LANGUAGE SQL IMMUTABLE STRICT PARALLEL SAFE AS $$
-    SELECT hashtextextended('buzz-community-deletion:' || target::text, 0)
+    SELECT hashtextextended('crew-community-deletion:' || target::text, 0)
 $$;
 
 -- Keep the deletion control plane writable while its target tenant is fenced.

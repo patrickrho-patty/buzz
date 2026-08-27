@@ -212,7 +212,7 @@ CREATE TABLE events (
     --   44100  = KIND_MEMBER_ADDED_NOTIFICATION  (p-gated membership notice)
     --   44101  = KIND_MEMBER_REMOVED_NOTIFICATION (p-gated membership notice)
     -- NULL tsvector never matches `@@`, so excluded rows are storage-level
-    -- unsearchable. Constants kept in `buzz_core::kind` (KIND_GIFT_WRAP,
+    -- unsearchable. Constants kept in `crew_core::kind` (KIND_GIFT_WRAP,
     -- KIND_EVENT_REMINDER, KIND_DM_VISIBILITY,
     -- KIND_MEMBER_ADDED_NOTIFICATION, KIND_MEMBER_REMOVED_NOTIFICATION); inlined
     -- here because a sqlx

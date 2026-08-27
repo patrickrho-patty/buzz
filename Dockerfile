@@ -2,7 +2,7 @@
 #
 # Public Buzz relay image — published as ghcr.io/block/buzz:<tag>.
 #
-# Builds the `crew-relay` binary (Rust 1.95) and the `buzz-web` static bundle
+# Builds the `crew-relay` binary (Rust 1.95) and the `crew-web` static bundle
 # (pnpm + vite), then assembles them into a small debian-slim runtime with
 # `git` available (the relay shells out to git for repo hydrate / receive-pack
 # / upload-pack — see crates/crew-relay/src/api/git).

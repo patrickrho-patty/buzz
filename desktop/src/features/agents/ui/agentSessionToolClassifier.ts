@@ -284,12 +284,12 @@ function classifyCrewTool(
 
   const operation = normalizeToolNameText(name);
   const label = formatToolTitle(name, input.title);
-  const preview = extractBuzzToolPreview(input.args);
+  const preview = extractCrewToolPreview(input.args);
   return {
-    renderClass: isBuzzMessageSend(operation) ? "message" : "relay-op",
+    renderClass: isCrewMessageSend(operation) ? "message" : "relay-op",
     label,
     preview,
-    action: actionForBuzzOperation(operation, preview, info.tone),
+    action: actionForCrewOperation(operation, preview, info.tone),
     tone: info.tone,
     operation,
     object: preview,
@@ -357,7 +357,7 @@ export function parseCrewCliCommand(
   command: string,
 ): AgentActivityDescriptor | null {
   const tokens = tokenizeShellCommand(command);
-  const range = findBuzzCommand(tokens);
+  const range = findCrewCommand(tokens);
   if (!range) return null;
 
   const group = tokens[range.groupIndex];
@@ -365,14 +365,14 @@ export function parseCrewCliCommand(
   const operation = `${group}.${verb}`;
   const isSend = group === "messages" && verb === "send";
   const preview = isSend
-    ? extractBuzzCliInlineContent(tokens, range)
-    : extractBuzzCliObjectPreview(tokens, range);
+    ? extractCrewCliInlineContent(tokens, range)
+    : extractCrewCliObjectPreview(tokens, range);
   const tone = crewCliTone(group, verb);
   return {
     renderClass: isSend ? "message" : "relay-op",
-    label: titleForBuzzCli(group, verb),
+    label: titleForCrewCli(group, verb),
     preview,
-    action: actionForBuzzOperation(operation, preview, tone),
+    action: actionForCrewOperation(operation, preview, tone),
     tone,
     operation,
     object: preview,
@@ -381,7 +381,7 @@ export function parseCrewCliCommand(
   };
 }
 
-function titleForBuzzCli(group: string, verb: string) {
+function titleForCrewCli(group: string, verb: string) {
   if (group === "messages" && verb === "send") return "Send Message";
   return [group, verb]
     .map((part) =>
@@ -395,7 +395,7 @@ function titleForBuzzCli(group: string, verb: string) {
     .join(" ");
 }
 
-function actionForBuzzOperation(
+function actionForCrewOperation(
   operation: string,
   object: string | null,
   tone: AgentActivityTone,
@@ -431,7 +431,7 @@ function crewOperationVerb(verb: string, tone: AgentActivityTone) {
 }
 
 function crewOperationObject(operation: string) {
-  if (isBuzzMessageSend(operation)) return "message";
+  if (isCrewMessageSend(operation)) return "message";
   if (operation.includes(".")) {
     const [group] = operation.split(".");
     return group ? group.replace(/[-_]+/g, " ") : "Crew";
@@ -450,7 +450,7 @@ function crewCliTone(group: string, verb: string): AgentActivityTone {
   return "write";
 }
 
-function extractBuzzCliInlineContent(
+function extractCrewCliInlineContent(
   tokens: string[],
   range: CrewCommandRange,
 ): string | null {
@@ -460,7 +460,7 @@ function extractBuzzCliInlineContent(
   return content;
 }
 
-function extractBuzzCliObjectPreview(
+function extractCrewCliObjectPreview(
   tokens: string[],
   range: CrewCommandRange,
 ): string | null {
@@ -484,7 +484,7 @@ type CrewCommandRange = {
   verbIndex: number;
 };
 
-function findBuzzCommand(tokens: string[]): CrewCommandRange | null {
+function findCrewCommand(tokens: string[]): CrewCommandRange | null {
   for (let i = 0; i < tokens.length; i++) {
     if (!isCrewExecutable(tokens[i])) continue;
 
@@ -583,7 +583,7 @@ function getFlagValue(tokens: string[], start: number, flag: string) {
   return null;
 }
 
-function extractBuzzToolPreview(args: Record<string, unknown>): string | null {
+function extractCrewToolPreview(args: Record<string, unknown>): string | null {
   const content = getToolString(args, ["content", "message", "text", "body"]);
   if (content) return content;
   const query = getToolString(args, ["query", "search"]);
@@ -612,7 +612,7 @@ function genericPreview(input: ToolClassificationInput): string | null {
   );
 }
 
-function isBuzzMessageSend(operation: string) {
+function isCrewMessageSend(operation: string) {
   return operation === "send_message" || operation === "messages_send";
 }
 

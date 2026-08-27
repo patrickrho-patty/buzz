@@ -124,7 +124,7 @@ function assetPattern(platform: CrewDownloadPlatform): RegExp | undefined {
   }
 }
 
-export function selectBuzzDownloadUrl(
+export function selectCrewDownloadUrl(
   releases: GitHubRelease[],
   platform: CrewDownloadPlatform,
 ): string | undefined {
@@ -139,7 +139,7 @@ export function selectBuzzDownloadUrl(
   return undefined;
 }
 
-export async function resolveBuzzDownloadUrlForPlatform(
+export async function resolveCrewDownloadUrlForPlatform(
   platform: CrewDownloadPlatform,
 ): Promise<string> {
   try {
@@ -165,7 +165,7 @@ export async function resolveBuzzDownloadUrlForPlatform(
       headers: { Accept: "application/vnd.github+json" },
     });
     if (!response.ok) return CREW_RELEASES_URL;
-    const url = selectBuzzDownloadUrl(
+    const url = selectCrewDownloadUrl(
       (await response.json()) as GitHubRelease[],
       platform,
     );
@@ -188,8 +188,8 @@ export async function resolveBuzzDownloadUrlForPlatform(
   }
 }
 
-export async function resolveBuzzDownloadUrl(): Promise<string> {
-  return resolveBuzzDownloadUrlForPlatform(
+export async function resolveCrewDownloadUrl(): Promise<string> {
+  return resolveCrewDownloadUrlForPlatform(
     await detectCrewDownloadPlatform(navigator),
   );
 }

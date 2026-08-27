@@ -8,7 +8,7 @@
 
 CREATE SCHEMA IF NOT EXISTS benchmark;
 
--- One row per provisioned trial; written by BuzzTrialProvisioner.
+-- One row per provisioned trial; written by CrewTrialProvisioner.
 CREATE TABLE IF NOT EXISTS benchmark.trial_manifest (
     run_id        text        NOT NULL,
     trial_id      uuid        NOT NULL,

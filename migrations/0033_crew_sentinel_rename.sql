@@ -3,10 +3,10 @@
 -- Renames the session-GUC namespace and advisory-lock key literals shared
 -- between the relay binary and the database trigger layer:
 --   * session GUCs   crew.*                     -> crew.*
---   * lock-key salts 'buzz_channel_ttl:'        -> 'crew_channel_ttl:'
---                    'buzz_push_gate:'          -> 'crew_push_gate:'
---                    'buzz_channel_membership:' -> 'crew_channel_membership:'
---                    'buzz-community-deletion:' -> 'crew-community-deletion:'
+--   * lock-key salts 'crew_channel_ttl:'        -> 'crew_channel_ttl:'
+--                    'crew_push_gate:'          -> 'crew_push_gate:'
+--                    'crew_channel_membership:' -> 'crew_channel_membership:'
+--                    'crew-community-deletion:' -> 'crew-community-deletion:'
 --
 -- Safety model:
 --   * GUCs and advisory-lock keys are runtime-scoped (never persisted), so
