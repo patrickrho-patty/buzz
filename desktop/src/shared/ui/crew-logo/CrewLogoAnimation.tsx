@@ -448,7 +448,7 @@ function TextureFilter({
         scale={texture.displacement}
         xChannelSelector="R"
         yChannelSelector="G"
-        result="buzzedLogo"
+        result="crewedLogo"
       />
       <feColorMatrix
         in="textureNoise"
@@ -460,13 +460,13 @@ function TextureFilter({
         result="grainAlpha"
       />
       <feComposite
-        in="buzzedLogo"
+        in="crewedLogo"
         in2="grainAlpha"
         operator="in"
         result="grainLogo"
       />
       <feMerge>
-        <feMergeNode in="buzzedLogo" />
+        <feMergeNode in="crewedLogo" />
         <feMergeNode in="grainLogo" />
       </feMerge>
     </filter>

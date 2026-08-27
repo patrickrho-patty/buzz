@@ -1357,7 +1357,7 @@ test("requiredCredentialEnvKeys: custom/unknown runtime → empty", () => {
 
 const hasRequiredEnvKeyMissing = hasMissingRequiredEnvKey;
 
-test("blockSave_buzzAgentAnthropicMissingKey_blocked", () => {
+test("blockSave_crewAgentAnthropicMissingKey_blocked", () => {
   // Will's exact case: crew-agent / anthropic / opus / no ANTHROPIC_API_KEY
   const requiredKeys = requiredCredentialEnvKeys("crew-agent", "anthropic");
   const envVars = {}; // key absent
@@ -1368,7 +1368,7 @@ test("blockSave_buzzAgentAnthropicMissingKey_blocked", () => {
   );
 });
 
-test("blockSave_buzzAgentAnthropicKeyProvided_allowed", () => {
+test("blockSave_crewAgentAnthropicKeyProvided_allowed", () => {
   const requiredKeys = requiredCredentialEnvKeys("crew-agent", "anthropic");
   const envVars = { ANTHROPIC_API_KEY: "sk-ant-test" };
   assert.equal(
@@ -1378,7 +1378,7 @@ test("blockSave_buzzAgentAnthropicKeyProvided_allowed", () => {
   );
 });
 
-test("blockSave_buzzAgentAnthropicEmptyStringKey_blocked", () => {
+test("blockSave_crewAgentAnthropicEmptyStringKey_blocked", () => {
   // Empty string is treated the same as absent — matches EnvVarsEditor isMissing
   const requiredKeys = requiredCredentialEnvKeys("crew-agent", "anthropic");
   const envVars = { ANTHROPIC_API_KEY: "" };
@@ -1410,7 +1410,7 @@ test("blockSave_codexNoCliLogin_notBlocked", () => {
   );
 });
 
-test("blockSave_buzzAgentDatabricksMissingHost_blocked", () => {
+test("blockSave_crewAgentDatabricksMissingHost_blocked", () => {
   const requiredKeys = requiredCredentialEnvKeys("crew-agent", "databricks");
   const envVars = {};
   assert.equal(
@@ -1420,7 +1420,7 @@ test("blockSave_buzzAgentDatabricksMissingHost_blocked", () => {
   );
 });
 
-test("blockSave_buzzAgentDatabricksHostProvided_allowed", () => {
+test("blockSave_crewAgentDatabricksHostProvided_allowed", () => {
   const requiredKeys = requiredCredentialEnvKeys("crew-agent", "databricks");
   const envVars = { DATABRICKS_HOST: "https://my.databricks.instance" };
   assert.equal(
@@ -1525,7 +1525,7 @@ test("blockSave_inheritTransition_claudePin_toCrewAgentPersona_missingKey_blocke
   );
 });
 
-test("blockSave_inheritTransition_buzzAgentPin_toClaudePersona_notBlocked", () => {
+test("blockSave_inheritTransition_crewAgentPin_toClaudePersona_notBlocked", () => {
   // Scenario: agent is pinned to crew-agent/anthropic. The user checks
   // "Inherit runtime from persona" where the persona uses claude.
   // prospectiveRuntimeId resolves to "claude"; claude doesn't support provider

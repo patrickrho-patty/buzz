@@ -42,24 +42,24 @@ test("invite requires age and legal consent before opening Crew", async ({
           prerelease: false,
           assets: [
             {
-              name: "Buzz_0.4.9_aarch64.dmg",
+              name: "Crew_0.4.9_aarch64.dmg",
               browser_download_url:
-                "https://github.com/block/crew/releases/download/v0.4.9/Buzz_0.4.9_aarch64.dmg",
+                "https://github.com/block/crew/releases/download/v0.4.9/Crew_0.4.9_aarch64.dmg",
             },
             {
-              name: "Buzz_0.4.9_x64.dmg",
+              name: "Crew_0.4.9_x64.dmg",
               browser_download_url:
-                "https://github.com/block/crew/releases/download/v0.4.9/Buzz_0.4.9_x64.dmg",
+                "https://github.com/block/crew/releases/download/v0.4.9/Crew_0.4.9_x64.dmg",
             },
             {
-              name: "Buzz_0.4.9_amd64.AppImage",
+              name: "Crew_0.4.9_amd64.AppImage",
               browser_download_url:
-                "https://github.com/block/crew/releases/download/v0.4.9/Buzz_0.4.9_amd64.AppImage",
+                "https://github.com/block/crew/releases/download/v0.4.9/Crew_0.4.9_amd64.AppImage",
             },
             {
-              name: "Buzz_0.4.9_x64-setup_alpha-unsigned.exe",
+              name: "Crew_0.4.9_x64-setup_alpha-unsigned.exe",
               browser_download_url:
-                "https://github.com/block/crew/releases/download/v0.4.9/Buzz_0.4.9_x64-setup_alpha-unsigned.exe",
+                "https://github.com/block/crew/releases/download/v0.4.9/Crew_0.4.9_x64-setup_alpha-unsigned.exe",
             },
           ],
         },
@@ -72,7 +72,7 @@ test("invite requires age and legal consent before opening Crew", async ({
     page.getByRole("link", { name: "Download it now" }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/block/crew/releases/download/v0.4.9/Buzz_0.4.9_x64-setup_alpha-unsigned.exe",
+    "https://github.com/block/crew/releases/download/v0.4.9/Crew_0.4.9_x64-setup_alpha-unsigned.exe",
   );
 
   const ageConfirmation = page.getByLabel("I am 18 years of age or older.");
@@ -324,14 +324,14 @@ test("invite download falls back for mobile and non-desktop devices", async ({
             prerelease: false,
             assets: [
               {
-                name: "Buzz_0.4.9_x64.dmg",
+                name: "Crew_0.4.9_x64.dmg",
                 browser_download_url:
-                  "https://github.com/block/crew/releases/download/v0.4.9/Buzz_0.4.9_x64.dmg",
+                  "https://github.com/block/crew/releases/download/v0.4.9/Crew_0.4.9_x64.dmg",
               },
               {
-                name: "Buzz_0.4.9_amd64.AppImage",
+                name: "Crew_0.4.9_amd64.AppImage",
                 browser_download_url:
-                  "https://github.com/block/crew/releases/download/v0.4.9/Buzz_0.4.9_amd64.AppImage",
+                  "https://github.com/block/crew/releases/download/v0.4.9/Crew_0.4.9_amd64.AppImage",
               },
             ],
           },

@@ -54,7 +54,7 @@ cat > ~/.config/crew-fontconfig/fonts.conf <<'XML'
   </selectfont>
 </fontconfig>
 XML
-FONTCONFIG_FILE=~/.config/crew-fontconfig/fonts.conf ./Buzz_*.AppImage
+FONTCONFIG_FILE=~/.config/crew-fontconfig/fonts.conf ./Crew_*.AppImage
 ```
 
 **Native packages (`deb`/`rpm`):** The COLRv1 crash ([#2548](https://github.com/block/crew/issues/2548), [#2982](https://github.com/block/crew/issues/2982)) is AppImage-only — native packages use the system WebKit, which has a consistent FreeType ABI, and are not affected.
@@ -76,7 +76,7 @@ FONTCONFIG_FILE=~/.config/crew-fontconfig/fonts.conf ./Buzz_*.AppImage
 **If automatic detection doesn't help (`--safe-rendering`):** Pass `--safe-rendering` to force both `WEBKIT_DMABUF_RENDERER_FORCE_SHM=1` and `WEBKIT_DISABLE_COMPOSITING_MODE=1` for that launch:
 
 ```bash
-./Buzz_*.AppImage --safe-rendering
+./Crew_*.AppImage --safe-rendering
 # or for a native install:
 crew-desktop --safe-rendering
 ```
@@ -104,7 +104,7 @@ export WEBKIT_DMABUF_RENDERER_FORCE_SHM=1
 export GDK_BACKEND=x11
 export WEBKIT_DMABUF_RENDERER_FORCE_SHM=1
 export WEBKIT_SKIA_ENABLE_CPU_RENDERING=1
-./Buzz_*.AppImage
+./Crew_*.AppImage
 # or for native:
 crew-desktop
 ```
@@ -123,7 +123,7 @@ If none of the above match your situation:
 
 1. Run Crew from a terminal and capture the output:
    ```bash
-   ./Buzz_*.AppImage 2>&1 | tee crew-crash.log
+   ./Crew_*.AppImage 2>&1 | tee crew-crash.log
    ```
 
 2. Check for a core dump:

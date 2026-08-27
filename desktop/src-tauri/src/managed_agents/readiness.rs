@@ -998,7 +998,7 @@ mod tests {
         // The nudge copy must NOT say "set OPENAI_API_KEY".
         // Use a not-installed runtime so the requirement is always emitted
         // regardless of whether codex is on the test machine's PATH.
-        let rt = make_cli_runtime(&["__buzz_nonexistent_adapter_xyz789__"], None);
+        let rt = make_cli_runtime(&["__crew_nonexistent_adapter_xyz789__"], None);
         let reqs = cli_login::requirements(&["codex", "login", "status"], "run `codex login`", &rt);
         // Whether codex is installed or not, the copy (if any) must not mention OPENAI_API_KEY.
         for req in &reqs {
@@ -1076,11 +1076,11 @@ mod tests {
         // Both adapter and underlying CLI are nonexistent → NotInstalled state
         // → must return a CliLogin requirement with availability=NotInstalled.
         let rt = make_cli_runtime(
-            &["__buzz_nonexistent_adapter_abc123__"],
-            Some("__buzz_nonexistent_cli_abc123__"),
+            &["__crew_nonexistent_adapter_abc123__"],
+            Some("__crew_nonexistent_cli_abc123__"),
         );
         let reqs = cli_login::requirements(
-            &["__buzz_nonexistent_binary_abc123__", "status"],
+            &["__crew_nonexistent_binary_abc123__", "status"],
             "install the tool first",
             &rt,
         );
@@ -1112,7 +1112,7 @@ mod tests {
         // adapter absent.
         // → AdapterMissing state → no probe run → CliLogin{AdapterMissing}.
         let exe = present_binary_str();
-        let rt = make_cli_runtime(&["__buzz_nonexistent_adapter_xyz789__"], Some(exe));
+        let rt = make_cli_runtime(&["__crew_nonexistent_adapter_xyz789__"], Some(exe));
         let reqs = cli_login::requirements(&[exe, "--list"], "install the adapter", &rt);
         assert!(
             !reqs.is_empty(),
@@ -1138,7 +1138,7 @@ mod tests {
         let exe = present_binary_str();
         let rt = make_cli_runtime(
             static_commands(vec![exe]),              // adapter found via absolute path
-            Some("__buzz_nonexistent_cli_abc123__"), // underlying CLI missing
+            Some("__crew_nonexistent_cli_abc123__"), // underlying CLI missing
         );
         let reqs = cli_login::requirements(&[exe, "--list"], "install the CLI", &rt);
         assert!(
