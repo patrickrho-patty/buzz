@@ -69,6 +69,26 @@ test("username is prefilled from email prefix and locked", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("whoami invoke carries the onboarding transaction relay URL", async ({
+  page,
+}) => {
+  // Regression pin: the real oidc_whoami command used to resolve its base
+  // URL from build defaults, so a cold-cache fresh onboarding queried
+  // whatever listened on localhost:3000 instead of the joining workspace.
+  const input = page.getByTestId("community-profile-name-key");
+  await expect(input).toHaveValue("e2e-test");
+
+  const whoamiPayloads = await page.evaluate(() =>
+    (window.__BUZZ_E2E_COMMAND_LOG__ ?? [])
+      .filter((entry) => entry.command === "oidc_whoami")
+      .map((entry) => entry.payload),
+  );
+  expect(whoamiPayloads.length).toBeGreaterThan(0);
+  expect(whoamiPayloads[0]).toMatchObject({
+    relayUrl: "ws://localhost:3000",
+  });
+});
+
 test("no step-dot chrome during SSO join", async ({ page }) => {
   await expect(page.getByTestId("onboarding-step-dots")).toHaveCount(0);
 });

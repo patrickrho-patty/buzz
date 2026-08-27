@@ -27,7 +27,12 @@ ownerPubkey: "ebf0b5847e34a95716bca3cd83c1cd91efd8f6b610cc62b4531ec5e7d9825026"
 # ── Workforce SSO (Keycloak) ────────────────────────────────────────────────
 # Secret values (bridge client secret, key-wrap master key) live in the
 # `griddle-oidc` Secret; non-secret routing values are inline below.
+# ── Relay ────────────────────────────────────────────────────────────────────
+# Strict agent enrollment (relay.allowNipOaAuth=false): agent keys get NO
+# implicit workspace access via NIP-OA owner attestation. Every legitimate
+# agent must be explicitly enrolled by the admin (kind:9030 / invite claim).
 relay:
+  allowNipOaAuth: false
   extraEnv:
     - name: BUZZ_OIDC_ISSUER
       value: https://login.patty.io/realms/internal

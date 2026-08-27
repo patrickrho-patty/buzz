@@ -196,7 +196,7 @@ export function CommunityOnboardingFlow({
       return;
     }
     let cancelled = false;
-    void resolveWorkspaceEmail().then((email) => {
+    void resolveWorkspaceEmail(transaction?.relayUrl).then((email) => {
       console.info("[griddle-sso] resolveWorkspaceEmail resolved", {
         cancelled,
         email,

@@ -1,5 +1,5 @@
 use nostr::{
-    nips::nip44, Event, EventBuilder, JsonUtil, Keys, Kind, PublicKey, Tag, Timestamp, ToBech32,
+    Event, EventBuilder, JsonUtil, Keys, Kind, PublicKey, Tag, Timestamp, ToBech32, nips::nip44,
 };
 use tauri::Manager;
 use tauri::State;
@@ -789,23 +789,76 @@ mod nostr_identity_binding_tests {
 #[path = "identity_key_backup_tests.rs"]
 mod identity_key_backup_tests;
 
+#[cfg(test)]
+mod oidc_whoami_base_url_tests {
+    use super::oidc_relay_api_base;
+    use crate::app_state::build_app_state;
+
+    #[test]
+    fn explicit_transaction_relay_url_wins_and_converts_to_https() {
+        let state = build_app_state();
+        let base = oidc_relay_api_base(Some("wss://griddle.patty.io"), &state);
+        assert_eq!(base, "https://griddle.patty.io");
+    }
+
+    #[test]
+    fn explicit_relay_url_is_trimmed() {
+        let state = build_app_state();
+        let base = oidc_relay_api_base(Some("  wss://griddle.patty.io  "), &state);
+        assert_eq!(base, "https://griddle.patty.io");
+    }
+
+    #[test]
+    fn blank_explicit_falls_back_to_workspace_override() {
+        let state = build_app_state();
+        *state.relay_url_override.lock().unwrap() = Some("ws://127.0.0.1:9".to_string());
+        let base = oidc_relay_api_base(Some("   "), &state);
+        assert_eq!(base, "http://127.0.0.1:9");
+    }
+
+    #[test]
+    fn none_falls_back_to_workspace_override() {
+        let state = build_app_state();
+        *state.relay_url_override.lock().unwrap() = Some("ws://127.0.0.1:9".to_string());
+        let base = oidc_relay_api_base(None, &state);
+        assert_eq!(base, "http://127.0.0.1:9");
+    }
+}
+
+/// Base URL for OIDC relay calls.
+///
+/// Precedence: explicit relay URL (the onboarding transaction's workspace —
+/// authoritative during SSO join, when no workspace override exists yet) >
+/// workspace override > env/build default.
+///
+/// The explicit parameter exists because a bare default resolves to
+/// `ws://localhost:3000` during fresh onboarding; whoami then hits whatever
+/// happens to listen there and the SSO username prefill silently blanks.
+fn oidc_relay_api_base(explicit_relay_url: Option<&str>, state: &AppState) -> String {
+    explicit_relay_url
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(crate::relay::relay_http_base_url)
+        .unwrap_or_else(|| crate::relay::relay_api_base_url_with_override(state))
+}
+
 /// Resolve the workspace email bound to the current identity's pubkey via the
 /// relay's OIDC mapping (`GET /auth/oidc/whoami`, NIP-98 authed).
 ///
 /// Workforce SSO: the desktop uses this to derive+lock the username on any
-/// machine / after restarts — no session-scoped stash involved.
+/// machine / after restarts — no session-scoped stash involved. Callers should
+/// pass `relayUrl` from the active onboarding transaction so fresh-onboarding
+/// lookups target the joining workspace rather than the build default.
 #[tauri::command]
-pub async fn oidc_whoami(app_handle: tauri::AppHandle) -> Result<String, String> {
+pub async fn oidc_whoami(
+    app_handle: tauri::AppHandle,
+    relay_url: Option<String>,
+) -> Result<String, String> {
     let state = app_handle.state::<AppState>();
-    let base = crate::relay::relay_api_base_url();
+    let base = oidc_relay_api_base(relay_url.as_deref(), &state);
     let url = format!("{base}/auth/oidc/whoami");
 
-    let auth = crate::relay::build_nip98_auth_header(
-        &reqwest::Method::GET,
-        &url,
-        &[],
-        &state,
-    )?;
+    let auth = crate::relay::build_nip98_auth_header(&reqwest::Method::GET, &url, &[], &state)?;
 
     let client = reqwest::Client::new();
     let resp = client
@@ -817,8 +870,10 @@ pub async fn oidc_whoami(app_handle: tauri::AppHandle) -> Result<String, String>
     if !resp.status().is_success() {
         return Err(format!("whoami returned {}", resp.status()));
     }
-    let body: serde_json::Value =
-        resp.json().await.map_err(|e| format!("whoami parse: {e}"))?;
+    let body: serde_json::Value = resp
+        .json()
+        .await
+        .map_err(|e| format!("whoami parse: {e}"))?;
     let email = body
         .get("email")
         .and_then(|v| v.as_str())

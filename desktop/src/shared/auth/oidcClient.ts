@@ -184,13 +184,22 @@ function cleanupPending(): void {
  *
  * The result is cached in localStorage so the username survives restarts
  * without a network round-trip on the profile screen.
+ *
+ * `relayUrl` should be the active onboarding transaction's relay — during
+ * fresh SSO onboarding no workspace override exists yet, so without it the
+ * command would target the build-default relay and the lookup would fail.
  */
-export async function resolveWorkspaceEmail(): Promise<string> {
+export async function resolveWorkspaceEmail(
+  relayUrl?: string,
+): Promise<string> {
   const debug = (msg: string, data?: unknown) =>
     console.info(`[griddle-sso] ${msg}`, data ?? "");
-  debug("resolveWorkspaceEmail: start");
+  debug("resolveWorkspaceEmail: start", { relayUrl });
   try {
-    const email = await invokeTauri<string>("oidc_whoami");
+    const email = await invokeTauri<string>(
+      "oidc_whoami",
+      relayUrl ? { relayUrl } : undefined,
+    );
     debug("whoami returned", email);
     if (email && email.includes("@")) {
       try {
