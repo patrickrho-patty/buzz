@@ -3,12 +3,12 @@
 //! **Worktree sync** (`sync_shared_agent_data`): Per-launch symlink creation
 //! from the current worktree data directory to the canonical dev data
 //! directory (`xyz.patty.griddle.app.dev`). Only runs when
-//! `CREW_SHARE_IDENTITY=1` and `CREW_PRIVATE_KEY` is set. All dev
+//! `BUZZ_SHARE_IDENTITY=1` and `BUZZ_PRIVATE_KEY` is set. All dev
 //! instances share the same physical files — edits in any worktree are
 //! immediately visible to all others.
 //!
 //! **Command reconciliation** (`reconcile_legacy_command_names`): Per-launch
-//! fix-up of persisted built-in command names from the Sprout→Buzz rename.
+//! fix-up of persisted built-in command names from the Sprout→Crew rename.
 //!
 //! **Provider reconciliation** (`reconcile_provider_mcp_commands`): Per-launch
 //! fix-up of `mcp_command` values in `managed-agents.json` against the
@@ -28,7 +28,7 @@ const LEGACY_RELEASE_IDENTIFIER: &str = "xyz.block.sprout.app";
 /// JSON files symlinked from worktree data directories to the canonical
 /// dev data directory. Only data files — never `agent-pids/` or `logs/`.
 /// `identity.key` is deliberately excluded because worktree instances
-/// receive their identity via the `CREW_PRIVATE_KEY` env var.
+/// receive their identity via the `BUZZ_PRIVATE_KEY` env var.
 const SHARED_AGENT_FILES: &[&str] = &[
     "agents/managed-agents.json",
     "agents/personas.json",
@@ -192,14 +192,14 @@ fn run_boot_migrations_inner(app: &tauri::AppHandle, reset_completed: bool) {
 }
 
 /// Copy one-time app state from the legacy app identifier directory to
-/// the current Buzz identifier directory. The Tauri identifier controls the app
+/// the current Crew identifier directory. The Tauri identifier controls the app
 /// data path, so without this copy a product rename would look like a fresh
 /// install and users would lose their persisted identity and agent settings.
 pub fn migrate_legacy_app_data_dir(app: &tauri::AppHandle) {
     let current_dir = match app.path().app_data_dir() {
         Ok(dir) => dir,
         Err(e) => {
-            eprintln!("griddle-desktop: app-data-migration: cannot resolve app data dir: {e}");
+            eprintln!("crew-desktop: app-data-migration: cannot resolve app data dir: {e}");
             return;
         }
     };
@@ -211,12 +211,12 @@ pub fn migrate_legacy_app_data_dir(app: &tauri::AppHandle) {
     }
     match copy_dir_all(&legacy_dir, &current_dir) {
         Ok(()) => eprintln!(
-            "griddle-desktop: app-data-migration: copied legacy data from {} to {}",
+            "crew-desktop: app-data-migration: copied legacy data from {} to {}",
             legacy_dir.display(),
             current_dir.display()
         ),
         Err(error) => eprintln!(
-            "griddle-desktop: app-data-migration: failed to copy {} to {}: {error}",
+            "crew-desktop: app-data-migration: failed to copy {} to {}: {error}",
             legacy_dir.display(),
             current_dir.display()
         ),
@@ -268,12 +268,12 @@ const LEGACY_NEST_KNOWLEDGE: &[&str] = &[
 /// frontend dedupes the hint, so re-firing while `~/.sprout` lingers is benign.
 pub fn migrate_legacy_nest() -> bool {
     let Some(home) = dirs::home_dir() else {
-        eprintln!("griddle-desktop: nest-migration: cannot resolve home directory");
+        eprintln!("crew-desktop: nest-migration: cannot resolve home directory");
         return false;
     };
     // Destination is the current build's nest dir (`.buzz` or `.buzz-dev`).
     let Some(current_nest) = crate::managed_agents::nest_dir() else {
-        eprintln!("griddle-desktop: nest-migration: cannot resolve nest directory");
+        eprintln!("crew-desktop: nest-migration: cannot resolve nest directory");
         return false;
     };
     migrate_legacy_nest_at(&home.join(".sprout"), &current_nest)
@@ -316,12 +316,12 @@ fn migrate_legacy_nest_at(legacy: &Path, current: &Path) -> bool {
         };
         match result {
             Ok(()) => eprintln!(
-                "griddle-desktop: nest-migration: migrated {} to {}",
+                "crew-desktop: nest-migration: migrated {} to {}",
                 src.display(),
                 dst.display()
             ),
             Err(error) => eprintln!(
-                "griddle-desktop: nest-migration: failed to migrate {} to {}: {error}",
+                "crew-desktop: nest-migration: failed to migrate {} to {}: {error}",
                 src.display(),
                 dst.display()
             ),
@@ -368,19 +368,17 @@ pub(crate) fn migrate_dev_repos_dir_at(home: &Path, dev_nest: &Path) {
     // ensure_nest() in the boot sequence, so the directory may not yet exist.
     if let Err(e) = std::fs::create_dir_all(dev_nest) {
         eprintln!(
-            "griddle-desktop: dev-nest-migration: failed to create dev nest {}: {e}",
+            "crew-desktop: dev-nest-migration: failed to create dev nest {}: {e}",
             dev_nest.display()
         );
         return;
     }
     match std::fs::copy(&src, &dst) {
         Ok(_) => eprintln!(
-            "griddle-desktop: dev-nest-migration: migrated .repos-dir to {}",
+            "crew-desktop: dev-nest-migration: migrated .repos-dir to {}",
             dst.display()
         ),
-        Err(e) => {
-            eprintln!("griddle-desktop: dev-nest-migration: failed to migrate .repos-dir: {e}")
-        }
+        Err(e) => eprintln!("crew-desktop: dev-nest-migration: failed to migrate .repos-dir: {e}"),
     }
 }
 
@@ -420,7 +418,7 @@ pub(crate) fn maybe_migrate_dev_repos_dir(
 /// contents were copied (useful for a one-time log message, not required).
 pub fn migrate_dev_nest() -> bool {
     let Some(home) = dirs::home_dir() else {
-        eprintln!("griddle-desktop: dev-nest-migration: cannot resolve home directory");
+        eprintln!("crew-desktop: dev-nest-migration: cannot resolve home directory");
         return false;
     };
     let legacy = home.join(".buzz");
@@ -440,7 +438,7 @@ pub fn migrate_dev_nest() -> bool {
         let sentinel = current.join(DEV_NEST_MIGRATED_SENTINEL);
         if let Err(e) = std::fs::write(&sentinel, "") {
             eprintln!(
-                "griddle-desktop: dev-nest-migration: failed to write sentinel {}: {e}",
+                "crew-desktop: dev-nest-migration: failed to write sentinel {}: {e}",
                 sentinel.display()
             );
         }
@@ -498,7 +496,7 @@ fn patch_json_records(
     };
     let Ok(mut records) = serde_json::from_str::<Vec<serde_json::Value>>(&content) else {
         eprintln!(
-            "griddle-desktop: patch-json-records: failed to parse {}",
+            "crew-desktop: patch-json-records: failed to parse {}",
             path.display()
         );
         return;
@@ -512,7 +510,7 @@ fn patch_json_records(
     if changed {
         if let Ok(bytes) = serde_json::to_vec_pretty(&records) {
             if let Err(e) = crate::managed_agents::atomic_write_json_restricted(path, &bytes) {
-                eprintln!("griddle-desktop: patch-json-records: {e}");
+                eprintln!("crew-desktop: patch-json-records: {e}");
             }
         }
     }
@@ -583,7 +581,7 @@ fn refresh_builtin_agent_avatars_in_file(
     };
     let Ok(mut records) = serde_json::from_str::<Vec<serde_json::Value>>(&contents) else {
         eprintln!(
-            "griddle-desktop: refresh-builtin-agent-avatars: invalid JSON in {}",
+            "crew-desktop: refresh-builtin-agent-avatars: invalid JSON in {}",
             path.display()
         );
         return;
@@ -663,7 +661,7 @@ fn refresh_builtin_agent_avatars_in_file(
     if changed {
         if let Ok(bytes) = serde_json::to_vec_pretty(&records) {
             if let Err(e) = crate::managed_agents::atomic_write_json_restricted(path, &bytes) {
-                eprintln!("griddle-desktop: refresh-builtin-agent-avatars: {e}");
+                eprintln!("crew-desktop: refresh-builtin-agent-avatars: {e}");
             }
         }
     }
@@ -759,35 +757,33 @@ fn replace_builtin_avatar(record: &mut serde_json::Value, persona_id: &str, now:
 /// data directory to the canonical dev data directory.
 ///
 /// Guards:
-/// - `CREW_SHARE_IDENTITY` must be `"1"`
-/// - `CREW_PRIVATE_KEY` must parse as valid `nostr::Keys`
+/// - `BUZZ_SHARE_IDENTITY` must be `"1"`
+/// - `BUZZ_PRIVATE_KEY` must parse as valid `nostr::Keys`
 /// - The canonical dir must differ from the current dir (skip if we ARE canonical)
 /// - The canonical dir must exist
 pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
     // Guard: only runs when sharing identity with a worktree.
-    let is_shared = std::env::var("CREW_SHARE_IDENTITY")
+    let is_shared = std::env::var("BUZZ_SHARE_IDENTITY")
         .map(|v| v == "1")
         .unwrap_or(false);
     if !is_shared {
         return;
     }
 
-    // Guard: CREW_PRIVATE_KEY must be a valid nostr key.
-    let has_valid_key = crew_core_pkg::env_alias::env_lookup("CREW_PRIVATE_KEY")
+    // Guard: BUZZ_PRIVATE_KEY must be a valid nostr key.
+    let has_valid_key = std::env::var("BUZZ_PRIVATE_KEY")
         .ok()
         .and_then(|k| k.parse::<nostr::Keys>().ok())
         .is_some();
     if !has_valid_key {
-        eprintln!(
-            "griddle-desktop: shared-agent-sync: CREW_PRIVATE_KEY missing or invalid, skipping"
-        );
+        eprintln!("crew-desktop: shared-agent-sync: BUZZ_PRIVATE_KEY missing or invalid, skipping");
         return;
     }
 
     let current_dir = match app.path().app_data_dir() {
         Ok(dir) => dir,
         Err(e) => {
-            eprintln!("griddle-desktop: shared-agent-sync: cannot resolve app data dir: {e}");
+            eprintln!("crew-desktop: shared-agent-sync: cannot resolve app data dir: {e}");
             return;
         }
     };
@@ -803,7 +799,7 @@ pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
         .is_some_and(is_dev_data_dir_name);
     if !is_dev {
         eprintln!(
-            "griddle-desktop: shared-agent-sync: skipping — data dir is not a dev dir ({})",
+            "crew-desktop: shared-agent-sync: skipping — data dir is not a dev dir ({})",
             current_dir.display()
         );
         return;
@@ -812,9 +808,7 @@ pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
     let canonical_dir = match canonical_dev_data_dir(&current_dir) {
         Some(dir) => dir,
         None => {
-            eprintln!(
-                "griddle-desktop: shared-agent-sync: cannot compute canonical dir (no parent)"
-            );
+            eprintln!("crew-desktop: shared-agent-sync: cannot compute canonical dir (no parent)");
             return;
         }
     };
@@ -832,7 +826,7 @@ pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
     // Guard: skip if canonical dir doesn't exist.
     if !canonical_dir.exists() {
         eprintln!(
-            "griddle-desktop: shared-agent-sync: canonical dir does not exist: {}",
+            "crew-desktop: shared-agent-sync: canonical dir does not exist: {}",
             canonical_dir.display()
         );
         return;
@@ -864,7 +858,7 @@ pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
                 if let Some(file_parent) = canonical_file.parent() {
                     if let Err(e) = std::fs::create_dir_all(file_parent) {
                         eprintln!(
-                            "griddle-desktop: shared-agent-sync: failed to create {}: {e}",
+                            "crew-desktop: shared-agent-sync: failed to create {}: {e}",
                             file_parent.display()
                         );
                         break;
@@ -872,7 +866,7 @@ pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
                 }
                 let _ = std::fs::rename(&sibling_file, &canonical_file);
                 eprintln!(
-                    "griddle-desktop: shared-agent-sync: seeded {rel} from {}",
+                    "crew-desktop: shared-agent-sync: seeded {rel} from {}",
                     sibling.display()
                 );
                 break;
@@ -892,7 +886,7 @@ pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
         if let Some(parent) = dst.parent() {
             if let Err(e) = std::fs::create_dir_all(parent) {
                 eprintln!(
-                    "griddle-desktop: shared-agent-sync: failed to create {}: {e}",
+                    "crew-desktop: shared-agent-sync: failed to create {}: {e}",
                     parent.display()
                 );
                 continue;
@@ -910,7 +904,7 @@ pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
         if !canonical_target.exists() {
             if let Err(e) = std::fs::create_dir_all(&canonical_target) {
                 eprintln!(
-                    "griddle-desktop: shared-agent-sync: failed to create {}: {e}",
+                    "crew-desktop: shared-agent-sync: failed to create {}: {e}",
                     canonical_target.display()
                 );
             }
@@ -936,7 +930,7 @@ pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
                             // replace_with_symlink backs up any leftover real content.
                             replace_with_symlink(&canonical_target, &sibling_dir);
                             eprintln!(
-                                "griddle-desktop: shared-agent-sync: migrated {rel} from {}",
+                                "crew-desktop: shared-agent-sync: migrated {rel} from {}",
                                 sibling.display()
                             );
                             break;
@@ -958,7 +952,7 @@ pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
         if let Some(parent) = dst.parent() {
             if let Err(e) = std::fs::create_dir_all(parent) {
                 eprintln!(
-                    "griddle-desktop: shared-agent-sync: failed to create {}: {e}",
+                    "crew-desktop: shared-agent-sync: failed to create {}: {e}",
                     parent.display()
                 );
                 continue;
@@ -970,7 +964,7 @@ pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
 
     if synced > 0 {
         eprintln!(
-            "griddle-desktop: shared-agent-sync: {synced} item(s) linked to {}",
+            "crew-desktop: shared-agent-sync: {synced} item(s) linked to {}",
             canonical_dir.display()
         );
     }
@@ -1018,7 +1012,7 @@ fn reconcile_mcp_commands_in_file(path: &Path) {
             return false;
         }
         eprintln!(
-            "griddle-desktop: runtime-reconcile: {:?} ({:?}): mcp_command {:?} → {:?}",
+            "crew-desktop: runtime-reconcile: {:?} ({:?}): mcp_command {:?} → {:?}",
             obj.get("name").and_then(|v| v.as_str()).unwrap_or("?"),
             effective_command,
             current,
@@ -1044,7 +1038,7 @@ fn replace_command_field(
         return false;
     }
     eprintln!(
-        "griddle-desktop: command-rename-reconcile: {:?}: {field} {:?} → {:?}",
+        "crew-desktop: command-rename-reconcile: {:?}: {field} {:?} → {:?}",
         obj.get("name").and_then(|v| v.as_str()).unwrap_or("?"),
         current,
         replacement,
@@ -1088,7 +1082,7 @@ fn reconcile_legacy_command_names_in_file(path: &Path) {
                         replace_command_field(obj, "mcp_command", "crew-dev-mcp".to_string());
                 }
                 "sprout-mcp" | "sprout-mcp-server" | "buzz-mcp-server" => {
-                    let replacement = if agent_command == "crew-agent" {
+                    let replacement = if agent_command == "buzz-agent" {
                         "crew-dev-mcp"
                     } else {
                         ""
@@ -1112,17 +1106,17 @@ fn reconcile_legacy_persona_runtimes_in_file(path: &Path) {
             return false;
         }
         eprintln!(
-            "griddle-desktop: command-rename-reconcile: persona {:?}: runtime {:?} → {:?}",
+            "crew-desktop: command-rename-reconcile: persona {:?}: runtime {:?} → {:?}",
             obj.get("display_name")
                 .or_else(|| obj.get("displayName"))
                 .and_then(|v| v.as_str())
                 .unwrap_or("?"),
             runtime,
-            "crew-agent",
+            "buzz-agent",
         );
         obj.insert(
             "runtime".to_string(),
-            serde_json::Value::String("crew-agent".to_string()),
+            serde_json::Value::String("buzz-agent".to_string()),
         );
         true
     });
@@ -1136,7 +1130,7 @@ fn rewrite_legacy_persona_md_runtime(content: &str) -> Option<String> {
     if runtime.as_str()? != "sprout-agent" {
         return None;
     }
-    *runtime = serde_yaml::Value::String("crew-agent".to_string());
+    *runtime = serde_yaml::Value::String("buzz-agent".to_string());
     let frontmatter = serde_yaml::to_string(&value).ok()?;
     Some(format!("---\n{frontmatter}---\n{body}"))
 }
@@ -1175,13 +1169,13 @@ fn reconcile_legacy_team_persona_runtime_files(dir: &Path) {
         match std::fs::write(&path, updated) {
             Ok(()) => {
                 eprintln!(
-                    "griddle-desktop: command-rename-reconcile: updated {}",
+                    "crew-desktop: command-rename-reconcile: updated {}",
                     path.display()
                 );
             }
             Err(error) => {
                 eprintln!(
-                    "griddle-desktop: command-rename-reconcile: failed to update {}: {error}",
+                    "crew-desktop: command-rename-reconcile: failed to update {}: {error}",
                     path.display()
                 );
             }
@@ -1189,7 +1183,7 @@ fn reconcile_legacy_team_persona_runtime_files(dir: &Path) {
     }
 }
 
-/// Reconcile exact built-in command values persisted before the Sprout→Buzz
+/// Reconcile exact built-in command values persisted before the Sprout→Crew
 /// rename. Custom commands and explicit paths are left untouched.
 pub fn reconcile_legacy_command_names(app: &tauri::AppHandle) {
     let Ok(current_dir) = app.path().app_data_dir() else {
@@ -1245,7 +1239,7 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
         let mut changed = false;
 
         // Only rewrite the structured provider field when the baked build env
-        // marks this as a Block build (CREW_AGENT_PROVIDER == "databricks_v2").
+        // marks this as a Block build (BUZZ_AGENT_PROVIDER == "databricks_v2").
         // OSS users may intentionally select V1 (Model Serving), so we must not
         // silently migrate their provider to V2 (AI Gateway).
         if rewrite_v1_provider && obj.get("provider").and_then(|v| v.as_str()) == Some("databricks")
@@ -1256,7 +1250,7 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
                 .unwrap_or("?")
                 .to_string();
             eprintln!(
-                "griddle-desktop: databricks-v1-to-v2: {name:?}: provider \"databricks\" → \"databricks_v2\"",
+                "crew-desktop: databricks-v1-to-v2: {name:?}: provider \"databricks\" → \"databricks_v2\"",
             );
             obj.insert(
                 "provider".to_string(),
@@ -1264,11 +1258,11 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
             );
             // Also clear the model field — a V1 model name (e.g. "dbrx-instruct")
             // on a V2 provider would shadow the baked DATABRICKS_MODEL at spawn time
-            // (CREW_AGENT_MODEL from runtime_metadata_env_vars takes priority in
-            // crew-agent config.rs). Clearing it lets the baked V2 default win.
+            // (BUZZ_AGENT_MODEL from runtime_metadata_env_vars takes priority in
+            // buzz-agent config.rs). Clearing it lets the baked V2 default win.
             if obj.remove("model").is_some() {
                 eprintln!(
-                    "griddle-desktop: databricks-v1-to-v2: {name:?}: cleared stale V1 model field",
+                    "crew-desktop: databricks-v1-to-v2: {name:?}: cleared stale V1 model field",
                 );
             }
             changed = true;
@@ -1290,9 +1284,7 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
                 .collect();
             for key in stale_keys {
                 env_vars.remove(key.as_str());
-                eprintln!(
-                    "griddle-desktop: databricks-v1-to-v2: removed stale env_vars[\"{key}\"]",
-                );
+                eprintln!("crew-desktop: databricks-v1-to-v2: removed stale env_vars[\"{key}\"]",);
                 changed = true;
             }
         }
@@ -1306,7 +1298,7 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
 /// `provider: "databricks"` to `"databricks_v2"`.
 ///
 /// **Block builds** (where `baked_build_env()` contains
-/// `CREW_AGENT_PROVIDER=databricks_v2`): the structured `provider` field is
+/// `BUZZ_AGENT_PROVIDER=databricks_v2`): the structured `provider` field is
 /// rewritten V1→V2 because the baked release targets V2 exclusively. Records
 /// that were saved before this migration would otherwise silently override the
 /// baked value at spawn time (last-write-wins in `Command::env`).
@@ -1314,7 +1306,7 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
 /// **OSS builds** (baked env empty): the `provider` field is left alone —
 /// V1 (`databricks`) is a valid Model Serving choice for OSS users.
 ///
-/// In both cases, stale `CREW_AGENT_PROVIDER` / `CREW_AGENT_MODEL` /
+/// In both cases, stale `BUZZ_AGENT_PROVIDER` / `BUZZ_AGENT_MODEL` /
 /// `GOOSE_PROVIDER` / `GOOSE_MODEL` are stripped from `env_vars`. These keys
 /// are always re-derived from structured fields at spawn time; persisted copies
 /// silence UI edits and cause stale routing.
@@ -1324,12 +1316,12 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
 /// `reconcile_legacy_command_names` and `reconcile_provider_mcp_commands`.
 pub fn reconcile_databricks_v1_to_v2(app: &tauri::AppHandle) {
     use crate::managed_agents::baked_build_env;
-    // On Block builds, the baked env contains CREW_AGENT_PROVIDER=databricks_v2.
+    // On Block builds, the baked env contains BUZZ_AGENT_PROVIDER=databricks_v2.
     // Use that as a reliable signal that this is a Block build and the V1
     // provider should be migrated. OSS builds have an empty baked env, so
     // rewrite_v1_provider is false and the structured provider is preserved.
     let rewrite_v1_provider = baked_build_env()
-        .get("CREW_AGENT_PROVIDER")
+        .get("BUZZ_AGENT_PROVIDER")
         .map(|v| v == "databricks_v2")
         .unwrap_or(false);
     let Ok(current_dir) = app.path().app_data_dir() else {

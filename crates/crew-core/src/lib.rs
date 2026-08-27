@@ -12,8 +12,10 @@ pub mod channel;
 /// NIP-AE Agent Engrams — slug grammar, conversation key, d-tag derivation,
 /// body parse/serialize, envelope build/validate, head selection.
 pub mod engram;
-/// Relay-side error types.
+/// Legacy-name alias window for externally documented env contracts
+/// (`CREW_*` reads falling back to documented `BUZZ_*` spellings).
 pub mod env_alias;
+/// Relay-side error types.
 pub mod error;
 /// Relay-side event wrapper with verification tracking.
 pub mod event;

@@ -321,7 +321,7 @@ mod tests {
         assert_eq!(pods[0].metadata.name.as_deref(), Some("sprig"));
         assert!(uri.starts_with("/api/v1/namespaces/owned-ns/pods?"));
         assert!(
-            uri.contains("labelSelector=app.kubernetes.io%2Fmanaged-by%3Dbuzz-backend-kubernetes")
+            uri.contains("labelSelector=app.kubernetes.io%2Fmanaged-by%3Dcrew-backend-kubernetes")
         );
         assert!(
             !uri.contains("resourceVersion"),
