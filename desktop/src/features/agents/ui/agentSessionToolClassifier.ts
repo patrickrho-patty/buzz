@@ -7,7 +7,7 @@ import type {
 } from "./agentSessionTypes";
 import {
   formatToolTitle,
-  getBuzzToolInfo,
+  getCrewToolInfo,
   normalizeToolNameText,
 } from "./agentSessionToolCatalog";
 import {
@@ -104,7 +104,7 @@ const TOOL_CLASS_LABELS: Record<AgentActivityRenderClass, string> = {
 const providers: ToolClassifierProvider[] = [
   classifyLoadSkillTool,
   classifyDeveloperHarnessTool,
-  classifyBuzzTool,
+  classifyCrewTool,
 ];
 
 export function classifyTool(
@@ -173,7 +173,7 @@ function classifyDeveloperHarnessTool(
 
   if (kind === "shell") {
     const command = getToolString(input.args, ["command"]);
-    const crewCli = command ? parseBuzzCliCommand(command) : null;
+    const crewCli = command ? parseCrewCliCommand(command) : null;
     if (crewCli) {
       return crewCli;
     }
@@ -271,15 +271,15 @@ function classifyDeveloperHarnessTool(
   };
 }
 
-function classifyBuzzTool(
+function classifyCrewTool(
   input: ToolClassificationInput,
 ): AgentActivityDescriptor | null {
   const name = [input.crewToolName, input.toolName, input.title].find(
-    (value) => value && getBuzzToolInfo(value),
+    (value) => value && getCrewToolInfo(value),
   );
   if (!name) return null;
 
-  const info = getBuzzToolInfo(name);
+  const info = getCrewToolInfo(name);
   if (!info) return null;
 
   const operation = normalizeToolNameText(name);
@@ -353,7 +353,7 @@ function classifyDeveloperToolName(value: string | null | undefined) {
   return null;
 }
 
-export function parseBuzzCliCommand(
+export function parseCrewCliCommand(
   command: string,
 ): AgentActivityDescriptor | null {
   const tokens = tokenizeShellCommand(command);
@@ -486,7 +486,7 @@ type CrewCommandRange = {
 
 function findBuzzCommand(tokens: string[]): CrewCommandRange | null {
   for (let i = 0; i < tokens.length; i++) {
-    if (!isBuzzExecutable(tokens[i])) continue;
+    if (!isCrewExecutable(tokens[i])) continue;
 
     for (let j = i + 1; j < tokens.length; j++) {
       if (isCommandSeparator(tokens[j])) break;
@@ -559,7 +559,7 @@ export function tokenizeShellCommand(command: string): string[] {
   return tokens;
 }
 
-function isBuzzExecutable(token: string) {
+function isCrewExecutable(token: string) {
   const base = token.split(/[\\/]/).pop();
   // `crew` is the canonical binary; `crew` accepted for older transcripts.
   return base === "crew" || base === "crew" || token === "crew";

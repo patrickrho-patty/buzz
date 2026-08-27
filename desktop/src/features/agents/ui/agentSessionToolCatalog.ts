@@ -136,7 +136,7 @@ const CREW_TOOL_TITLE_ALIASES: Array<[RegExp, string]> = [
   [/\bremoving reaction\b/, "remove_reaction"],
 ];
 
-export function getBuzzToolInfo(title: string): CrewToolInfo | null {
+export function getCrewToolInfo(title: string): CrewToolInfo | null {
   const name = normalizeToolName(title);
   const isRead = CREW_READ_TOOLS.has(name);
   const isWrite = CREW_WRITE_TOOLS.has(name);
@@ -206,7 +206,7 @@ export function getBuzzToolInfo(title: string): CrewToolInfo | null {
 }
 
 export function normalizeToolName(title: string): string {
-  const knownName = findBuzzToolName(title, true);
+  const knownName = findCrewToolName(title, true);
   if (knownName) return knownName;
 
   const normalized = normalizeToolNameText(title).replace(/^buzz_/, "");
@@ -222,7 +222,7 @@ export function normalizeToolNameText(value: string): string {
     .replace(/^_+|_+$/g, "");
 }
 
-export function findBuzzToolName(value: string, includeShortNames: boolean) {
+export function findCrewToolName(value: string, includeShortNames: boolean) {
   const alias = findBuzzToolAlias(value);
   if (alias) return alias;
 

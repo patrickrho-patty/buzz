@@ -29,7 +29,7 @@ function createMemoryStorage(initial = {}) {
 
 test("migrateLegacyCommunityStorage promotes current Crew workspace state", () => {
   const storage = createMemoryStorage({
-    "crew-workspaces": '[{"id":"current"}]',
+    "buzz-workspaces": '[{"id":"current"}]',
     "buzz-active-workspace-id": "current",
   });
 
@@ -43,7 +43,7 @@ test("migrateLegacyCommunityStorage does not overwrite new community state", () 
   const storage = createMemoryStorage({
     "crew-communities": '[{"id":"new"}]',
     "crew-active-community-id": "new",
-    "crew-workspaces": '[{"id":"old"}]',
+    "buzz-workspaces": '[{"id":"old"}]',
     "buzz-active-workspace-id": "old",
   });
 
@@ -121,8 +121,8 @@ test("clearCommunityStorage preserves completed final-leave discovery", () => {
   const storage = createMemoryStorage({
     "crew-communities": "new",
     "crew-active-community-id": "new",
-    "crew-workspaces": "old",
-    "crew-active-workspace-id": "old",
+    "buzz-workspaces": "old",
+    "buzz-active-workspace-id": "old",
     "crew-community-discovery-after-leave": "1",
   });
 

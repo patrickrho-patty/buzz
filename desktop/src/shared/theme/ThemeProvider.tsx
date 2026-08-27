@@ -247,7 +247,7 @@ export function isCrewTheme(themeName: string): boolean {
   return themeName === "crew" || themeName === "crew-dark";
 }
 /** @deprecated use isCrewTheme */
-export const isCrewTheme = isCrewTheme;
+export const isBuzzTheme = isCrewTheme;
 
 
 /**
