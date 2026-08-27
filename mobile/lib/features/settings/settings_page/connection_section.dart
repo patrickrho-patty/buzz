@@ -26,7 +26,7 @@ class _ConnectionSection extends ConsumerWidget {
           AppListRow(
             icon: LucideIcons.scanQrCode,
             title: 'Send identity to desktop',
-            subtitle: 'Scan a recovery code shown by Buzz Desktop',
+            subtitle: 'Scan a recovery code shown by Crew Desktop',
             trailing: const _RowChevron(),
             onTap: () async {
               final pairing = ref.read(pairingProvider.notifier);
@@ -149,7 +149,7 @@ class _IdentityRow extends StatelessWidget {
 }
 
 void _confirmRemoveCommunity(BuildContext context, WidgetRef ref) {
-  showBuzzDialog<void>(
+  showCrewDialog<void>(
     context: context,
     builder: (ctx) => AlertDialog(
       title: const Text('Remove Community'),

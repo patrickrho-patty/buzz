@@ -1,6 +1,6 @@
-import 'package:buzz/shared/widgets/concentric_sheet_surface.dart';
-import 'package:buzz/shared/theme/theme.dart';
-import 'package:buzz/shared/widgets/modal_presentation.dart';
+import 'package:crew/shared/widgets/concentric_sheet_surface.dart';
+import 'package:crew/shared/theme/theme.dart';
+import 'package:crew/shared/widgets/modal_presentation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -45,7 +45,7 @@ void main() {
     'replaces the Flutter fallback when native support is available',
     (tester) async {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      const surfaceChannel = MethodChannel('buzz/concentric_sheet_surface');
+      const surfaceChannel = MethodChannel('crew/concentric_sheet_surface');
       tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
         surfaceChannel,
         (call) async => call.method == 'isSupported' ? true : null,
@@ -84,7 +84,7 @@ void main() {
     tester,
   ) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-    const surfaceChannel = MethodChannel('buzz/concentric_sheet_surface');
+    const surfaceChannel = MethodChannel('crew/concentric_sheet_surface');
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
       surfaceChannel,
       (call) async => call.method == 'isSupported' ? true : null,
@@ -96,7 +96,7 @@ void main() {
           home: Scaffold(
             body: Builder(
               builder: (context) => FilledButton(
-                onPressed: () => showBuzzModalBottomSheet<void>(
+                onPressed: () => showCrewModalBottomSheet<void>(
                   context: context,
                   title: 'Members',
                   builder: (_) => const Text('Sheet body'),
@@ -115,7 +115,7 @@ void main() {
         find.byWidgetPredicate(
           (widget) =>
               widget is UiKitView &&
-              widget.viewType == 'buzz/concentric_sheet_surface',
+              widget.viewType == 'crew/concentric_sheet_surface',
         ),
       );
       expect(
@@ -140,7 +140,7 @@ void main() {
       final nativeClose = tester.widget<UiKitView>(
         find.byWidgetPredicate(
           (widget) =>
-              widget is UiKitView && widget.viewType == 'buzz/navigation_glass',
+              widget is UiKitView && widget.viewType == 'crew/navigation_glass',
         ),
       );
       expect(nativeClose.creationParams, containsPair('icon', 'close'));
@@ -164,7 +164,7 @@ void main() {
             home: Scaffold(
               body: Builder(
                 builder: (context) => FilledButton(
-                  onPressed: () => showBuzzModalBottomSheet<void>(
+                  onPressed: () => showCrewModalBottomSheet<void>(
                     context: context,
                     title: 'Sheet title',
                     showDragHandle: true,
@@ -292,7 +292,7 @@ void main() {
           home: Scaffold(
             body: Builder(
               builder: (context) => FilledButton(
-                onPressed: () => showBuzzModalBottomSheet<void>(
+                onPressed: () => showCrewModalBottomSheet<void>(
                   context: context,
                   showDragHandle: true,
                   builder: (_) => const Text('Sheet body'),
@@ -342,7 +342,7 @@ void main() {
           home: Scaffold(
             body: Builder(
               builder: (context) => FilledButton(
-                onPressed: () => showBuzzModalBottomSheet<void>(
+                onPressed: () => showCrewModalBottomSheet<void>(
                   context: context,
                   showDragHandle: true,
                   showCloseButton: false,

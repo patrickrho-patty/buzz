@@ -10,8 +10,8 @@ library;
 import '../relay/relay_validation.dart';
 
 /// A parsed deep link supported by the app.
-sealed class BuzzDeepLink {
-  const BuzzDeepLink();
+sealed class CrewDeepLink {
+  const CrewDeepLink();
 }
 
 /// A parsed relay invite link.
@@ -19,7 +19,7 @@ sealed class BuzzDeepLink {
 /// Canonical share links are `https://<relay>/invite/<code>`. The custom
 /// `crew://join?relay=<ws(s)://relay>&code=<code>` form is only an installed-app
 /// handoff from the web landing page.
-class InviteDeepLink extends BuzzDeepLink {
+class InviteDeepLink extends CrewDeepLink {
   /// Relay URL normalized to the websocket scheme used by the app.
   final String relayUrl;
 
@@ -53,7 +53,7 @@ class InviteDeepLink extends BuzzDeepLink {
 /// A parsed channel-only deep link.
 ///
 /// Canonical form: `crew://channel/<channel-uuid>`.
-class ChannelDeepLink extends BuzzDeepLink {
+class ChannelDeepLink extends CrewDeepLink {
   /// Channel UUID from the sole path segment.
   final String channelId;
 
@@ -71,7 +71,7 @@ class ChannelDeepLink extends BuzzDeepLink {
 }
 
 /// A parsed `crew://message` deep link.
-class MessageDeepLink extends BuzzDeepLink {
+class MessageDeepLink extends CrewDeepLink {
   /// Channel UUID from the `channel` query param.
   final String channelId;
 
@@ -129,7 +129,7 @@ String buildMessageLink({
     if (threadRootId != null && threadRootId.isNotEmpty) 'thread': threadRootId,
   };
   return Uri(
-    scheme: 'buzz',
+    scheme: 'crew',
     host: 'message',
     queryParameters: params,
   ).toString();
@@ -141,7 +141,7 @@ String buildMessageLink({
 /// parameters and fragments are rejected so malformed or ambiguous links never
 /// become navigation targets.
 ChannelDeepLink? parseChannelDeepLink(Uri uri) {
-  if (uri.scheme != 'buzz' || uri.host != 'channel') return null;
+  if (!(uri.scheme == 'crew' || uri.scheme == 'buzz') || uri.host != 'channel') return null;
   if (uri.hasQuery ||
       uri.hasFragment ||
       uri.userInfo.isNotEmpty ||
@@ -167,7 +167,7 @@ ChannelDeepLink? parseChannelDeepLink(Uri uri) {
 /// shape: no path, fragment, credentials, duplicate or unknown parameters; a
 /// UUID channel; and 64-character hexadecimal message/thread event IDs.
 MessageDeepLink? parseMessageDeepLink(Uri uri) {
-  if (uri.scheme != 'buzz' || uri.host != 'message') return null;
+  if (!(uri.scheme == 'crew' || uri.scheme == 'buzz') || uri.host != 'message') return null;
   if (uri.path.isNotEmpty ||
       uri.hasFragment ||
       uri.userInfo.isNotEmpty ||
@@ -218,7 +218,7 @@ MessageDeepLink? parseMessageDeepLink(Uri uri) {
 InviteDeepLink? parseInviteDeepLink(Uri uri) {
   if (uri.hasFragment || uri.userInfo.isNotEmpty) return null;
 
-  if (uri.scheme == 'buzz') {
+  if (uri.scheme == 'crew' || uri.scheme == 'buzz') {
     if (uri.host != 'join') return null;
     final relay = uri.queryParameters['relay'];
     final code = uri.queryParameters['code'];
@@ -284,13 +284,13 @@ InviteDeepLink? parseInviteDeepLink(Uri uri) {
 }
 
 /// Parse any supported Buzz deep link.
-BuzzDeepLink? parseBuzzDeepLink(Uri uri) =>
+CrewDeepLink? parseCrewDeepLink(Uri uri) =>
     parseInviteDeepLink(uri) ??
     parseChannelDeepLink(uri) ??
     parseMessageDeepLink(uri);
 
 /// A validated Buzz repository, pull request, or issue permalink.
-class EntityDeepLink extends BuzzDeepLink {
+class EntityDeepLink extends CrewDeepLink {
   final String type;
   final String owner;
   final String repository;
@@ -306,7 +306,7 @@ class EntityDeepLink extends BuzzDeepLink {
 
 /// Parse canonical `crew://repo|pr|issue` permalinks for inline presentation.
 EntityDeepLink? parseEntityDeepLink(Uri uri) {
-  if (uri.scheme != 'buzz' || !{'repo', 'pr', 'issue'}.contains(uri.host)) {
+  if (!(uri.scheme == 'crew' || uri.scheme == 'buzz') || !{'repo', 'pr', 'issue'}.contains(uri.host)) {
     return null;
   }
   if (uri.path.isNotEmpty ||

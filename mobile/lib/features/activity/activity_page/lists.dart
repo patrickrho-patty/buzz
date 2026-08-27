@@ -23,7 +23,7 @@ class _RemindersList extends ConsumerWidget {
 
     if (remindersAsync.isLoading && reminders.isEmpty) {
       return const Center(
-        child: BuzzLoadingIndicator(
+        child: CrewLoadingIndicator(
           size: 44,
           semanticLabel: 'Loading reminders',
         ),

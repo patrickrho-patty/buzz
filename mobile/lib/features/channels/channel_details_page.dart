@@ -164,7 +164,7 @@ class ChannelDetailsPage extends HookConsumerWidget {
       return () => scrollController.removeListener(updateCollapsedTitle);
     }, [scrollController, resolvedChannel.name]);
 
-    Future<void> openMembers() => showBuzzModalBottomSheet<void>(
+    Future<void> openMembers() => showCrewModalBottomSheet<void>(
       context: context,
       title: 'Members',
       isScrollControlled: true,
@@ -177,7 +177,7 @@ class ChannelDetailsPage extends HookConsumerWidget {
 
     Future<void> openAddMembers() async {
       final mediaQuery = MediaQuery.of(context);
-      await showBuzzModalBottomSheet<bool>(
+      await showCrewModalBottomSheet<bool>(
         context: context,
         title: 'Add members',
         isScrollControlled: true,
@@ -197,7 +197,7 @@ class ChannelDetailsPage extends HookConsumerWidget {
     }
 
     Future<void> openManageChannel() async {
-      final shouldClose = await showBuzzModalBottomSheet<bool>(
+      final shouldClose = await showCrewModalBottomSheet<bool>(
         context: context,
         title: 'Manage channel',
         isScrollControlled: true,
@@ -320,7 +320,7 @@ class ChannelDetailsPage extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
-                    child: BuzzActionTile(
+                    child: CrewActionTile(
                       key: const ValueKey('channel-details-star-action'),
                       icon: null,
                       iconWidget: LucideStarIcon(
@@ -335,7 +335,7 @@ class ChannelDetailsPage extends HookConsumerWidget {
                   ),
                   const SizedBox(width: Grid.xxs),
                   Expanded(
-                    child: BuzzActionTile(
+                    child: CrewActionTile(
                       key: const ValueKey('channel-details-mute-action'),
                       icon: isMuted ? LucideIcons.bell : LucideIcons.bellOff,
                       iconColor: isMuted ? context.colors.primary : null,
@@ -345,7 +345,7 @@ class ChannelDetailsPage extends HookConsumerWidget {
                   ),
                   const SizedBox(width: Grid.xxs),
                   Expanded(
-                    child: BuzzActionTile(
+                    child: CrewActionTile(
                       key: const ValueKey('channel-details-edit-action'),
                       icon: LucideIcons.pencil,
                       label: 'Edit',
@@ -390,7 +390,7 @@ class ChannelDetailsPage extends HookConsumerWidget {
                 const AppListRow(
                   icon: LucideIcons.loaderCircle,
                   title: 'Loading members…',
-                  trailing: BuzzLoadingIndicator(
+                  trailing: CrewLoadingIndicator(
                     size: 20,
                     semanticLabel: 'Loading members',
                   ),
@@ -503,7 +503,7 @@ class ChannelDetailsPage extends HookConsumerWidget {
                   const AppListRow(
                     icon: LucideIcons.loaderCircle,
                     title: 'Loading channel actions…',
-                    trailing: BuzzLoadingIndicator(
+                    trailing: CrewLoadingIndicator(
                       size: 20,
                       semanticLabel: 'Loading channel actions',
                     ),

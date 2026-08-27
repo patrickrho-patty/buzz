@@ -9,8 +9,8 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart' as http_testing;
 import 'package:image_picker/image_picker.dart';
 import 'package:nostr/nostr.dart' as nostr;
-import 'package:buzz/shared/relay/media_auth.dart';
-import 'package:buzz/shared/relay/media_upload.dart';
+import 'package:crew/shared/relay/media_auth.dart';
+import 'package:crew/shared/relay/media_upload.dart';
 
 final _pngBytes = Uint8List.fromList([
   0x89,
@@ -237,7 +237,7 @@ final _animatedWebpBytes = Uint8List.fromList([
   0x00,
 ]);
 
-const _mediaUploadPlatformChannel = MethodChannel('buzz/media_upload');
+const _mediaUploadPlatformChannel = MethodChannel('crew/media_upload');
 
 void _setMockMediaUploadPlatformHandler(
   Future<Object?> Function(MethodCall call)? handler,

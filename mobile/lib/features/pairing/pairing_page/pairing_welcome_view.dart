@@ -57,7 +57,7 @@ class _PairingWelcomeView extends StatelessWidget {
                 ),
                 const SizedBox(height: Grid.sm),
                 Text(
-                  'Welcome to Buzz',
+                  'Welcome to Crew',
                   textAlign: TextAlign.center,
                   style: context.textTheme.headlineSmall?.copyWith(
                     color: _onboardingInk,
@@ -87,7 +87,7 @@ class _PairingWelcomeView extends StatelessWidget {
                               ? const SizedBox(
                                   width: 20,
                                   height: 20,
-                                  child: BuzzLoadingIndicator(
+                                  child: CrewLoadingIndicator(
                                     size: 20,
                                     color: _onboardingCtaLabel,
                                     semanticLabel: 'Opening scanner',
@@ -174,7 +174,7 @@ class _PairingWelcomeView extends StatelessWidget {
                                             ? const SizedBox(
                                                 width: 20,
                                                 height: 20,
-                                                child: BuzzLoadingIndicator(
+                                                child: CrewLoadingIndicator(
                                                   size: 20,
                                                   color: _onboardingCtaLabel,
                                                   semanticLabel: 'Connecting',

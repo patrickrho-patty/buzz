@@ -317,7 +317,7 @@ void showReactionDetailSheet({
   required List<TimelineReaction> reactions,
   required String initialEmoji,
 }) {
-  showBuzzModalBottomSheet<void>(
+  showCrewModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,

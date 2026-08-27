@@ -152,7 +152,7 @@ String _normalizeToolName(String title) {
 
   final normalized = _normalizeToolNameText(
     title,
-  ).replaceAll(RegExp(r'^buzz_'), '');
+  ).replaceAll(RegExp(r'^crew_'), '');
   return RegExp(r'[a-z][a-z0-9_]+').firstMatch(normalized)?[0] ?? normalized;
 }
 
@@ -219,7 +219,8 @@ _parsePromptText(String text) {
 
   PromptSection? eventSection;
   for (final section in sections) {
-    if (section.title.toLowerCase().startsWith('buzz event')) {
+    if (section.title.toLowerCase().startsWith('crew event') ||
+        section.title.toLowerCase().startsWith('buzz event')) {
       eventSection = section;
       break;
     }
@@ -308,7 +309,7 @@ Map<String, dynamic> _extractToolArgs(Map<String, dynamic> update) {
   return const {};
 }
 
-({String title, String toolName, String? buzzToolName}) _extractToolIdentity(
+({String title, String toolName, String? crewToolName}) _extractToolIdentity(
   Map<String, dynamic> update,
 ) {
   final candidates = _collectToolNameCandidates(update);
@@ -330,7 +331,7 @@ Map<String, dynamic> _extractToolArgs(Map<String, dynamic> update) {
   return (
     title: title,
     toolName: knownName ?? _normalizeToolName(firstSpecific ?? title),
-    buzzToolName: knownName,
+    crewToolName: knownName,
   );
 }
 
@@ -509,7 +510,7 @@ List<TranscriptItem> buildTranscript(List<ObserverFrame> events) {
     String id,
     String title,
     String toolName,
-    String? buzzToolName,
+    String? crewToolName,
     ToolStatus status,
     Map<String, dynamic> args,
     String result,
@@ -518,15 +519,15 @@ List<TranscriptItem> buildTranscript(List<ObserverFrame> events) {
   ) {
     final existing = itemsById[id];
     final canonicalBuzzToolName =
-        buzzToolName ?? _findBuzzToolName(toolName, true);
+        crewToolName ?? _findBuzzToolName(toolName, true);
     if (existing is ToolItem) {
       if (!_isGenericToolTitle(title)) {
         existing.title = title;
       }
       if (canonicalBuzzToolName != null) {
-        existing.buzzToolName = canonicalBuzzToolName;
+        existing.crewToolName = canonicalBuzzToolName;
         existing.toolName = canonicalBuzzToolName;
-      } else if (existing.buzzToolName == null &&
+      } else if (existing.crewToolName == null &&
           !_isGenericToolTitle(toolName)) {
         existing.toolName = toolName;
       }
@@ -541,7 +542,7 @@ List<TranscriptItem> buildTranscript(List<ObserverFrame> events) {
       id: id,
       title: title,
       toolName: canonicalBuzzToolName ?? toolName,
-      buzzToolName: canonicalBuzzToolName,
+      crewToolName: canonicalBuzzToolName,
       status: status,
       args: args,
       result: result,
@@ -668,7 +669,7 @@ List<TranscriptItem> buildTranscript(List<ObserverFrame> events) {
         'tool:$toolId',
         identity.title,
         identity.toolName,
-        identity.buzzToolName,
+        identity.crewToolName,
         _normalizeToolStatus(_asString(update['status']) ?? 'executing'),
         _extractToolArgs(update),
         _extractToolResult(update),
@@ -688,7 +689,7 @@ List<TranscriptItem> buildTranscript(List<ObserverFrame> events) {
         'tool:$toolId',
         identity.title,
         identity.toolName,
-        identity.buzzToolName,
+        identity.crewToolName,
         status,
         _extractToolArgs(update),
         _extractToolResult(update),

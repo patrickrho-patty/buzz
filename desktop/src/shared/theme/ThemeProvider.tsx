@@ -262,14 +262,14 @@ function resolveEffectiveAccent(
 function applyBuzzSidebar(themeName: string) {
   const root = document.documentElement;
   if (isBuzzTheme(themeName)) {
-    root.setAttribute("data-buzz-sidebar", "");
+    root.setAttribute("data-crew-sidebar", "");
     // Keep the concrete Buzz variant on the root as well as the generic
     // marker. The gradient stylesheet matches this attribute directly, which
     // makes WKWebView invalidate the painted background when light/dark mode
     // changes instead of relying only on a custom-property dependency update.
     root.setAttribute("data-buzz-theme", themeName);
   } else {
-    root.removeAttribute("data-buzz-sidebar");
+    root.removeAttribute("data-crew-sidebar");
     root.removeAttribute("data-buzz-theme");
   }
 }

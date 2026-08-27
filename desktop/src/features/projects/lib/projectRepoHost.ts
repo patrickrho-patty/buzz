@@ -1,7 +1,7 @@
 import { effectiveCloneUrls } from "./projectCloneUrl";
 
 export type ProjectRepoHost =
-  | { kind: "buzz" }
+  | { kind: "crew" }
   | { kind: "external"; host: string }
   | { kind: "unresolved" };
 
@@ -22,7 +22,7 @@ export function projectRepoHost(
     const isBuzzPath = /^\/git\/[0-9a-f]{64}\/[^/]+\/?$/i.test(clone.pathname);
 
     if (clone.origin === relay.origin && isBuzzPath) {
-      return { kind: "buzz" };
+      return { kind: "crew" };
     }
 
     return { kind: "external", host: clone.host };
@@ -73,7 +73,7 @@ export function repositoryDisplayPath(
   )[0];
   if (!cloneUrl) return null;
 
-  if (projectRepoHost(cloneUrl, relayOrigin).kind === "buzz") {
+  if (projectRepoHost(cloneUrl, relayOrigin).kind === "crew") {
     const owner = ownerLabel?.trim() || `${repository.owner.slice(0, 8)}…`;
     return `${owner}/${repository.dtag}`;
   }

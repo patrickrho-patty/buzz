@@ -168,7 +168,7 @@ export function ProjectsView() {
       filter === "all"
         ? projects.filter(
             (project) =>
-              projectRepoHostForProject(project, relayOrigin).kind === "buzz",
+              projectRepoHostForProject(project, relayOrigin).kind === "crew",
           )
         : [],
     [filter, projects, relayOrigin],
@@ -303,7 +303,7 @@ export function ProjectsView() {
           return hasLocalCheckout(project, localRepoNames);
         if (repositoryScope === "buzz")
           return (
-            projectRepoHostForProject(project, relayOrigin).kind === "buzz"
+            projectRepoHostForProject(project, relayOrigin).kind === "crew"
           );
         if (repositoryScope === "linked")
           return (

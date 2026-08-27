@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../theme/theme.dart';
-import 'buzz_loading_indicator.dart';
+import 'crew_loading_indicator.dart';
 
 /// Equal-width icon action used by profile and profile-adjacent surfaces.
-class BuzzActionTile extends StatelessWidget {
+class CrewActionTile extends StatelessWidget {
   /// Creates an action tile with an optional loading state.
-  const BuzzActionTile({
+  const CrewActionTile({
     super.key,
     required this.icon,
     required this.label,
@@ -77,7 +77,7 @@ class BuzzActionTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (isLoading)
-                  BuzzLoadingIndicator(
+                  CrewLoadingIndicator(
                     size: 22,
                     color: context.colors.onSurface,
                     semanticLabel: loadingSemanticLabel ?? label,

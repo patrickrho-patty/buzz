@@ -1,4 +1,4 @@
-package xyz.block.buzz.mobile
+package xyz.block.crew.mobile
 
 import kotlin.test.Test
 import kotlin.test.assertContentEquals

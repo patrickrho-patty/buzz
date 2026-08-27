@@ -5,15 +5,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hooks_riverpod/misc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:nostr/nostr.dart' as nostr;
-import 'package:buzz/features/channels/channel.dart';
-import 'package:buzz/features/channels/channels_provider.dart';
-import 'package:buzz/features/channels/message_content.dart';
-import 'package:buzz/features/channels/media_viewer_page.dart';
-import 'package:buzz/shared/deeplink/deep_link.dart';
-import 'package:buzz/shared/deeplink/pending_deep_link_provider.dart';
-import 'package:buzz/shared/emoji/emoji_only.dart';
-import 'package:buzz/shared/relay/relay.dart';
-import 'package:buzz/shared/theme/theme.dart';
+import 'package:crew/features/channels/channel.dart';
+import 'package:crew/features/channels/channels_provider.dart';
+import 'package:crew/features/channels/message_content.dart';
+import 'package:crew/features/channels/media_viewer_page.dart';
+import 'package:crew/shared/deeplink/deep_link.dart';
+import 'package:crew/shared/deeplink/pending_deep_link_provider.dart';
+import 'package:crew/shared/emoji/emoji_only.dart';
+import 'package:crew/shared/relay/relay.dart';
+import 'package:crew/shared/theme/theme.dart';
 
 Widget _testable(
   Widget child, {
@@ -474,7 +474,7 @@ void main() {
         );
       });
 
-      testWidgets('renders and routes bare Buzz message links', (tester) async {
+      testWidgets('renders and routes bare Crew message links', (tester) async {
         const url =
             'crew://message?channel=580ca78b-9dae-46f3-8854-bd671853ba32&id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 

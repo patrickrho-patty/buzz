@@ -5,14 +5,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:nostr/nostr.dart' as nostr;
-import 'package:buzz/features/pairing/pairing_crypto.dart';
-import 'package:buzz/features/pairing/pairing_provider.dart';
-import 'package:buzz/features/pairing/pairing_socket.dart';
-import 'package:buzz/shared/auth/auth.dart';
-import 'package:buzz/shared/crypto/ecdh.dart';
-import 'package:buzz/shared/crypto/nip44.dart';
-import 'package:buzz/shared/relay/relay.dart';
-import 'package:buzz/shared/security/sensitive_action_authorizer.dart';
+import 'package:crew/features/pairing/pairing_crypto.dart';
+import 'package:crew/features/pairing/pairing_provider.dart';
+import 'package:crew/features/pairing/pairing_socket.dart';
+import 'package:crew/shared/auth/auth.dart';
+import 'package:crew/shared/crypto/ecdh.dart';
+import 'package:crew/shared/crypto/nip44.dart';
+import 'package:crew/shared/relay/relay.dart';
+import 'package:crew/shared/security/sensitive_action_authorizer.dart';
 
 /// Tests for [PairingNotifier]'s legacy `crew://` payload parsing and
 /// SSRF-prevention validation.

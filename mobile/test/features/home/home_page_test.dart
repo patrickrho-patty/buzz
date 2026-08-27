@@ -1,7 +1,7 @@
-import 'package:buzz/features/home/home_page.dart';
-import 'package:buzz/features/channels/channels_page.dart';
-import 'package:buzz/features/profile/profile_avatar.dart';
-import 'package:buzz/shared/theme/theme.dart';
+import 'package:crew/features/home/home_page.dart';
+import 'package:crew/features/channels/channels_page.dart';
+import 'package:crew/features/profile/profile_avatar.dart';
+import 'package:crew/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';

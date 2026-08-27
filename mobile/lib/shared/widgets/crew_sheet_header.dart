@@ -8,8 +8,8 @@ import '../theme/theme.dart';
 import 'ios_glass_navigation_button.dart';
 
 /// A titled sheet header with balanced actions and an exactly centered title.
-class BuzzSheetHeader extends StatelessWidget {
-  const BuzzSheetHeader({
+class CrewSheetHeader extends StatelessWidget {
+  const CrewSheetHeader({
     super.key,
     this.title,
     this.titleKey,

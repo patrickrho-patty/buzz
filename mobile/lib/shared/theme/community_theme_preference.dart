@@ -5,11 +5,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'accent_colors.dart';
 import 'theme_catalog.dart';
+import 'crew_theme.dart' show crewThemeName, crewDarkThemeName;
 import 'theme_provider.dart' show effectiveTheme, schemeForAppearanceMode;
 
 const communityThemeDTag = 'community-theme';
 const defaultCommunityTheme = CommunityThemePreference(
-  theme: 'buzz',
+  theme: 'crew',
   accent: '#3b82f6',
   followSystem: true,
 );
@@ -30,17 +31,25 @@ class CommunityThemePreference {
   factory CommunityThemePreference.fromJson(Map<String, dynamic> json) {
     if (json['version'] != 1 ||
         json['theme'] is! String ||
-        findTheme(json['theme'] as String) == null ||
+        findTheme(_normalizeLegacyTheme(json['theme'] as String)) == null ||
         json['accent'] is! String ||
         accentIndexForWireValue(json['accent'] as String) == null ||
         json['followSystem'] is! bool) {
       throw const FormatException('Invalid community theme preference');
     }
     return CommunityThemePreference(
-      theme: json['theme'] as String,
+      // Wire events written by pre-rename apps may carry 'buzz'/'buzz-dark';
+      // normalize to the crew spellings on read.
+      theme: _normalizeLegacyTheme(json['theme'] as String),
       accent: json['accent'] as String,
       followSystem: json['followSystem'] as bool,
     );
+  }
+
+  static String _normalizeLegacyTheme(String theme) {
+    if (theme == 'buzz') return crewThemeName;
+    if (theme == 'buzz-dark') return crewDarkThemeName;
+    return theme;
   }
 
   Map<String, dynamic> toJson() => {
@@ -70,9 +79,9 @@ class CommunityThemeStorage {
   static const _prefix = 'buzz-community-theme.v1';
   static const _outboxPrefix = 'buzz-community-theme-outbox.v1';
   static const _migrationPrefix = 'buzz-community-theme-migrated.v1';
-  static const _legacyModeKey = 'buzz_theme_mode';
-  static const _legacyAccentKey = 'buzz_accent_color';
-  static const _legacySchemeKey = 'buzz_color_scheme';
+  static const _legacyModeKey = 'crew_theme_mode';
+  static const _legacyAccentKey = 'crew_accent_color';
+  static const _legacySchemeKey = 'crew_color_scheme';
 
   final SharedPreferences prefs;
 

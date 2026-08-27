@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:buzz/features/invites/invite_create_provider.dart';
-import 'package:buzz/shared/community/community_membership_provider.dart';
-import 'package:buzz/shared/relay/relay.dart';
+import 'package:crew/features/invites/invite_create_provider.dart';
+import 'package:crew/shared/community/community_membership_provider.dart';
+import 'package:crew/shared/relay/relay.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;

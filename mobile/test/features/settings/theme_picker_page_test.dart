@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:buzz/features/settings/accent_picker_page.dart';
-import 'package:buzz/features/settings/theme_picker_page.dart';
-import 'package:buzz/features/settings/settings_page.dart';
-import 'package:buzz/shared/theme/theme.dart';
+import 'package:crew/features/settings/accent_picker_page.dart';
+import 'package:crew/features/settings/theme_picker_page.dart';
+import 'package:crew/features/settings/settings_page.dart';
+import 'package:crew/shared/theme/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/widget_helpers.dart';
@@ -62,7 +62,7 @@ void main() {
     testWidgets('system mode normalizes a stored unpaired theme', (
       tester,
     ) async {
-      final instance = await _prefs({'buzz_color_scheme': 'snazzy-light'});
+      final instance = await _prefs({'crew_color_scheme': 'snazzy-light'});
       await tester.pumpWidget(
         WidgetHelpers.testable(
           child: const ThemePickerPage(),
@@ -72,7 +72,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        instance.getString('buzz_color_scheme'),
+        instance.getString('crew_color_scheme'),
         themeGroups().paired.first.name,
       );
     });
@@ -83,7 +83,7 @@ void main() {
       await _pumpPicker(
         tester,
         const ThemePickerPage(),
-        prefs: {'buzz_theme_mode': 'light'},
+        prefs: {'crew_theme_mode': 'light'},
       );
 
       await _search(tester, 'github');
@@ -97,7 +97,7 @@ void main() {
       await _pumpPicker(
         tester,
         const ThemePickerPage(),
-        prefs: {'buzz_theme_mode': 'light'},
+        prefs: {'crew_theme_mode': 'light'},
       );
 
       await _search(tester, 'snazzy');
@@ -109,7 +109,7 @@ void main() {
       await _pumpPicker(
         tester,
         const ThemePickerPage(),
-        prefs: {'buzz_theme_mode': 'dark'},
+        prefs: {'crew_theme_mode': 'dark'},
       );
 
       await _search(tester, 'github');
@@ -122,7 +122,7 @@ void main() {
       await _pumpPicker(
         tester,
         const ThemePickerPage(),
-        prefs: {'buzz_theme_mode': 'light', 'buzz_color_scheme': 'nord'},
+        prefs: {'crew_theme_mode': 'light', 'crew_color_scheme': 'nord'},
       );
 
       await _search(tester, 'nord');
@@ -138,7 +138,7 @@ void main() {
       await _pumpPicker(
         tester,
         const ThemePickerPage(),
-        prefs: {'buzz_color_scheme': 'github-dark'},
+        prefs: {'crew_color_scheme': 'github-dark'},
       );
 
       await _search(tester, 'github');
@@ -151,7 +151,7 @@ void main() {
     });
 
     testWidgets('tapping a theme persists the selection', (tester) async {
-      final instance = await _prefs({'buzz_theme_mode': 'dark'});
+      final instance = await _prefs({'crew_theme_mode': 'dark'});
       await tester.pumpWidget(
         WidgetHelpers.testable(
           child: const ThemePickerPage(),
@@ -164,7 +164,7 @@ void main() {
       await tester.tap(find.text('Nord'));
       await tester.pumpAndSettle();
 
-      expect(instance.getString('buzz_color_scheme'), 'nord');
+      expect(instance.getString('crew_color_scheme'), 'nord');
     });
   });
 
@@ -177,7 +177,7 @@ void main() {
           invitePageBuilder: (_) => const SizedBox.shrink(),
           identityRecoveryPageBuilder: (_) => const SizedBox.shrink(),
         ),
-        prefs: {'buzz_color_scheme': 'buzz', 'buzz_accent_color': 4},
+        prefs: {'crew_color_scheme': 'crew', 'crew_accent_color': 4},
       );
 
       expect(find.text('Accent color'), findsNothing);
@@ -194,9 +194,9 @@ void main() {
           identityRecoveryPageBuilder: (_) => const SizedBox.shrink(),
         ),
         prefs: {
-          'buzz_theme_mode': 'light',
-          'buzz_color_scheme': 'github-light',
-          'buzz_accent_color': 4,
+          'crew_theme_mode': 'light',
+          'crew_color_scheme': 'github-light',
+          'crew_accent_color': 4,
         },
       );
 
@@ -209,7 +209,7 @@ void main() {
       await _pumpPicker(
         tester,
         const AccentPickerPage(),
-        prefs: {'buzz_accent_color': 2},
+        prefs: {'crew_accent_color': 2},
       );
 
       for (final accent in accentColors) {
@@ -232,7 +232,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        instance.getInt('buzz_accent_color'),
+        instance.getInt('crew_accent_color'),
         accentColors.indexWhere((a) => a.name == 'Green'),
       );
     });

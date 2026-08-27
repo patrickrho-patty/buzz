@@ -1,7 +1,7 @@
-import 'package:buzz/features/settings/settings_page.dart';
-import 'package:buzz/shared/community/community_membership_provider.dart';
-import 'package:buzz/shared/theme/theme.dart';
-import 'package:buzz/shared/widgets/app_list_card.dart';
+import 'package:crew/features/settings/settings_page.dart';
+import 'package:crew/shared/community/community_membership_provider.dart';
+import 'package:crew/shared/theme/theme.dart';
+import 'package:crew/shared/widgets/app_list_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -31,7 +31,7 @@ void main() {
     await tester.pumpAndSettle();
 
     final nativeClose = tester.widget<UiKitView>(find.byType(UiKitView));
-    expect(nativeClose.viewType, 'buzz/navigation_glass');
+    expect(nativeClose.viewType, 'crew/navigation_glass');
     expect(nativeClose.creationParams, containsPair('icon', 'close'));
     expect(find.byTooltip('Close settings'), findsOneWidget);
     debugDefaultTargetPlatformOverride = null;

@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:buzz/features/channels/emoji_picker.dart';
-import 'package:buzz/features/channels/recent_emoji_provider.dart';
-import 'package:buzz/shared/custom_emoji/custom_emoji.dart';
-import 'package:buzz/shared/custom_emoji/custom_emoji_provider.dart';
-import 'package:buzz/shared/emoji/emoji_data.dart';
-import 'package:buzz/shared/emoji/emoji_data_provider.dart';
-import 'package:buzz/shared/relay/relay.dart';
-import 'package:buzz/shared/theme/theme.dart';
+import 'package:crew/features/channels/emoji_picker.dart';
+import 'package:crew/features/channels/recent_emoji_provider.dart';
+import 'package:crew/shared/custom_emoji/custom_emoji.dart';
+import 'package:crew/shared/custom_emoji/custom_emoji_provider.dart';
+import 'package:crew/shared/emoji/emoji_data.dart';
+import 'package:crew/shared/emoji/emoji_data_provider.dart';
+import 'package:crew/shared/relay/relay.dart';
+import 'package:crew/shared/theme/theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -145,7 +145,7 @@ class _FakeCustomEmojiPaletteNotifier extends CustomEmojiPaletteNotifier {
   Future<List<CustomEmoji>> build() => palette;
 }
 
-const _nativeEmojiPickerChannel = MethodChannel('buzz/native_emoji_picker');
+const _nativeEmojiPickerChannel = MethodChannel('crew/native_emoji_picker');
 
 void _setMockNativeEmojiPickerHandler(
   Future<Object?> Function(MethodCall call)? handler,

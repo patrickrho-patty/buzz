@@ -90,7 +90,7 @@ if (externalReleaseSigning && uploadSigningValues.values.any { !it.isNullOrBlank
 }
 
 android {
-    namespace = "xyz.block.buzz.mobile"
+    namespace = "xyz.block.crew.mobile"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -104,7 +104,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "xyz.block.buzz.mobile"
+        applicationId = "xyz.block.crew.mobile"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

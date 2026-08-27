@@ -22,7 +22,7 @@ import 'shared/emoji/emoji_burst.dart';
 import 'shared/relay/relay.dart';
 import 'shared/read_state/read_state_provider.dart';
 import 'shared/theme/theme.dart';
-import 'shared/widgets/buzz_loading_indicator.dart';
+import 'shared/widgets/crew_loading_indicator.dart';
 
 /// App-shell projection that joins Activity state for the Home navigation.
 ///
@@ -70,11 +70,11 @@ class App extends HookConsumerWidget {
     // Derive the gradient from the themes that produced each color scheme.
     // This keeps fallbacks and pinned brightness changes aligned with the
     // rendered palette rather than the raw persisted selection.
-    final buzzLightGradient = buzzTopSectionGradient(
+    final crewLightGradient = crewTopSectionGradient(
       resolved.lightTheme?.name ?? '',
       lightScheme.brightness,
     );
-    final buzzDarkGradient = buzzTopSectionGradient(
+    final crewDarkGradient = crewTopSectionGradient(
       resolved.darkTheme?.name ?? '',
       darkScheme.brightness,
     );
@@ -113,14 +113,14 @@ class App extends HookConsumerWidget {
     });
 
     return MaterialApp(
-      title: 'Buzz',
+      title: 'Crew',
       theme: AppTheme.light(
         colorScheme: lightScheme,
-        topSectionGradient: buzzLightGradient,
+        topSectionGradient: crewLightGradient,
       ),
       darkTheme: AppTheme.dark(
         colorScheme: darkScheme,
-        topSectionGradient: buzzDarkGradient,
+        topSectionGradient: crewDarkGradient,
       ),
       themeMode: effectiveMode,
       // Above the navigator, so a burst keeps playing over a pushed thread page
@@ -162,7 +162,7 @@ class _SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: BuzzLoadingIndicator(size: 56, semanticLabel: 'Starting Buzz'),
+        child: CrewLoadingIndicator(size: 56, semanticLabel: 'Starting Buzz'),
       ),
     );
   }

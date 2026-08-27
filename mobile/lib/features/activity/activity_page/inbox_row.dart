@@ -345,7 +345,7 @@ class _InboxRow extends HookConsumerWidget {
   }
 
   void _showRowActions(BuildContext context) {
-    showBuzzModalBottomSheet<void>(
+    showCrewModalBottomSheet<void>(
       context: context,
       builder: (sheetContext) => SafeArea(
         child: Padding(

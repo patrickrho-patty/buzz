@@ -15,7 +15,7 @@ export type ProjectsRepositoryScope =
   | "accessible"
   | "mine"
   | "local"
-  | "buzz"
+  | "crew"
   | "linked";
 export type ProjectsWorkItemScope = "all" | "mine" | "assigned";
 export type ProjectsFilter =

@@ -5,14 +5,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:buzz/features/pairing/pairing_page.dart';
-import 'package:buzz/features/pairing/pairing_provider.dart';
-import 'package:buzz/shared/community/community.dart';
-import 'package:buzz/shared/security/sensitive_action_authorizer.dart';
-import 'package:buzz/shared/theme/theme.dart';
-import 'package:buzz/shared/widgets/buzz_loading_indicator.dart';
-import 'package:buzz/shared/widgets/ios_glass_navigation_button.dart';
-import 'package:buzz/shared/widgets/tappable_flapping_bee.dart';
+import 'package:crew/features/pairing/pairing_page.dart';
+import 'package:crew/features/pairing/pairing_provider.dart';
+import 'package:crew/shared/community/community.dart';
+import 'package:crew/shared/security/sensitive_action_authorizer.dart';
+import 'package:crew/shared/theme/theme.dart';
+import 'package:crew/shared/widgets/crew_loading_indicator.dart';
+import 'package:crew/shared/widgets/ios_glass_navigation_button.dart';
+import 'package:crew/shared/widgets/tappable_flapping_bee.dart';
 
 import '../../helpers/widget_helpers.dart';
 
@@ -26,7 +26,7 @@ void main() {
       );
 
       expect(find.byType(TappableFlappingBee), findsOneWidget);
-      expect(find.text('Welcome to Buzz'), findsOneWidget);
+      expect(find.text('Welcome to Crew'), findsOneWidget);
       expect(find.text('Scan a QR code'), findsOneWidget);
       expect(find.text('Use pairing code'), findsOneWidget);
       expect(find.text('Connect'), findsNothing);
@@ -149,7 +149,7 @@ void main() {
       );
 
       final nativeBack = tester.widget<UiKitView>(find.byType(UiKitView));
-      expect(nativeBack.viewType, 'buzz/navigation_glass');
+      expect(nativeBack.viewType, 'crew/navigation_glass');
       expect(nativeBack.creationParams, containsPair('icon', 'back'));
       expect(
         nativeBack.creationParams,
@@ -243,7 +243,7 @@ void main() {
       );
       await tester.pump();
 
-      expect(find.byType(BuzzLoadingIndicator), findsOneWidget);
+      expect(find.byType(CrewLoadingIndicator), findsOneWidget);
       // Connect text should be replaced by spinner.
       expect(find.text('Connect'), findsNothing);
     });

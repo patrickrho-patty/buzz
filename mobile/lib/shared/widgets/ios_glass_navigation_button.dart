@@ -37,7 +37,7 @@ class IosGlassNavigationButton extends HookWidget {
     this.nativeViewSuppressed,
   });
 
-  static const viewType = 'buzz/navigation_glass';
+  static const viewType = 'crew/navigation_glass';
 
   final IosGlassNavigationIcon icon;
   final String semanticLabel;

@@ -16,15 +16,15 @@ import 'deep_link.dart';
 ///
 /// Listens to [AppLinks.uriLinkStream], which delivers both the cold-start link
 /// (the URL that launched the app) and links received while running.
-class PendingDeepLinkNotifier extends Notifier<BuzzDeepLink?> {
+class PendingDeepLinkNotifier extends Notifier<CrewDeepLink?> {
   @visibleForTesting
   static Stream<Uri>? debugUriStreamOverride;
 
   StreamSubscription<Uri>? _subscription;
-  final Queue<BuzzDeepLink> _waiting = Queue<BuzzDeepLink>();
+  final Queue<CrewDeepLink> _waiting = Queue<CrewDeepLink>();
 
   @override
-  BuzzDeepLink? build() {
+  CrewDeepLink? build() {
     _waiting.clear();
     final stream = debugUriStreamOverride ?? AppLinks().uriLinkStream;
     _subscription = stream.listen(open);
@@ -37,7 +37,7 @@ class PendingDeepLinkNotifier extends Notifier<BuzzDeepLink?> {
 
   /// Parse and park an incoming URI. Unsupported links are ignored loudly.
   void open(Uri uri) {
-    final link = parseBuzzDeepLink(uri);
+    final link = parseCrewDeepLink(uri);
     if (link == null) {
       debugPrint('deep-link: ignoring unsupported link: $uri');
       return;
@@ -56,6 +56,6 @@ class PendingDeepLinkNotifier extends Notifier<BuzzDeepLink?> {
 }
 
 final pendingDeepLinkProvider =
-    NotifierProvider<PendingDeepLinkNotifier, BuzzDeepLink?>(
+    NotifierProvider<PendingDeepLinkNotifier, CrewDeepLink?>(
       PendingDeepLinkNotifier.new,
     );

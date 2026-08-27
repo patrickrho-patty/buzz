@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:buzz/features/pairing/pairing_provider.dart';
-import 'package:buzz/features/settings/settings_page.dart';
-import 'package:buzz/shared/auth/auth.dart';
-import 'package:buzz/shared/relay/relay.dart';
-import 'package:buzz/shared/theme/theme.dart';
+import 'package:crew/features/pairing/pairing_provider.dart';
+import 'package:crew/features/settings/settings_page.dart';
+import 'package:crew/shared/auth/auth.dart';
+import 'package:crew/shared/relay/relay.dart';
+import 'package:crew/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nostr/nostr.dart' as nostr;

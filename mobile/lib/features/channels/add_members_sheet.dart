@@ -7,7 +7,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../shared/theme/theme.dart';
 import '../../shared/widgets/avatar_image.dart';
-import '../../shared/widgets/buzz_loading_indicator.dart';
+import '../../shared/widgets/crew_loading_indicator.dart';
 import 'channel_management_provider.dart';
 
 /// Searchable multi-select used to add people or agents to a channel.
@@ -216,7 +216,7 @@ class AddChannelMembersSheet extends HookConsumerWidget {
                           },
                         ),
                   loading: () => const Center(
-                    child: BuzzLoadingIndicator(
+                    child: CrewLoadingIndicator(
                       size: 44,
                       semanticLabel: 'Loading people and agents',
                     ),

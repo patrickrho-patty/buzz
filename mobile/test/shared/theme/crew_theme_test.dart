@@ -1,54 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:buzz/shared/theme/theme.dart';
-import 'package:buzz/shared/widgets/frosted_app_bar.dart';
+import 'package:crew/shared/theme/theme.dart';
+import 'package:crew/shared/widgets/frosted_app_bar.dart';
 
 void main() {
   group('Buzz theme catalog entries', () {
     test('both halves are in the catalog', () {
-      expect(findTheme(buzzThemeName), isNotNull);
-      expect(findTheme(buzzDarkThemeName), isNotNull);
+      expect(findTheme(crewThemeName), isNotNull);
+      expect(findTheme(crewDarkThemeName), isNotNull);
     });
 
     test('borrow the GitHub palettes', () {
-      final buzz = findTheme(buzzThemeName)!;
+      final buzz = findTheme(crewThemeName)!;
       final github = findTheme('github-light')!;
       expect(buzz.bg, github.bg);
       expect(buzz.fg, github.fg);
       expect(buzz.comment, github.comment);
 
-      final buzzDark = findTheme(buzzDarkThemeName)!;
+      final crewDark = findTheme(crewDarkThemeName)!;
       final githubDark = findTheme('github-dark')!;
-      expect(buzzDark.bg, githubDark.bg);
-      expect(buzzDark.fg, githubDark.fg);
-      expect(buzzDark.comment, githubDark.comment);
+      expect(crewDark.bg, githubDark.bg);
+      expect(crewDark.fg, githubDark.fg);
+      expect(crewDark.comment, githubDark.comment);
     });
 
     test('are a light/dark pair', () {
-      expect(findTheme(buzzThemeName)!.isDark, isFalse);
-      expect(findTheme(buzzDarkThemeName)!.isDark, isTrue);
-      expect(themePairFor(buzzThemeName), buzzDarkThemeName);
-      expect(themePairFor(buzzDarkThemeName), buzzThemeName);
+      expect(findTheme(crewThemeName)!.isDark, isFalse);
+      expect(findTheme(crewDarkThemeName)!.isDark, isTrue);
+      expect(themePairFor(crewThemeName), crewDarkThemeName);
+      expect(themePairFor(crewDarkThemeName), crewThemeName);
     });
 
-    test('appear as a single System-mode option labelled "Buzz"', () {
+    test('appear as a single System-mode option labelled "Crew"', () {
       final paired = themeGroups().paired.map((t) => t.name);
-      expect(paired, contains(buzzThemeName));
-      expect(paired, isNot(contains(buzzDarkThemeName)));
-      expect(pairedThemeLabel(buzzThemeName), 'Buzz');
-      expect(themeSelectionLabel(buzzThemeName, ThemeMode.system), 'Buzz');
-      expect(themeSelectionLabel(buzzDarkThemeName, ThemeMode.system), 'Buzz');
+      expect(paired, contains(crewThemeName));
+      expect(paired, isNot(contains(crewDarkThemeName)));
+      expect(pairedThemeLabel(crewThemeName), 'Crew');
+      expect(themeSelectionLabel(crewThemeName, ThemeMode.system), 'Crew');
+      expect(themeSelectionLabel(crewDarkThemeName, ThemeMode.system), 'Crew');
     });
 
     test('forces neutral rendering without changing the stored accent', () {
       const storedAccent = '#ef4444';
 
       expect(
-        effectiveAccentIndex(buzzThemeName, storedAccent),
+        effectiveAccentIndex(crewThemeName, storedAccent),
         neutralAccentIndex,
       );
       expect(
-        effectiveAccentIndex(buzzDarkThemeName, storedAccent),
+        effectiveAccentIndex(crewDarkThemeName, storedAccent),
         neutralAccentIndex,
       );
       expect(
@@ -59,20 +59,20 @@ void main() {
     });
 
     test('resolve across brightnesses like any other pair', () {
-      final resolved = resolveSchemes(buzzThemeName, ThemeMode.system);
+      final resolved = resolveSchemes(crewThemeName, ThemeMode.system);
       expect(resolved.forcedMode, isNull);
       expect(resolved.light.brightness, Brightness.light);
       expect(resolved.dark.brightness, Brightness.dark);
-      expect(resolved.lightTheme?.name, buzzThemeName);
-      expect(resolved.darkTheme?.name, buzzDarkThemeName);
+      expect(resolved.lightTheme?.name, crewThemeName);
+      expect(resolved.darkTheme?.name, crewDarkThemeName);
 
       expect(
-        effectiveTheme(buzzThemeName, ThemeMode.dark)?.name,
-        buzzDarkThemeName,
+        effectiveTheme(crewThemeName, ThemeMode.dark)?.name,
+        crewDarkThemeName,
       );
       expect(
-        effectiveTheme(buzzDarkThemeName, ThemeMode.light)?.name,
-        buzzThemeName,
+        effectiveTheme(crewDarkThemeName, ThemeMode.light)?.name,
+        crewThemeName,
       );
     });
 
@@ -80,9 +80,9 @@ void main() {
       'fallbacks expose the effective Buzz theme for gradient selection',
       () {
         final coerced = resolveSchemes('nord', ThemeMode.light);
-        expect(coerced.lightTheme?.name, buzzThemeName);
+        expect(coerced.lightTheme?.name, crewThemeName);
         expect(
-          buzzTopSectionGradient(
+          crewTopSectionGradient(
             coerced.lightTheme!.name,
             coerced.light.brightness,
           ),
@@ -90,9 +90,9 @@ void main() {
         );
 
         final unknown = resolveSchemes('not-a-theme', ThemeMode.light);
-        expect(unknown.lightTheme?.name, buzzThemeName);
+        expect(unknown.lightTheme?.name, crewThemeName);
         expect(
-          buzzTopSectionGradient(
+          crewTopSectionGradient(
             unknown.lightTheme!.name,
             unknown.light.brightness,
           ),
@@ -102,15 +102,15 @@ void main() {
     );
   });
 
-  group('buzzTopSectionGradient', () {
+  group('crewTopSectionGradient', () {
     test('is null for non-Buzz themes', () {
-      expect(buzzTopSectionGradient('github-light', Brightness.light), isNull);
-      expect(buzzTopSectionGradient('nord', Brightness.dark), isNull);
+      expect(crewTopSectionGradient('github-light', Brightness.light), isNull);
+      expect(crewTopSectionGradient('nord', Brightness.dark), isNull);
     });
 
     test('paints top to bottom for both halves of the pair', () {
-      for (final name in [buzzThemeName, buzzDarkThemeName]) {
-        final gradient = buzzTopSectionGradient(name, Brightness.light);
+      for (final name in [crewThemeName, crewDarkThemeName]) {
+        final gradient = crewTopSectionGradient(name, Brightness.light);
         expect(gradient, isNotNull, reason: '$name should be gradient-backed');
         expect(gradient!.begin, Alignment.topCenter);
         expect(gradient.end, Alignment.bottomCenter);
@@ -121,23 +121,23 @@ void main() {
     test('brightness selects the stops, not the theme name', () {
       // Both halves enable the gradient, so System mode keeps it on across an
       // OS switch — the applied brightness alone decides which stops are used.
-      final light = buzzTopSectionGradient(buzzThemeName, Brightness.light)!;
-      final dark = buzzTopSectionGradient(buzzThemeName, Brightness.dark)!;
+      final light = crewTopSectionGradient(crewThemeName, Brightness.light)!;
+      final dark = crewTopSectionGradient(crewThemeName, Brightness.dark)!;
 
       expect(light.colors, isNot(dark.colors));
       expect(
-        buzzTopSectionGradient(buzzDarkThemeName, Brightness.dark)!.colors,
+        crewTopSectionGradient(crewDarkThemeName, Brightness.dark)!.colors,
         dark.colors,
       );
       expect(
-        buzzTopSectionGradient(buzzDarkThemeName, Brightness.light)!.colors,
+        crewTopSectionGradient(crewDarkThemeName, Brightness.light)!.colors,
         light.colors,
       );
     });
 
     test('is opaque so the color replaces the frosted fill', () {
       for (final brightness in Brightness.values) {
-        final gradient = buzzTopSectionGradient(buzzThemeName, brightness)!;
+        final gradient = crewTopSectionGradient(crewThemeName, brightness)!;
         for (final color in gradient.colors) {
           expect(color.a, 1.0);
         }
@@ -178,8 +178,8 @@ void main() {
       await tester.pumpWidget(
         harness(
           AppTheme.light(
-            topSectionGradient: buzzTopSectionGradient(
-              buzzThemeName,
+            topSectionGradient: crewTopSectionGradient(
+              crewThemeName,
               Brightness.light,
             ),
           ),
@@ -208,8 +208,8 @@ void main() {
       await tester.pumpWidget(
         harness(
           AppTheme.light(
-            topSectionGradient: buzzTopSectionGradient(
-              buzzThemeName,
+            topSectionGradient: crewTopSectionGradient(
+              crewThemeName,
               Brightness.light,
             ),
           ),
@@ -256,12 +256,12 @@ void main() {
     });
   });
 
-  group('isBuzzTheme', () {
+  group('isCrewTheme', () {
     test('matches only the Buzz pair', () {
-      expect(isBuzzTheme(buzzThemeName), isTrue);
-      expect(isBuzzTheme(buzzDarkThemeName), isTrue);
-      expect(isBuzzTheme('github-light'), isFalse);
-      expect(isBuzzTheme(''), isFalse);
+      expect(isCrewTheme(crewThemeName), isTrue);
+      expect(isCrewTheme(crewDarkThemeName), isTrue);
+      expect(isCrewTheme('github-light'), isFalse);
+      expect(isCrewTheme(''), isFalse);
     });
   });
 }

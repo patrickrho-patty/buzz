@@ -8,20 +8,20 @@ import 'app_colors.dart';
 /// painted across the app's top section. Mirrors desktop, where the same
 /// gradient fills the sidebar canvas — see `data-buzz-sidebar` in
 /// `desktop/src/shared/styles/globals/theme.css`.
-const buzzThemeName = 'buzz';
+const crewThemeName = 'crew';
 
 /// Name of the dark counterpart, which reuses the GitHub Dark palette and the
-/// dark-tuned gradient stops. Paired with [buzzThemeName] in `themePairs`, so
+/// dark-tuned gradient stops. Paired with [crewThemeName] in `themePairs`, so
 /// the two behave as a single "Buzz" choice under System mode.
-const buzzDarkThemeName = 'buzz-dark';
+const crewDarkThemeName = 'crew-dark';
 
 /// Whether [themeName] is either half of the Buzz pair. Both halves enable the
 /// gradient so System mode keeps it on across an OS light/dark switch.
-bool isBuzzTheme(String themeName) =>
-    themeName == buzzThemeName || themeName == buzzDarkThemeName;
+bool isCrewTheme(String themeName) =>
+    themeName == crewThemeName || themeName == crewDarkThemeName || themeName == 'buzz-dark' || themeName == 'buzz';
 
 /// Whether the current widget tree is using the first-party Buzz treatment.
-bool isBuzzThemeContext(BuildContext context) =>
+bool isCrewThemeContext(BuildContext context) =>
     Theme.of(context).extension<AppColors>()?.topSectionGradient != null;
 
 /// Primary foreground for the mobile top navigation.
@@ -31,14 +31,14 @@ bool isBuzzThemeContext(BuildContext context) =>
 /// rather than the accent-derived color scheme foreground.
 Color navigationPrimaryForeground(BuildContext context) {
   final scheme = Theme.of(context).colorScheme;
-  if (!isBuzzThemeContext(context)) return scheme.onSurface;
+  if (!isCrewThemeContext(context)) return scheme.onSurface;
   return scheme.brightness == Brightness.dark ? Colors.white : Colors.black;
 }
 
 /// Secondary label and placeholder foreground for the mobile top navigation.
 Color navigationSecondaryForeground(BuildContext context) {
   final scheme = Theme.of(context).colorScheme;
-  if (!isBuzzThemeContext(context)) return scheme.onSurfaceVariant;
+  if (!isCrewThemeContext(context)) return scheme.onSurfaceVariant;
   return navigationPrimaryForeground(context).withValues(alpha: 0.4);
 }
 
@@ -49,14 +49,14 @@ Color navigationSecondaryForeground(BuildContext context) {
 /// established secondary foreground token.
 Color navigationSectionForeground(BuildContext context) {
   final scheme = Theme.of(context).colorScheme;
-  if (!isBuzzThemeContext(context)) return scheme.onSurfaceVariant;
+  if (!isCrewThemeContext(context)) return scheme.onSurfaceVariant;
   return navigationPrimaryForeground(context).withValues(alpha: 0.8);
 }
 
 /// Search-field surface for the mobile top navigation.
 Color navigationSearchSurface(BuildContext context) {
   final scheme = Theme.of(context).colorScheme;
-  if (!isBuzzThemeContext(context)) return scheme.surfaceContainerHighest;
+  if (!isCrewThemeContext(context)) return scheme.surfaceContainerHighest;
   return navigationPrimaryForeground(context).withValues(alpha: 0.04);
 }
 
@@ -67,7 +67,7 @@ Color navigationDivider(BuildContext context, double opacity) =>
 /// Buzz renders with its fixed neutral foreground while preserving the stored
 /// wire accent so the user's choice returns on another theme.
 int effectiveAccentIndex(String themeName, String storedAccent) {
-  if (isBuzzTheme(themeName)) return neutralAccentIndex;
+  if (isCrewTheme(themeName)) return neutralAccentIndex;
   return accentIndexForWireValue(storedAccent) ?? defaultAccentIndex;
 }
 
@@ -85,11 +85,11 @@ const _darkBottom = Color(0xFF0A1423);
 ///
 /// [brightness] comes from the applied color scheme rather than the theme name,
 /// so System mode picks the right stops as the OS switches.
-LinearGradient? buzzTopSectionGradient(
+LinearGradient? crewTopSectionGradient(
   String themeName,
   Brightness brightness,
 ) {
-  if (!isBuzzTheme(themeName)) return null;
+  if (!isCrewTheme(themeName)) return null;
 
   final isDark = brightness == Brightness.dark;
   return LinearGradient(

@@ -4,18 +4,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'accent_colors.dart';
 import 'adaptive_theme.dart';
-import 'buzz_theme.dart';
+import 'crew_theme.dart';
 import 'color_scheme.dart';
 import 'theme_catalog.dart';
 import 'theme_pairs.dart';
 
-const _themeModeKey = 'buzz_theme_mode';
-const _accentKey = 'buzz_accent_color';
-const _schemeKey = 'buzz_color_scheme';
+const _themeModeKey = 'crew_theme_mode';
+const _accentKey = 'crew_accent_color';
+const _schemeKey = 'crew_color_scheme';
 
 /// Buzz ships as the default: the first-party pair, so a fresh install gets the
 /// branded top-section gradient without picking a theme first.
-const defaultSchemeName = buzzThemeName;
+const defaultSchemeName = crewThemeName;
 const defaultSchemeDisplayName = 'Buzz';
 
 /// Pre-loaded SharedPreferences instance, overridden in main().

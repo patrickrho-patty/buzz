@@ -1,4 +1,4 @@
-package xyz.block.buzz.mobile
+package xyz.block.crew.mobile
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -336,7 +336,7 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     companion object {
-        private const val MEDIA_UPLOAD_CHANNEL = "buzz/media_upload"
+        private const val MEDIA_UPLOAD_CHANNEL = "crew/media_upload"
         private const val SANITIZE_IMAGE_FOR_UPLOAD_METHOD = "sanitizeImageForUpload"
         private const val TRANSCODE_IMAGE_TO_JPEG_METHOD = "transcodeImageToJpeg"
         private const val TRANSCODE_VIDEO_TO_MP4_METHOD = "transcodeVideoToMp4"

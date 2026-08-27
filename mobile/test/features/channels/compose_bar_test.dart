@@ -13,18 +13,18 @@ import 'package:http/testing.dart' as http_testing;
 import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:nostr/nostr.dart' as nostr;
-import 'package:buzz/features/channels/channel.dart';
-import 'package:buzz/features/channels/channel_management_provider.dart';
-import 'package:buzz/features/channels/compose_bar.dart';
-import 'package:buzz/features/channels/channels_provider.dart';
-import 'package:buzz/features/channels/photo_library.dart';
-import 'package:buzz/shared/custom_emoji/custom_emoji.dart';
-import 'package:buzz/shared/custom_emoji/custom_emoji_provider.dart';
-import 'package:buzz/shared/mentions/agent_identity_provider.dart';
-import 'package:buzz/shared/relay/relay.dart';
-import 'package:buzz/shared/theme/theme.dart';
-import 'package:buzz/shared/widgets/anchored_popover_menu.dart';
-import 'package:buzz/shared/widgets/mobile_tab_footer_backdrop.dart';
+import 'package:crew/features/channels/channel.dart';
+import 'package:crew/features/channels/channel_management_provider.dart';
+import 'package:crew/features/channels/compose_bar.dart';
+import 'package:crew/features/channels/channels_provider.dart';
+import 'package:crew/features/channels/photo_library.dart';
+import 'package:crew/shared/custom_emoji/custom_emoji.dart';
+import 'package:crew/shared/custom_emoji/custom_emoji_provider.dart';
+import 'package:crew/shared/mentions/agent_identity_provider.dart';
+import 'package:crew/shared/relay/relay.dart';
+import 'package:crew/shared/theme/theme.dart';
+import 'package:crew/shared/widgets/anchored_popover_menu.dart';
+import 'package:crew/shared/widgets/mobile_tab_footer_backdrop.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final _pngBytes = Uint8List.fromList([
@@ -129,9 +129,9 @@ List<int> _testPngChunk(String type, List<int> payload) {
   ];
 }
 
-const _mediaUploadPlatformChannel = MethodChannel('buzz/media_upload');
+const _mediaUploadPlatformChannel = MethodChannel('crew/media_upload');
 const _nativeAttachmentPopoverChannel = MethodChannel(
-  'buzz/native_attachment_popover',
+  'crew/native_attachment_popover',
 );
 
 void _setMockMediaUploadPlatformHandler(

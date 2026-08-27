@@ -26,7 +26,7 @@ class ConcentricSheetSurface extends HookWidget {
           ?.providesSurface ??
       false;
 
-  static const _surfaceChannel = MethodChannel('buzz/concentric_sheet_surface');
+  static const _surfaceChannel = MethodChannel('crew/concentric_sheet_surface');
   static const _nativeContentClipRadius = Radii.dialog * 2;
 
   Future<bool> _checkNativeSurfaceSupport() async {
@@ -72,7 +72,7 @@ class ConcentricSheetSurface extends HookWidget {
             Positioned.fill(
               child: ExcludeSemantics(
                 child: UiKitView(
-                  viewType: 'buzz/concentric_sheet_surface',
+                  viewType: 'crew/concentric_sheet_surface',
                   hitTestBehavior: PlatformViewHitTestBehavior.transparent,
                   creationParams: <String, Object>{
                     'color': surfaceColor.toARGB32(),

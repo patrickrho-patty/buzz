@@ -303,7 +303,7 @@ export function SettingsView({
           {appVersion ? (
             <p
               className="px-2 pb-1 text-xs text-sidebar-foreground/45"
-              data-buzz-sidebar-secondary
+              data-crew-sidebar-secondary
               data-testid="settings-version"
             >
               v{appVersion}
