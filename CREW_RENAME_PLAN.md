@@ -72,6 +72,21 @@ emoji JSON and two test-fixture display strings ("Product crew",
 - Per-shot hashtext lock salts renamed atomically with migration 0033
   (single-writer deploy model; see migration header for the argument).
 
+## Status @ end of session
+
+Gates green: cargo check/fmt/clippy(-p crew-desktop) · unit suite 1451/0 ·
+flutter analyze+tests 1575/0 · desktop+web tsc · vite builds · size ratchet.
+Known pre-existing reds carried from the SSO checkpoint (proven at HEAD~):
+7 biome `useExhaustiveDependencies` errors, oidc.rs missing-docs clippy set,
+1 useRetainedProjectGitViews stub-hook failure — not rename regressions.
+
+**Open (needs a focused session): desktop node:test suite ~86 fixture/key
+parity failures.** Root cause is asymmetric storage-key handling: prod still
+writes legacy `buzz-…` keys (deliberate deferral) while a subset of test
+fixtures and mock-bridge payloads were swept to crew spellings, plus provider
+copy mismatches. Fix = decide key policy (alias-read or wholesale flip with
+migration) and pair every fixture; repro: `cd desktop && pnpm test`.
+
 ## Invariants honored
 
 - No edits to historical `migrations/*.sql`; sentinel renames ship as new
