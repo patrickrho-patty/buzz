@@ -1362,7 +1362,7 @@ mod tests {
         // Keyword prefix without the NUL separator, and near-miss keywords,
         // stay forbidden.
         for payload in [
-            b"buzz_agent_snapshotX\0data".as_slice(),
+            b"crew_agent_snapshotX\0data".as_slice(),
             b"crew_agent_snapshot_extra\0data",
             b"crew_agent_snapshot", // no separator at all
             b"Comment\0GPS=37.7,-122.4",

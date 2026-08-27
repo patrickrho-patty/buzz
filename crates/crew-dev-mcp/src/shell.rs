@@ -74,10 +74,10 @@ impl SharedState {
 
 fn build_bootstrap(cwd: &Path, shell_hint: &str) -> String {
     let stack = detect_stack(cwd);
-    let crew_hint = if crew_core::env_alias::env_lookup("CREW_RELAY_URL").is_ok()
-        && crew_core::env_alias::env_lookup("CREW_PRIVATE_KEY").is_ok()
+    let crew_hint = if std::env::var("CREW_RELAY_URL").is_ok()
+        && std::env::var("CREW_PRIVATE_KEY").is_ok()
     {
-        "\nBuzz relay configured. Run `crew --help` to see available commands.\n"
+        "\nCrew relay configured. Run `crew --help` to see available commands.\n"
     } else {
         ""
     };

@@ -2,7 +2,7 @@ name: crew-prod
 
 services:
   relay:
-    image: ${CREW_IMAGE:-ghcr.io/block/buzz:main}
+    image: ${CREW_IMAGE:-ghcr.io/patty-io/crew:main}
     env_file:
       - .env
     environment:

@@ -120,7 +120,7 @@ fn merged_env_strips_reserved_case_insensitive() {
     // Unix env vars are case-sensitive at the syscall level, but we
     // refuse close-typo variants too — a lowercase `crew_private_key`
     // is almost certainly a footgun, not a legitimate use.
-    let agent = map(&[("crew_private_key", "x"), ("Buzz_Auth_Tag", "y")]);
+    let agent = map(&[("crew_private_key", "x"), ("Crew_Auth_Tag", "y")]);
     let merged = merged_user_env(&BTreeMap::new(), &agent);
     assert!(merged.is_empty());
 }

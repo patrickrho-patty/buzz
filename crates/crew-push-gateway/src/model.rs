@@ -16,9 +16,7 @@ pub enum AppProfile {
     CrewIosSandbox,
 }
 impl AppProfile {
-    /// Serialized profile ids are now `crew-ios-*`. Legacy `buzz-ios-*` values
-    /// from shipped app bundles and existing `push_leases` rows remain readable
-    /// via alias handling in parsers (see `config.rs`, `postgres.rs`).
+    /// Serialized profile ids. Fresh-fork posture: only `crew-ios-*` exists.
     pub const fn as_str(self) -> &'static str {
         match self {
             Self::CrewIosProduction => "crew-ios-production",

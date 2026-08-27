@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'accent_colors.dart';
 import 'theme_catalog.dart';
-import 'crew_theme.dart' show crewThemeName, crewDarkThemeName;
 import 'theme_provider.dart' show effectiveTheme, schemeForAppearanceMode;
 
 const communityThemeDTag = 'community-theme';
@@ -31,25 +30,18 @@ class CommunityThemePreference {
   factory CommunityThemePreference.fromJson(Map<String, dynamic> json) {
     if (json['version'] != 1 ||
         json['theme'] is! String ||
-        findTheme(_normalizeLegacyTheme(json['theme'] as String)) == null ||
+        findTheme(json['theme'] as String) == null ||
         json['accent'] is! String ||
         accentIndexForWireValue(json['accent'] as String) == null ||
         json['followSystem'] is! bool) {
       throw const FormatException('Invalid community theme preference');
     }
     return CommunityThemePreference(
-      // Wire events written by pre-rename apps may carry 'buzz'/'crew-dark';
-      // normalize to the crew spellings on read.
-      theme: _normalizeLegacyTheme(json['theme'] as String),
+      // Fresh-fork posture: wire events carry crew spellings only.
+      theme: json['theme'] as String,
       accent: json['accent'] as String,
       followSystem: json['followSystem'] as bool,
     );
-  }
-
-  static String _normalizeLegacyTheme(String theme) {
-    if (theme == 'buzz') return crewThemeName;
-    if (theme == 'crew-dark') return crewDarkThemeName;
-    return theme;
   }
 
   Map<String, dynamic> toJson() => {
@@ -157,7 +149,7 @@ class CommunityThemeStorage {
         ThemeMode.values.where((value) => value.name == modeName).firstOrNull ??
         ThemeMode.system;
     final storedTheme = prefs.getString(_legacySchemeKey);
-    final theme = findTheme(storedTheme ?? 'buzz')?.name ?? 'buzz';
+    final theme = findTheme(storedTheme ?? 'crew')?.name ?? 'crew';
     final legacyAccent = prefs.getInt(_legacyAccentKey);
     final resolvedTheme = switch (mode) {
       ThemeMode.system => schemeForAppearanceMode(theme, mode) ?? theme,

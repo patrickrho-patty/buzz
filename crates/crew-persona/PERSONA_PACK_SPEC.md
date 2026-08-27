@@ -122,7 +122,7 @@ my-pack/
 ├── instructions.md           # Pack-level instructions (injected by harness)
 ├── pack.lock                 # Version lock (Phase 1+)
 ├── README.md                 # Human-readable description
-└── my-pack-1.2.0.buzzpack.sha256  # Checksum (required for zip distribution)
+└── my-pack-1.2.0.crewpack.sha256  # Checksum (required for zip distribution)
 ```
 
 ### Directory Conventions
@@ -846,18 +846,18 @@ All fields are consumed entirely by crew-acp. None are passed to the agent runti
 
 ### Phase 1: Zip File
 
-A pack is distributed as a `.buzzpack` file (zip archive):
+A pack is distributed as a `.crewpack` file (zip archive):
 
 ```bash
 crew pack validate ./my-pack
-crew pack ./my-pack --output my-pack-1.2.0.buzzpack
-crew install ./my-pack-1.2.0.buzzpack
-crew install https://example.com/releases/my-pack-1.2.0.buzzpack
+crew pack ./my-pack --output my-pack-1.2.0.crewpack
+crew install ./my-pack-1.2.0.crewpack
+crew install https://example.com/releases/my-pack-1.2.0.crewpack
 ```
 
 #### Pack Integrity (Required)
 
-Zip packs **must** ship with `<pack-name>-<version>.buzzpack.sha256` containing `sha256sum`
+Zip packs **must** ship with `<pack-name>-<version>.crewpack.sha256` containing `sha256sum`
 output (`<hex-digest>  <filename>`). crew-acp **must** verify before installation and refuse on
 mismatch. For HTTP installs, the checksum file is fetched from the same base URL.
 
@@ -868,7 +868,7 @@ Phase 1 installs record the installed pack in `pack.lock` alongside the pack dir
 ```json
 {
   "com.example.meadow-security-team": {
-    "source": "https://example.com/releases/my-pack-1.2.0.buzzpack",
+    "source": "https://example.com/releases/my-pack-1.2.0.crewpack",
     "sha256": "a3f1c2d4e5b6...",
     "version": "1.2.0",
     "installed_at": "2026-04-10T11:00:00Z"
@@ -1006,7 +1006,7 @@ deployment mechanism (systemd env files, Vault, Kubernetes secrets, etc.).
 
 ### Pack Integrity
 
-- **Phase 1 (zip)**: Packs **must** ship with `<pack-name>-<version>.buzzpack.sha256` containing
+- **Phase 1 (zip)**: Packs **must** ship with `<pack-name>-<version>.crewpack.sha256` containing
   `sha256sum` output (`<hex-digest>  <filename>`). crew-acp **must** verify before installation
   and refuse on mismatch.
 - **Phase 2 (git)**: `pack.lock` pins the resolved commit SHA; crew-acp verifies on install.

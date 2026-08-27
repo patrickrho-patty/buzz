@@ -209,7 +209,7 @@ export function normalizeToolName(title: string): string {
   const knownName = findCrewToolName(title, true);
   if (knownName) return knownName;
 
-  const normalized = normalizeToolNameText(title).replace(/^buzz_/, "");
+  const normalized = normalizeToolNameText(title).replace(/^crew_/, "");
   return normalized.match(/[a-z][a-z0-9_]+/)?.[0] ?? normalized;
 }
 
@@ -223,7 +223,7 @@ export function normalizeToolNameText(value: string): string {
 }
 
 export function findCrewToolName(value: string, includeShortNames: boolean) {
-  const alias = findBuzzToolAlias(value);
+  const alias = findCrewToolAlias(value);
   if (alias) return alias;
 
   const normalized = normalizeToolNameText(value);
@@ -235,7 +235,7 @@ export function findCrewToolName(value: string, includeShortNames: boolean) {
   );
 }
 
-function findBuzzToolAlias(value: string) {
+function findCrewToolAlias(value: string) {
   const normalizedPhrase = value
     .trim()
     .toLowerCase()

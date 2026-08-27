@@ -316,7 +316,7 @@ pub(crate) async fn run_setup_listener(config: Config, payload: SetupPayload) ->
     let pubkey_hex = config.keys.public_key().to_hex();
 
     // Parse CREW_AUTH_TAG for relay membership / NIP-OA.
-    let relay_auth_tag: Option<nostr::Tag> = crew_core::env_alias::env_lookup("CREW_AUTH_TAG")
+    let relay_auth_tag: Option<nostr::Tag> = std::env::var("CREW_AUTH_TAG")
         .ok()
         .filter(|s| !s.is_empty())
         .and_then(|s| crew_sdk::nip_oa::parse_auth_tag(&s).ok());

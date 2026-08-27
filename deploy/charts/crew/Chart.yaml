@@ -9,9 +9,9 @@ description: |
 type: application
 version: 0.1.7
 appVersion: "0.1.0"
-home: https://github.com/block/buzz
+home: https://github.com/patty-io/crew
 sources:
-  - https://github.com/block/buzz
+  - https://github.com/patty-io/crew
 keywords:
   - nostr
   - relay

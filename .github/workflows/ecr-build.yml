@@ -2,7 +2,7 @@
 #
 # Fork-specific workflow: upstream docker.yml publishes multi-arch to GHCR;
 # this one builds linux/amd64 only (matching the rho-cluster nodes) and
-# pushes to 361645878435.dkr.ecr.ap-northeast-2.amazonaws.com/griddle.
+# pushes to 361645878435.dkr.ecr.ap-northeast-2.amazonaws.com/crew.
 #
 # Trigger manually via `gh workflow run ecr-build.yml -f tag=vX.Y.Z`.
 name: ecr-build
@@ -17,7 +17,7 @@ on:
 
 env:
   ECR_REGISTRY: 361645878435.dkr.ecr.ap-northeast-2.amazonaws.com
-  ECR_REPOSITORY: griddle
+  ECR_REPOSITORY: crew
   AWS_REGION: ap-northeast-2
 
 jobs:

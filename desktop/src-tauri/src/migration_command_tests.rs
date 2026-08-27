@@ -23,7 +23,7 @@ fn reconcile_legacy_command_names_rewrites_renamed_sidecars() {
 }
 
 #[test]
-fn reconcile_legacy_command_names_updates_removed_mcp_server_for_buzz_agent() {
+fn reconcile_legacy_command_names_updates_removed_mcp_server_for_crew_agent() {
     let dir = tempfile::tempdir().unwrap();
     write_agents_json(
         dir.path(),

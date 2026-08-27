@@ -122,7 +122,7 @@ fn emit_runtime_lifecycle(
 /// 2. `--agent-owner` CLI flag / `CREW_ACP_AGENT_OWNER` env var.
 fn resolve_agent_owner(config: &Config) -> Option<String> {
     // Try CREW_AUTH_TAG first (NIP-OA attestation).
-    if let Ok(auth_tag) = crew_core::env_alias::env_lookup("CREW_AUTH_TAG") {
+    if let Ok(auth_tag) = std::env::var("CREW_AUTH_TAG") {
         if !auth_tag.is_empty() {
             let agent_pk = config.keys.public_key();
             match crew_sdk::nip_oa::verify_auth_tag(&auth_tag, &agent_pk) {
@@ -1981,7 +1981,7 @@ async fn tokio_main() -> Result<()> {
     let pubkey_hex = config.keys.public_key().to_hex();
 
     // Parse CREW_AUTH_TAG into a nostr::Tag for NIP-OA relay membership delegation.
-    let relay_auth_tag: Option<nostr::Tag> = crew_core::env_alias::env_lookup("CREW_AUTH_TAG")
+    let relay_auth_tag: Option<nostr::Tag> = std::env::var("CREW_AUTH_TAG")
         .ok()
         .filter(|s| !s.is_empty())
         .and_then(|s| crew_sdk::nip_oa::parse_auth_tag(&s).ok());
@@ -5051,7 +5051,7 @@ fn build_mcp_servers(config: &Config) -> Vec<McpServer> {
             ];
             // Forward CREW_AUTH_TAG (NIP-OA owner attestation credential)
             // so the MCP server can attach it to every signed event.
-            if let Ok(auth_tag) = crew_core::env_alias::env_lookup("CREW_AUTH_TAG") {
+            if let Ok(auth_tag) = std::env::var("CREW_AUTH_TAG") {
                 if !auth_tag.is_empty() {
                     env.push(EnvVar {
                         name: "CREW_AUTH_TAG".into(),

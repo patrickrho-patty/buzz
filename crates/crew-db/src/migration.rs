@@ -640,7 +640,7 @@ mod tests {
         let mut migrations: Vec<_> = MIGRATOR.iter().collect();
         migrations.sort_by_key(|migration| migration.version);
 
-        assert_eq!(migrations.len(), 35);
+        assert_eq!(migrations.len(), 36);
         assert_eq!(migrations[0].version, 1);
         assert_eq!(&*migrations[0].description, "initial schema");
         assert!(migrations[0]
@@ -1112,6 +1112,15 @@ mod tests {
         assert!(crew_sentinels.contains("d_tag LIKE 'buzz-mesh-member-status:%'"));
         assert!(crew_sentinels.contains(r#"tags @> '[["k", "crew-mesh-status"]]'::jsonb"#));
         assert!(crew_sentinels.contains(r#"tags @> '[["k", "buzz-mesh-status"]]'::jsonb"#));
+
+        // Fresh-fork posture: migration 0036 narrows mesh retention to
+        // crew-* spellings only (no buzz-era rows exist on a fresh DB).
+        assert_eq!(migrations[35].version, 36);
+        let crew_mesh = migrations[35].sql.as_str();
+        assert!(crew_mesh.contains("purge_soft_deleted_crew_mesh_status"));
+        assert!(crew_mesh.contains("LIKE 'crew-mesh-member-status:%'"));
+        assert!(crew_mesh.contains(r#"tags @> '[["k", "crew-mesh-status"]]'::jsonb"#));
+        assert!(!crew_mesh.contains("buzz-mesh"));
     }
 
     #[test]

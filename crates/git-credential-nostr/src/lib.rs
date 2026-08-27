@@ -5,21 +5,7 @@
 //! event as the credential value.  Git then sends:
 //!   Authorization: Nostr <credential>
 
-use std::env::VarError;
 use std::io::{self, BufRead, Write};
-
-/// Reads CREW_* names, falling back to legacy BUZZ_* spellings during the
-/// Crew → Crew rename window.
-fn crew_env_with_legacy(key: &str) -> Result<String, VarError> {
-    match std::env::var(key) {
-        Ok(v) => Ok(v),
-        Err(VarError::NotPresent) => match key {
-            "CREW_AUTH_TAG" => std::env::var("BUZZ_AUTH_TAG"),
-            _ => Err(VarError::NotPresent),
-        },
-        Err(e) => Err(e),
-    }
-}
 
 use base64::Engine as _;
 use nostr::nips::nip98::{HttpData, HttpMethod};
@@ -90,7 +76,7 @@ fn load_key() -> Result<String, String> {
 /// The tag must be part of the signed NIP-98 event: Git's credential protocol
 /// can return an Authorization value, but it cannot add a separate HTTP header.
 fn load_auth_tag() -> Result<Option<Tag>, String> {
-    let raw = crew_env_with_legacy("CREW_AUTH_TAG")
+    let raw = std::env::var("CREW_AUTH_TAG")
         .ok()
         .filter(|value| !value.is_empty())
         .or_else(|| git_config("nostr.authtag"));

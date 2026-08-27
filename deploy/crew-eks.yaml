@@ -8,7 +8,7 @@
 # Image: built by .github/workflows/ecr-build.yml from branch `patty`.
 
 image:
-  repository: 361645878435.dkr.ecr.ap-northeast-2.amazonaws.com/griddle
+  repository: 361645878435.dkr.ecr.ap-northeast-2.amazonaws.com/crew
   tag: v0.2.7
 
 # Canonical relay identity.

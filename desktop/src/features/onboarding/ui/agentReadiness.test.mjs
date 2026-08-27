@@ -209,7 +209,7 @@ test("resolveAgentReadiness_welcome_readiness_uses_ready_cli_without_preference"
   });
 });
 
-test("resolveAgentReadiness_legacy_config_without_preference_uses_buzz_agent_fields", () => {
+test("resolveAgentReadiness_legacy_config_without_preference_uses_crew_agent_fields", () => {
   const runtimes = [makeRuntime({ id: "crew-agent", label: "Crew Agent" })];
   const result = resolveAgentReadiness(
     runtimes,

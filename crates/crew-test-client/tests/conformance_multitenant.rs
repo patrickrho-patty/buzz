@@ -587,7 +587,7 @@ mod api_tokens_nip98_replay {
     ///     product + security-surface decision, not a test-enablement task.
     ///   * Api_tokens are consumed (not minted) by the Blossom upload path at
     ///     `crates/crew-relay/src/api/media.rs:638`, which extracts the
-    ///     `X-Auth-Token: buzz_*` header and looks up
+    ///     `X-Auth-Token: crew_*` header and looks up
     ///     `state.db.get_api_token_by_hash_including_revoked(tenant.community(),
     ///     &hash)`. The comment immediately above that call names the row-44
     ///     fence explicitly: *"A token minted in community A presented to a

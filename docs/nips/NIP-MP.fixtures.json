@@ -1371,32 +1371,6 @@
       }
     },
     {
-      "name": "invalid_metadata_duplicate_channel_across_legacy_spelling",
-      "expect": "reject",
-      "note": "One `crew-channel` plus one legacy `buzz-channel` still makes the linked channel reader-dependent.",
-      "reject_rules": [
-        "metadata-cardinality"
-      ],
-      "template": {
-        "kind": 30621,
-        "content": "",
-        "tags": [
-          [
-            "d",
-            "platform"
-          ],
-          [
-            "crew-channel",
-            "3580ca9b-47b4-4af9-b22a-1068778f26c6"
-          ],
-          [
-            "crew-channel",
-            "00000000-0000-0000-0000-000000000000"
-          ]
-        ]
-      }
-    },
-    {
       "name": "invalid_metadata_name_too_long",
       "expect": "reject",
       "note": "`name` value exceeds 256 bytes.",

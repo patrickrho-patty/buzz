@@ -152,7 +152,7 @@ fn write_keyfile_atomic(path: &Path, data: &[u8]) -> std::io::Result<()> {
 /// Format: `<hex_pubkey>@<relay_host>` (e.g., `ab12...cd@relay.crew.dev`).
 /// Falls back to `<hex_pubkey>@crew` if no relay URL is configured.
 fn derive_git_email(pubkey_hex: &str) -> String {
-    let host = crew_core::env_alias::env_lookup("CREW_RELAY_URL")
+    let host = std::env::var("CREW_RELAY_URL")
         .ok()
         .and_then(|url| {
             // Strip scheme, port, and trailing paths

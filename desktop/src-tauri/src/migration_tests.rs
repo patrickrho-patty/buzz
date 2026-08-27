@@ -19,27 +19,6 @@ fn canonical_dev_data_dir_returns_none_for_root() {
 }
 
 #[test]
-fn legacy_app_data_dir_maps_release_identifier() {
-    let current = PathBuf::from("/Users/me/Library/Application Support/xyz.patty.crew.app");
-    let legacy = legacy_app_data_dir(&current).unwrap();
-    assert_eq!(
-        legacy,
-        PathBuf::from("/Users/me/Library/Application Support/xyz.block.sprout.app")
-    );
-}
-
-#[test]
-fn legacy_app_data_dir_maps_dev_worktree_identifier() {
-    let current =
-        PathBuf::from("/Users/me/Library/Application Support/xyz.patty.crew.app.dev.my-branch");
-    let legacy = legacy_app_data_dir(&current).unwrap();
-    assert_eq!(
-        legacy,
-        PathBuf::from("/Users/me/Library/Application Support/xyz.block.sprout.app.dev.my-branch",)
-    );
-}
-
-#[test]
 fn copy_dir_all_preserves_nested_files_without_overwriting() {
     let dir = tempfile::tempdir().unwrap();
     let src = dir.path().join("old");
@@ -847,8 +826,8 @@ fn migrate_legacy_nest_carries_knowledge_and_skips_repos() {
     std::fs::write(legacy.join("AGENTS.md"), "agents").unwrap();
     std::fs::write(legacy.join("RESEARCH/NOTES.md"), "notes").unwrap();
     // A fat REPOS/ that must NOT be copied.
-    std::fs::create_dir_all(legacy.join("REPOS/buzz")).unwrap();
-    std::fs::write(legacy.join("REPOS/buzz/huge.bin"), "checkout").unwrap();
+    std::fs::create_dir_all(legacy.join("REPOS/crew")).unwrap();
+    std::fs::write(legacy.join("REPOS/crew/huge.bin"), "checkout").unwrap();
 
     let migrated = super::migrate_legacy_nest_at(&legacy, &current);
 

@@ -454,7 +454,7 @@ fn parse_nostr_bind_deep_link_accepts_valid_url() {
 
 #[test]
 fn parse_nostr_bind_deep_link_accepts_same_origin_callback_url() {
-    let url = Url::parse("crew://nostr-bind?challenge_id=550e8400-e29b-41d4-a716-446655440000&nonce=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi01234567&verification_code=123456&audience=crew%3Anostr-identity&action=bind_nostr_identity&protocol=crew-nostr-identity&version=1&origin=https%3A%2F%2Fexample.com&expires_at=2999-01-01T00%3A00%3A00Z&return=clipboard&callback_url=https%3A%2F%2Fexample.com%2Fbuzz%3FmockSession%3D1").unwrap();
+    let url = Url::parse("crew://nostr-bind?challenge_id=550e8400-e29b-41d4-a716-446655440000&nonce=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi01234567&verification_code=123456&audience=crew%3Anostr-identity&action=bind_nostr_identity&protocol=crew-nostr-identity&version=1&origin=https%3A%2F%2Fexample.com&expires_at=2999-01-01T00%3A00%3A00Z&return=clipboard&callback_url=https%3A%2F%2Fexample.com%2Fcrew%3FmockSession%3D1").unwrap();
     let payload = parse_nostr_bind_deep_link(&url).unwrap();
     assert_eq!(
         payload.callback_url.as_deref(),
@@ -464,7 +464,7 @@ fn parse_nostr_bind_deep_link_accepts_same_origin_callback_url() {
 
 #[test]
 fn parse_nostr_bind_deep_link_accepts_browser_fragment_return() {
-    let url = Url::parse("crew://nostr-bind?challenge_id=550e8400-e29b-41d4-a716-446655440000&nonce=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi01234567&verification_code=123456&audience=crew%3Anostr-identity&action=bind_nostr_identity&protocol=crew-nostr-identity&version=1&origin=https%3A%2F%2Fexample.com&expires_at=2999-01-01T00%3A00%3A00Z&return=browser_fragment_v1&callback_url=https%3A%2F%2Fexample.com%2Fbuzz").unwrap();
+    let url = Url::parse("crew://nostr-bind?challenge_id=550e8400-e29b-41d4-a716-446655440000&nonce=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi01234567&verification_code=123456&audience=crew%3Anostr-identity&action=bind_nostr_identity&protocol=crew-nostr-identity&version=1&origin=https%3A%2F%2Fexample.com&expires_at=2999-01-01T00%3A00%3A00Z&return=browser_fragment_v1&callback_url=https%3A%2F%2Fexample.com%2Fcrew").unwrap();
     let payload = parse_nostr_bind_deep_link(&url).unwrap();
 
     assert_eq!(payload.return_mode, "browser_fragment_v1");
@@ -486,13 +486,13 @@ fn parse_nostr_bind_deep_link_requires_callback_for_browser_fragment_return() {
 
 #[test]
 fn parse_nostr_bind_deep_link_rejects_cross_origin_callback_url() {
-    let url = Url::parse("crew://nostr-bind?challenge_id=550e8400-e29b-41d4-a716-446655440000&nonce=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi01234567&verification_code=123456&audience=crew%3Anostr-identity&action=bind_nostr_identity&protocol=crew-nostr-identity&version=1&origin=https%3A%2F%2Fexample.com&expires_at=2999-01-01T00%3A00%3A00Z&return=clipboard&callback_url=https%3A%2F%2Fevil.example%2Fbuzz").unwrap();
+    let url = Url::parse("crew://nostr-bind?challenge_id=550e8400-e29b-41d4-a716-446655440000&nonce=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi01234567&verification_code=123456&audience=crew%3Anostr-identity&action=bind_nostr_identity&protocol=crew-nostr-identity&version=1&origin=https%3A%2F%2Fexample.com&expires_at=2999-01-01T00%3A00%3A00Z&return=clipboard&callback_url=https%3A%2F%2Fevil.example%2Fcrew").unwrap();
     assert!(parse_nostr_bind_deep_link(&url).is_err());
 }
 
 #[test]
 fn parse_nostr_bind_deep_link_rejects_http_callback_url() {
-    let url = Url::parse("crew://nostr-bind?challenge_id=550e8400-e29b-41d4-a716-446655440000&nonce=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi01234567&verification_code=123456&audience=crew%3Anostr-identity&action=bind_nostr_identity&protocol=crew-nostr-identity&version=1&origin=https%3A%2F%2Fexample.com&expires_at=2999-01-01T00%3A00%3A00Z&return=clipboard&callback_url=http%3A%2F%2Fexample.com%2Fbuzz").unwrap();
+    let url = Url::parse("crew://nostr-bind?challenge_id=550e8400-e29b-41d4-a716-446655440000&nonce=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi01234567&verification_code=123456&audience=crew%3Anostr-identity&action=bind_nostr_identity&protocol=crew-nostr-identity&version=1&origin=https%3A%2F%2Fexample.com&expires_at=2999-01-01T00%3A00%3A00Z&return=clipboard&callback_url=http%3A%2F%2Fexample.com%2Fcrew").unwrap();
     assert!(parse_nostr_bind_deep_link(&url).is_err());
 }
 

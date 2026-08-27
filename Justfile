@@ -846,7 +846,7 @@ release-desktop *ARGS:
     fi
     scripts/prepare-desktop-release.sh "$VERSION"
 
-# Open or update the relay release PR (ghcr.io/block/buzz image)
+# Open or update the relay release PR (ghcr.io/patty-io/crew image)
 release-relay *ARGS:
     #!/usr/bin/env bash
     set -euo pipefail

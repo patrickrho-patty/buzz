@@ -1,5 +1,5 @@
 pub const RELAY_MESH_API_BASE_URL: &str = "http://127.0.0.1:9337/v1";
-pub const RELAY_MESH_API_KEY_PLACEHOLDER: &str = "buzz-mesh-local";
+pub const RELAY_MESH_API_KEY_PLACEHOLDER: &str = "crew-mesh-local";
 pub const RELAY_MESH_PROVIDER_ID: &str = "relay-mesh";
 /// Stored value for "let the mesh decide", kept as the user-facing word.
 pub const RELAY_MESH_AUTO_MODEL_ID: &str = "auto";

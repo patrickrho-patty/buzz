@@ -5,7 +5,7 @@ set -euo pipefail
 instance_id="${1:-}"
 keyring_service="${2:-}"
 
-if [[ "$instance_id" != "xyz.patty.griddle.app.dev" && "$instance_id" != xyz.patty.griddle.app.dev.* ]]; then
+if [[ "$instance_id" != "xyz.patty.crew.app.dev" && "$instance_id" != xyz.patty.crew.app.dev.* ]]; then
     echo "reset-desktop-standalone-state: refusing non-dev bundle identifier: $instance_id" >&2
     exit 1
 fi

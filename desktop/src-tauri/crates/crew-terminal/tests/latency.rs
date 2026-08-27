@@ -70,7 +70,7 @@ const FRAMES: u32 = 200;
 fn flood(shared: &SharedTerminal, stop: &AtomicBool) {
     let mut payload: Vec<u8> = b"\x1b[?2026h".to_vec();
     while payload.len() < (2 << 20) {
-        payload.extend_from_slice(b"\x1b[1;32mbuzz\x1b[0m substrate line of output 0123456789\r\n");
+        payload.extend_from_slice(b"\x1b[1;32mcrew\x1b[0m substrate line of output 0123456789\r\n");
     }
     payload.extend_from_slice(b"\x1b[?2026l");
     while !stop.load(Ordering::Relaxed) {

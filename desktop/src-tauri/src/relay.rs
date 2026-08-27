@@ -17,7 +17,7 @@ const DEFAULT_RELAY_WS_URL: &str = "ws://localhost:3000";
 const MALFORMED_RESPONSE_MESSAGE: &str = "relay returned malformed response: not valid JSON";
 
 fn configured_env_var(name: &str) -> Option<String> {
-    crew_core_pkg::env_alias::env_lookup(name)
+    std::env::var(name)
         .ok()
         .map(|value| value.trim().to_string())
         .filter(|value| !value.is_empty())

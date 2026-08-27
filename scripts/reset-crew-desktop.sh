@@ -7,7 +7,7 @@
 #   3. App data dir           (~/Library/Application Support/xyz.patty.crew.app)
 #                             — localStorage: onboarding transactions, SSO stash,
 #                               cached profiles, webview state
-#   4. Legacy block-era identifier data (~/Library/WebKit/xyz.block.buzz.app) from
+#   4. Legacy block-era identifier data (~/Library/WebKit/xyz.block.crew.app) from
 #      pre-fork installs
 #
 # Keeps:
@@ -45,7 +45,7 @@ rm -rf "$HOME/Library/Application Support/$APP_ID"
 rm -rf "$HOME/Library/Caches/$APP_ID" 2>/dev/null || true
 rm -rf "$HOME/Library/WebKit/$APP_ID" 2>/dev/null || true
 
-echo "==> Wiping legacy pre-rebrand data (xyz.block.buzz.app)…"
+echo "==> Wiping legacy pre-rebrand data (xyz.block.crew.app)…"
 rm -rf "$HOME/Library/WebKit/xyz.block.crew.app" 2>/dev/null || true
 rm -rf "$HOME/Library/Application Support/xyz.block.crew.app" 2>/dev/null || true
 

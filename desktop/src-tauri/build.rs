@@ -9,7 +9,6 @@ use base64::Engine as _;
 
 fn main() {
     println!("cargo:rerun-if-env-changed=CREW_RELAY_URL");
-    println!("cargo:rerun-if-env-changed=BUZZ_RELAY_URL");
     println!("cargo:rerun-if-env-changed=CREW_RELAY_HTTP");
     println!("cargo:rerun-if-env-changed=CREW_UPDATER_PUBLIC_KEY");
     println!("cargo:rerun-if-env-changed=CREW_UPDATER_ENDPOINT");
@@ -27,8 +26,7 @@ fn main() {
         println!("cargo:rustc-env=CREW_DESKTOP_BUILD_AGENT_ACCESS_OWNER_ONLY=1");
     }
 
-    let relay_url = std::env::var("CREW_RELAY_URL").or_else(|_| std::env::var("BUZZ_RELAY_URL"));
-    if let Ok(relay_url) = relay_url {
+    if let Ok(relay_url) = std::env::var("CREW_RELAY_URL") {
         println!("cargo:rustc-env=CREW_DESKTOP_BUILD_RELAY_URL={relay_url}");
     }
 

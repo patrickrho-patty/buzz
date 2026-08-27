@@ -87,7 +87,7 @@ jobs:
         run: cd desktop && node scripts/build-release-config.mjs
         env:
           CREW_UPDATER_PUBLIC_KEY: ${{ secrets.CREW_UPDATER_PUBLIC_KEY || secrets.SPROUT_UPDATER_PUBLIC_KEY }}
-          CREW_UPDATER_ENDPOINT: https://github.com/block/buzz/releases/download/buzz-desktop-latest/latest.json
+          CREW_UPDATER_ENDPOINT: https://github.com/patty-io/crew/releases/download/crew-desktop-latest/latest.json
 
       - name: Build sidecars
         run: |
@@ -138,7 +138,7 @@ jobs:
         run: cd desktop && pnpm tauri build --verbose --no-sign --features mesh-llm --config src-tauri/tauri.release.conf.json
         env:
           CREW_UPDATER_PUBLIC_KEY: ${{ secrets.CREW_UPDATER_PUBLIC_KEY || secrets.SPROUT_UPDATER_PUBLIC_KEY }}
-          CREW_UPDATER_ENDPOINT: https://github.com/block/buzz/releases/download/buzz-desktop-latest/latest.json
+          CREW_UPDATER_ENDPOINT: https://github.com/patty-io/crew/releases/download/crew-desktop-latest/latest.json
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
           CMAKE_POLICY_VERSION_MINIMUM: "3.5"
@@ -221,7 +221,7 @@ jobs:
         run: |
           BUNDLE_DIR="desktop/src-tauri/target/release/bundle"
 
-          # Find the DMG (Tauri names it Buzz_<version>_<arch>.dmg)
+          # Find the DMG (Tauri names it Crew_<version>_<arch>.dmg)
           DMG=$(find "$BUNDLE_DIR/dmg" -name '*.dmg' -type f | head -1)
           if [[ -z "$DMG" ]]; then
             echo "::error::No DMG found in $BUNDLE_DIR/dmg"
@@ -237,7 +237,7 @@ jobs:
             echo "::error::Updater archive or signature not found in $BUNDLE_DIR/macos"
             exit 1
           fi
-          RENAMED="$(dirname "$ARCHIVE")/Buzz_${VERSION}_aarch64.app.tar.gz"
+          RENAMED="$(dirname "$ARCHIVE")/Crew_${VERSION}_aarch64.app.tar.gz"
           mv "$ARCHIVE" "$RENAMED"
           mv "$SIG" "${RENAMED}.sig"
           ARCHIVE="$RENAMED"
@@ -304,7 +304,7 @@ jobs:
         run: cd desktop && node scripts/build-release-config.mjs
         env:
           CREW_UPDATER_PUBLIC_KEY: ${{ secrets.CREW_UPDATER_PUBLIC_KEY || secrets.SPROUT_UPDATER_PUBLIC_KEY }}
-          CREW_UPDATER_ENDPOINT: https://github.com/block/buzz/releases/download/buzz-desktop-latest/latest.json
+          CREW_UPDATER_ENDPOINT: https://github.com/patty-io/crew/releases/download/crew-desktop-latest/latest.json
 
       - name: Build sidecars
         run: |
@@ -315,7 +315,7 @@ jobs:
         run: cd desktop && pnpm tauri build --verbose --no-sign --target "$TARGET" --config src-tauri/tauri.release.conf.json
         env:
           CREW_UPDATER_PUBLIC_KEY: ${{ secrets.CREW_UPDATER_PUBLIC_KEY || secrets.SPROUT_UPDATER_PUBLIC_KEY }}
-          CREW_UPDATER_ENDPOINT: https://github.com/block/buzz/releases/download/buzz-desktop-latest/latest.json
+          CREW_UPDATER_ENDPOINT: https://github.com/patty-io/crew/releases/download/crew-desktop-latest/latest.json
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
           CMAKE_POLICY_VERSION_MINIMUM: "3.5"
@@ -398,7 +398,7 @@ jobs:
             echo "::error::Updater archive or signature not found in $BUNDLE_DIR/macos"
             exit 1
           fi
-          RENAMED="$(dirname "$ARCHIVE")/Buzz_${VERSION}_x64.app.tar.gz"
+          RENAMED="$(dirname "$ARCHIVE")/Crew_${VERSION}_x64.app.tar.gz"
           mv "$ARCHIVE" "$RENAMED"
           mv "$SIG" "${RENAMED}.sig"
           ARCHIVE="$RENAMED"
@@ -570,13 +570,13 @@ jobs:
         run: cd desktop && node scripts/build-release-config.mjs
         env:
           CREW_UPDATER_PUBLIC_KEY: ${{ secrets.CREW_UPDATER_PUBLIC_KEY || secrets.SPROUT_UPDATER_PUBLIC_KEY }}
-          CREW_UPDATER_ENDPOINT: https://github.com/block/buzz/releases/download/buzz-desktop-latest/latest.json
+          CREW_UPDATER_ENDPOINT: https://github.com/patty-io/crew/releases/download/crew-desktop-latest/latest.json
 
       - name: Build Linux Tauri app
         run: cd desktop && pnpm tauri build --verbose --ci --bundles deb,appimage --features mesh-llm --config src-tauri/tauri.release.conf.json
         env:
           CREW_UPDATER_PUBLIC_KEY: ${{ secrets.CREW_UPDATER_PUBLIC_KEY || secrets.SPROUT_UPDATER_PUBLIC_KEY }}
-          CREW_UPDATER_ENDPOINT: https://github.com/block/buzz/releases/download/buzz-desktop-latest/latest.json
+          CREW_UPDATER_ENDPOINT: https://github.com/patty-io/crew/releases/download/crew-desktop-latest/latest.json
           CMAKE_POLICY_VERSION_MINIMUM: "3.5"
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
@@ -707,7 +707,7 @@ jobs:
         run: cd desktop && node scripts/build-release-config.mjs
         env:
           CREW_UPDATER_PUBLIC_KEY: ${{ secrets.CREW_UPDATER_PUBLIC_KEY || secrets.SPROUT_UPDATER_PUBLIC_KEY }}
-          CREW_UPDATER_ENDPOINT: https://github.com/block/buzz/releases/download/buzz-desktop-latest/latest.json
+          CREW_UPDATER_ENDPOINT: https://github.com/patty-io/crew/releases/download/crew-desktop-latest/latest.json
 
       - name: Build sidecars
         shell: bash
@@ -720,7 +720,7 @@ jobs:
         run: cd desktop && pnpm tauri build --verbose --target "$TARGET" --bundles nsis --config src-tauri/tauri.release.conf.json
         env:
           CREW_UPDATER_PUBLIC_KEY: ${{ secrets.CREW_UPDATER_PUBLIC_KEY || secrets.SPROUT_UPDATER_PUBLIC_KEY }}
-          CREW_UPDATER_ENDPOINT: https://github.com/block/buzz/releases/download/buzz-desktop-latest/latest.json
+          CREW_UPDATER_ENDPOINT: https://github.com/patty-io/crew/releases/download/crew-desktop-latest/latest.json
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
           CMAKE_POLICY_VERSION_MINIMUM: "3.5"
@@ -888,7 +888,7 @@ jobs:
           ARCHIVE_WIN: ${{ needs.release-windows.outputs.archive_name }}
         run: |
           set -euo pipefail
-          BASE="https://github.com/block/buzz/releases/download/desktop-v${VERSION}"
+          BASE="https://github.com/patty-io/crew/releases/download/desktop-v${VERSION}"
           TRIPLES=()
 
           add_triple() {

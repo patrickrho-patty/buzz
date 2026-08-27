@@ -37,7 +37,7 @@ pub enum ManifestError {
 pub struct Engines {
     /// Semver range the Crew runtime must satisfy (e.g. `">=0.9.0"`).
     ///
-    /// Serialized as `crew`; pre-rename packs carrying `buzz` still parse
+    /// Serialized as `crew`; pre-rename packs carrying `crew` still parse
     /// through the alias below. New packs always emit the new spelling.
     #[serde(rename = "crew", alias = "crew", skip_serializing_if = "Option::is_none")]
     pub crew: Option<String>,

@@ -14,7 +14,7 @@ fn nest_dir_is_under_home() {
 }
 
 #[test]
-fn init_nest_dir_prod_sets_buzz() {
+fn init_nest_dir_prod_sets_crew() {
     // init_nest_dir is idempotent (OnceLock) — once set, subsequent calls
     // are no-ops. We can only test the fallback path if the OnceLock is
     // unset, which is only true in a fresh process. Instead, verify that
@@ -342,12 +342,12 @@ fn ensure_skill_symlinks_skip_dangling_symlink() {
 }
 
 #[test]
-fn cli_link_name_prod_is_buzz() {
+fn cli_link_name_prod_is_crew() {
     assert_eq!(cli_link_name(false), "crew");
 }
 
 #[test]
-fn cli_link_name_dev_is_buzz_dev() {
+fn cli_link_name_dev_is_crew_dev() {
     assert_eq!(cli_link_name(true), "crew-dev");
 }
 

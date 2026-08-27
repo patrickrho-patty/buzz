@@ -131,8 +131,8 @@ const _customEmoji = [
 ];
 const _relayCustomEmoji = [
   CustomEmoji(
-    shortcode: 'buzzbee',
-    url: 'https://relay.example/media/buzzbee.png',
+    shortcode: 'crewbeee',
+    url: 'https://relay.example/media/crewbeee.png',
   ),
 ];
 
@@ -762,8 +762,8 @@ void main() {
             'url': 'https://example.test/parrot.gif',
           },
           {
-            'shortcode': 'buzzbee',
-            'url': 'https://relay.example/media/buzzbee.png',
+            'shortcode': 'crewbeee',
+            'url': 'https://relay.example/media/crewbeee.png',
           },
         ]);
         expect(find.byType(EmojiPickerSheet), findsNothing);
@@ -777,7 +777,7 @@ void main() {
         final relayHeaders = await _sendNativeEmojiPickerCall(
           tester,
           'mediaHeaders',
-          'https://relay.example/media/buzzbee.png',
+          'https://relay.example/media/crewbeee.png',
         );
         expect(
           (relayHeaders as Map<Object?, Object?>)['Authorization'],

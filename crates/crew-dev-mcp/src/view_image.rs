@@ -291,12 +291,12 @@ fn server_authority(url: &reqwest::Url) -> Option<String> {
 /// to an unsigned fetch instead of an error. Once the flag is on, the fetch
 /// 403s and the error path below names the missing key.
 fn relay_media_get_auth(url: &reqwest::Url) -> Option<String> {
-    let relay = crew_core::env_alias::env_lookup("CREW_RELAY_URL").ok()?;
+    let relay = std::env::var("CREW_RELAY_URL").ok()?;
     let relay = reqwest::Url::parse(&relay).ok()?;
     if !is_relay_media_url(url, &relay) {
         return None;
     }
-    let key = crew_core::env_alias::env_lookup("CREW_PRIVATE_KEY").ok()?;
+    let key = std::env::var("CREW_PRIVATE_KEY").ok()?;
     let keys = match nostr::Keys::parse(&key) {
         Ok(k) => k,
         Err(e) => {
@@ -338,7 +338,7 @@ async fn fetch_url(url: &str) -> Result<Vec<u8>, ErrorData> {
     let authed = auth.is_some();
     if let Some(header) = auth {
         req = req.header("Authorization", header);
-        if let Ok(auth_tag) = crew_core::env_alias::env_lookup("CREW_AUTH_TAG") {
+        if let Ok(auth_tag) = std::env::var("CREW_AUTH_TAG") {
             if !auth_tag.trim().is_empty() {
                 req = req.header("x-auth-tag", auth_tag);
             }

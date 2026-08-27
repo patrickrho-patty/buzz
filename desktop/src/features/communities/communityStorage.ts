@@ -5,9 +5,6 @@ import { getStorageItem, removeStorageItem } from "@/shared/lib/safeStorage";
 
 const COMMUNITIES_KEY = "crew-communities";
 const ACTIVE_COMMUNITY_KEY = "crew-active-community-id";
-// Sprout→Buzz era spellings; still the oldest on-disk generation.
-const LEGACY_WORKSPACES_KEY = "buzz-workspaces";
-const LEGACY_ACTIVE_WORKSPACE_KEY = "buzz-active-workspace-id";
 const COMMUNITY_DISCOVERY_AFTER_LEAVE_KEY =
   "crew-community-discovery-after-leave";
 
@@ -34,32 +31,9 @@ export async function expandTilde(input: string): Promise<string | undefined> {
 }
 
 export function migrateLegacyCommunityStorage(
-  storage: Storage = localStorage,
+  _storage: Storage = localStorage,
 ): void {
-  try {
-    if (storage.getItem(COMMUNITIES_KEY) === null) {
-      const legacyCommunities = storage.getItem(LEGACY_WORKSPACES_KEY);
-      if (legacyCommunities !== null) {
-        storage.setItem(COMMUNITIES_KEY, legacyCommunities);
-      }
-    }
-    if (storage.getItem(ACTIVE_COMMUNITY_KEY) === null) {
-      const legacyActiveCommunity = storage.getItem(
-        LEGACY_ACTIVE_WORKSPACE_KEY,
-      );
-      if (legacyActiveCommunity !== null) {
-        storage.setItem(ACTIVE_COMMUNITY_KEY, legacyActiveCommunity);
-      }
-    }
-  } catch (error) {
-    // WebKit throws SecurityError from getItem when storage access is denied
-    // for the origin (block/crew#5078). Fencing here so the app can still
-    // boot with an empty/default community list instead of a blank window.
-    console.warn(
-      "[communityStorage] migrateLegacyCommunityStorage failed (storage denied?):",
-      error,
-    );
-  }
+  // Fresh-fork posture: no pre-fork workspace keys exist to migrate.
 }
 
 export function loadCommunities(): Community[] {
@@ -147,13 +121,11 @@ export function markCommunityDiscoveryAfterLeave(
 export function clearCommunityStorage(storage: Storage = localStorage): void {
   storage.removeItem(COMMUNITIES_KEY);
   storage.removeItem(ACTIVE_COMMUNITY_KEY);
-  storage.removeItem(LEGACY_WORKSPACES_KEY);
-  storage.removeItem(LEGACY_ACTIVE_WORKSPACE_KEY);
 }
 
 export function loadActiveCommunityId(): string | null {
   migrateLegacyCommunityStorage();
-  // block/buzz#5078 — WebKit can throw SecurityError from a denied-storage
+  // patty-io/crew#5078 — WebKit can throw SecurityError from a denied-storage
   // getItem. Fail closed so the boot path renders the default community UI
   // instead of unmounting the root.
   return getStorageItem(ACTIVE_COMMUNITY_KEY);

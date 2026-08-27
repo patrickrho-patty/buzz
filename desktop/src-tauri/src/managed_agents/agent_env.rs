@@ -403,7 +403,7 @@ mod tests {
     #[test]
     fn build_env_map_drops_baked_access_gate_keys() {
         use base64::Engine as _;
-        let raw = "CREW_ACP_RESPOND_TO=anyone\nGRIDDLE_ACP_ALLOWED_RESPOND_TO=anyone\nGRIDDLE_ACP_RESPOND_TO_ALLOWLIST=deadbeef\nDATABRICKS_MODEL=goose-claude-opus-4-8";
+        let raw = "CREW_ACP_RESPOND_TO=anyone\nOTHER_ACP_ALLOWED_RESPOND_TO=anyone\nOTHER_ACP_RESPOND_TO_ALLOWLIST=deadbeef\nDATABRICKS_MODEL=goose-claude-opus-4-8";
         let blob = base64::engine::general_purpose::STANDARD.encode(raw.as_bytes());
         let map = build_env_map(None, None, Some(&blob));
         for key in [

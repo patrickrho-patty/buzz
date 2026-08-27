@@ -432,7 +432,7 @@ fn work_flushed_by_a_sync_abort_is_counted() {
 #[test]
 fn ordinary_output_needs_no_second_call() {
     let mut term = terminal();
-    let line = b"\x1b[1;32mbuzz\x1b[0m substrate line of output 0123456789\r\n";
+    let line = b"\x1b[1;32mcrew\x1b[0m substrate line of output 0123456789\r\n";
     let screenful = line.repeat(LINES);
 
     assert!(

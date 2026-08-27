@@ -23,7 +23,7 @@ RUN cargo build --release --locked -p crew-push-gateway --bin crew-push-gateway 
 FROM debian:${DEBIAN_VERSION}-slim AS runtime
 LABEL org.opencontainers.image.title="Crew Push Gateway" \
       org.opencontainers.image.description="Capability-gated APNs last hop for Crew" \
-      org.opencontainers.image.source="https://github.com/block/buzz" \
+      org.opencontainers.image.source="https://github.com/patty-io/crew" \
       org.opencontainers.image.licenses="Apache-2.0"
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates \

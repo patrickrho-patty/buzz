@@ -24,9 +24,6 @@ use crate::util::replace_with_symlink;
 const CANONICAL_DEV_IDENTIFIER: &str = "xyz.patty.crew.app.dev";
 const CANONICAL_RELEASE_IDENTIFIER: &str = "xyz.patty.crew.app";
 
-#[path = "migration_legacy.rs"]
-mod migration_legacy;
-pub(crate) use migration_legacy::{legacy_app_data_dir, legacy_sprout_app_data_dir, LEGACY_GRIDDLE_DEV_IDENTIFIER, LEGACY_GRIDDLE_RELEASE_IDENTIFIER, LEGACY_SPROUT_DEV_IDENTIFIER, LEGACY_SPROUT_RELEASE_IDENTIFIER};
 
 /// JSON files symlinked from worktree data directories to the canonical
 /// dev data directory. Only data files — never `agent-pids/` or `logs/`.
@@ -188,38 +185,9 @@ fn run_boot_migrations_inner(app: &tauri::AppHandle, reset_completed: bool) {
 /// the current Crew identifier directory. The Tauri identifier controls the app
 /// data path, so without this copy a product rename would look like a fresh
 /// install and users would lose their persisted identity and agent settings.
-pub fn migrate_legacy_app_data_dir(app: &tauri::AppHandle) {
-    let current_dir = match app.path().app_data_dir() {
-        Ok(dir) => dir,
-        Err(e) => {
-            eprintln!("crew-desktop: app-data-migration: cannot resolve app data dir: {e}");
-            return;
-        }
-    };
-    // Try Griddle legacy first, then Sprout for very old installs that never ran Griddle
-    let legacy_dirs = [
-        legacy_app_data_dir(&current_dir),
-        legacy_sprout_app_data_dir(&current_dir),
-    ];
-    for legacy_dir in legacy_dirs.into_iter().flatten() {
-        if !legacy_dir.exists() {
-            continue;
-        }
-        match copy_dir_all(&legacy_dir, &current_dir) {
-            Ok(()) => eprintln!(
-                "crew-desktop: app-data-migration: copied legacy data from {} to {}",
-                legacy_dir.display(),
-                current_dir.display()
-            ),
-            Err(error) => eprintln!(
-                "crew-desktop: app-data-migration: failed to copy {} to {}: {error}",
-                legacy_dir.display(),
-                current_dir.display()
-            ),
-        }
-    }
+pub fn migrate_legacy_app_data_dir(_app: &tauri::AppHandle) {
+    // Fresh-fork posture: no pre-fork app data exists.
 }
-
 /// Knowledge directories and files carried from the legacy nest into the live
 /// nest. Deliberately excludes `REPOS/`: cloned repositories are re-clonable by
 /// definition (Will's stranded `REPOS/` measured 62 GB of checkouts plus build
@@ -754,13 +722,13 @@ fn replace_builtin_avatar(record: &mut serde_json::Value, persona_id: &str, now:
 /// data directory to the canonical dev data directory.
 ///
 /// Guards:
-/// - `BUZZ_SHARE_IDENTITY` must be `"1"`
+/// - `CREW_SHARE_IDENTITY` must be `"1"`
 /// - `CREW_PRIVATE_KEY` must parse as valid `nostr::Keys`
 /// - The canonical dir must differ from the current dir (skip if we ARE canonical)
 /// - The canonical dir must exist
 pub fn sync_shared_agent_data(app: &tauri::AppHandle) {
     // Guard: only runs when sharing identity with a worktree.
-    let is_shared = std::env::var("BUZZ_SHARE_IDENTITY")
+    let is_shared = std::env::var("CREW_SHARE_IDENTITY")
         .map(|v| v == "1")
         .unwrap_or(false);
     if !is_shared {
@@ -1236,7 +1204,7 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
         let mut changed = false;
 
         // Only rewrite the structured provider field when the baked build env
-        // marks this as a Block build (BUZZ_AGENT_PROVIDER == "databricks_v2").
+        // marks this as a Block build (CREW_AGENT_PROVIDER == "databricks_v2").
         // OSS users may intentionally select V1 (Model Serving), so we must not
         // silently migrate their provider to V2 (AI Gateway).
         if rewrite_v1_provider && obj.get("provider").and_then(|v| v.as_str()) == Some("databricks")
@@ -1255,7 +1223,7 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
             );
             // Also clear the model field — a V1 model name (e.g. "dbrx-instruct")
             // on a V2 provider would shadow the baked DATABRICKS_MODEL at spawn time
-            // (BUZZ_AGENT_MODEL from runtime_metadata_env_vars takes priority in
+            // (CREW_AGENT_MODEL from runtime_metadata_env_vars takes priority in
             // crew-agent config.rs). Clearing it lets the baked V2 default win.
             if obj.remove("model").is_some() {
                 eprintln!(
@@ -1295,7 +1263,7 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
 /// `provider: "databricks"` to `"databricks_v2"`.
 ///
 /// **Block builds** (where `baked_build_env()` contains
-/// `BUZZ_AGENT_PROVIDER=databricks_v2`): the structured `provider` field is
+/// `CREW_AGENT_PROVIDER=databricks_v2`): the structured `provider` field is
 /// rewritten V1→V2 because the baked release targets V2 exclusively. Records
 /// that were saved before this migration would otherwise silently override the
 /// baked value at spawn time (last-write-wins in `Command::env`).
@@ -1303,7 +1271,7 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
 /// **OSS builds** (baked env empty): the `provider` field is left alone —
 /// V1 (`databricks`) is a valid Model Serving choice for OSS users.
 ///
-/// In both cases, stale `BUZZ_AGENT_PROVIDER` / `BUZZ_AGENT_MODEL` /
+/// In both cases, stale `CREW_AGENT_PROVIDER` / `CREW_AGENT_MODEL` /
 /// `GOOSE_PROVIDER` / `GOOSE_MODEL` are stripped from `env_vars`. These keys
 /// are always re-derived from structured fields at spawn time; persisted copies
 /// silence UI edits and cause stale routing.
@@ -1313,12 +1281,12 @@ fn reconcile_databricks_v1_to_v2_in_file(path: &Path, rewrite_v1_provider: bool)
 /// `reconcile_legacy_command_names` and `reconcile_provider_mcp_commands`.
 pub fn reconcile_databricks_v1_to_v2(app: &tauri::AppHandle) {
     use crate::managed_agents::baked_build_env;
-    // On Block builds, the baked env contains BUZZ_AGENT_PROVIDER=databricks_v2.
+    // On Block builds, the baked env contains CREW_AGENT_PROVIDER=databricks_v2.
     // Use that as a reliable signal that this is a Block build and the V1
     // provider should be migrated. OSS builds have an empty baked env, so
     // rewrite_v1_provider is false and the structured provider is preserved.
     let rewrite_v1_provider = baked_build_env()
-        .get("BUZZ_AGENT_PROVIDER")
+        .get("CREW_AGENT_PROVIDER")
         .map(|v| v == "databricks_v2")
         .unwrap_or(false);
     let Ok(current_dir) = app.path().app_data_dir() else {

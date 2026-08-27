@@ -18,8 +18,8 @@
 # (the main checkout never reaps a worktree's agents, or vice versa).
 #
 # Usage: cleanup-instance-agents.sh <instance-id>
-#   <instance-id> is the desktop bundle identifier, e.g. `xyz.patty.griddle.app.dev`
-#   (main checkout) or `xyz.patty.griddle.app.dev.my-branch` (a worktree).
+#   <instance-id> is the desktop bundle identifier, e.g. `xyz.patty.crew.app.dev`
+#   (main checkout) or `xyz.patty.crew.app.dev.my-branch` (a worktree).
 
 set -euo pipefail
 

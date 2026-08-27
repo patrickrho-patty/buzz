@@ -117,7 +117,7 @@ export async function migrateLegacyCommunityStorageBeforeRender(): Promise<void>
   }
 
   migrateLegacyCommunityStorage(window.localStorage);
-  // block/buzz#5078 — read through the throw-safe accessor so a denied-storage
+  // patty-io/crew#5078 — read through the throw-safe accessor so a denied-storage
   // origin degrades to "no community state" instead of crashing pre-render.
   const currentCommunitiesRaw = getStorageItem(CREW_COMMUNITIES_KEY);
   const hasCurrentActiveCommunity = getStorageItem(CREW_ACTIVE_COMMUNITY_KEY);

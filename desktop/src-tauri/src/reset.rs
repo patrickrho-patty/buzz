@@ -94,9 +94,7 @@ pub(crate) struct ResetOutcome {
 /// Wipe parameters assembled by `lib.rs` and passed into `run_boot_reset_with_keychain`.
 pub(crate) struct ResetContext<'a> {
     pub app_data_dir: &'a Path,
-    /// Legacy App Support dir for this build (Sprout import source). When
-    /// present and non-empty, wiped alongside `app_data_dir` to prevent
-    /// `migrate_legacy_app_data_dir` from restoring the old identity.
+    /// Pre-fork App Support dir (kept None: fresh-fork posture has none).
     pub legacy_app_data_dir: Option<PathBuf>,
     /// Nest dir (`~/.crew` or `~/.crew-dev`) scoped to this build's variant,
     /// injected so unit tests can override without touching the global OnceLock.
@@ -123,12 +121,12 @@ pub(crate) fn run_boot_reset(app_data_dir: &Path) -> ResetOutcome {
 
     let store = crate::secret_store::SecretStore::keyring(crate::app_state::keyring_service());
     let home_dir = dirs::home_dir();
-    let legacy_dir = crate::migration::legacy_app_data_dir(app_data_dir);
+    let legacy_dir: Option<PathBuf> = None;
     let nest_dir = crate::managed_agents::nest_dir();
 
     let ctx = ResetContext {
         app_data_dir,
-        legacy_app_data_dir: legacy_dir,
+        legacy_app_data_dir: None,
         nest_dir,
         keychain: &store,
         home_dir,
@@ -181,17 +179,6 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
         }
     }
 
-    // ── Step 1b: rename legacy App Support dir (sprout import source) ────────
-    let trash_legacy: Option<PathBuf> = ctx.legacy_app_data_dir.as_ref().map(|l| trash_path(l));
-    if let Some(ref legacy) = ctx.legacy_app_data_dir {
-        if legacy.exists() {
-            if let Err(e) = rename_to_trash(legacy) {
-                eprintln!("crew-desktop reset: {e}");
-                // Non-fatal for legacy dir — continue
-            }
-        }
-    }
-
     // ── Step 2: rename WebKit dir for this build ──────────────────────────────
     let trash_webkit: Option<PathBuf> = if let Some(ref home) = ctx.home_dir {
         let bundle_id = app_data_dir
@@ -230,13 +217,6 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
         if trash_app.exists() {
             let _ = std::fs::rename(&trash_app, app_data_dir);
         }
-        if let Some(ref legacy) = ctx.legacy_app_data_dir {
-            if let Some(ref tl) = trash_legacy {
-                if tl.exists() {
-                    let _ = std::fs::rename(tl, legacy);
-                }
-            }
-        }
         if let Some(ref home) = ctx.home_dir {
             let bundle_id = app_data_dir
                 .file_name()
@@ -257,9 +237,6 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
 
     // ── Step 5: sweep ALL reset trash (including from prior crashed boots) ───
     let _ = std::fs::remove_dir_all(&trash_app);
-    if let Some(ref tl) = trash_legacy {
-        let _ = std::fs::remove_dir_all(tl);
-    }
     if let Some(ref tw) = trash_webkit {
         let _ = std::fs::remove_dir_all(tw);
     }
@@ -274,21 +251,18 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
         .unwrap_or(true);
     let nest_gone = ctx.nest_dir.as_ref().map(|n| !n.exists()).unwrap_or(true);
     let trash_app_gone = !trash_app.exists();
-    let trash_legacy_gone = trash_legacy.as_ref().map(|p| !p.exists()).unwrap_or(true);
     let trash_webkit_gone = trash_webkit.as_ref().map(|p| !p.exists()).unwrap_or(true);
 
     if !keychain_ok
         || !app_data_gone
-        || !legacy_gone
         || !nest_gone
         || !trash_app_gone
-        || !trash_legacy_gone
         || !trash_webkit_gone
     {
         eprintln!(
             "crew-desktop reset: verification failed (keychain_wiped={keychain_ok}, \
              app_data_gone={app_data_gone}, legacy_gone={legacy_gone}, nest_gone={nest_gone}, \
-             trash_app_gone={trash_app_gone}, trash_legacy_gone={trash_legacy_gone}, \
+             trash_app_gone={trash_app_gone}, \
              trash_webkit_gone={trash_webkit_gone})"
         );
         return ResetOutcome {

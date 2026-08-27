@@ -28,7 +28,7 @@ import { installRelayBridge } from "../helpers/bridge";
  *   CREW_E2E_RELAY_URL=http://127.0.0.1:13000 \
  *   CREW_COMMUNITY_HOST=sprout-oss.stage.blox.sqprod.co \
  *   CREW_PERF_NSEC=nsec1... \
- *   npx playwright test --config=playwright.perf.config.ts scrollback-buzzbugs.perf.ts
+ *   npx playwright test --config=playwright.perf.config.ts scrollback-crewbugs.perf.ts
  */
 
 const RELAY_HTTP =

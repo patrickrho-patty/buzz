@@ -71,7 +71,7 @@ fn legitimate_frame(markers: usize, bytes: usize) -> Vec<u8> {
 #[test]
 fn g1_sync_abort_bounds_all_hostile_shapes() {
     let shapes: [(&str, &[u8]); 5] = [
-        ("sgr", b"\x1b[1;32mbuzz\x1b[0m\r\n"),
+        ("sgr", b"\x1b[1;32mcrew\x1b[0m\r\n"),
         ("ascii", b"crew substrate output\r\n"),
         ("emoji", "🐝🚀✨\r\n".as_bytes()),
         ("zalgo", "z\u{0301}\u{0302}\u{0303}\u{0304}\r\n".as_bytes()),

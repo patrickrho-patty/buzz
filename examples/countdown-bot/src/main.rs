@@ -81,7 +81,7 @@ struct Config {
 
 impl Config {
     fn from_env() -> Result<Self> {
-        let relay_url = crew_core::env_alias::env_lookup("CREW_RELAY_URL")
+        let relay_url = std::env::var("CREW_RELAY_URL")
             .unwrap_or_else(|_| DEFAULT_RELAY_URL.to_string());
         let channel_id = required_env("CREW_CHANNEL_ID")?;
         let bot_keys = Keys::parse(&required_env("CREW_BOT_PRIVATE_KEY")?)
@@ -92,7 +92,7 @@ impl Config {
         let owner_auth_tag = match auth_mode.as_str() {
             "standalone" => None,
             "owner-attested" => {
-                let tag_json = match crew_core::env_alias::env_lookup("CREW_AUTH_TAG") {
+                let tag_json = match std::env::var("CREW_AUTH_TAG") {
                     Ok(value) if !value.trim().is_empty() => value,
                     _ => {
                         let owner_keys = Keys::parse(&required_env("CREW_OWNER_PRIVATE_KEY")?)

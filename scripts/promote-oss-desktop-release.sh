@@ -36,12 +36,12 @@ jq -e --arg version "$VERSION" --argjson expected "$EXPECTED_PLATFORMS" '
   .version == $version and
   (.platforms | keys == $expected) and
   ([.platforms[] | (.signature | type == "string" and length > 0)] | all) and
-  ([.platforms[] | (.url | type == "string" and startswith("https://github.com/block/buzz/releases/download/desktop-v" + $version + "/"))] | all)
+  ([.platforms[] | (.url | type == "string" and startswith("https://github.com/patty-io/crew/releases/download/desktop-v" + $version + "/"))] | all)
 ' "$candidate" >/dev/null || fail "$CANDIDATE failed version, platform, signature, or URL validation"
 
 while IFS= read -r url; do
   asset="${url##*/}"
-  [[ "$url" == "https://github.com/block/buzz/releases/download/$TAG/$asset" ]] || fail "$CANDIDATE contains non-canonical updater URL: $url"
+  [[ "$url" == "https://github.com/patty-io/crew/releases/download/$TAG/$asset" ]] || fail "$CANDIDATE contains non-canonical updater URL: $url"
   grep -Fxq "$asset" <<<"$release_assets" || fail "$CANDIDATE references missing release asset: $asset"
 done < <(jq -r '.platforms[].url' "$candidate")
 

@@ -5243,19 +5243,15 @@ impl Db {
                         .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
             })
             && read_state_t_tag_count == 1;
-        // Mesh status rows may carry either the current `crew-mesh-*` tag
-        // spelling or the legacy `crew-mesh-*` one written by pre-rename
-        // binaries; both must hard-delete-supersede identically.
-        let is_buzz_mesh_status = kind_i32 == crew_core::kind::KIND_BOOKMARK_SET as i32
-            && (d_tag.starts_with("crew-mesh-member-status:")
-                || d_tag.starts_with("buzz-mesh-member-status:"))
+        let is_crew_mesh_status = kind_i32 == crew_core::kind::KIND_BOOKMARK_SET as i32
+            && d_tag.starts_with("crew-mesh-member-status:")
             && event.tags.iter().any(|tag| {
                 let parts = tag.as_slice();
                 parts.len() == 2
                     && parts[0] == "k"
-                    && (parts[1] == "crew-mesh-status" || parts[1] == "buzz-mesh-status")
+                    && parts[1] == "crew-mesh-status"
             });
-        let hard_delete_superseded = is_nip_rs || is_buzz_mesh_status;
+        let hard_delete_superseded = is_nip_rs || is_crew_mesh_status;
 
         // Check the live head and, for NIP-RS, the compact historical ordering
         // watermark. The watermark remains after a NIP-09 coordinate deletion,
@@ -6028,10 +6024,10 @@ mod tests {
         let db = setup_db().await;
         let community = CommunityId::from_uuid(make_community(&db.pool).await);
         let keys = Keys::generate();
-        let d_tag = "buzz-mesh-member-status:owner-test";
+        let d_tag = "crew-mesh-member-status:owner-test";
         let tags = vec![
             Tag::parse(["d", d_tag]).expect("d tag"),
-            Tag::parse(["k", "buzz-mesh-status"]).expect("k tag"),
+            Tag::parse(["k", "crew-mesh-status"]).expect("k tag"),
         ];
         let base = Timestamp::now().as_secs();
         for (offset, content) in [(0, "running"), (1, "running-again"), (2, "stopped")] {

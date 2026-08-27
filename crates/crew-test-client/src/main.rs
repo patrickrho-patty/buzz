@@ -47,7 +47,7 @@ async fn main() {
     let channel = opts.channel.as_deref().unwrap_or("default");
     let kind = opts.kind.unwrap_or(9);
 
-    let keys = match crew_core::env_alias::env_lookup("CREW_PRIVATE_KEY") {
+    let keys = match std::env::var("CREW_PRIVATE_KEY") {
         Ok(sk) => Keys::parse(&sk).expect("invalid CREW_PRIVATE_KEY"),
         Err(_) => Keys::generate(),
     };

@@ -30,7 +30,7 @@ function createMemoryStorage(initial = {}) {
 test("migrateLegacyCommunityStorage promotes current Crew workspace state", () => {
   const storage = createMemoryStorage({
     "crew-workspaces": '[{"id":"current"}]',
-    "buzz-active-workspace-id": "current",
+    "crew-active-workspace-id": "current",
   });
 
   migrateLegacyCommunityStorage(storage);
@@ -44,7 +44,7 @@ test("migrateLegacyCommunityStorage does not overwrite new community state", () 
     "crew-communities": '[{"id":"new"}]',
     "crew-active-community-id": "new",
     "crew-workspaces": '[{"id":"old"}]',
-    "buzz-active-workspace-id": "old",
+    "crew-active-workspace-id": "old",
   });
 
   migrateLegacyCommunityStorage(storage);
@@ -74,8 +74,8 @@ test("signed-build relay defaults auto-connect during first-run onboarding", () 
 test("failed first-community write preserves existing community data", () => {
   const storage = createMemoryStorage({
     "crew-communities": '[{"id":"existing"}]',
-    "buzz-workspaces": '[{"id":"legacy"}]',
-    "buzz-active-workspace-id": "legacy",
+    "crew-workspaces": '[{"id":"legacy"}]',
+    "crew-active-workspace-id": "legacy",
   });
   storage.setItem = (key, value) => {
     if (key === "crew-communities") {
@@ -89,8 +89,8 @@ test("failed first-community write preserves existing community data", () => {
   assert.equal(initFirstCommunity("wss://relay.example.com", "pubkey"), null);
   assert.equal(storage.getItem("crew-communities"), '[{"id":"existing"}]');
   assert.equal(storage.getItem("crew-active-community-id"), null);
-  assert.equal(storage.getItem("buzz-workspaces"), '[{"id":"legacy"}]');
-  assert.equal(storage.getItem("buzz-active-workspace-id"), "legacy");
+  assert.equal(storage.getItem("crew-workspaces"), '[{"id":"legacy"}]');
+  assert.equal(storage.getItem("crew-active-workspace-id"), "legacy");
 });
 
 test("loading an existing community clears stale final-leave discovery", () => {

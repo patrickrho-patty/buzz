@@ -989,7 +989,7 @@ impl CrewClient {
                             })
                             .unwrap_or(body_text);
                         let message = if status == 403
-                            && crew_core::env_alias::env_lookup("CREW_AUTH_TAG").is_ok()
+                            && std::env::var("CREW_AUTH_TAG").is_ok()
                         {
                             format!(
                                 "{message} (CREW_AUTH_TAG is set — it may be stale or revoked; try unsetting it)"
@@ -1270,7 +1270,7 @@ impl CrewClient {
                         .map(|s| s.to_string())
                 })
                 .unwrap_or(body);
-            if status == 403 && crew_core::env_alias::env_lookup("CREW_AUTH_TAG").is_ok() {
+            if status == 403 && std::env::var("CREW_AUTH_TAG").is_ok() {
                 let message = format!(
                     "{message} (CREW_AUTH_TAG is set — it may be stale or revoked; try unsetting it)"
                 );

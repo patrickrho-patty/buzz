@@ -144,8 +144,6 @@ impl Config {
         let enabled_profiles = req(e, "CREW_PUSH_ENABLED_PROFILES")?
             .split(',')
             .map(|profile| match profile {
-                "buzz-ios-production" => Ok(crate::model::AppProfile::CrewIosProduction),
-                "buzz-ios-sandbox" => Ok(crate::model::AppProfile::CrewIosSandbox),
                 "crew-ios-production" => Ok(crate::model::AppProfile::CrewIosProduction),
                 "crew-ios-sandbox" => Ok(crate::model::AppProfile::CrewIosSandbox),
                 _ => Err(ConfigError::Invalid("CREW_PUSH_ENABLED_PROFILES")),

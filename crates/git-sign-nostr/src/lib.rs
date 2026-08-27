@@ -416,7 +416,7 @@ fn load_key() -> Result<zeroize::Zeroizing<String>, Error> {
     }
 
     // 2. CREW_PRIVATE_KEY
-    if let Ok(mut val) = crew_env_with_legacy("CREW_PRIVATE_KEY") {
+    if let Ok(mut val) = std::env::var("CREW_PRIVATE_KEY") {
         // Cap at 128 bytes: nsec1 bech32 is ~63 chars, hex is 64 chars.
         // 128 bytes is generous headroom; anything larger is malformed input.
         if val.len() > 128 {
@@ -464,7 +464,7 @@ fn load_auth_tag() -> Result<Option<(String, String, String)>, Error> {
     // NIP-GS spec: check env var first, then git config.
     // Use git_config_strict for auth tag to fail closed on read errors —
     // a configured-but-unreadable auth tag must not be silently omitted.
-    let json_str = match crew_env_with_legacy("CREW_AUTH_TAG")
+    let json_str = match std::env::var("CREW_AUTH_TAG")
         .ok()
         .filter(|s| !s.is_empty())
     {
@@ -1723,17 +1723,6 @@ fn has_non_string_whitespace(s: &str) -> bool {
 
 /// Entry point — returns an exit code. This ensures all locals are
 /// dropped (and zeroized) before `process::exit` is called.
-fn crew_env_with_legacy(key: &str) -> Result<String, std::env::VarError> {
-    match std::env::var(key) {
-        Ok(v) => Ok(v),
-        Err(std::env::VarError::NotPresent) => match key {
-            "CREW_PRIVATE_KEY" => std::env::var("BUZZ_PRIVATE_KEY"),
-            "CREW_AUTH_TAG" => std::env::var("BUZZ_AUTH_TAG"),
-            _ => Err(std::env::VarError::NotPresent),
-        },
-        Err(e) => Err(e),
-    }
-}
 
 pub fn run() -> i32 {
     let args = match parse_args() {

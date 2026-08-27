@@ -389,7 +389,7 @@ fn meaningful_agent_error_from_log_does_not_promote_midline_auth_text() {
 
 #[test]
 fn strips_ansi_from_typical_tracing_line() {
-    let input = "\x1b[2m2026-05-27T15:16:32\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbuzz_acp\x1b[0m\x1b[2m:\x1b[0m starting";
+    let input = "\x1b[2m2026-05-27T15:16:32\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mcrew_acp\x1b[0m\x1b[2m:\x1b[0m starting";
     assert_eq!(
         strip_ansi_escapes::strip_str(input),
         "2026-05-27T15:16:32  INFO crew_acp: starting"

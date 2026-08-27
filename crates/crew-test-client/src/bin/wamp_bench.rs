@@ -32,7 +32,7 @@ async fn main() -> anyhow::Result<()> {
     let conns: usize = args[4].parse()?;
     let latency_out = args[5].clone();
 
-    let url = crew_core::env_alias::env_lookup("CREW_RELAY_URL")
+    let url = std::env::var("CREW_RELAY_URL")
         .unwrap_or_else(|_| "ws://localhost:3000".into());
     let keys = match std::env::var("BENCH_PRIVATE_KEY") {
         Ok(hex) => Keys::parse(&hex)?,

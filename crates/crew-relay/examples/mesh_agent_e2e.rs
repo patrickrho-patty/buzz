@@ -283,7 +283,7 @@ async fn agent_chat_in_isolated_home(
         .env("CREW_AGENT_MODEL", model)
         .env("OPENAI_COMPAT_BASE_URL", base)
         .env("OPENAI_COMPAT_MODEL", model)
-        .env("OPENAI_COMPAT_API_KEY", "buzz-mesh-local")
+        .env("OPENAI_COMPAT_API_KEY", "crew-mesh-local")
         .env("OPENAI_COMPAT_API", "chat")
         .env("CREW_AGENT_MAX_OUTPUT_TOKENS", "4096")
         // No CREW_AGENT_THINKING_EFFORT: apply_relay_mesh_env() deliberately

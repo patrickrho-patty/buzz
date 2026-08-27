@@ -138,7 +138,7 @@ pub struct AppState {
 /// fall through to persisted resolution. A malformed value is logged and
 /// treated as absent rather than left on an ephemeral identity.
 fn identity_from_env() -> Option<Keys> {
-    match crew_core_pkg::env_alias::env_lookup("CREW_PRIVATE_KEY") {
+    match std::env::var("CREW_PRIVATE_KEY") {
         Ok(nsec) => match Keys::parse(nsec.trim()) {
             Ok(keys) => Some(keys),
             Err(error) => {

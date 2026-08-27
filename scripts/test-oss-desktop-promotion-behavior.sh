@@ -45,7 +45,7 @@ chmod +x "$tmp/bin/gh"
 
 write_manifest() {
   local file="$1" version="$2" signature="${3-signed}" base_version="${4-$2}"
-  jq -n --arg version "$version" --arg signature "$signature" --arg base "https://github.com/block/buzz/releases/download/desktop-v${base_version}" '{
+  jq -n --arg version "$version" --arg signature "$signature" --arg base "https://github.com/patty-io/crew/releases/download/desktop-v${base_version}" '{
     version: $version, notes: ("Crew v" + $version), pub_date: "2026-08-09T00:00:00Z",
     platforms: {
       "darwin-aarch64": {signature: $signature, url: ($base + "/mac-arm.tar.gz")},

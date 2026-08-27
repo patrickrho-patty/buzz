@@ -81,7 +81,7 @@ pub fn is_shared_identity() -> bool {
     std::env::var("CREW_SHARE_IDENTITY")
         .map(|v| v == "1")
         .unwrap_or(false)
-        && crew_core_pkg::env_alias::env_lookup("CREW_PRIVATE_KEY")
+        && std::env::var("CREW_PRIVATE_KEY")
             .ok()
             .and_then(|k| Keys::parse(k.trim()).ok())
             .is_some()

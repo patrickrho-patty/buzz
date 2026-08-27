@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 #
-# Public Buzz relay image — published as ghcr.io/block/buzz:<tag>.
+# Public Crew relay image — published as ghcr.io/patty-io/crew:<tag>.
 #
 # Builds the `crew-relay` binary (Rust 1.95) and the `crew-web` static bundle
 # (pnpm + vite), then assembles them into a small debian-slim runtime with
@@ -126,9 +126,9 @@ FROM debian:${DEBIAN_VERSION}-slim AS runtime-base
 # one — without it GHCR keeps the image private even when the repo is public.
 LABEL org.opencontainers.image.title="Crew" \
       org.opencontainers.image.description="WebSocket relay server for the Crew communications platform" \
-      org.opencontainers.image.source="https://github.com/block/buzz" \
-      org.opencontainers.image.url="https://github.com/block/buzz" \
-      org.opencontainers.image.documentation="https://github.com/block/buzz#readme" \
+      org.opencontainers.image.source="https://github.com/patty-io/crew" \
+      org.opencontainers.image.url="https://github.com/patty-io/crew" \
+      org.opencontainers.image.documentation="https://github.com/patty-io/crew#readme" \
       org.opencontainers.image.licenses="Apache-2.0"
 
 RUN apt-get update \

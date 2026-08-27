@@ -1269,7 +1269,7 @@ mod tests {
     #[ignore = "requires real OS keychain (run locally)"]
     #[test]
     fn delete_all_with_legacy_cleanup_removes_per_key_identity() {
-        let svc = "buzz-test-delete-all-legacy";
+        let svc = "crew-test-delete-all-legacy";
         let key = "identity";
         let value = "nsec1legacytest";
 

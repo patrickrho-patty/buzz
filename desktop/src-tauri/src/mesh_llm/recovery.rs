@@ -14,7 +14,7 @@ const DEAD_PROBE_EVICT_THRESHOLD: u32 = 2;
 
 /// Sentinel prefix on errors owned by this recovery path. Recovery clears only
 /// these errors and never an unrelated agent failure.
-pub(crate) const MESH_REARM_ERROR_SENTINEL: &str = "[buzz-mesh-rearm] ";
+pub(crate) const MESH_REARM_ERROR_SENTINEL: &str = "[crew-mesh-rearm] ";
 
 /// App-scoped recovery coordination. The runtime id binds a dead-probe streak
 /// to one specific handle, while `rearm_lock` prevents overlapping watchdog

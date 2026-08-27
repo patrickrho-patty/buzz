@@ -163,7 +163,7 @@ fn orchestrate() -> anyhow::Result<()> {
     let model = std::env::var("MESH_SMOKE_MODEL").unwrap_or_else(|_| DEFAULT_MODEL.to_string());
     eprintln!("[admission] model: {model}");
 
-    let scratch = std::env::temp_dir().join(format!("buzz-mesh-admission-{}", std::process::id()));
+    let scratch = std::env::temp_dir().join(format!("crew-mesh-admission-{}", std::process::id()));
     std::fs::create_dir_all(&scratch)?;
     let make_owner = |name: &str| -> anyhow::Result<(String, String)> {
         let keypair = OwnerKeypair::generate();
