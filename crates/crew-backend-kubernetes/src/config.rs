@@ -251,7 +251,7 @@ mod tests {
     }
 
     fn minimal() -> serde_json::Value {
-        serde_json::json!({"namespace": "buzz-agents-abc123", "image": digest_ref()})
+        serde_json::json!({"namespace": "crew-agents-abc123", "image": digest_ref()})
     }
 
     #[test]
@@ -391,8 +391,8 @@ mod tests {
         let b = generated_namespace();
         assert_ne!(a, b, "namespace default is not random");
         assert!(valid_namespace(&a), "{a} is not a valid namespace");
-        assert!(a.starts_with("buzz-agents-"));
-        assert_eq!(a.len(), "buzz-agents-".len() + 6);
+        assert!(a.starts_with("crew-agents-"));
+        assert_eq!(a.len(), "crew-agents-".len() + 6);
     }
 
     /// The schema's own namespace default must be a value the parser accepts —
@@ -415,7 +415,7 @@ mod tests {
         let schema = config_schema();
         let default = schema["properties"]["image"]["default"].as_str().unwrap();
         assert_eq!(default, DEFAULT_IMAGE);
-        let cfg = serde_json::json!({"namespace": "buzz-agents-abc123", "image": default});
+        let cfg = serde_json::json!({"namespace": "crew-agents-abc123", "image": default});
         let parsed = parse(&cfg).unwrap();
         assert_eq!(
             parsed.image.as_str(),

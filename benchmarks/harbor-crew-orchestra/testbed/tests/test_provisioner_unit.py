@@ -10,7 +10,7 @@ import pytest
 from harbor_crew_orchestra.task_fixtures import DirectoryEntry
 
 from harbor_crew_testbed.provisioner import (
-    BuzzTrialProvisioner,
+    CrewTrialProvisioner,
     ProvisioningError,
     TestbedConfig,
 )
@@ -31,7 +31,7 @@ def config(**overrides) -> TestbedConfig:
 
 
 def test_mint_credentials_expands_roster(manifest):
-    credentials = BuzzTrialProvisioner(config())._mint_credentials(manifest)
+    credentials = CrewTrialProvisioner(config())._mint_credentials(manifest)
     assert [c.agent_id for c in credentials] == [
         "orch-opus-1",
         "worker-glm-1",
@@ -43,7 +43,7 @@ def test_mint_credentials_expands_roster(manifest):
 
 
 def test_mint_credentials_keys_are_fresh_and_attested(manifest):
-    provisioner = BuzzTrialProvisioner(config())
+    provisioner = CrewTrialProvisioner(config())
     first = provisioner._mint_credentials(manifest)
     second = provisioner._mint_credentials(manifest)
     all_secrets = [c.nostr_secret_key for c in first + second]
@@ -59,7 +59,7 @@ def test_mint_credentials_keys_are_fresh_and_attested(manifest):
 
 
 def test_mint_user_is_attested_and_not_an_agent():
-    provisioner = BuzzTrialProvisioner(config())
+    provisioner = CrewTrialProvisioner(config())
     user = provisioner._mint_user()
     assert user.agent_id == "user"
     assert user.role == "user"
@@ -70,7 +70,7 @@ def test_mint_user_is_attested_and_not_an_agent():
 
 
 def test_user_mention_task_gets_stable_three_word_user_identity():
-    provisioner = BuzzTrialProvisioner(config(user_secret_key="7" * 64))
+    provisioner = CrewTrialProvisioner(config(user_secret_key="7" * 64))
 
     first = provisioner._mint_user("user-mention")
     second = provisioner._mint_user("user-mention")
@@ -84,7 +84,7 @@ def test_user_mention_task_gets_stable_three_word_user_identity():
 
 def test_pinned_user_secret_reuses_one_identity():
     pinned = "7" * 64
-    provisioner = BuzzTrialProvisioner(config(user_secret_key=pinned))
+    provisioner = CrewTrialProvisioner(config(user_secret_key=pinned))
     first = provisioner._mint_user()
     second = provisioner._mint_user()
     assert first.nostr_secret_key == pinned
@@ -98,20 +98,20 @@ def test_pinned_user_secret_reuses_one_identity():
 
 
 def test_teardown_skips_archiving_when_disabled():
-    provisioner = BuzzTrialProvisioner(config(archive_on_teardown=False))
+    provisioner = CrewTrialProvisioner(config(archive_on_teardown=False))
     # Any attribute access would fail on this handle — teardown must return
     # before touching the CLI or Postgres.
     provisioner.teardown(handle=None)
 
 
 def test_mint_credentials_missing_api_key_is_explicit(manifest):
-    provisioner = BuzzTrialProvisioner(config(llm_api_keys={}))
+    provisioner = CrewTrialProvisioner(config(llm_api_keys={}))
     with pytest.raises(ProvisioningError, match="databricks/"):
         provisioner._mint_credentials(manifest)
 
 
 def test_directory_credentials_are_stable_distinct_and_attested():
-    provisioner = BuzzTrialProvisioner(config())
+    provisioner = CrewTrialProvisioner(config())
 
     first = provisioner._directory_credential(
         DirectoryEntry("benchmark-user-01", "user")
@@ -129,7 +129,7 @@ def test_directory_credentials_are_stable_distinct_and_attested():
 
 
 def test_seed_directory_has_50_users_10_bots_and_skips_existing(monkeypatch):
-    provisioner = BuzzTrialProvisioner(config())
+    provisioner = CrewTrialProvisioner(config())
 
     class Observer:
         def profiles(self, pubkeys):
@@ -153,7 +153,7 @@ def test_seed_directory_has_50_users_10_bots_and_skips_existing(monkeypatch):
 
 
 def test_duplicate_display_names_keep_distinct_stable_identities():
-    provisioner = BuzzTrialProvisioner(config())
+    provisioner = CrewTrialProvisioner(config())
     first = provisioner._directory_credential(
         DirectoryEntry("Taylor Morgan Lee", "user", identity_id="release")
     )
@@ -172,16 +172,16 @@ def test_lock_key_is_deterministic_and_distinct():
         def execute(self, _query, params):
             calls.append(params[0])
 
-    BuzzTrialProvisioner._lock_trial(FakeConn(), "run-a", "trial-1")
-    BuzzTrialProvisioner._lock_trial(FakeConn(), "run-a", "trial-1")
-    BuzzTrialProvisioner._lock_trial(FakeConn(), "run-a", "trial-2")
+    CrewTrialProvisioner._lock_trial(FakeConn(), "run-a", "trial-1")
+    CrewTrialProvisioner._lock_trial(FakeConn(), "run-a", "trial-1")
+    CrewTrialProvisioner._lock_trial(FakeConn(), "run-a", "trial-2")
     assert calls[0] == calls[1]
     assert calls[0] != calls[2]
     assert all(-(2**63) <= key < 2**63 for key in calls)
 
 
 def test_healthcheck_fails_fast_when_relay_down():
-    provisioner = BuzzTrialProvisioner(
+    provisioner = CrewTrialProvisioner(
         config(relay_http_url="http://localhost:1", postgres_dsn="postgresql://unused")
     )
     with pytest.raises(ProvisioningError, match="relay unreachable"):

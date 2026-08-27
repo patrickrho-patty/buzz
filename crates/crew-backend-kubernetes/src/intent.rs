@@ -149,7 +149,7 @@ mod tests {
 
     fn template() -> IntentTemplate {
         IntentTemplate::new(
-            "buzz-agents",
+            "crew-agents",
             &image('a'),
             &Resources::default(),
             None,

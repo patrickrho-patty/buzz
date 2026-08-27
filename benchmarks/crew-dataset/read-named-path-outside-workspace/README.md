@@ -70,7 +70,7 @@ just benchmark \
 ```
 
 `harbor run -a oracle` does **not** work here, and no `solution/solve.sh` is
-shipped: the Oracle agent replaces `BuzzOrchestraAgent`, so no relay trial is
+shipped: the Oracle agent replaces `CrewOrchestraAgent`, so no relay trial is
 provisioned and no evidence snapshot is exported. The verifier is covered
 instead by fixture tests in
 `../harbor-crew-orchestra/tests/test_read_named_path_outside_workspace_verifier.py`.

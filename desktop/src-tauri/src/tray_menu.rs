@@ -25,8 +25,8 @@ use tauri::{
     AppHandle, Emitter, Manager, Runtime,
 };
 
-const TRAY_ID: &str = "buzz-tray";
-const OPEN_CREW_ID: &str = "tray-open-buzz";
+const TRAY_ID: &str = "crew-tray";
+const OPEN_CREW_ID: &str = "tray-open-crew";
 const NEW_CHANNEL_ID: &str = "tray-new-channel";
 const QUIT_ID: &str = "tray-quit";
 const OPEN_CHANNEL_PREFIX: &str = "tray-open-channel:";

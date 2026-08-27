@@ -28,7 +28,7 @@ const CANARY: &str = "SAMI_CANARY_MUST_NOT_LEAK";
 
 /// Uniquely-named executable seeded into Crew's own PATH; the child must not
 /// be able to run it.
-const CANARY_BIN: &str = "buzz-hermit-canary-tool";
+const CANARY_BIN: &str = "crew-hermit-canary-tool";
 
 /// Creates a fixture file at `name` with `mode`, replacing any leftover from
 /// a previous run.

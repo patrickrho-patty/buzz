@@ -9,13 +9,13 @@ from harbor.agents.base import BaseAgent
 from harbor.environments.base import BaseEnvironment
 from harbor.models.agent.context import AgentContext
 
-from .container_runtime import BuzzContainerRuntime, EndpointLaunchConfig
+from .container_runtime import CrewContainerRuntime, EndpointLaunchConfig
 from .manifest import ExperimentManifest
 from .provisioning import TrialProvisioner
 from .runtime import OrchestraRuntime
 
 
-class BuzzOrchestraAgent(BaseAgent):
+class CrewOrchestraAgent(BaseAgent):
     """Coordinate an arbitrary manifest-defined team through a Crew trial."""
 
     # Set True only once the runtime writes a validated agent/trajectory.json.
@@ -33,10 +33,10 @@ class BuzzOrchestraAgent(BaseAgent):
         provisioner_config: str | Path | dict[str, Any] | None = None,
         artifact_root: str | Path | None = None,
         endpoint_config: str | Path | dict[str, Any] | None = None,
-        buzz_acp_binary: str = "crew-acp",
-        buzz_agent_binary: str = "crew-agent",
-        buzz_dev_mcp_binary: str = "crew-dev-mcp",
-        buzz_cli_binary: str = "crew",
+        crew_acp_binary: str = "crew-acp",
+        crew_agent_binary: str = "crew-agent",
+        crew_dev_mcp_binary: str = "crew-dev-mcp",
+        crew_cli_binary: str = "crew",
         relay_gateway: str = "",
         forwarder_binary: str = "relay-forwarder",
         run_id: str | None = None,
@@ -51,10 +51,10 @@ class BuzzOrchestraAgent(BaseAgent):
             logs_dir,
             artifact_root,
             endpoint_config,
-            buzz_acp_binary,
-            buzz_agent_binary,
-            buzz_dev_mcp_binary,
-            buzz_cli_binary,
+            crew_acp_binary,
+            crew_agent_binary,
+            crew_dev_mcp_binary,
+            crew_cli_binary,
             relay_gateway,
             forwarder_binary,
         )
@@ -110,10 +110,10 @@ class BuzzOrchestraAgent(BaseAgent):
         logs_dir: Path,
         artifact_root: str | Path | None,
         endpoint_source: str | Path | dict[str, Any] | None,
-        buzz_acp_binary: str,
-        buzz_agent_binary: str,
-        buzz_dev_mcp_binary: str,
-        buzz_cli_binary: str,
+        crew_acp_binary: str,
+        crew_agent_binary: str,
+        crew_dev_mcp_binary: str,
+        crew_cli_binary: str,
         relay_gateway: str,
         forwarder_binary: str,
     ) -> OrchestraRuntime | None:
@@ -132,14 +132,14 @@ class BuzzOrchestraAgent(BaseAgent):
             )
             for name, value in endpoint_data.items()
         }
-        return BuzzContainerRuntime(
+        return CrewContainerRuntime(
             logs_dir=logs_dir,
             artifact_root=Path(artifact_root),
             endpoints=endpoints,
-            buzz_acp_binary=buzz_acp_binary,
-            buzz_agent_binary=buzz_agent_binary,
-            buzz_dev_mcp_binary=buzz_dev_mcp_binary,
-            buzz_cli_binary=buzz_cli_binary,
+            crew_acp_binary=crew_acp_binary,
+            crew_agent_binary=crew_agent_binary,
+            crew_dev_mcp_binary=crew_dev_mcp_binary,
+            crew_cli_binary=crew_cli_binary,
             relay_gateway=relay_gateway,
             forwarder_binary=forwarder_binary,
         )
@@ -157,7 +157,7 @@ class BuzzOrchestraAgent(BaseAgent):
     ) -> None:
         if self.provisioner is None or self.runtime is None:
             raise RuntimeError(
-                "BuzzOrchestraAgent requires provisioner and runtime integrations; "
+                "CrewOrchestraAgent requires provisioner and runtime integrations; "
                 "the adapter contract is installed but M1 wiring is incomplete"
             )
 
@@ -198,7 +198,7 @@ class BuzzOrchestraAgent(BaseAgent):
             **result.metadata,
             "manifest_sha256": self.manifest.sha256,
             "condition": self.manifest.condition,
-            "buzz_channel_id": handle.channel_id,
+            "crew_channel_id": handle.channel_id,
             "run_id": run_id,
             "trial_id": trial_id,
         }

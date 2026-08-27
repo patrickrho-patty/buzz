@@ -312,14 +312,14 @@ fn ensure_skill_symlinks(_root: &Path) -> Result<(), String> {
 
 /// Returns the `~/.local/bin` link name for the bundled CLI.
 ///
-/// Dev builds (`is_dev = true`) use `"buzz-dev"` so that a running DMG and a
+/// Dev builds (`is_dev = true`) use `"crew-dev"` so that a running DMG and a
 /// concurrent dev build each own a separate link and never clobber each other —
 /// the same isolation that separates `~/.crew` (prod) from `~/.crew-dev` (dev).
 pub fn cli_link_name(is_dev: bool) -> &'static str {
     if is_dev {
-        "buzz-dev"
+        "crew-dev"
     } else {
-        "buzz"
+        "crew"
     }
 }
 
@@ -331,8 +331,8 @@ pub fn cli_link_name(is_dev: bool) -> &'static str {
 /// overwrite each other's target — the same isolation that separates the
 /// `~/.crew` and `~/.crew-dev` nests (see [`NEST_DIR_DEV`]).
 ///
-/// On every boot: replaces any existing symlink unconditionally (the `buzz` /
-/// `buzz-dev` name is our namespace), creates a new one if absent, and leaves
+/// On every boot: replaces any existing symlink unconditionally (the `crew` /
+/// `crew-dev` name is our namespace), creates a new one if absent, and leaves
 /// regular files alone to avoid clobbering a user-compiled binary.
 ///
 /// Non-fatal: callers should ignore errors — the symlink is a convenience

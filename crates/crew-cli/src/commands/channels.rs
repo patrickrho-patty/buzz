@@ -1213,7 +1213,7 @@ mod tests {
     fn from_event_extracts_known_tags() {
         let ev = event(json!([
             ["d", "11111111-1111-1111-1111-111111111111"],
-            ["name", "buzz-chat-composer"],
+            ["name", "crew-chat-composer"],
             ["t", "stream"],
             ["public"],
             ["about", "About text"],
@@ -1223,7 +1223,7 @@ mod tests {
         ]));
         let s = ChannelSummary::from_event(&ev).expect("parse");
         assert_eq!(s.channel_id, "11111111-1111-1111-1111-111111111111");
-        assert_eq!(s.name, "buzz-chat-composer");
+        assert_eq!(s.name, "crew-chat-composer");
         assert_eq!(s.channel_type.as_deref(), Some("stream"));
         assert_eq!(s.visibility.as_deref(), Some("public"));
         assert!(!s.archived);

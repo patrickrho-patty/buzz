@@ -134,8 +134,8 @@ async fn test_project_publish_and_query_returns_cross_owner_members() {
     let d_tag = unique("project");
 
     let members = vec![
-        member_coord(&owner, "buzz"),
-        member_coord(&other, "buzz-infra"),
+        member_coord(&owner, "crew"),
+        member_coord(&other, "crew-infra"),
     ];
 
     let mut client = CrewTestClient::connect(&url, &owner)

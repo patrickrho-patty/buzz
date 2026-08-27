@@ -14,7 +14,7 @@ from harbor_crew_orchestra.container_runtime import (
     REMOTE_EVIDENCE,
     REMOTE_LOGS,
     THINKING_EFFORT,
-    BuzzContainerRuntime,
+    CrewContainerRuntime,
     EndpointLaunchConfig,
     RuntimeLaunchError,
 )
@@ -107,7 +107,7 @@ def trial_handle(credentials, user_relay_url=""):
 
 
 def runtime(tmp_path, **kwargs):
-    return BuzzContainerRuntime(
+    return CrewContainerRuntime(
         logs_dir=tmp_path / "logs",
         artifact_root=tmp_path,
         endpoints={
@@ -191,7 +191,7 @@ async def test_collects_task_declared_channel_membership(tmp_path, monkeypatch):
     )
     calls = []
 
-    async def buzz_json(credential_arg, trial_arg, *args):
+    async def crew_json(credential_arg, trial_arg, *args):
         calls.append((credential_arg, trial_arg, args))
         if args[:2] == ("channels", "search"):
             return [
@@ -206,7 +206,7 @@ async def test_collects_task_declared_channel_membership(tmp_path, monkeypatch):
             ]
         return [{"pubkey": "member", "role": "member"}]
 
-    monkeypatch.setattr(rt, "_buzz_json", buzz_json)
+    monkeypatch.setattr(rt, "_buzz_json", crew_json)
 
     observed = await rt._collect_observed_channels(trial)
 
@@ -238,9 +238,9 @@ async def test_install_stack_uploads_the_pinned_stack(tmp_path):
         binaries[name] = str(path)
     rt = runtime(
         tmp_path,
-        buzz_acp_binary=binaries["crew-acp"],
-        buzz_agent_binary=binaries["crew-agent"],
-        buzz_dev_mcp_binary=binaries["crew-dev-mcp"],
+        crew_acp_binary=binaries["crew-acp"],
+        crew_agent_binary=binaries["crew-agent"],
+        crew_dev_mcp_binary=binaries["crew-dev-mcp"],
     )
     environment = Environment()
     await rt._install_stack(environment)
@@ -253,7 +253,7 @@ async def test_install_stack_uploads_the_pinned_stack(tmp_path):
 
 
 async def test_install_stack_requires_binaries_on_disk(tmp_path):
-    rt = runtime(tmp_path, buzz_acp_binary=str(tmp_path / "missing"))
+    rt = runtime(tmp_path, crew_acp_binary=str(tmp_path / "missing"))
     with pytest.raises(RuntimeLaunchError, match="binary not found"):
         await rt._install_stack(Environment())
 
@@ -437,11 +437,11 @@ async def test_send_mentions_by_pubkey_so_task_text_stays_inert(tmp_path, monkey
     trial = trial_handle((orch,))
     calls = []
 
-    async def buzz_json(credential, trial, *args):
+    async def crew_json(credential, trial, *args):
         calls.append(args)
         return {}
 
-    monkeypatch.setattr(rt, "_buzz_json", buzz_json)
+    monkeypatch.setattr(rt, "_buzz_json", crew_json)
 
     await rt._send(
         trial.user,
@@ -514,11 +514,11 @@ async def test_wait_for_done_requires_orchestrator_authorship(tmp_path, monkeypa
     )
     observers = []
 
-    async def buzz_json(credential, *args, **kwargs):
+    async def crew_json(credential, *args, **kwargs):
         observers.append(credential.agent_id)
         return next(rounds)
 
-    monkeypatch.setattr(rt, "_buzz_json", buzz_json)
+    monkeypatch.setattr(rt, "_buzz_json", crew_json)
     result = await rt._wait_for_done(Environment(), orch, trial, [])
     assert json.dumps(result).find("real") > 0
     # observation happens as the trial user, never as an agent identity
@@ -542,10 +542,10 @@ async def test_solo_turn_end_completes_without_done_message(tmp_path, monkeypatc
         }
     )
 
-    async def buzz_json(*args, **kwargs):
+    async def crew_json(*args, **kwargs):
         return []
 
-    monkeypatch.setattr(rt, "_buzz_json", buzz_json)
+    monkeypatch.setattr(rt, "_buzz_json", crew_json)
     assert await rt._wait_for_done(environment, orch, trial, [], solo=solo) is None
 
 
@@ -568,13 +568,13 @@ async def test_scripted_events_wait_for_second_agent_message(tmp_path, monkeypat
     )
     turn_rounds = iter([(1, 1), (2, 1), (2, 2)])
 
-    async def buzz_json(*args, **kwargs):
+    async def crew_json(*args, **kwargs):
         return next(message_rounds)
 
     async def turn_counts(*args, **kwargs):
         return next(turn_rounds)
 
-    monkeypatch.setattr(rt, "_buzz_json", buzz_json)
+    monkeypatch.setattr(rt, "_buzz_json", crew_json)
     monkeypatch.setattr(rt, "_turn_counts", turn_counts)
 
     result = await rt._wait_for_done(
@@ -614,10 +614,10 @@ async def test_collect_evidence_uploads_verifier_artifact(tmp_path, monkeypatch)
         },
     ]
 
-    async def buzz_json(*args, **kwargs):
+    async def crew_json(*args, **kwargs):
         return messages
 
-    monkeypatch.setattr(rt, "_buzz_json", buzz_json)
+    monkeypatch.setattr(rt, "_buzz_json", crew_json)
     environment = Environment()
     trial_dir = tmp_path / "trial"
     trial_dir.mkdir()
@@ -640,10 +640,10 @@ async def test_failed_evidence_snapshot_records_the_reason(tmp_path, monkeypatch
     orch = credential("orch-1", "orchestrator", "orch-model")
     trial = trial_handle((orch,))
 
-    async def buzz_json(*args, **kwargs):
+    async def crew_json(*args, **kwargs):
         raise RuntimeError("relay unreachable")
 
-    monkeypatch.setattr(rt, "_buzz_json", buzz_json)
+    monkeypatch.setattr(rt, "_buzz_json", crew_json)
     trial_dir = tmp_path / "trial"
     trial_dir.mkdir()
 
@@ -662,9 +662,9 @@ async def test_failed_evidence_snapshot_records_the_reason(tmp_path, monkeypatch
 
 def test_runtime_logging_keeps_readiness_and_turn_completion_signals(tmp_path):
     rt = runtime(tmp_path)
-    assert rt._rust_log(None) == "buzz_acp=info,pool::prompt=info"
+    assert rt._rust_log(None) == "crew_acp=info,pool::prompt=info"
     assert rt._rust_log("custom=debug") == (
-        "custom=debug,buzz_acp=info,pool::prompt=info"
+        "custom=debug,crew_acp=info,pool::prompt=info"
     )
 
 
@@ -701,7 +701,7 @@ async def test_stop_agents_sweeps_the_uploaded_stack(tmp_path):
 
     environment = Environment()
     agents = [_Agent(credential("orch-1", "orchestrator", "orch-model"), 1, "o", "e")]
-    await BuzzContainerRuntime._stop_agents(environment, agents)
+    await CrewContainerRuntime._stop_agents(environment, agents)
     sweeps = [cmd for cmd, _ in environment.commands if REMOTE_BIN in cmd]
     assert len(sweeps) == 2
     assert "kill -TERM" in sweeps[0] and "kill -KILL" in sweeps[1]

@@ -190,7 +190,7 @@ mod tests {
     #[test]
     fn parse_rejects_foreign_channels() {
         assert_eq!(
-            parse_conn_control_channel("buzz:not-a-uuid:conn-control"),
+            parse_conn_control_channel("crew:not-a-uuid:conn-control"),
             None
         );
         assert_eq!(parse_conn_control_channel("crew:*:cache-invalidate"), None);

@@ -2966,8 +2966,8 @@ channels = "ALL"
     #[test]
     fn compose_session_title_qualifies_the_agent_name_with_the_channel() {
         assert_eq!(
-            compose_session_title("Fizz", Some("buzz-dev")),
-            "Fizz · #buzz-dev"
+            compose_session_title("Fizz", Some("crew-dev")),
+            "Fizz · #crew-dev"
         );
     }
 
@@ -2988,7 +2988,7 @@ channels = "ALL"
     #[test]
     fn compose_session_title_drops_the_channel_when_the_agent_name_fills_the_cap() {
         let agent = "a".repeat(SESSION_TITLE_MAX_CHARS);
-        assert_eq!(compose_session_title(&agent, Some("buzz-dev")), agent);
+        assert_eq!(compose_session_title(&agent, Some("crew-dev")), agent);
     }
 
     /// Every arg whose env var name contains KEY/SECRET/TOKEN/PASSWORD/CRED/AUTH

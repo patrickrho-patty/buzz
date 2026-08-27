@@ -1484,7 +1484,7 @@ const REACTION_TARGET_CONTENT = "React to me with a custom emoji";
 // id so it is a valid reaction target and never collides with the regular
 // REACTION_TARGET_EVENT_ID.
 const SYSTEM_REACTION_TARGET_EVENT_ID = "e".repeat(64);
-const E2E_IDENTITY_OVERRIDE_STORAGE_KEY = "buzz:e2e-identity-override.v1";
+const E2E_IDENTITY_OVERRIDE_STORAGE_KEY = "crew:e2e-identity-override.v1";
 /** Stands in for `tauri.conf.json`'s version, which no mock IPC call can read. */
 const MOCK_APP_VERSION = "0.0.0-e2e";
 const DEFAULT_MOCK_IDENTITY = {
@@ -9913,7 +9913,7 @@ async function handleEditMessage(
     ...emojiTags,
     ...mentionPubkeys.map((pubkey) => ["p", pubkey]),
     ...(mentionTags ?? []),
-    ...(mentionTags ? [["buzz:mention-snapshot"]] : []),
+    ...(mentionTags ? [["crew:mention-snapshot"]] : []),
     ...(args.suppressLinkPreviews ? [["link-preview", "none"]] : []),
   ];
   const tags = [["h", args.channelId], ["e", args.eventId], ...extraTags];
@@ -10829,7 +10829,7 @@ export function maybeInstallE2eTauriMocks() {
   window.__CREW_E2E_PUSH_MOCK_FEED_ITEM__ = (item) => {
     const category = item.category === "mention" ? "mentions" : item.category;
     mockFeedOverrides[category].unshift(item);
-    window.dispatchEvent(new CustomEvent("buzz:e2e-home-feed-updated"));
+    window.dispatchEvent(new CustomEvent("crew:e2e-home-feed-updated"));
     return item;
   };
   window.__CREW_E2E_REPLACE_MOCK_FEED_ITEM__ = (oldId, item) => {
@@ -10845,7 +10845,7 @@ export function maybeInstallE2eTauriMocks() {
     }
     // Insert the replacement at the front of the correct bucket.
     mockFeedOverrides[category].unshift(item);
-    window.dispatchEvent(new CustomEvent("buzz:e2e-home-feed-updated"));
+    window.dispatchEvent(new CustomEvent("crew:e2e-home-feed-updated"));
     return item;
   };
   window.__CREW_E2E_MD_PARSE_COUNT__ = getMarkdownParseCount;

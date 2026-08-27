@@ -41,7 +41,7 @@ type DesktopNotificationPayload = {
   title: string;
 };
 
-const DESKTOP_NOTIFICATION_ACTION_EVENT = "buzz:desktop-notification-action";
+const DESKTOP_NOTIFICATION_ACTION_EVENT = "crew:desktop-notification-action";
 
 type DesktopNotificationOptions = NotificationOptions & {
   extra?: Record<string, unknown>;

@@ -538,12 +538,12 @@ export function useHomeFeedNotifications(pubkey: string | undefined) {
     }
 
     window.addEventListener(
-      "buzz:e2e-home-feed-updated",
+      "crew:e2e-home-feed-updated",
       handleMockHomeFeedUpdate,
     );
     return () => {
       window.removeEventListener(
-        "buzz:e2e-home-feed-updated",
+        "crew:e2e-home-feed-updated",
         handleMockHomeFeedUpdate,
       );
     };

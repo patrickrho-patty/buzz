@@ -67,7 +67,7 @@ macro_rules! windows_install_command {
             "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"",
             $env_prefix,
             "$ErrorActionPreference='Stop'; ",
-            "$installer=Join-Path $env:TEMP 'buzz-install-",
+            "$installer=Join-Path $env:TEMP 'crew-install-",
             $slug,
             ".ps1'; ",
             "Invoke-RestMethod ",

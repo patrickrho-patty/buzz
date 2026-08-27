@@ -27,7 +27,7 @@ export function migrateBuzzStorageKeys(storage: Storage = localStorage): number 
 
     let migrated = 0;
     for (const oldKey of keys) {
-      if (!oldKey.startsWith("buzz-")) continue;
+      if (!oldKey.startsWith("crew-")) continue;
       const newKey = `crew-${oldKey.slice(5)}`;
       if (storage.getItem(newKey) !== null) continue;
       const value = storage.getItem(oldKey);

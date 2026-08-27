@@ -16,12 +16,12 @@ nobody else.
 ## Environment
 
 `python:3.12-slim-bookworm`, no extra packages: the agent never runs in this
-container's shell. `BuzzOrchestraAgent` launches the real `crew-acp` /
+container's shell. `CrewOrchestraAgent` launches the real `crew-acp` /
 `crew-agent` stack against a dedicated relay, and the agent does all its work
 through `crew channels create` / `channels invite`. Agent timeout 300s.
 
 Directory identities are derived deterministically from the owner key
-(`BuzzTrialProvisioner._stable_credential`) without persisting any secret, and
+(`CrewTrialProvisioner._stable_credential`) without persisting any secret, and
 `_seed_directory` skips profiles already published — so reruns are idempotent
 and pubkeys are stable across trials.
 
@@ -71,7 +71,7 @@ just benchmark \
 ```
 
 `harbor run -a oracle` does **not** work here, and no `solution/solve.sh` is
-shipped: the Oracle agent replaces `BuzzOrchestraAgent`, so no relay trial is
+shipped: the Oracle agent replaces `CrewOrchestraAgent`, so no relay trial is
 provisioned and no evidence snapshot is exported. The verifier is covered
 instead by fixture tests in
 `../harbor-crew-orchestra/tests/test_create_channel_invite_users_verifier.py`.

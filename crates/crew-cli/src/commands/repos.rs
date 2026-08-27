@@ -49,7 +49,7 @@ fn tag_error(error: impl std::fmt::Display) -> CliError {
 
 fn protection_pattern(tag: &Tag) -> Option<&str> {
     let values = tag.as_slice();
-    (values.first().map(String::as_str) == Some("buzz-protect"))
+    (values.first().map(String::as_str) == Some("crew-protect"))
         .then(|| values.get(1).map(String::as_str))
         .flatten()
 }
@@ -65,7 +65,7 @@ fn build_protection_tag(
     no_delete: bool,
     require_patch: bool,
 ) -> Result<Tag, CliError> {
-    let mut values = vec!["buzz-protect".to_string(), ref_pattern.to_string()];
+    let mut values = vec!["crew-protect".to_string(), ref_pattern.to_string()];
     if let Some(role) = push_role {
         values.push(format!("push:{role}"));
     }
@@ -169,7 +169,7 @@ fn protection_rules_json(event: &Event) -> Result<serde_json::Value, CliError> {
         .iter()
         .filter_map(|tag| {
             let values = tag.as_slice();
-            (values.first().map(String::as_str) == Some("buzz-protect")).then(|| {
+            (values.first().map(String::as_str) == Some("crew-protect")).then(|| {
                 serde_json::json!({
                     "ref": values.get(1).map(String::as_str).unwrap_or(""),
                     "rules": values.get(2..).unwrap_or_default(),
@@ -492,8 +492,8 @@ mod tests {
                 tag(&["crew-channel", "channel-id"]),
                 tag(&["future-metadata", "preserve-me"]),
                 tag(&["auth", &"a".repeat(64), "kind=30617", &"b".repeat(128)]),
-                tag(&["buzz-protect", "refs/heads/main", "push:member"]),
-                tag(&["buzz-protect", "refs/tags/*", "no-delete"]),
+                tag(&["crew-protect", "refs/heads/main", "push:member"]),
+                tag(&["crew-protect", "refs/tags/*", "no-delete"]),
             ],
             "repository content",
             100,
@@ -526,7 +526,7 @@ mod tests {
         assert!(updated.tags.iter().any(|tag| {
             tag.as_slice()
                 == [
-                    "buzz-protect",
+                    "crew-protect",
                     "refs/heads/main",
                     "push:admin",
                     "no-force-push",
@@ -536,14 +536,14 @@ mod tests {
         assert!(updated
             .tags
             .iter()
-            .any(|tag| { tag.as_slice() == ["buzz-protect", "refs/tags/*", "no-delete"] }));
+            .any(|tag| { tag.as_slice() == ["crew-protect", "refs/tags/*", "no-delete"] }));
         assert_eq!(
             updated
                 .tags
                 .iter()
                 .filter(|tag| {
                     let values = tag.as_slice();
-                    values.first().map(String::as_str) == Some("buzz-protect")
+                    values.first().map(String::as_str) == Some("crew-protect")
                         && values.get(1).map(String::as_str) == Some("refs/heads/main")
                 })
                 .count(),
@@ -556,8 +556,8 @@ mod tests {
         let existing = signed_repo(
             vec![
                 tag(&["d", "demo"]),
-                tag(&["buzz-protect", "refs/heads/main", "no-delete"]),
-                tag(&["buzz-protect", "refs/heads/release", "push:owner"]),
+                tag(&["crew-protect", "refs/heads/main", "no-delete"]),
+                tag(&["crew-protect", "refs/heads/release", "push:owner"]),
             ],
             "",
             10,
@@ -578,7 +578,7 @@ mod tests {
         assert!(updated
             .tags
             .iter()
-            .any(|tag| { tag.as_slice() == ["buzz-protect", "refs/heads/release", "push:owner"] }));
+            .any(|tag| { tag.as_slice() == ["crew-protect", "refs/heads/release", "push:owner"] }));
     }
 
     #[test]
@@ -591,7 +591,7 @@ mod tests {
         let existing = signed_repo(
             vec![
                 tag(&["d", "demo"]),
-                tag(&["buzz-protect", "refs/heads/main"]),
+                tag(&["crew-protect", "refs/heads/main"]),
             ],
             "",
             10,
@@ -616,7 +616,7 @@ mod tests {
         let mut tags = vec![tag(&["d", "demo"])];
         for index in 0..50 {
             tags.push(tag(&[
-                "buzz-protect",
+                "crew-protect",
                 &format!("refs/heads/branch-{index}"),
                 "push:member",
             ]));
@@ -641,7 +641,7 @@ mod tests {
             vec![
                 tag(&["d", "demo"]),
                 tag(&[
-                    "buzz-protect",
+                    "crew-protect",
                     "refs/heads/main",
                     "push:admin",
                     "future-rule",
@@ -666,7 +666,7 @@ mod tests {
         let existing = signed_repo(
             vec![
                 tag(&["d", "demo"]),
-                tag(&["buzz-protect", "refs/heads/main"]),
+                tag(&["crew-protect", "refs/heads/main"]),
             ],
             "",
             10,
@@ -690,7 +690,7 @@ mod tests {
                 tag(&["crew-channel", "old-and-broken"]),
                 tag(&["crew-channel", &uuid::Uuid::new_v4().to_string()]),
                 tag(&["auth", &"a".repeat(64), "kind=30617", &"b".repeat(128)]),
-                tag(&["buzz-protect", "refs/heads/main", "push:admin"]),
+                tag(&["crew-protect", "refs/heads/main", "push:admin"]),
                 tag(&["future-metadata", "preserve-me"]),
             ],
             "repository content",
@@ -721,7 +721,7 @@ mod tests {
         assert!(updated
             .tags
             .iter()
-            .any(|tag| tag.as_slice() == ["buzz-protect", "refs/heads/main", "push:admin"]));
+            .any(|tag| tag.as_slice() == ["crew-protect", "refs/heads/main", "push:admin"]));
         assert!(updated
             .tags
             .iter()

@@ -184,7 +184,7 @@ fn local_agent() -> ManagedAgentRecord {
         auto_restart_on_config_change: true,
         runtime_pid: Some(1234),
         backend: crate::managed_agents::BackendKind::Provider {
-            id: "buzz-backend".to_string(),
+            id: "crew-backend".to_string(),
             config: serde_json::json!({ "api_key": "localproviderkey" }),
         },
         backend_agent_id: Some("local-remote-id".to_string()),

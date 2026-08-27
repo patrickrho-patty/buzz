@@ -95,9 +95,9 @@ def test_command_uses_standard_settings_only(args, binaries, agent_binaries):
         assert flag not in command
     # The full production stack rides in as agent kwargs.
     kwargs = [command[i + 1] for i, p in enumerate(command) if p == "--agent-kwarg"]
-    assert any(k.startswith("buzz_acp_binary=") for k in kwargs)
-    assert any(k.startswith("buzz_agent_binary=") for k in kwargs)
-    assert any(k.startswith("buzz_dev_mcp_binary=") for k in kwargs)
+    assert any(k.startswith("crew_acp_binary=") for k in kwargs)
+    assert any(k.startswith("crew_agent_binary=") for k in kwargs)
+    assert any(k.startswith("crew_dev_mcp_binary=") for k in kwargs)
 
 
 def test_agent_binaries_must_exist(tmp_path):

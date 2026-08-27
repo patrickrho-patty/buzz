@@ -33,7 +33,7 @@ from pathlib import Path
 import yaml
 
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
-AGENT_IMPORT = "harbor_crew_orchestra:BuzzOrchestraAgent"
+AGENT_IMPORT = "harbor_crew_orchestra:CrewOrchestraAgent"
 PROVISIONER_FACTORY = "harbor_crew_testbed:provisioner_from_dict"
 # Host-side: the harness speaks to the relay as the trial user via this CLI.
 BINARIES = ("crew",)
@@ -214,10 +214,10 @@ def build_command(
         "provisioner_config": args.provisioner_config,
         "artifact_root": PACKAGE_ROOT,
         "endpoint_config": args.endpoint_config,
-        "buzz_acp_binary": agent_binaries["crew-acp"],
-        "buzz_agent_binary": agent_binaries["crew-agent"],
-        "buzz_dev_mcp_binary": agent_binaries["crew-dev-mcp"],
-        "buzz_cli_binary": binaries["crew"],
+        "crew_acp_binary": agent_binaries["crew-acp"],
+        "crew_agent_binary": agent_binaries["crew-agent"],
+        "crew_dev_mcp_binary": agent_binaries["crew-dev-mcp"],
+        "crew_cli_binary": binaries["crew"],
         "run_id": args.job_name,
     }
     if args.relay_gateway:
@@ -276,7 +276,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.dry_run:
         # Dry runs print the command without requiring built binaries.
-        bin_dir = args.buzz_bin_dir or PACKAGE_ROOT.parents[1] / "target" / "release"
+        bin_dir = args.crew_bin_dir or PACKAGE_ROOT.parents[1] / "target" / "release"
         binaries = {name: bin_dir / name for name in BINARIES}
         agent_binaries = {
             name: args.agent_bin_dir / name
@@ -284,7 +284,7 @@ def main(argv: list[str] | None = None) -> int:
         }
         print(" ".join(build_command(args, binaries, agent_binaries)))
         return 0
-    binaries = find_binaries(args.buzz_bin_dir)
+    binaries = find_binaries(args.crew_bin_dir)
     agent_binaries = find_agent_binaries(
         args.agent_bin_dir, with_forwarder=bool(args.relay_gateway)
     )

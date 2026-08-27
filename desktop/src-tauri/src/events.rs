@@ -373,7 +373,7 @@ pub fn build_message_edit(
     emoji_tags(edit_tags.custom_emoji, &mut tags)?;
     if let Some(mention_refs) = edit_tags.mention_refs {
         mention_reference_tags(mention_refs, &mut tags)?;
-        tags.push(tag(vec!["buzz:mention-snapshot"])?);
+        tags.push(tag(vec!["crew:mention-snapshot"])?);
     }
     if suppress_link_previews {
         tags.push(tag(vec!["link-preview", "none"])?);
@@ -916,7 +916,7 @@ mod tests {
             "stable mention reference must be present: {tags:?}"
         );
         assert!(
-            tags.iter().any(|tag| tag == &["buzz:mention-snapshot"]),
+            tags.iter().any(|tag| tag == &["crew:mention-snapshot"]),
             "snapshot marker must be present: {tags:?}"
         );
     }
@@ -925,7 +925,7 @@ mod tests {
     fn empty_edit_mention_snapshot_is_explicit() {
         let tags = edit_tags_with_refs(&[], Some(&[]));
         assert!(
-            tags.iter().any(|tag| tag == &["buzz:mention-snapshot"]),
+            tags.iter().any(|tag| tag == &["crew:mention-snapshot"]),
             "empty snapshot must still clear stale references: {tags:?}"
         );
         assert!(!tags
@@ -941,7 +941,7 @@ mod tests {
             .any(|tag| tag.first().map(String::as_str) == Some("mention")));
         assert!(!tags
             .iter()
-            .any(|tag| tag.first().map(String::as_str) == Some("buzz:mention-snapshot")));
+            .any(|tag| tag.first().map(String::as_str) == Some("crew:mention-snapshot")));
     }
 
     #[test]

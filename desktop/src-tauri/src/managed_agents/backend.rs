@@ -437,7 +437,7 @@ fn stage_provider(
     binary: &Path,
 ) -> Result<(tempfile::TempDir, PathBuf, String, std::fs::File), String> {
     let directory = tempfile::Builder::new()
-        .prefix("buzz-provider-")
+        .prefix("crew-provider-")
         .tempdir()
         .map_err(|error| format!("failed to create provider staging directory: {error}"))?;
     let suffix = if cfg!(windows) { ".exe" } else { "" };
@@ -570,7 +570,7 @@ pub fn validate_provider_config(config: &serde_json::Value) -> Result<(), String
 /// Windows leaves the executable/script extension, which is not part of the
 /// provider id.
 fn provider_id_from_filename(name: &str) -> Option<&str> {
-    let raw = name.strip_prefix("buzz-backend-")?;
+    let raw = name.strip_prefix("crew-backend-")?;
     let id = [".exe", ".bat", ".cmd"]
         .into_iter()
         .find_map(|extension| {
@@ -591,7 +591,7 @@ fn provider_id_from_filename(name: &str) -> Option<&str> {
 /// We augment the search with those directories so bundled and user-installed providers
 /// are always discovered regardless of how the desktop was launched.
 pub fn discover_provider_candidates() -> Vec<(String, PathBuf)> {
-    let prefix = "buzz-backend-";
+    let prefix = "crew-backend-";
     let mut seen = std::collections::HashSet::new();
     let mut results = Vec::new();
 

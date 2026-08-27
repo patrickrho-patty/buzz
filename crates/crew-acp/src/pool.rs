@@ -8385,18 +8385,18 @@ printf '%s\n' '{{"jsonrpc":"2.0","id":0,"result":{{"stopReason":"end_turn"}}}}'"
         use std::sync::atomic::Ordering;
 
         let id = Uuid::new_v4();
-        let response = channel_metadata_response(id, &[["name", "buzz-dev"], ["t", "stream"]]);
+        let response = channel_metadata_response(id, &[["name", "crew-dev"], ["t", "stream"]]);
         let (resolver, requests, server) = counting_resolver(response).await;
 
         let (is_dm, title_channel, channel_type) =
             resolve_new_session_channel_context(&resolver, id).await;
         assert!(!is_dm, "a stream channel is not a DM");
-        assert_eq!(title_channel.as_deref(), Some("buzz-dev"));
+        assert_eq!(title_channel.as_deref(), Some("crew-dev"));
         assert_eq!(channel_type.as_deref(), Some("stream"));
         assert_eq!(requests.load(Ordering::SeqCst), 1);
 
         let (_, again, _) = resolve_new_session_channel_context(&resolver, id).await;
-        assert_eq!(again.as_deref(), Some("buzz-dev"));
+        assert_eq!(again.as_deref(), Some("crew-dev"));
         assert_eq!(
             requests.load(Ordering::SeqCst),
             1,
@@ -8429,7 +8429,7 @@ printf '%s\n' '{{"jsonrpc":"2.0","id":0,"result":{{"stopReason":"end_turn"}}}}'"
     #[tokio::test]
     async fn test_channel_resolver_absent_description_when_no_about_tag() {
         let id = Uuid::new_v4();
-        let response = channel_metadata_response(id, &[["name", "buzz-dev"], ["t", "stream"]]);
+        let response = channel_metadata_response(id, &[["name", "crew-dev"], ["t", "stream"]]);
         let (resolver, _requests, server) = counting_resolver(response).await;
 
         let info = resolver.resolve(id).await.expect("should resolve");

@@ -415,7 +415,7 @@ fn provider_filename_strips_the_windows_extension() {
         Some("kubernetes")
     );
     assert_eq!(
-        provider_id_from_filename("buzz-backend-my-provider"),
+        provider_id_from_filename("crew-backend-my-provider"),
         Some("my-provider")
     );
     assert_eq!(provider_id_from_filename("other"), None);

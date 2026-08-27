@@ -592,7 +592,7 @@ mod tests {
             "http://localhost:9000",
             "crew_dev",
             "crew_dev_secret",
-            "buzz-git",
+            "crew-git",
             "us-east-1",
             crew_media::config::S3AddressingStyle::Path,
         )

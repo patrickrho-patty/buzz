@@ -348,7 +348,7 @@ fn cli_link_name_prod_is_buzz() {
 
 #[test]
 fn cli_link_name_dev_is_buzz_dev() {
-    assert_eq!(cli_link_name(true), "buzz-dev");
+    assert_eq!(cli_link_name(true), "crew-dev");
 }
 
 #[cfg(unix)]
@@ -380,8 +380,8 @@ fn ensure_cli_symlink_creates_symlink_dev() {
     let local_bin = tmp.path().join("local_bin");
     fs::create_dir_all(&local_bin).unwrap();
 
-    // Dev link must be "buzz-dev", never "buzz".
-    assert_eq!(cli_link_name(true), "buzz-dev");
+    // Dev link must be "crew-dev", never "crew".
+    assert_eq!(cli_link_name(true), "crew-dev");
 
     let link = local_bin.join(cli_link_name(true));
     std::os::unix::fs::symlink(exe_parent.join("crew"), &link).unwrap();

@@ -1368,7 +1368,7 @@ mod tests {
             );
         }
         assert!(is_reply_shaped("dev__shell", &args));
-        assert!(is_reply_shaped("buzz-dev-mcp__shell", &args));
+        assert!(is_reply_shaped("crew-dev-mcp__shell", &args));
     }
 
     /// Only the field that carries the executable command counts. Searching

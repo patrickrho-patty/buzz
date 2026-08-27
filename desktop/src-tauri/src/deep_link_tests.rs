@@ -442,9 +442,9 @@ fn parse_nostr_bind_deep_link_accepts_valid_url() {
     assert_eq!(payload.challenge_id, "550e8400-e29b-41d4-a716-446655440000");
     assert_eq!(payload.nonce, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi01234567");
     assert_eq!(payload.verification_code, "123456");
-    assert_eq!(payload.audience, "buzz:nostr-identity");
+    assert_eq!(payload.audience, "crew:nostr-identity");
     assert_eq!(payload.action, "bind_nostr_identity");
-    assert_eq!(payload.protocol, "buzz-nostr-identity");
+    assert_eq!(payload.protocol, "crew-nostr-identity");
     assert_eq!(payload.version, "1");
     assert_eq!(payload.origin, "https://example.com");
     assert_eq!(payload.expires_at, "2999-01-01T00:00:00Z");

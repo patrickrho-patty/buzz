@@ -39,7 +39,7 @@ export type NostrBindDeepLinkPayload = {
   challengeId: string;
   nonce: string;
   verificationCode: string;
-  audience: "buzz:nostr-identity";
+  audience: "crew:nostr-identity";
   action: "bind_nostr_identity";
   protocol: "crew-nostr-identity";
   version: "1";

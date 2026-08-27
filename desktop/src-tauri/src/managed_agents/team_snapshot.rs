@@ -49,7 +49,7 @@ use crate::managed_agents::{
 pub const PNG_CHUNK_KEYWORD: &str = "crew_team_snapshot";
 
 /// Format discriminator — used for sniffing and validation.
-pub const FORMAT_DISCRIMINATOR: &str = "buzz-team-snapshot";
+pub const FORMAT_DISCRIMINATOR: &str = "crew-team-snapshot";
 
 /// Version of the manifest format produced by this module.
 pub const FORMAT_VERSION: u32 = 1;

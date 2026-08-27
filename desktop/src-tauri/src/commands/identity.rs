@@ -744,9 +744,9 @@ mod nostr_identity_binding_tests {
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi01234567".into(),
         ]));
         assert!(tags.contains(&vec!["verification_code".into(), "123456".into(),]));
-        assert!(tags.contains(&vec!["audience".into(), "buzz:nostr-identity".into()]));
+        assert!(tags.contains(&vec!["audience".into(), "crew:nostr-identity".into()]));
         assert!(tags.contains(&vec!["action".into(), "bind_nostr_identity".into(),]));
-        assert!(tags.contains(&vec!["protocol".into(), "buzz-nostr-identity".into(),]));
+        assert!(tags.contains(&vec!["protocol".into(), "crew-nostr-identity".into(),]));
         assert!(tags.contains(&vec!["version".into(), "1".into(),]));
         assert!(tags.contains(&vec!["origin".into(), "https://example.com".into(),]));
         assert!(tags.contains(&vec!["expires_at".into(), "2999-01-01T00:00:00Z".into(),]));

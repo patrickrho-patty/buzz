@@ -953,7 +953,7 @@ mod tests {
             "http://localhost:9000",
             "crew_dev",
             "crew_dev_secret",
-            "buzz-git",
+            "crew-git",
             "us-west-2",
             crew_media::config::S3AddressingStyle::Path,
         )
@@ -982,7 +982,7 @@ mod tests {
                 "https://storage.example",
                 "crew_dev",
                 "crew_dev_secret",
-                "buzz-git",
+                "crew-git",
                 "us-east-1",
                 style,
             )
@@ -999,7 +999,7 @@ mod tests {
                 "http://localhost:9000",
                 access,
                 secret,
-                "buzz-git",
+                "crew-git",
                 "us-east-1",
                 crew_media::config::S3AddressingStyle::Path,
             ) {
@@ -1024,7 +1024,7 @@ mod probe {
     //!   CREW_GIT_S3_PROBE=1 cargo test -p crew-relay --lib \
     //!     api::git::store::probe -- --nocapture --test-threads=1
     //!
-    //! Pre-req: `docker compose up minio` and the `buzz-git` bucket exists.
+    //! Pre-req: `docker compose up minio` and the `crew-git` bucket exists.
 
     use super::*;
 
@@ -1041,7 +1041,7 @@ mod probe {
         let access_key = std::env::var("CREW_S3_ACCESS_KEY").unwrap_or_else(|_| "crew_dev".into());
         let secret_key =
             std::env::var("CREW_S3_SECRET_KEY").unwrap_or_else(|_| "crew_dev_secret".into());
-        let bucket = std::env::var("CREW_S3_BUCKET").unwrap_or_else(|_| "buzz-git".into());
+        let bucket = std::env::var("CREW_S3_BUCKET").unwrap_or_else(|_| "crew-git".into());
         let region = std::env::var("CREW_S3_REGION").unwrap_or_else(|_| "us-east-1".into());
         let addressing_style = std::env::var("CREW_S3_ADDRESSING_STYLE")
             .unwrap_or_else(|_| "path".into())

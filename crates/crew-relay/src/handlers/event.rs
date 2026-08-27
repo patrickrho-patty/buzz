@@ -523,7 +523,7 @@ async fn dispatch_persistent_event_inner(
             .event
             .tags
             .iter()
-            .any(|t| t.as_slice().first().map(|s| s.as_str()) == Some("buzz:workflow"));
+            .any(|t| t.as_slice().first().map(|s| s.as_str()) == Some("crew:workflow"));
 
     if !crew_core::kind::is_workflow_execution_kind(kind_u32)
         && !crew_core::kind::is_command_kind(kind_u32)
@@ -1800,7 +1800,7 @@ mod tests {
                 "test precondition: relay signer must differ from actor"
             );
             let event = EventBuilder::new(Kind::from(KIND_PRESENCE_UPDATE as u16), "online")
-                .tags([nostr::Tag::parse(["buzz:workflow", "true"]).expect("workflow tag")])
+                .tags([nostr::Tag::parse(["crew:workflow", "true"]).expect("workflow tag")])
                 .sign_with_keys(signer)
                 .expect("sign relay event");
             let event_id_hex = event.id.to_hex();

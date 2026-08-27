@@ -81,7 +81,7 @@ class _Agent:
     stderr_log: str  # container path
 
 
-class BuzzContainerRuntime:
+class CrewContainerRuntime:
     """Launch one production Crew agent stack per identity in the container."""
 
     def __init__(
@@ -90,10 +90,10 @@ class BuzzContainerRuntime:
         logs_dir: Path,
         artifact_root: Path,
         endpoints: dict[str, EndpointLaunchConfig],
-        buzz_acp_binary: str = "crew-acp",
-        buzz_agent_binary: str = "crew-agent",
-        buzz_dev_mcp_binary: str = "crew-dev-mcp",
-        buzz_cli_binary: str = "crew",
+        crew_acp_binary: str = "crew-acp",
+        crew_agent_binary: str = "crew-agent",
+        crew_dev_mcp_binary: str = "crew-dev-mcp",
+        crew_cli_binary: str = "crew",
         relay_gateway: str = "",
         forwarder_binary: str = "relay-forwarder",
         max_agent_rounds: int = DEFAULT_MAX_AGENT_ROUNDS,
@@ -108,11 +108,11 @@ class BuzzContainerRuntime:
         self.artifact_root = Path(artifact_root)
         self.endpoints = endpoints
         # Linux builds uploaded into the task container:
-        self.buzz_acp_binary = buzz_acp_binary
-        self.buzz_agent_binary = buzz_agent_binary
-        self.buzz_dev_mcp_binary = buzz_dev_mcp_binary
+        self.crew_acp_binary = crew_acp_binary
+        self.crew_agent_binary = crew_agent_binary
+        self.crew_dev_mcp_binary = crew_dev_mcp_binary
         # Host build used for user/provisioning operations only:
-        self.buzz_cli_binary = buzz_cli_binary
+        self.crew_cli_binary = crew_cli_binary
         # Where the relay actually lives, as seen from inside the task
         # container (e.g. host.docker.internal:3600). When set, a loopback
         # forwarder bridges the agents' canonical relay address — the Host
@@ -246,7 +246,7 @@ class BuzzContainerRuntime:
                 "completion_message": (
                     final_message.get("content") if final_message is not None else None
                 ),
-                "buzz_evidence_exported": evidence_exported,
+                "crew_evidence_exported": evidence_exported,
                 "agent_runtime": "in-container",
                 "agent_hints_enabled": False,
                 "task_seed": "user-identity-prompt",
@@ -265,9 +265,9 @@ class BuzzContainerRuntime:
     async def _install_stack(self, environment: BaseEnvironment) -> None:
         """Upload the pinned Linux binaries into the task container."""
         uploads = {
-            f"{REMOTE_BIN}/crew-acp": self.buzz_acp_binary,
-            f"{REMOTE_BIN}/crew-agent": self.buzz_agent_binary,
-            f"{REMOTE_BIN}/crew-dev-mcp": self.buzz_dev_mcp_binary,
+            f"{REMOTE_BIN}/crew-acp": self.crew_acp_binary,
+            f"{REMOTE_BIN}/crew-agent": self.crew_agent_binary,
+            f"{REMOTE_BIN}/crew-dev-mcp": self.crew_dev_mcp_binary,
         }
         if self.relay_gateway:
             uploads[FORWARDER] = self.forwarder_binary
@@ -461,11 +461,11 @@ class BuzzContainerRuntime:
 
     @staticmethod
     def _rust_log(configured: str | None) -> str:
-        # ``buzz_acp=info`` carries the subscription-readiness line; the turn
+        # ``crew_acp=info`` carries the subscription-readiness line; the turn
         # target lets a solo trial stop when its only turn ends. Keep both:
         # replacing the former with only the latter makes a healthy process
         # look permanently unready.
-        required = "buzz_acp=info,pool::prompt=info"
+        required = "crew_acp=info,pool::prompt=info"
         return f"{configured},{required}" if configured else required
 
     # -- lifecycle -------------------------------------------------------------
@@ -554,7 +554,7 @@ class BuzzContainerRuntime:
 
     @staticmethod
     async def _turn_ended(environment: BaseEnvironment, agent: _Agent) -> bool:
-        _, ends = await BuzzContainerRuntime._turn_counts(environment, agent)
+        _, ends = await CrewContainerRuntime._turn_counts(environment, agent)
         return ends > 0
 
     @staticmethod
@@ -840,7 +840,7 @@ class BuzzContainerRuntime:
         self, credential: AgentCredential, trial: TrialHandle, *args: str
     ) -> Any:
         process = await asyncio.create_subprocess_exec(
-            self.buzz_cli_binary,
+            self.crew_cli_binary,
             *args,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
@@ -872,7 +872,7 @@ class BuzzContainerRuntime:
         """
         if trial.user_relay_url:
             return trial.user_relay_url
-        return BuzzContainerRuntime._cli_relay_url(trial.relay_ws_url)
+        return CrewContainerRuntime._cli_relay_url(trial.relay_ws_url)
 
     @staticmethod
     def _cli_relay_url(relay_ws_url: str) -> str:

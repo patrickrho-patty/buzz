@@ -257,7 +257,7 @@ export GOOSE_MODE=auto                        # must be 'auto' or goose hangs on
 crew-acp                                    # foreground; logs to stdout (run in a separate terminal)
 
 # Optional: turn on per-turn tracing if the default log is too quiet.
-# RUST_LOG=buzz_acp=debug crew-acp
+# RUST_LOG=crew_acp=debug crew-acp
 ```
 
 > **Using a different ACP agent?** The default recipe assumes `goose` is on

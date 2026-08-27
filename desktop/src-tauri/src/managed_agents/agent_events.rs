@@ -189,7 +189,7 @@ mod tests {
             auto_restart_on_config_change: true,
             runtime_pid: Some(4242),
             backend: super::super::BackendKind::Provider {
-                id: "buzz-backend-x".to_string(),
+                id: "crew-backend-x".to_string(),
                 config: serde_json::json!({ "api_key": "sk-provider-secret" }),
             },
             backend_agent_id: Some("remote-id".to_string()),

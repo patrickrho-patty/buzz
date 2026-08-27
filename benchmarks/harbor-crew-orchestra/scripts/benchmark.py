@@ -217,7 +217,7 @@ def write_env_file(state: dict[str, str]) -> Path:
         "CREW_ALLOW_NIP_OA_AUTH": "true",
         "CREW_AUTO_MIGRATE": "true",
         "CREW_GIT_CONFORMANCE_PROBE": "true",
-        "RUST_LOG": "buzz_relay=info,buzz_db=info,buzz_auth=info",
+        "RUST_LOG": "crew_relay=info,crew_db=info,crew_auth=info",
         "RELAY_OWNER_PUBKEY": state["owner_pubkey"],
         "CREW_RELAY_PRIVATE_KEY": state["relay_private_key"],
         "CREW_GIT_HOOK_HMAC_SECRET": state["git_hook_hmac_secret"],

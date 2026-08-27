@@ -6,7 +6,7 @@ from harbor.models.agent.context import AgentContext
 
 from harbor_crew_orchestra import (
     AgentCredential,
-    BuzzOrchestraAgent,
+    CrewOrchestraAgent,
     RuntimeResult,
     TrialHandle,
 )
@@ -78,7 +78,7 @@ class Runtime:
 async def test_agent_lifecycle_and_context(tmp_path, manifest_data):
     provisioner, runtime, context_id = Provisioner(), Runtime(), uuid4()
     environment = SimpleNamespace(context_id=context_id, environment_name="hello-world")
-    agent = BuzzOrchestraAgent(
+    agent = CrewOrchestraAgent(
         logs_dir=tmp_path,
         manifest=manifest_data,
         provisioner=provisioner,
@@ -113,7 +113,7 @@ async def test_teardown_runs_when_runtime_fails(tmp_path, manifest_data):
         uuid4(),
     )
     environment = SimpleNamespace(context_id=context_id)
-    agent = BuzzOrchestraAgent(
+    agent = CrewOrchestraAgent(
         logs_dir=tmp_path,
         manifest=manifest_data,
         provisioner=provisioner,
@@ -126,7 +126,7 @@ async def test_teardown_runs_when_runtime_fails(tmp_path, manifest_data):
 
 
 async def test_missing_integrations_fail_explicitly(tmp_path, manifest_data):
-    agent = BuzzOrchestraAgent(logs_dir=tmp_path, manifest=manifest_data)
+    agent = CrewOrchestraAgent(logs_dir=tmp_path, manifest=manifest_data)
     with pytest.raises(RuntimeError, match="M1 wiring is incomplete"):
         await agent.run("solve it", SimpleNamespace(context_id=uuid4()), AgentContext())
 
@@ -139,33 +139,33 @@ async def test_cli_runtime_construction_from_json(tmp_path, manifest_data):
         '"worker/rev":{"provider":"openai",'
         '"api_key_env":"OPENAI_API_KEY"}}'
     )
-    agent = BuzzOrchestraAgent(
+    agent = CrewOrchestraAgent(
         logs_dir=tmp_path / "logs",
         manifest=manifest_data,
         artifact_root=tmp_path,
         endpoint_config=endpoint_path,
-        buzz_acp_binary="/pinned/crew-acp",
-        buzz_agent_binary="/pinned/crew-agent",
-        buzz_dev_mcp_binary="/pinned/crew-dev-mcp",
-        buzz_cli_binary="/pinned/crew",
+        crew_acp_binary="/pinned/crew-acp",
+        crew_agent_binary="/pinned/crew-agent",
+        crew_dev_mcp_binary="/pinned/crew-dev-mcp",
+        crew_cli_binary="/pinned/crew",
     )
     assert agent.runtime.artifact_root == tmp_path
     assert agent.runtime.endpoints["frontier/rev"].provider == "anthropic"
-    assert agent.runtime.buzz_acp_binary == "/pinned/crew-acp"
-    assert agent.runtime.buzz_agent_binary == "/pinned/crew-agent"
-    assert agent.runtime.buzz_dev_mcp_binary == "/pinned/crew-dev-mcp"
-    assert agent.runtime.buzz_cli_binary == "/pinned/crew"
+    assert agent.runtime.crew_acp_binary == "/pinned/crew-acp"
+    assert agent.runtime.crew_agent_binary == "/pinned/crew-agent"
+    assert agent.runtime.crew_dev_mcp_binary == "/pinned/crew-dev-mcp"
+    assert agent.runtime.crew_cli_binary == "/pinned/crew"
 
 
 async def test_cli_construction_requires_complete_pairs(tmp_path, manifest_data):
     with pytest.raises(ValueError, match="artifact_root"):
-        BuzzOrchestraAgent(
+        CrewOrchestraAgent(
             logs_dir=tmp_path,
             manifest=manifest_data,
             endpoint_config={},
         )
     with pytest.raises(ValueError, match="provisioner_factory"):
-        BuzzOrchestraAgent(
+        CrewOrchestraAgent(
             logs_dir=tmp_path,
             manifest=manifest_data,
             provisioner_config={},

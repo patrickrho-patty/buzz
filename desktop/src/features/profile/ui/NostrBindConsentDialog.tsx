@@ -34,7 +34,7 @@ const NOSTR_BIND_PREVIEW_PAYLOAD: NostrBindDeepLinkPayload = {
   challengeId: "550e8400-e29b-41d4-a716-446655440000",
   nonce: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi01234567",
   verificationCode: "123456",
-  audience: "buzz:nostr-identity",
+  audience: "crew:nostr-identity",
   action: "bind_nostr_identity",
   protocol: "crew-nostr-identity",
   version: "1",

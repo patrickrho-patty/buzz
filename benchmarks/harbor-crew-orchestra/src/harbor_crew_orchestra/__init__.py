@@ -1,8 +1,8 @@
 """Crew orchestra custom agent for Harbor."""
 
-from .agent import BuzzOrchestraAgent
+from .agent import CrewOrchestraAgent
 from .container_runtime import (
-    BuzzContainerRuntime,
+    CrewContainerRuntime,
     EndpointLaunchConfig,
     RuntimeLaunchError,
 )
@@ -17,8 +17,8 @@ from .runtime import OrchestraRuntime, RuntimeResult
 
 __all__ = [
     "AgentCredential",
-    "BuzzContainerRuntime",
-    "BuzzOrchestraAgent",
+    "CrewContainerRuntime",
+    "CrewOrchestraAgent",
     "DirectoryIdentity",
     "EndpointLaunchConfig",
     "ExperimentManifest",

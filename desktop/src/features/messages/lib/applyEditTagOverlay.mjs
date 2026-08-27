@@ -37,7 +37,7 @@ export function applyEditTagOverlay(originalTags, editTags) {
   if (!editTags) return originalTags;
   const editEmoji = editTags.filter((t) => t[0] === "emoji");
   const hasMentionSnapshot = editTags.some(
-    (t) => t[0] === "buzz:mention-snapshot",
+    (t) => t[0] === "crew:mention-snapshot",
   );
   const editMentions = editTags.filter((t) => t[0] === "mention");
   // imeta is always fully replaced by the edit. emoji is replaced only when
@@ -53,7 +53,7 @@ export function applyEditTagOverlay(originalTags, editTags) {
   };
   const baseFromOriginal = originalTags.filter(droppedFromOriginal);
   const overlaidFromEdit = editTags.filter(
-    (t) => t[0] === "imeta" || t[0] === "p" || t[0] === "buzz:mention-snapshot",
+    (t) => t[0] === "imeta" || t[0] === "p" || t[0] === "crew:mention-snapshot",
   );
   return [
     ...baseFromOriginal,

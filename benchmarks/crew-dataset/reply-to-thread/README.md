@@ -16,7 +16,7 @@ top-level channel message.
 ## Environment
 
 `python:3.12-slim-bookworm`, no extra packages: the agent never runs in this
-container's shell. `BuzzOrchestraAgent` launches the real `crew-acp` /
+container's shell. `CrewOrchestraAgent` launches the real `crew-acp` /
 `crew-agent` stack against a dedicated relay, and the agent works entirely
 through Crew. Agent timeout 300s; the manifest's `trial_budget` is the
 effective clock.
@@ -64,7 +64,7 @@ just benchmark \
 ```
 
 `harbor run -a oracle` does **not** work here, and no `solution/solve.sh` is
-shipped: the Oracle agent replaces `BuzzOrchestraAgent`, so no relay trial is
+shipped: the Oracle agent replaces `CrewOrchestraAgent`, so no relay trial is
 provisioned and no evidence snapshot is exported. The verifier is covered
 instead by positive and negative fixture tests in
 `../harbor-crew-orchestra/tests/test_reply_to_thread_verifier.py` (run from

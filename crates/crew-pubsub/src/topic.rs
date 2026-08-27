@@ -181,12 +181,12 @@ mod tests {
         for raw in [
             "",
             "not-crew:00000000-0000-0000-0000-00000000aaaa:global",
-            "buzz:not-a-uuid:global",
-            "buzz:00000000-0000-0000-0000-00000000aaaa",
-            "buzz:00000000-0000-0000-0000-00000000aaaa:global:extra",
-            "buzz:00000000-0000-0000-0000-00000000aaaa:channel",
-            "buzz:00000000-0000-0000-0000-00000000aaaa:channel:not-a-uuid",
-            "buzz:00000000-0000-0000-0000-00000000aaaa:presence:abc",
+            "crew:not-a-uuid:global",
+            "crew:00000000-0000-0000-0000-00000000aaaa",
+            "crew:00000000-0000-0000-0000-00000000aaaa:global:extra",
+            "crew:00000000-0000-0000-0000-00000000aaaa:channel",
+            "crew:00000000-0000-0000-0000-00000000aaaa:channel:not-a-uuid",
+            "crew:00000000-0000-0000-0000-00000000aaaa:presence:abc",
         ] {
             assert!(
                 EventTopicKey::parse_redis_channel(raw).is_err(),

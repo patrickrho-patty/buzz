@@ -359,7 +359,7 @@ mod tests {
         let pod = build_pod(&id, &cfg, "g", &fp);
         let meta = &pod.metadata;
         assert_eq!(meta.name.as_deref(), Some(id.pod_name().as_str()));
-        assert_eq!(meta.namespace.as_deref(), Some("buzz-agents-test"));
+        assert_eq!(meta.namespace.as_deref(), Some("crew-agents-test"));
         assert_eq!(meta.labels.as_ref().unwrap(), &id.labels());
         let ann = meta.annotations.as_ref().unwrap();
         assert_eq!(ann[ANNOTATION_PUBKEY_FULL], id.pubkey_hex());

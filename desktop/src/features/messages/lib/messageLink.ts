@@ -69,7 +69,7 @@ export function parseMessageLink(url: string): MessageLinkParseResult {
 
   // `crew://` is canonical; legacy `crew://` links keep parsing during the
   // Crew→Crew rename window.
-  if (parsed.protocol !== MESSAGE_LINK_SCHEME && parsed.protocol !== "buzz:") {
+  if (parsed.protocol !== MESSAGE_LINK_SCHEME && parsed.protocol !== "crew:") {
     return { ok: false, reason: "wrong-scheme" };
   }
   // `new URL("crew://message?…")` puts "message" in `hostname`.

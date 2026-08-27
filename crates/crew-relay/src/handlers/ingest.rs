@@ -576,7 +576,7 @@ pub(crate) fn is_global_only_kind(kind: u32) -> bool {
             | KIND_GIT_STATUS_CLOSED
             | KIND_GIT_STATUS_DRAFT
             // NIP-MP: projects are addressed by (pubkey, kind, d_tag). The
-            // `buzz-channel` tag is a metadata reference, not a routing directive,
+            // `crew-channel` tag is a metadata reference, not a routing directive,
             // so a project's state is never channel-scoped.
             | KIND_PROJECT
             // Community moderation commands (9040–9044): community-global
@@ -1443,7 +1443,7 @@ const PROJECT_NAME_MAX_LEN: usize = 256;
 /// Maximum byte length of a project `description` tag value.
 const PROJECT_DESCRIPTION_MAX_LEN: usize = 2048;
 
-/// Maximum byte length of `buzz-channel` and `buzz-visibility` tag values.
+/// Maximum byte length of `crew-channel` and `crew-visibility` tag values.
 ///
 /// Both are opaque strings at the relay layer; the bound exists only so an
 /// unbounded value cannot ride into storage on a tag ingest does not interpret.
@@ -1458,8 +1458,8 @@ const PROJECT_METADATA_TAG_MAX_LEN: usize = 256;
 const PROJECT_SINGLETON_METADATA_TAGS: [(&str, &str); 4] = [
     ("name", "name"),
     ("description", "description"),
-    ("crew-channel", "buzz-channel"),
-    ("crew-visibility", "buzz-visibility"),
+    ("crew-channel", "crew-channel"),
+    ("crew-visibility", "crew-visibility"),
 ];
 
 /// The kind segment every project member coordinate must carry: a project groups
@@ -1547,8 +1547,8 @@ fn validate_project_envelope(event: &Event) -> Result<(), ProjectRejection> {
                     match tag_name {
                         "name" => name = Some(value),
                         "description" => description = Some(value),
-                        "crew-channel" | "buzz-channel" => crew_channel = Some(value),
-                        "crew-visibility" | "buzz-visibility" => crew_visibility = Some(value),
+                        "crew-channel" | "crew-channel" => crew_channel = Some(value),
+                        "crew-visibility" | "crew-visibility" => crew_visibility = Some(value),
                         _ => {}
                     }
                 }
@@ -1653,7 +1653,7 @@ fn validate_project_envelope(event: &Event) -> Result<(), ProjectRejection> {
             return Err(ProjectRejection::new(
                 "metadata-length",
                 format!(
-                    "project event `buzz-channel` tag too long ({} bytes, max {PROJECT_METADATA_TAG_MAX_LEN})",
+                    "project event `crew-channel` tag too long ({} bytes, max {PROJECT_METADATA_TAG_MAX_LEN})",
                     crew_channel.len()
                 ),
             ));
@@ -1664,7 +1664,7 @@ fn validate_project_envelope(event: &Event) -> Result<(), ProjectRejection> {
             return Err(ProjectRejection::new(
                 "metadata-length",
                 format!(
-                    "project event `buzz-visibility` tag too long ({} bytes, max {PROJECT_METADATA_TAG_MAX_LEN})",
+                    "project event `crew-visibility` tag too long ({} bytes, max {PROJECT_METADATA_TAG_MAX_LEN})",
                     crew_visibility.len()
                 ),
             ));
@@ -4850,16 +4850,16 @@ mod tests {
     #[test]
     fn project_envelope_accepts_full_cross_owner_membership() {
         // The motivating case: one project spanning two owners' repositories.
-        let a = member_coord(OWNER_A, "buzz");
-        let b = member_coord(OWNER_B, "buzz-infra");
+        let a = member_coord(OWNER_A, "crew");
+        let b = member_coord(OWNER_B, "crew-infra");
         let ev = make_project(&[
             &["d", "platform"],
             &["name", "Platform"],
             &["description", "Relay, desktop, and mobile."],
             &["a", &a],
             &["a", &b],
-            &["buzz-channel", "3580ca9b-47b4-4af9-b22a-1068778f26c6"],
-            &["buzz-visibility", "listed"],
+            &["crew-channel", "3580ca9b-47b4-4af9-b22a-1068778f26c6"],
+            &["crew-visibility", "listed"],
         ]);
         assert!(validate_project_envelope(&ev).is_ok());
     }
@@ -5096,7 +5096,7 @@ mod tests {
         let ev = make_project(&[
             &["d", "platform"],
             &["crew-channel", "x"],
-            &["buzz-channel", "y"],
+            &["crew-channel", "y"],
         ]);
         let err = validate_project_envelope(&ev).unwrap_err();
         assert!(
@@ -5164,7 +5164,7 @@ mod tests {
 
     #[test]
     fn project_is_global_only() {
-        // `buzz-channel` is a metadata reference, not a routing directive.
+        // `crew-channel` is a metadata reference, not a routing directive.
         assert!(is_global_only_kind(KIND_PROJECT));
         assert!(!requires_h_channel_scope(KIND_PROJECT));
     }

@@ -710,7 +710,7 @@ fn install_shell_args(
         "-c".into(),
         format!("export PATH=\"$1\"; set -o pipefail; {command}").into(),
         // `$0` is the shell-name slot, so the PATH must be the second positional.
-        "buzz-install".into(),
+        "crew-install".into(),
         path.to_os_string(),
     ]
 }
@@ -1425,8 +1425,8 @@ mod tests {
                 "-l",
                 "-c",
                 "export PATH=\"$1\"; set -o pipefail; echo hi",
-                "buzz-install",
-                "/buzz/node/bin:/usr/bin",
+                "crew-install",
+                "/crew/node/bin:/usr/bin",
             ]
             .map(std::ffi::OsString::from),
             "Unix must re-export the composed PATH after login init"
@@ -1714,7 +1714,7 @@ mod tests {
     #[test]
     fn test_powershell_command_argv_exact() {
         // Catalog format: body wrapped in one outer double-quote pair (Bash-layer serialization).
-        let body = "$ErrorActionPreference='Stop'; $installer=Join-Path $env:TEMP 'buzz-install-codex.ps1'; Invoke-RestMethod https://chatgpt.com/codex/install.ps1 -OutFile $installer; & $installer; exit $LASTEXITCODE";
+        let body = "$ErrorActionPreference='Stop'; $installer=Join-Path $env:TEMP 'crew-install-codex.ps1'; Invoke-RestMethod https://chatgpt.com/codex/install.ps1 -OutFile $installer; & $installer; exit $LASTEXITCODE";
         let cmd = super::install_powershell_command(&format!(
             r#"powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "{body}""#
         ));
@@ -1749,7 +1749,7 @@ mod tests {
     #[test]
     fn test_powershell_command_claude_catalog_dequoted() {
         let cmd = super::install_powershell_command(
-            r#"powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='Stop'; $installer=Join-Path $env:TEMP 'buzz-install-claude.ps1'; Invoke-RestMethod https://claude.ai/install.ps1 -OutFile $installer; & $installer; exit $LASTEXITCODE""#,
+            r#"powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='Stop'; $installer=Join-Path $env:TEMP 'crew-install-claude.ps1'; Invoke-RestMethod https://claude.ai/install.ps1 -OutFile $installer; & $installer; exit $LASTEXITCODE""#,
         );
         assert_eq!(
             cmd.get_args()
@@ -1760,7 +1760,7 @@ mod tests {
                 "-ExecutionPolicy",
                 "Bypass",
                 "-Command",
-                "$ErrorActionPreference='Stop'; $installer=Join-Path $env:TEMP 'buzz-install-claude.ps1'; Invoke-RestMethod https://claude.ai/install.ps1 -OutFile $installer; & $installer; exit $LASTEXITCODE",
+                "$ErrorActionPreference='Stop'; $installer=Join-Path $env:TEMP 'crew-install-claude.ps1'; Invoke-RestMethod https://claude.ai/install.ps1 -OutFile $installer; & $installer; exit $LASTEXITCODE",
             ],
             "Claude catalog command must be dequoted correctly"
         );
@@ -1775,7 +1775,7 @@ mod tests {
     #[test]
     fn test_powershell_command_goose_catalog_dequoted() {
         let cmd = super::install_powershell_command(
-            r#"powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$env:CONFIGURE='false'; $ErrorActionPreference='Stop'; $installer=Join-Path $env:TEMP 'buzz-install-goose.ps1'; Invoke-RestMethod https://raw.githubusercontent.com/aaif-goose/goose/main/download_cli.ps1 -OutFile $installer; & $installer; exit $LASTEXITCODE""#,
+            r#"powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$env:CONFIGURE='false'; $ErrorActionPreference='Stop'; $installer=Join-Path $env:TEMP 'crew-install-goose.ps1'; Invoke-RestMethod https://raw.githubusercontent.com/aaif-goose/goose/main/download_cli.ps1 -OutFile $installer; & $installer; exit $LASTEXITCODE""#,
         );
         assert_eq!(
             cmd.get_args()
@@ -1786,7 +1786,7 @@ mod tests {
                 "-ExecutionPolicy",
                 "Bypass",
                 "-Command",
-                "$env:CONFIGURE='false'; $ErrorActionPreference='Stop'; $installer=Join-Path $env:TEMP 'buzz-install-goose.ps1'; Invoke-RestMethod https://raw.githubusercontent.com/aaif-goose/goose/main/download_cli.ps1 -OutFile $installer; & $installer; exit $LASTEXITCODE",
+                "$env:CONFIGURE='false'; $ErrorActionPreference='Stop'; $installer=Join-Path $env:TEMP 'crew-install-goose.ps1'; Invoke-RestMethod https://raw.githubusercontent.com/aaif-goose/goose/main/download_cli.ps1 -OutFile $installer; & $installer; exit $LASTEXITCODE",
             ],
             "Goose catalog command must dequote with bare $env: (no backslash before $)"
         );

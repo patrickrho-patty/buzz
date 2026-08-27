@@ -19,7 +19,7 @@ from harbor_crew_orchestra.provisioning import (
 )
 from harbor_crew_orchestra.task_fixtures import DirectoryEntry, fixture_for
 
-from .crew_cli import BuzzCli
+from .crew_cli import CrewCli
 from .keys import compute_auth_tag, generate_keypair, keypair_from_secret
 
 
@@ -50,12 +50,12 @@ class TestbedConfig:
     archive_on_teardown: bool = True
 
 
-def provisioner_from_dict(config: dict[str, object]) -> BuzzTrialProvisioner:
+def provisioner_from_dict(config: dict[str, object]) -> CrewTrialProvisioner:
     """Harbor CLI factory for a JSON-decoded testbed configuration."""
-    return BuzzTrialProvisioner(TestbedConfig(**config))
+    return CrewTrialProvisioner(TestbedConfig(**config))
 
 
-class BuzzTrialProvisioner:
+class CrewTrialProvisioner:
     """Implements the TrialHandle v1.1 contract against a live Crew relay.
 
     Guarantees (contract PLANS/HARBOR_CREW_TRIALHANDLE_CONTRACT.md):
@@ -207,7 +207,7 @@ class BuzzTrialProvisioner:
         )
 
     def _seed_directory(
-        self, task_name: str | None, observer: BuzzCli
+        self, task_name: str | None, observer: CrewCli
     ) -> tuple[DirectoryIdentity, ...]:
         """Publish stable task-directory profiles, skipping those already seeded."""
         entries = fixture_for(task_name).directory
@@ -324,8 +324,8 @@ class BuzzTrialProvisioner:
             llm_api_key="",
         )
 
-    def _cli_for(self, credential: AgentCredential) -> BuzzCli:
-        return BuzzCli(
+    def _cli_for(self, credential: AgentCredential) -> CrewCli:
+        return CrewCli(
             relay_url=self._config.relay_http_url,
             secret_key=credential.nostr_secret_key,
             auth_tag=credential.nostr_auth_tag,

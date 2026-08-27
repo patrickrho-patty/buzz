@@ -111,7 +111,7 @@ fn info_response_carries_the_contract_fields() {
         .as_str()
         .expect("no generated namespace default");
     assert!(
-        default.starts_with("buzz-agents-"),
+        default.starts_with("crew-agents-"),
         "unexpected namespace default: {default}"
     );
     let image_default = schema["properties"]["image"]["default"]

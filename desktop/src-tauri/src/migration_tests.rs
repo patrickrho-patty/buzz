@@ -634,7 +634,7 @@ fn reconcile_mcp_commands_clears_stale_buzz_mcp_server() {
         &serde_json::json!([{
             "name": "Fizz",
             "agent_command": "goose",
-            "mcp_command": "buzz-mcp-server"
+            "mcp_command": "crew-mcp-server"
         }]),
     );
     reconcile_mcp_commands_in_file(&dir.path().join("agents/managed-agents.json"));
@@ -650,7 +650,7 @@ fn reconcile_mcp_commands_sets_canonical_for_buzz_agent() {
         &serde_json::json!([{
             "name": "Stilgar",
             "agent_command": "crew-agent",
-            "mcp_command": "buzz-mcp-server"
+            "mcp_command": "crew-mcp-server"
         }]),
     );
     reconcile_mcp_commands_in_file(&dir.path().join("agents/managed-agents.json"));
@@ -679,7 +679,7 @@ fn reconcile_mcp_commands_leaves_unknown_runtime_untouched() {
     let json = serde_json::json!([{
         "name": "Custom",
         "agent_command": "my-custom-agent",
-        "mcp_command": "buzz-mcp-server"
+        "mcp_command": "crew-mcp-server"
     }]);
     write_agents_json(dir.path(), &json);
     let path = dir.path().join("agents/managed-agents.json");
@@ -696,7 +696,7 @@ fn reconcile_mcp_commands_is_idempotent() {
         &serde_json::json!([{
             "name": "Fizz",
             "agent_command": "goose",
-            "mcp_command": "buzz-mcp-server"
+            "mcp_command": "crew-mcp-server"
         }]),
     );
     let path = dir.path().join("agents/managed-agents.json");
@@ -712,10 +712,10 @@ fn reconcile_mcp_commands_handles_mixed_agents() {
     write_agents_json(
         dir.path(),
         &serde_json::json!([
-            {"name": "Stale Goose", "agent_command": "goose", "mcp_command": "buzz-mcp-server"},
+            {"name": "Stale Goose", "agent_command": "goose", "mcp_command": "crew-mcp-server"},
             {"name": "Clean Goose", "agent_command": "goose", "mcp_command": ""},
             {"name": "Custom Agent", "agent_command": "goose", "mcp_command": "my-custom-mcp"},
-            {"name": "Stale Crew", "agent_command": "crew-agent", "mcp_command": "buzz-mcp-server"}
+            {"name": "Stale Crew", "agent_command": "crew-agent", "mcp_command": "crew-mcp-server"}
         ]),
     );
     reconcile_mcp_commands_in_file(&dir.path().join("agents/managed-agents.json"));
@@ -738,7 +738,7 @@ fn reconcile_mcp_commands_resolves_persona_runtime_over_stale_snapshot() {
             "name": "Fizz",
             "persona_id": "p1",
             "agent_command": "crew-agent",
-            "mcp_command": "buzz-mcp-server"
+            "mcp_command": "crew-mcp-server"
         }]),
     );
     write_personas_json(
@@ -827,7 +827,7 @@ fn reconcile_mcp_commands_skips_record_without_agent_command() {
     let dir = tempfile::tempdir().unwrap();
     let json = serde_json::json!([{
         "name": "No Command",
-        "mcp_command": "buzz-mcp-server"
+        "mcp_command": "crew-mcp-server"
     }]);
     write_agents_json(dir.path(), &json);
     let path = dir.path().join("agents/managed-agents.json");

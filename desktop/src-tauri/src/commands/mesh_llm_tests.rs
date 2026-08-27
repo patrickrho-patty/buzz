@@ -106,7 +106,7 @@ fn crew_mesh_name_is_stable_and_does_not_expose_the_relay() {
 
     assert_eq!(first, second);
     assert_ne!(first, other_relay);
-    assert!(first.starts_with("buzz-community-"));
+    assert!(first.starts_with("crew-community-"));
     assert!(!first.contains("example"));
 }
 
@@ -117,7 +117,7 @@ fn sharing_config_keeps_the_community_where_sharing_was_enabled() {
         model_id: Some("test-model".to_string()),
         max_vram_gb: Some(24),
         join_token: None,
-        mesh_name: Some("buzz-community-test".to_string()),
+        mesh_name: Some("crew-community-test".to_string()),
         relay_url: Some("wss://community.example".to_string()),
         trusted_owner_ids: Some(Vec::new()),
     };

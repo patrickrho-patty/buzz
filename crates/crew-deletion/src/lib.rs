@@ -1800,7 +1800,7 @@ mod tests {
         assert!(!scan_proves_absence(&[(9, Vec::new())]));
         assert!(!scan_proves_absence(&[
             (9, Vec::new()),
-            (0, vec!["buzz:tenant:late".to_string()]),
+            (0, vec!["crew:tenant:late".to_string()]),
         ]));
         assert!(scan_proves_absence(&[(9, Vec::new()), (0, Vec::new())]));
     }

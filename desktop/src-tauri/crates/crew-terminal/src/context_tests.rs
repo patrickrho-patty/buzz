@@ -20,7 +20,7 @@ fn context_named(channel_name: &str) -> GuiContext {
 #[test]
 fn benign_channel_names_pass_through_unchanged() {
     for name in [
-        "buzz-tui",
+        "crew-tui",
         "General Chat",
         "release_2.0",
         "日本語チャンネル",
@@ -94,10 +94,10 @@ fn channel_id_is_never_the_name() {
 /// Absent rather than empty: `${CREW_THREAD_ID+set}` and `-n` must agree.
 #[test]
 fn thread_id_is_absent_when_there_is_no_thread() {
-    let vars = context_vars(&context_named("buzz-tui"));
+    let vars = context_vars(&context_named("crew-tui"));
     assert!(!vars.iter().any(|(k, _)| *k == "CREW_THREAD_ID"));
 
-    let mut context = context_named("buzz-tui");
+    let mut context = context_named("crew-tui");
     context.thread_id = Some("thread-1".to_owned());
     let vars = context_vars(&context);
     assert_eq!(
@@ -112,7 +112,7 @@ fn thread_id_is_absent_when_there_is_no_thread() {
 /// the value forge a second variable in the child's environ block.
 #[test]
 fn every_injected_key_is_well_formed() {
-    for (key, _) in context_vars(&context_named("buzz-tui")) {
+    for (key, _) in context_vars(&context_named("crew-tui")) {
         assert!(
             is_well_formed_env_key(key),
             "malformed injected key: {key:?}"

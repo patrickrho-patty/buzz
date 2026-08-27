@@ -1312,17 +1312,17 @@ mod windows_resolver_tests {
     fn crew_shell_bare_name_absent_from_path_falls_through() {
         let _guard = ENV_MUTEX.lock().unwrap_or_else(|p| p.into_inner());
         // Set CREW_SHELL to a command that won't be on any real PATH.
-        env::set_var("CREW_SHELL", "buzz-shell-does-not-exist-xyz");
+        env::set_var("CREW_SHELL", "crew-shell-does-not-exist-xyz");
         let result = resolve_bash("");
         env::remove_var("CREW_SHELL");
         if let Ok((resolved, name)) = result {
             assert_ne!(
                 resolved.file_name().and_then(|n| n.to_str()).unwrap_or(""),
-                "buzz-shell-does-not-exist-xyz.exe",
+                "crew-shell-does-not-exist-xyz.exe",
                 "absent CREW_SHELL must not be returned as the resolved path"
             );
             assert_ne!(
-                name, "buzz-shell-does-not-exist-xyz",
+                name, "crew-shell-does-not-exist-xyz",
                 "absent CREW_SHELL must not be reported as the shell name"
             );
         }

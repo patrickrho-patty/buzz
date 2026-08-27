@@ -21,7 +21,7 @@ use thiserror::Error;
 use crate::kind::{KIND_MANAGED_AGENT, KIND_PERSONA, KIND_PRIVATE_MANAGED_AGENT};
 
 /// Wire-format discriminator for decrypted private managed-agent payloads.
-pub const FORMAT: &str = "buzz-private-managed-agent";
+pub const FORMAT: &str = "crew-private-managed-agent";
 /// Current decrypted payload schema version.
 pub const VERSION: u32 = 1;
 /// NIP-44 v2 plaintext limit.
@@ -1127,7 +1127,7 @@ mod tests {
     #[test]
     fn projection_hash_fixture_is_stable() {
         assert_eq!(
-            content_sha256(b"buzz-private-managed-agent-v1"),
+            content_sha256(b"crew-private-managed-agent-v1"),
             "c3ca1603249c95343fc1766ba58d075d6bdf0e57b375bef38738729b2022cc80"
         );
     }

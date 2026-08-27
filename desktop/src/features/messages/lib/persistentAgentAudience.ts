@@ -1,7 +1,7 @@
 import * as React from "react";
 
-const ENABLED_STORAGE_KEY = "buzz:keep-addressed-agents-active";
-const AUDIENCES_STORAGE_KEY = "buzz:persistent-agent-audiences:v2";
+const ENABLED_STORAGE_KEY = "crew:keep-addressed-agents-active";
+const AUDIENCES_STORAGE_KEY = "crew:persistent-agent-audiences:v2";
 export const MAX_PERSISTENT_AGENT_AUDIENCES = 200;
 
 const listeners = new Set<() => void>();

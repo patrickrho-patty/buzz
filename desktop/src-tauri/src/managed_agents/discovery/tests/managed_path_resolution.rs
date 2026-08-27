@@ -146,7 +146,7 @@ fn cheap_discovery_never_spawns_login_shell_even_when_cold() {
         r#"{
             "id": "absent-harness",
             "label": "Absent Harness",
-            "command": "buzz-absent-command-xyzzy",
+            "command": "crew-absent-command-xyzzy",
             "args": []
         }"#,
     )

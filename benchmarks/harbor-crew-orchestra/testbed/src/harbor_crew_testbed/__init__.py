@@ -1,14 +1,14 @@
 """Testbed-side provisioning for harbor-crew-orchestra trials."""
 
 from .provisioner import (
-    BuzzTrialProvisioner,
+    CrewTrialProvisioner,
     ProvisioningError,
     TestbedConfig,
     provisioner_from_dict,
 )
 
 __all__ = [
-    "BuzzTrialProvisioner",
+    "CrewTrialProvisioner",
     "ProvisioningError",
     "TestbedConfig",
     "provisioner_from_dict",

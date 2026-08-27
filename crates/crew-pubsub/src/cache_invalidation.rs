@@ -209,10 +209,10 @@ mod tests {
     #[test]
     fn rejects_bad_cache_invalidation_channels() {
         for raw in [
-            "buzz:cache-invalidate",
-            "buzz:not-a-uuid:cache-invalidate",
-            "not-buzz:00000000-0000-0000-0000-00000000aaaa:cache-invalidate",
-            "buzz:00000000-0000-0000-0000-00000000aaaa:cache-invalidate:extra",
+            "crew:cache-invalidate",
+            "crew:not-a-uuid:cache-invalidate",
+            "not-crew:00000000-0000-0000-0000-00000000aaaa:cache-invalidate",
+            "crew:00000000-0000-0000-0000-00000000aaaa:cache-invalidate:extra",
             "crew:00000000-0000-0000-0000-00000000aaaa:channel:00000000-0000-0000-0000-00000000bbbb",
         ] {
             assert_eq!(parse_cache_invalidation_channel(raw), None);

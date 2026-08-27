@@ -1005,7 +1005,7 @@ fn reconcile_mcp_commands_in_file(path: &Path) {
         }
         // Only fix values that are clearly stale (empty or a removed binary).
         // Leave user-customized values untouched.
-        if !current.is_empty() && current != "buzz-mcp-server" {
+        if !current.is_empty() && current != "crew-mcp-server" {
             return false;
         }
         eprintln!(
@@ -1078,8 +1078,8 @@ fn reconcile_legacy_command_names_in_file(path: &Path) {
                     changed |=
                         replace_command_field(obj, "mcp_command", "crew-dev-mcp".to_string());
                 }
-                "sprout-mcp" | "sprout-mcp-server" | "buzz-mcp-server" => {
-                    let replacement = if agent_command == "buzz-agent" {
+                "sprout-mcp" | "sprout-mcp-server" | "crew-mcp-server" => {
+                    let replacement = if agent_command == "crew-agent" {
                         "crew-dev-mcp"
                     } else {
                         ""
@@ -1109,11 +1109,11 @@ fn reconcile_legacy_persona_runtimes_in_file(path: &Path) {
                 .and_then(|v| v.as_str())
                 .unwrap_or("?"),
             runtime,
-            "buzz-agent",
+            "crew-agent",
         );
         obj.insert(
             "runtime".to_string(),
-            serde_json::Value::String("buzz-agent".to_string()),
+            serde_json::Value::String("crew-agent".to_string()),
         );
         true
     });
@@ -1127,7 +1127,7 @@ fn rewrite_legacy_persona_md_runtime(content: &str) -> Option<String> {
     if runtime.as_str()? != "sprout-agent" {
         return None;
     }
-    *runtime = serde_yaml::Value::String("buzz-agent".to_string());
+    *runtime = serde_yaml::Value::String("crew-agent".to_string());
     let frontmatter = serde_yaml::to_string(&value).ok()?;
     Some(format!("---\n{frontmatter}---\n{body}"))
 }

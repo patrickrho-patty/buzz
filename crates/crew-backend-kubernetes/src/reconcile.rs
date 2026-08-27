@@ -675,7 +675,7 @@ mod tests {
     fn config() -> ProviderConfig {
         ProviderConfig {
             context: None,
-            namespace: "buzz-agents-test".into(),
+            namespace: "crew-agents-test".into(),
             image: crate::image::parse(&format!(
                 "ghcr.io/block/buzz-sprig@sha256:{}",
                 "a".repeat(64)

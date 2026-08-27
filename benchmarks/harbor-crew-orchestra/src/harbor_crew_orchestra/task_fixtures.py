@@ -33,7 +33,7 @@ class ScriptedMessage:
 
 
 @dataclass(frozen=True, slots=True)
-class BuzzTaskFixture:
+class CrewTaskFixture:
     """Relay state a task needs before the agent receives its prompt."""
 
     directory: tuple[DirectoryEntry, ...] = ()
@@ -61,7 +61,7 @@ INTERLEAVED_AGENT_REPORTS_TASK = "interleaved-agent-reports"
 CROSS_THREAD_REQUESTS_TASK = "cross-thread-requests"
 AMBIGUOUS_USER_MENTION_TASK = "ambiguous-user-mention"
 
-_CREATE_CHANNEL_FIXTURE = BuzzTaskFixture(
+_CREATE_CHANNEL_FIXTURE = CrewTaskFixture(
     directory=tuple(
         [
             DirectoryEntry(f"benchmark-user-{index:02d}", "user")
@@ -76,12 +76,12 @@ _CREATE_CHANNEL_FIXTURE = BuzzTaskFixture(
     requires_evidence=True,
 )
 
-_USER_MENTION_FIXTURE = BuzzTaskFixture(
+_USER_MENTION_FIXTURE = CrewTaskFixture(
     user_display_name=USER_MENTION_DISPLAY_NAME,
     requires_evidence=True,
 )
 
-_NARRATIVE_AGENT_NAMES_FIXTURE = BuzzTaskFixture(
+_NARRATIVE_AGENT_NAMES_FIXTURE = CrewTaskFixture(
     directory=(
         DirectoryEntry("Aurora Audit Bot", "bot", channel_member=True),
         DirectoryEntry("Beacon Deploy Bot", "bot", channel_member=True),
@@ -90,7 +90,7 @@ _NARRATIVE_AGENT_NAMES_FIXTURE = BuzzTaskFixture(
     requires_evidence=True,
 )
 
-_INTERLEAVED_AGENT_REPORTS_FIXTURE = BuzzTaskFixture(
+_INTERLEAVED_AGENT_REPORTS_FIXTURE = CrewTaskFixture(
     directory=(
         DirectoryEntry("Ledger Scout", "bot", channel_member=True),
         DirectoryEntry("Risk Sentinel", "bot", channel_member=True),
@@ -126,7 +126,7 @@ _INTERLEAVED_AGENT_REPORTS_FIXTURE = BuzzTaskFixture(
     requires_evidence=True,
 )
 
-_CROSS_THREAD_REQUESTS_FIXTURE = BuzzTaskFixture(
+_CROSS_THREAD_REQUESTS_FIXTURE = CrewTaskFixture(
     scripted_messages=(
         ScriptedMessage(
             label="beta-request",
@@ -142,7 +142,7 @@ _CROSS_THREAD_REQUESTS_FIXTURE = BuzzTaskFixture(
     requires_evidence=True,
 )
 
-_AMBIGUOUS_USER_MENTION_FIXTURE = BuzzTaskFixture(
+_AMBIGUOUS_USER_MENTION_FIXTURE = CrewTaskFixture(
     directory=(
         DirectoryEntry(
             "Taylor Morgan Lee",
@@ -166,9 +166,9 @@ _AMBIGUOUS_USER_MENTION_FIXTURE = BuzzTaskFixture(
 _FIXTURES = {
     CREATE_CHANNEL_TASK: _CREATE_CHANNEL_FIXTURE,
     USER_MENTION_TASK: _USER_MENTION_FIXTURE,
-    REPLY_TO_THREAD_TASK: BuzzTaskFixture(requires_evidence=True),
-    READ_NAMED_PATH_TASK: BuzzTaskFixture(requires_evidence=True),
-    MULTILINE_MESSAGE_TASK: BuzzTaskFixture(
+    REPLY_TO_THREAD_TASK: CrewTaskFixture(requires_evidence=True),
+    READ_NAMED_PATH_TASK: CrewTaskFixture(requires_evidence=True),
+    MULTILINE_MESSAGE_TASK: CrewTaskFixture(
         user_display_name="Eleanor June Brooks", requires_evidence=True
     ),
     NARRATIVE_AGENT_NAMES_TASK: _NARRATIVE_AGENT_NAMES_FIXTURE,
@@ -178,6 +178,6 @@ _FIXTURES = {
 }
 
 
-def fixture_for(task_name: str | None) -> BuzzTaskFixture:
+def fixture_for(task_name: str | None) -> CrewTaskFixture:
     """Return the declared setup for a task, or an empty setup."""
-    return _FIXTURES.get(task_name or "", BuzzTaskFixture())
+    return _FIXTURES.get(task_name or "", CrewTaskFixture())

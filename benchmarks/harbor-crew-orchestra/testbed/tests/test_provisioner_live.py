@@ -15,9 +15,9 @@ import uuid
 import psycopg
 import pytest
 
-from harbor_crew_testbed.crew_cli import BuzzCli, BuzzCliError
+from harbor_crew_testbed.crew_cli import CrewCli, CrewCliError
 from harbor_crew_testbed.provisioner import (
-    BuzzTrialProvisioner,
+    CrewTrialProvisioner,
     ProvisioningError,
     TestbedConfig,
 )
@@ -29,12 +29,12 @@ pytestmark = pytest.mark.skipif(
 
 
 @pytest.fixture()
-def provisioner() -> BuzzTrialProvisioner:
+def provisioner() -> CrewTrialProvisioner:
     owner_key = os.environ.get("CREW_TESTBED_OWNER_KEY")
     dsn = os.environ.get("CREW_TESTBED_PG_DSN")
     if not owner_key or not dsn:
         pytest.fail("CREW_TESTBED_OWNER_KEY and CREW_TESTBED_PG_DSN are required")
-    return BuzzTrialProvisioner(
+    return CrewTrialProvisioner(
         TestbedConfig(
             relay_http_url=os.environ.get(
                 "CREW_TESTBED_RELAY_HTTP", "http://localhost:3000"
@@ -52,7 +52,7 @@ def provisioner() -> BuzzTrialProvisioner:
     )
 
 
-def cli_for(provisioner: BuzzTrialProvisioner, credential) -> BuzzCli:
+def cli_for(provisioner: CrewTrialProvisioner, credential) -> CrewCli:
     return provisioner._cli_for(credential)
 
 
@@ -95,7 +95,7 @@ def test_create_is_idempotent_and_isolated(provisioner, manifest):
             "messages", "get", "--channel", handle_a.channel_id, "--limit", "10"
         )
         assert foreign_read == [], "cross-trial read must return nothing"
-        with pytest.raises(BuzzCliError, match="private"):
+        with pytest.raises(CrewCliError, match="private"):
             cli_b.run("channels", "join", "--channel", handle_a.channel_id)
 
         # Members can read their own channel.
