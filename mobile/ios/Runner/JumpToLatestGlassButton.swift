@@ -71,7 +71,7 @@ final class JumpToLatestGlassButtonPlatformView: NSObject, FlutterPlatformView {
   ) {
     containerView = UIView(frame: frame)
     channel = FlutterMethodChannel(
-      name: "buzz/jump_to_latest_glass/\(viewId)",
+      name: "crew/jump_to_latest_glass/\(viewId)",
       binaryMessenger: messenger
     )
     super.init()
@@ -181,7 +181,7 @@ final class NavigationGlassButtonPlatformView: NSObject, FlutterPlatformView {
   ) {
     containerView = UIView(frame: frame)
     channel = FlutterMethodChannel(
-      name: "buzz/navigation_glass/\(viewId)",
+      name: "crew/navigation_glass/\(viewId)",
       binaryMessenger: messenger
     )
     super.init()

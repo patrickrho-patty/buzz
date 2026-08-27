@@ -5,7 +5,7 @@
 // without patching tracked files by writing
 // `mobile/ios/Flutter/AppOverrides.xcconfig` containing
 // `BUNDLE_IDENTIFIER = your.app.id` (gitignored).
-BUNDLE_IDENTIFIER = com.crew.crewMobile
+BUNDLE_IDENTIFIER = com.patty.crew
 APP_DISPLAY_NAME = Crew
 
 // Worktree-aware debug identity (gitignored, written by

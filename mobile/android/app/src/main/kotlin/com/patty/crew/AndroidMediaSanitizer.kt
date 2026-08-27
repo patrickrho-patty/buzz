@@ -1,4 +1,4 @@
-package xyz.block.crew.mobile
+package com.patty.crew
 
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets

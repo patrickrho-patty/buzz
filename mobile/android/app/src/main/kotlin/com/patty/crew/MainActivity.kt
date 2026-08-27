@@ -1,4 +1,4 @@
-package xyz.block.crew.mobile
+package com.patty.crew
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

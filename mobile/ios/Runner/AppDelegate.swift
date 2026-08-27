@@ -25,21 +25,21 @@ import UserNotifications
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
     let messenger = engineBridge.applicationRegistrar.messenger()
     mediaUploadChannel = FlutterMethodChannel(
-      name: "buzz/media_upload",
+      name: "crew/media_upload",
       binaryMessenger: messenger
     )
     mediaUploadChannel?.setMethodCallHandler { [weak self] call, result in
       self?.handleMediaUploadMethodCall(call, result: result)
     }
     qrScannerChannel = FlutterMethodChannel(
-      name: "buzz/qr_scanner",
+      name: "crew/qr_scanner",
       binaryMessenger: messenger
     )
     qrScannerChannel?.setMethodCallHandler { call, result in
       Self.handleQrScannerMethodCall(call, result: result)
     }
     inlinePhotoPickerSupportChannel = FlutterMethodChannel(
-      name: "buzz/inline_photo_picker",
+      name: "crew/inline_photo_picker",
       binaryMessenger: messenger
     )
     inlinePhotoPickerSupportChannel?.setMethodCallHandler { call, result in
@@ -55,26 +55,26 @@ import UserNotifications
     }
 
     if let inlinePhotoPickerRegistrar = engineBridge.pluginRegistry.registrar(
-      forPlugin: "BuzzInlinePhotoPicker"
+      forPlugin: "CrewInlinePhotoPicker"
     ) {
       inlinePhotoPickerRegistrar.register(
         InlinePhotoPickerFactory(
           messenger: messenger,
           parentViewController: inlinePhotoPickerRegistrar.viewController
         ),
-        withId: "buzz/inline_photo_picker"
+        withId: "crew/inline_photo_picker"
       )
     }
 
     if let concentricSheetRegistrar = engineBridge.pluginRegistry.registrar(
-      forPlugin: "BuzzConcentricSheetSurface"
+      forPlugin: "CrewConcentricSheetSurface"
     ) {
       concentricSheetRegistrar.register(
         ConcentricSheetSurfaceFactory(),
-        withId: "buzz/concentric_sheet_surface"
+        withId: "crew/concentric_sheet_surface"
       )
       concentricSheetSurfaceChannel = FlutterMethodChannel(
-        name: "buzz/concentric_sheet_surface",
+        name: "crew/concentric_sheet_surface",
         binaryMessenger: messenger
       )
       concentricSheetSurfaceChannel?.setMethodCallHandler { call, result in
@@ -91,34 +91,34 @@ import UserNotifications
     }
 
     if let jumpToLatestGlassRegistrar = engineBridge.pluginRegistry.registrar(
-      forPlugin: "BuzzJumpToLatestGlassButton"
+      forPlugin: "CrewJumpToLatestGlassButton"
     ) {
       jumpToLatestGlassRegistrar.register(
         JumpToLatestGlassButtonFactory(messenger: messenger),
-        withId: "buzz/jump_to_latest_glass"
+        withId: "crew/jump_to_latest_glass"
       )
     }
 
     if let navigationGlassRegistrar = engineBridge.pluginRegistry.registrar(
-      forPlugin: "BuzzNavigationGlassButton"
+      forPlugin: "CrewNavigationGlassButton"
     ) {
       navigationGlassRegistrar.register(
         NavigationGlassButtonFactory(messenger: messenger),
-        withId: "buzz/navigation_glass"
+        withId: "crew/navigation_glass"
       )
     }
 
     if let stickyDateGlassRegistrar = engineBridge.pluginRegistry.registrar(
-      forPlugin: "BuzzStickyDateGlassHeader"
+      forPlugin: "CrewStickyDateGlassHeader"
     ) {
       stickyDateGlassRegistrar.register(
         StickyDateGlassHeaderFactory(messenger: messenger),
-        withId: "buzz/sticky_date_glass"
+        withId: "crew/sticky_date_glass"
       )
     }
 
     let nativeAttachmentRegistrar = engineBridge.pluginRegistry.registrar(
-      forPlugin: "BuzzNativeAttachmentPopover"
+      forPlugin: "CrewNativeAttachmentPopover"
     )
     nativeAttachmentPopoverCoordinator = NativeAttachmentPopoverCoordinator(
       messenger: messenger,
@@ -126,7 +126,7 @@ import UserNotifications
     )
 
     let nativeEmojiPickerRegistrar = engineBridge.pluginRegistry.registrar(
-      forPlugin: "BuzzNativeEmojiPicker"
+      forPlugin: "CrewNativeEmojiPicker"
     )
     nativeEmojiPickerCoordinator = NativeEmojiPickerCoordinator(
       messenger: messenger,
@@ -134,14 +134,14 @@ import UserNotifications
     )
     if #available(iOS 16.0, *),
       let nativeMessageActionsRegistrar = engineBridge.pluginRegistry.registrar(
-        forPlugin: "BuzzNativeMessageActionSurface"
+        forPlugin: "CrewNativeMessageActionSurface"
       ) {
       nativeMessageActionsRegistrar.register(
         NativeMessageActionSurfaceFactory(messenger: messenger),
-        withId: "buzz/native_message_action_surface"
+        withId: "crew/native_message_action_surface"
       )
       nativeMessageActionSurfaceSupportChannel = FlutterMethodChannel(
-        name: "buzz/native_message_action_surface",
+        name: "crew/native_message_action_surface",
         binaryMessenger: messenger
       )
       nativeMessageActionSurfaceSupportChannel?.setMethodCallHandler { call, result in
@@ -542,14 +542,14 @@ import UserNotifications
 
         guard let posterImage else {
           throw lastError ?? NSError(
-            domain: "BuzzVideoPoster",
+            domain: "CrewVideoPoster",
             code: 1,
             userInfo: [NSLocalizedDescriptionKey: "Unable to decode a video frame."]
           )
         }
         guard let jpegData = try MediaSanitizer.encodeJpeg(UIImage(cgImage: posterImage)) else {
           throw NSError(
-            domain: "BuzzVideoPoster",
+            domain: "CrewVideoPoster",
             code: 2,
             userInfo: [NSLocalizedDescriptionKey: "Unable to encode video poster."]
           )
@@ -635,7 +635,7 @@ import UserNotifications
 
   private static func invalidMp4BoxError() -> NSError {
     NSError(
-      domain: "BuzzVideoTranscode",
+      domain: "CrewVideoTranscode",
       code: 1,
       userInfo: [NSLocalizedDescriptionKey: "Invalid MP4 box structure."]
     )

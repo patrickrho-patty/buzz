@@ -1,4 +1,4 @@
-package xyz.block.crew.mobile
+package com.patty.crew
 
 import kotlin.test.Test
 import kotlin.test.assertContentEquals

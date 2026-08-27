@@ -1,0 +1,18 @@
+# Patty staging (forge) values — mirrors pin's stg ingress-patch pattern.
+# Deploy: helm upgrade crew-push-gateway-staging ./deploy/charts/crew-push-gateway \
+#   -f deploy/charts/crew-push-gateway/values-staging.yaml
+image:
+  tag: ""
+  digest: ""
+appAttestAppId: ""
+publicDeliveryUrl: https://forge.push.patty.io/v1/deliveries/apns
+enabledProfiles: crew-ios-production
+httpRoute:
+  enabled: true
+  parentRefs: []
+  hostnames:
+    - forge.push.patty.io
+networkPolicy:
+  apnsEgressCidrs:
+    - 0.0.0.0/0
+  postgresEgressCidrs: []

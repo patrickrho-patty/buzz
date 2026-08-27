@@ -28,7 +28,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.crew.deeplink</string>
+			<string>com.patty.crew.deeplink</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>crew</string>

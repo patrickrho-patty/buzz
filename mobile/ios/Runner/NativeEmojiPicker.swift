@@ -19,7 +19,7 @@ final class NativeEmojiPickerCoordinator: NSObject,
     parentViewController: UIViewController?
   ) {
     channel = FlutterMethodChannel(
-      name: "buzz/native_emoji_picker",
+      name: "crew/native_emoji_picker",
       binaryMessenger: messenger
     )
     self.parentViewController = parentViewController

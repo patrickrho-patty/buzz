@@ -29,7 +29,8 @@ class CustomEmoji {
 const int kindEmojiSet = 30030;
 
 /// d-tag for a member's own custom emoji set.
-const String customEmojiSetDTag = 'buzz:custom-emoji';
+const String customEmojiSetDTag = 'crew:custom-emoji';
+const String legacyCustomEmojiSetDTag = 'buzz:custom-emoji';
 
 final RegExp _shortcodeRe = RegExp(r'^[a-z0-9_-]+$');
 

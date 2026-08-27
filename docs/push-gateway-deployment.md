@@ -1,10 +1,10 @@
 # Crew Push Gateway deployment
 
-`crew-push-gateway` is the standalone public APNs last hop intended for `push.buzz.xyz`. Build it with `Dockerfile.push-gateway`; do not run it in the relay image or give relays APNs credentials.
+`crew-push-gateway` is the standalone public APNs last hop intended for `push.patty.io`. Build it with `Dockerfile.push-gateway`; do not run it in the relay image or give relays APNs credentials.
 
 ## Network and health
 
-- Public listener: `CREW_PUSH_BIND_ADDR` (default `0.0.0.0:8080`). Route `https://push.buzz.xyz` to this port.
+- Public listener: `CREW_PUSH_BIND_ADDR` (default `0.0.0.0:8080`). Route `https://push.patty.io` to this port.
 - Private health listener: `CREW_PUSH_HEALTH_ADDR` (default `0.0.0.0:8081`). Probe `/_liveness` and `/_readiness`; do not expose this port publicly. The chart has no pod-ingress allowance for 8081; Kubernetes node/kubelet-origin probe traffic is exempt from NetworkPolicy. Add a narrowly selected monitoring source only if the target CNI requires pod-origin health scraping.
 - Readiness fails when PostgreSQL authority is unavailable. Graceful shutdown stops accepting new requests before draining in-flight APNs calls.
 
@@ -13,7 +13,7 @@
 | Variable | Purpose |
 |---|---|
 | `DATABASE_URL` | PostgreSQL authority/admission store. Runtime credentials need DML on the six gateway tables, not DDL. |
-| `CREW_PUSH_PUBLIC_DELIVERY_URL` | Exact externally signed URL, normally `https://push.buzz.xyz/v1/deliveries/apns`. |
+| `CREW_PUSH_PUBLIC_DELIVERY_URL` | Exact externally signed URL, normally `https://push.patty.io/v1/deliveries/apns`. |
 | `CREW_PUSH_MAX_GRANT_LIFETIME_SECONDS` | Maximum delegation capability lifetime (`1..=31536000`). |
 | `CREW_PUSH_MAX_INSTALLATION_LIFETIME_SECONDS` | Maximum encrypted-token installation lifetime (default 90 days, max one year). Clients must renew before expiry. |
 | `CREW_PUSH_ENABLED_PROFILES` | Comma-separated `crew-ios-production` and/or `crew-ios-sandbox`. |
@@ -73,7 +73,7 @@ Alerting rules ship as an opt-in prometheus-operator `PrometheusRule` (`promethe
 ## Relay configuration
 
 Relays default `CREW_PUSH_GATEWAY_DELIVERY_URL` to the exact public delivery URL
-`https://push.buzz.xyz/v1/deliveries/apns`. Operators can override it with
+`https://push.patty.io/v1/deliveries/apns`. Operators can override it with
 another exact HTTPS `/v1/deliveries/apns` URL, or explicitly disable NIP-PL push
 by setting the variable to an empty string. When enabled, the relay advertises
 its host-scoped NIP-PL descriptor in NIP-11 and starts the matcher and delivery

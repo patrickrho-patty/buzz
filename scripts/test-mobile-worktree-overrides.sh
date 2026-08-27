@@ -64,7 +64,7 @@ out="$("$wt/scripts/mobile-worktree-overrides.sh")"
 ios="$wt/mobile/ios/Flutter/WorktreeOverrides.xcconfig"
 android="$wt/mobile/android/worktree.properties"
 [[ -f "$ios" && -f "$android" ]] || fail "worktree must write both override files"
-grep -q '^BUNDLE_IDENTIFIER = com\.crew\.buzzMobile\.feature-work-1$' "$ios" \
+grep -q '^BUNDLE_IDENTIFIER = com\.patty\.crew\.feature-work-1$' "$ios" \
   && pass "iOS bundle identifier keys to the sanitized worktree directory name" \
   || fail "iOS bundle identifier must key to the worktree dir, got: $(cat "$ios")"
 grep -q '^APP_DISPLAY_NAME = Crew (Fix_Thing-2)$' "$ios" \
@@ -83,7 +83,7 @@ printf '%s' "$out" | grep -q 'Worktree Feature_Work-1' \
 # ── Branch switch in the same worktree: identity stable, label follows ───────
 git -C "$wt" checkout -q -b "another/branch-name"
 "$wt/scripts/mobile-worktree-overrides.sh" > /dev/null
-grep -q '^BUNDLE_IDENTIFIER = com\.crew\.buzzMobile\.feature-work-1$' "$ios" \
+grep -q '^BUNDLE_IDENTIFIER = com\.patty\.crew\.feature-work-1$' "$ios" \
   && grep -q '^applicationIdSuffix=\.feature_work_1$' "$android" \
   && pass "branch switch keeps the install identity stable (per worktree)" \
   || fail "install identity must not change on branch switch"
@@ -140,9 +140,9 @@ fi
 grep -q 'WorktreeOverrides' "$release_xcconfig" \
   && fail "Release.xcconfig must not include WorktreeOverrides.xcconfig" \
   || pass "Release.xcconfig does not include WorktreeOverrides"
-grep -q '^BUNDLE_IDENTIFIER = com\.crew\.buzzMobile$' "$release_xcconfig" \
+grep -q '^BUNDLE_IDENTIFIER = com\.patty\.crew$' "$release_xcconfig" \
   && pass "Release.xcconfig keeps the production bundle identifier" \
-  || fail "Release.xcconfig must keep BUNDLE_IDENTIFIER = com.crew.buzzMobile"
+  || fail "Release.xcconfig must keep BUNDLE_IDENTIFIER = com.patty.crew"
 grep -q '^APP_DISPLAY_NAME = Crew$' "$release_xcconfig" \
   && pass "Release.xcconfig keeps the production display name" \
   || fail "Release.xcconfig must keep APP_DISPLAY_NAME = Crew"
@@ -218,9 +218,9 @@ case "$1 $2" in
 esac
 if [[ "$1" == "devices" ]]; then exit 0; fi
 if [[ "$3 $4 $5" == "shell pm list" ]]; then
-  printf 'package:xyz.block.crew.mobile\n'
-  printf 'package:xyz.block.crew.mobile.feature_work_1\n'
-  printf 'package:xyz.block.crew.mobile.w_2fast\n'
+  printf 'package:com.patty.crew\n'
+  printf 'package:com.patty.crew.feature_work_1\n'
+  printf 'package:com.patty.crew.w_2fast\n'
   printf 'package:com.android.settings\n'
   exit 0
 fi

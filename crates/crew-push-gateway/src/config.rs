@@ -102,7 +102,7 @@ impl Config {
             .parse::<url::Url>()
             .map_err(|_| ConfigError::Invalid("CREW_PUSH_PUBLIC_DELIVERY_URL"))?;
         if public_delivery_url.scheme() != "https"
-            || !matches!(public_delivery_url.host_str(), Some("push.buzz.xyz") | Some("push.crew.xyz"))
+            || !matches!(public_delivery_url.host_str(), Some("push.patty.io"))
             || public_delivery_url.port().is_some()
             || public_delivery_url.path() != "/v1/deliveries/apns"
             || public_delivery_url.query().is_some()
@@ -210,7 +210,7 @@ mod tests {
             ),
             (
                 "CREW_PUSH_PUBLIC_DELIVERY_URL".into(),
-                "https://push.buzz.xyz/v1/deliveries/apns".into(),
+                "https://push.patty.io/v1/deliveries/apns".into(),
             ),
             (
                 "CREW_PUSH_MAX_GRANT_LIFETIME_SECONDS".into(),

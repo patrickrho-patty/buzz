@@ -6,7 +6,7 @@ trap 'rm -f "$out" "$production_out"' EXIT
 # Defaults must lint and render without parameter injection.
 helm lint deploy/charts/crew-push-gateway >/dev/null
 helm template push deploy/charts/crew-push-gateway >"$out"
-# Production values must attach push.buzz.xyz to an explicit Gateway.
+# Production values must attach push.patty.io to an explicit Gateway.
 production_args=(
   -f deploy/charts/crew-push-gateway/values-production.yaml
   --set 'image.digest=sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
@@ -70,7 +70,7 @@ assert ingress_ports=={8080}, ingress_ports
 production=list(yaml.safe_load_all(open(sys.argv[2])))
 route=next(x for x in production if x and x.get('kind')=='HTTPRoute')
 assert route['spec']['parentRefs']
-assert 'push.buzz.xyz' in route['spec']['hostnames']
+assert 'push.patty.io' in route['spec']['hostnames']
 PY
 
 # Enabling a route without a Gateway attachment must fail schema validation.
