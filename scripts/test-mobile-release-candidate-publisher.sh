@@ -17,7 +17,7 @@ record() {
 }
 
 case "${1:-}:${2:-}" in
-  api:repos/block/buzz/rulesets/14378754)
+  api:repos/block/crew/rulesets/14378754)
     case "$*" in
       *'.enforcement'*) printf '%s\n' "${GH_TAG_RULESET_STATE:-active}" ;;
       *'.current_user_can_bypass'*) printf '%s\n' "${GH_CURRENT_USER_CAN_BYPASS-always}" ;;
@@ -27,33 +27,33 @@ case "${1:-}:${2:-}" in
       *) exit 2 ;;
     esac
     ;;
-  api:repos/block/buzz/git/ref/heads/main) printf '%s\n' "$GH_TARGET_SHA" ;;
-  api:repos/block/buzz/commits/*) printf '%s\n' "$GH_TARGET_SHA" ;;
+  api:repos/block/crew/git/ref/heads/main) printf '%s\n' "$GH_TARGET_SHA" ;;
+  api:repos/block/crew/commits/*) printf '%s\n' "$GH_TARGET_SHA" ;;
   api:--paginate)
-    [[ "$3" == "repos/block/buzz/git/matching-refs/tags/mobile-v1.2.3-rc." ]]
+    [[ "$3" == "repos/block/crew/git/matching-refs/tags/mobile-v1.2.3-rc." ]]
     printf '%s' "${GH_EXISTING_REFS:-}"
     ;;
   api:--method)
     endpoint="$4"
     case "$endpoint" in
-      repos/block/buzz/git/tags)
+      repos/block/crew/git/tags)
         record "$*"
         printf '%s\n' "$GH_TAG_OBJECT_SHA"
         ;;
-      repos/block/buzz/git/refs)
+      repos/block/crew/git/refs)
         record "$*"
         ;;
       *) exit 2 ;;
     esac
     ;;
-  api:repos/block/buzz/git/ref/tags/mobile-v1.2.3-rc.*)
+  api:repos/block/crew/git/ref/tags/mobile-v1.2.3-rc.*)
     if [[ "$*" == *'.object.type'* ]]; then
       printf '%s\n' "${GH_PUBLISHED_REF_TYPE:-tag}"
     else
       printf '%s\n' "${GH_PUBLISHED_REF_SHA:-$GH_TAG_OBJECT_SHA}"
     fi
     ;;
-  api:repos/block/buzz/git/tags/*)
+  api:repos/block/crew/git/tags/*)
     if [[ "$*" == *'.object.type'* ]]; then
       printf '%s\n' "${GH_ANNOTATED_TARGET_TYPE:-commit}"
     else

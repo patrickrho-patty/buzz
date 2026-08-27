@@ -191,7 +191,7 @@ an exact RC tag for the platform build being cut. For desktop, start
 [Release Desktop](https://buildkite.com/runway/sprout-releases) and enter the
 exact public source tag as `desktop_ref=desktop-v<version>`; a generic
 `v<version>` tag is intentionally rejected. See the
-[crew-releases README](https://github.com/squareup/squareup/buzz-releases#cutting-a-release)
+[crew-releases README](https://github.com/squareup/squareup/crew-releases#cutting-a-release)
 for the rest of the private pipeline contract.
 
 ---

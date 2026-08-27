@@ -7,9 +7,9 @@ use super::*;
 /// may report either form depending on how the binary was built.
 pub(crate) const KNOWN_AGENT_BINARIES: &[&str] = &[
     "crew-acp",
-    "buzz_acp",
+    "crew_acp",
     "crew-agent",
-    "buzz_agent",
+    "crew_agent",
     "claude-agent-acp",
     "claude_agent_acp",
     "claude-code-acp",
@@ -21,7 +21,7 @@ pub(crate) const KNOWN_AGENT_BINARIES: &[&str] = &[
     // git-credential-nostr, git-sign-nostr) are short-lived per-tool-call
     // invocations — not listed here.
     "crew-dev-mcp",
-    "buzz_dev_mcp",
+    "crew_dev_mcp",
 ];
 
 /// Script interpreters that may host managed agent wrappers (e.g. npm shims).

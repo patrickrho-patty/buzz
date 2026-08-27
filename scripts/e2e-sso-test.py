@@ -138,8 +138,8 @@ def main():
     # 6c. relay membership row
     step(6, "verify relay_members oidc row")
     kubectl_cmd = [
-        "kubectl", "-n", "crew", "exec", "griddle-postgresql-0", "--",
-        "psql", "-U", "buzz", "-d", "buzz", "-t", "-A", "-c",
+        "kubectl", "-n", "crew", "exec", "crew-postgresql-0", "--",
+        "psql", "-U", "crew", "-d", "crew", "-t", "-A", "-c",
         f"SELECT added_by FROM relay_members WHERE pubkey='{result['pubkey']}';",
     ]
     out = subprocess.run(kubectl_cmd, capture_output=True, text=True).stdout.strip()
@@ -148,8 +148,8 @@ def main():
 
     # 7. cleanup membership row so the test is repeatable
     subprocess.run([
-        "kubectl", "-n", "crew", "exec", "griddle-postgresql-0", "--",
-        "psql", "-U", "buzz", "-d", "buzz", "-t", "-A", "-c",
+        "kubectl", "-n", "crew", "exec", "crew-postgresql-0", "--",
+        "psql", "-U", "crew", "-d", "crew", "-t", "-A", "-c",
         f"DELETE FROM relay_members WHERE pubkey='{result['pubkey']}' AND added_by='oidc';",
     ], capture_output=True, text=True)
     step(7, "cleanup done (oidc row removed; Keycloak attrs kept for re-login identity)")

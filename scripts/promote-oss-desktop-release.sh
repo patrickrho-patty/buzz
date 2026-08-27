@@ -9,7 +9,7 @@ ROLLING_TAG="buzz-desktop-latest"
 EXPECTED_PLATFORMS='["darwin-aarch64","darwin-x86_64","linux-x86_64","windows-x86_64"]'
 
 fail() { echo "::error::$*" >&2; exit 1; }
-[[ "$REPOSITORY" == "block/buzz" ]] || fail "promotion is restricted to block/buzz"
+[[ "$REPOSITORY" == "block/crew" ]] || fail "promotion is restricted to block/crew"
 [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "version must be stable semver X.Y.Z"
 command -v gh >/dev/null || fail "gh is required"
 command -v jq >/dev/null || fail "jq is required"

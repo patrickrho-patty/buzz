@@ -1,4 +1,4 @@
-# Buzz — development task runner
+# Crew — development task runner
 
 set dotenv-load := true
 
@@ -64,8 +64,8 @@ hooks:
     git config --local core.hooksPath "$HOOKS_DIR"
     lefthook install --force
 
-# Wipe development state and recreate a clean environment. Installed Buzz is preserved.
-[confirm("This will DELETE all development data and preserve installed Buzz. Continue? (y/N)")]
+# Wipe development state and recreate a clean environment. Installed Crew is preserved.
+[confirm("This will DELETE all development data and preserve installed Crew. Continue? (y/N)")]
 reset:
     ./scripts/dev-reset.sh --yes
 
@@ -206,7 +206,7 @@ _ensure-sidecar-stubs:
     set -euo pipefail
     TARGET=$(rustc -vV | sed -n 's|host: ||p')
     mkdir -p desktop/src-tauri/binaries
-    SIDECARS=(crew-acp crew-agent crew-dev-mcp git-credential-nostr buzz)
+    SIDECARS=(crew-acp crew-agent crew-dev-mcp git-credential-nostr crew)
     if [[ "$TARGET" != *windows* ]]; then
         SIDECARS+=(crew-backend-kubernetes)
     fi
@@ -308,7 +308,7 @@ desktop-release-build target="aarch64-apple-darwin":
     fi
     touch "desktop/src-tauri/binaries/crew-dev-mcp-$TARGET"
     touch "desktop/src-tauri/binaries/git-credential-nostr-$TARGET"
-    touch "desktop/src-tauri/binaries/buzz-$TARGET"
+    touch "desktop/src-tauri/binaries/crew-$TARGET"
     pnpm install
     cd {{desktop_dir}} && pnpm tauri build --features mesh-llm --target {{target}}
 
@@ -399,7 +399,7 @@ test-integration:
 regen-model-corpus:
     cargo test -p crew-agent --lib model_capabilities::tests::regen_corpus_file -- --ignored --exact
 
-# Buzz shared compute e2e: current desktop discovery/admission logic and
+# Crew shared compute e2e: current desktop discovery/admission logic and
 # Playwright UI coverage.
 mesh-e2e:
     cargo test --manifest-path {{desktop_dir}}/src-tauri/Cargo.toml --features mesh-llm mesh_llm --lib
@@ -408,7 +408,7 @@ mesh-e2e:
 # Reset only development state, seed deterministic local channels, and launch
 # the mesh-enabled desktop with the repository's public Tyler test identity.
 # This is for local verification only; never point this identity at staging/prod.
-[confirm("This will reset development data, preserve installed Buzz, then launch a seeded mesh dev app. Continue? (y/N)")]
+[confirm("This will reset development data, preserve installed Crew, then launch a seeded mesh dev app. Continue? (y/N)")]
 mesh-dev-fresh:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -430,7 +430,7 @@ mesh-e2e-hardware:
     cargo run -p crew-relay --example mesh_serve_client_smoke
 
 # Three isolated node processes: trusted member joins and infers; stranger is rejected.
-# Uses temp homes and explicit mesh owner keystores. Never reads the Buzz Keychain.
+# Uses temp homes and explicit mesh owner keystores. Never reads the Crew Keychain.
 mesh-e2e-admission:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -572,7 +572,7 @@ desktop-standalone *ARGS: _ensure-sidecar-stubs
     cargo build -p crew-acp -p crew-agent -p crew-backend-kubernetes -p crew-dev-mcp -p crew-cli -p git-credential-nostr
     TARGET=$(rustc -vV | sed -n 's|host: ||p')
     TARGET_DIR=$(cargo metadata --format-version 1 --no-deps | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).target_directory")
-    for bin in crew-acp crew-agent crew-backend-kubernetes crew-dev-mcp git-credential-nostr buzz; do
+    for bin in crew-acp crew-agent crew-backend-kubernetes crew-dev-mcp git-credential-nostr crew; do
         cp "${TARGET_DIR}/debug/${bin}" "desktop/src-tauri/binaries/${bin}-${TARGET}"
         chmod +x "desktop/src-tauri/binaries/${bin}-${TARGET}"
     done
@@ -584,7 +584,7 @@ desktop-standalone *ARGS: _ensure-sidecar-stubs
     fi
     source ../scripts/instance-env.sh
     INSTANCE_ID=$(node -e "console.log(JSON.parse(process.env.CREW_TAURI_CONFIG).identifier)")
-    export CREW_DEV_KEYRING_SERVICE="buzz-desktop-dev.${CREW_INSTANCE_SLUG:-main}"
+    export CREW_DEV_KEYRING_SERVICE="crew-desktop-dev.${CREW_INSTANCE_SLUG:-main}"
     if [[ -n "{{fresh}}" ]]; then
         ../scripts/reset-desktop-standalone-state.sh "$INSTANCE_ID" "$CREW_DEV_KEYRING_SERVICE"
     fi
@@ -604,12 +604,12 @@ staging *ARGS: bootstrap _ensure-sidecar-stubs
         FEATURES=(--features mesh-llm)
     fi
     # Replace 0-byte sidecar stubs with real binaries so tauri dev picks them up.
-    # buzz: the CLI sidecar. crew-backend-kubernetes: provider discovery scans the
-    # exe dir for executable buzz-backend-* files, so the non-executable stub that
+    # crew: the CLI sidecar. crew-backend-kubernetes: provider discovery scans the
+    # exe dir for executable crew-backend-* files, so the non-executable stub that
     # tauri dev copies next to the exe would hide the provider from "Run on".
     TARGET=$(rustc -vV | sed -n 's|host: ||p')
     TARGET_DIR=$(cargo metadata --format-version 1 --no-deps | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).target_directory")
-    STAGING_SIDECARS=(buzz)
+    STAGING_SIDECARS=(crew)
     if [[ "$TARGET" != *windows* ]]; then
         STAGING_SIDECARS+=(crew-backend-kubernetes)
     fi
@@ -639,12 +639,12 @@ production *ARGS: bootstrap _ensure-sidecar-stubs
         FEATURES=(--features mesh-llm)
     fi
     # Replace 0-byte sidecar stubs with real binaries so tauri dev picks them up.
-    # buzz: the CLI sidecar. crew-backend-kubernetes: provider discovery scans the
-    # exe dir for executable buzz-backend-* files, so the non-executable stub that
+    # crew: the CLI sidecar. crew-backend-kubernetes: provider discovery scans the
+    # exe dir for executable crew-backend-* files, so the non-executable stub that
     # tauri dev copies next to the exe would hide the provider from "Run on".
     TARGET=$(rustc -vV | sed -n 's|host: ||p')
     TARGET_DIR=$(cargo metadata --format-version 1 --no-deps | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).target_directory")
-    PRODUCTION_SIDECARS=(buzz)
+    PRODUCTION_SIDECARS=(crew)
     if [[ "$TARGET" != *windows* ]]; then
         PRODUCTION_SIDECARS+=(crew-backend-kubernetes)
     fi
@@ -653,7 +653,7 @@ production *ARGS: bootstrap _ensure-sidecar-stubs
         chmod +x "desktop/src-tauri/binaries/${bin}-${TARGET}"
     done
     cd {{desktop_dir}}
-    export CREW_RELAY_URL="wss://buzz.block.builderlab.xyz"
+    export CREW_RELAY_URL="wss://crew.block.builderlab.xyz"
     source ../scripts/instance-env.sh
     # Ctrl+C kills the Tauri app before its in-process sweep finishes, leaking
     # agent workers. Reap this instance's agents on exit as a backstop.
@@ -753,7 +753,7 @@ mobile-dev:
     unset GIT_DIR GIT_WORK_TREE
     flutter run
 
-# Uninstall stale worktree-suffixed Buzz debug installs (production apps kept)
+# Uninstall stale worktree-suffixed Crew debug installs (production apps kept)
 mobile-clean:
     ./scripts/mobile-worktree-clean.sh
 
@@ -821,7 +821,7 @@ bump-desktop-version version:
     "
     # Regenerate lockfiles
     pnpm install --lockfile-only
-    cargo update -p buzz-desktop --manifest-path desktop/src-tauri/Cargo.toml
+    cargo update -p crew-desktop --manifest-path desktop/src-tauri/Cargo.toml
     echo "Bumped desktop manifests to {{ version }} and regenerated lockfiles"
 
 # Bump the relay crate version and regenerate the lockfile
@@ -879,7 +879,7 @@ _release-pr lane version:
             CHANGELOG="CHANGELOG.md"
             ADD_FILES=(desktop/package.json desktop/src-tauri/tauri.conf.json desktop/src-tauri/Cargo.toml desktop/src-tauri/Cargo.lock pnpm-lock.yaml CHANGELOG.md)
             LOG_PATHS=(desktop/ crates/crew-core/ crates/crew-persona/ crates/crew-sdk/ crates/crew-agent/)
-            ARTIFACT="Buzz Desktop" ;;
+            ARTIFACT="Crew Desktop" ;;
         relay)
             BRANCH_PREFIX="relay-release"
             TAG_FETCH='relay-v*'
@@ -889,7 +889,7 @@ _release-pr lane version:
             CHANGELOG="crates/crew-relay/CHANGELOG.md"
             ADD_FILES=(crates/crew-relay/Cargo.toml Cargo.lock crates/crew-relay/CHANGELOG.md)
             LOG_PATHS=(crates/crew-relay/ crates/crew-core/ crates/crew-db/ crates/crew-auth/ crates/crew-pubsub/ crates/crew-search/ crates/crew-audit/ crates/crew-media/ crates/crew-sdk/ crates/crew-workflow/ crates/crew-conformance/ migrations/)
-            ARTIFACT="Buzz Relay" ;;
+            ARTIFACT="Crew Relay" ;;
         *)
             echo "Error: unknown release lane '{{ lane }}'"
             exit 1 ;;
@@ -1011,7 +1011,7 @@ _release-pr lane version:
 
 # ─── Agent Harness ────────────────────────────────────────────────────────────
 
-# Run a goose agent connected to a Buzz relay (foreground)
+# Run a goose agent connected to a Crew relay (foreground)
 goose relay="ws://localhost:3000" agents="1" heartbeat="0" prompt="" key="$CREW_PRIVATE_KEY":
     #!/usr/bin/env bash
     set -euo pipefail
@@ -1030,7 +1030,7 @@ goose-bg relay="ws://localhost:3000" agents="1" heartbeat="0" prompt="" key="$CR
 
 # ─── Benchmarking ─────────────────────────────────────────────────────────────
 
-# Run the Buzz orchestra benchmark — leaderboard-eligible by default (TB 2.1, k=5, Sonnet+Haiku). Stands up its own Docker stack; --gui opens a live spectator desktop app; other flags pass to benchmark.py (--dataset/--path, --include-task, --attempts, --manifest, --dry-run, ...)
+# Run the Crew orchestra benchmark — leaderboard-eligible by default (TB 2.1, k=5, Sonnet+Haiku). Stands up its own Docker stack; --gui opens a live spectator desktop app; other flags pass to benchmark.py (--dataset/--path, --include-task, --attempts, --manifest, --dry-run, ...)
 benchmark *ARGS:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -1057,12 +1057,12 @@ benchmark-check:
             uvx "ruff@$ruff_pin" format --check .
         )
     done
-    # The task verifiers live in the sibling benchmarks/buzz-dataset, so they
+    # The task verifiers live in the sibling benchmarks/crew-dataset, so they
     # need the harness config passed explicitly to stay linted.
-    echo "── buzz-dataset (ruff $ruff_pin)"
-    uvx "ruff@$ruff_pin" check --config pyproject.toml ../buzz-dataset
-    uvx "ruff@$ruff_pin" format --check --config pyproject.toml ../buzz-dataset
+    echo "── crew-dataset (ruff $ruff_pin)"
+    uvx "ruff@$ruff_pin" check --config pyproject.toml ../crew-dataset
+    uvx "ruff@$ruff_pin" format --check --config pyproject.toml ../crew-dataset
 
 # Stop the benchmark Docker stack (state and channels are kept)
 benchmark-down:
-    docker compose --project-name buzz-benchmark down
+    docker compose --project-name crew-benchmark down

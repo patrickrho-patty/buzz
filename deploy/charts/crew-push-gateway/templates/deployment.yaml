@@ -33,8 +33,8 @@ spec:
             - { name: CREW_PUSH_MAX_GRANT_LIFETIME_SECONDS, value: {{ .Values.maxGrantLifetimeSeconds | quote }} }
             - { name: CREW_PUSH_ENABLED_PROFILES, value: {{ .Values.enabledProfiles | quote }} }
             - { name: CREW_PUSH_APP_ATTEST_APP_ID, value: {{ .Values.appAttestAppId | quote }} }
-            - { name: CREW_PUSH_APP_ATTEST_ROOT_CERT_PATH, value: /run/buzz/app-attest/root.pem }
-            - { name: CREW_PUSH_APNS_KEY_PATH, value: /run/buzz/apns/provider.p8 }
+            - { name: CREW_PUSH_APP_ATTEST_ROOT_CERT_PATH, value: /run/crew/app-attest/root.pem }
+            - { name: CREW_PUSH_APNS_KEY_PATH, value: /run/crew/apns/provider.p8 }
             {{- range $name := list "DATABASE_URL" "CREW_PUSH_APNS_KEY_ID" "CREW_PUSH_APNS_TEAM_ID" "CREW_PUSH_APNS_TOPIC" "CREW_PUSH_GRANT_KEYS" "CREW_PUSH_TOKEN_KEYS" }}
             - name: {{ $name }}
               valueFrom: { secretKeyRef: { name: {{ $.Values.existingSecret }}, key: {{ $name }} } }

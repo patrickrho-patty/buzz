@@ -339,7 +339,7 @@ pub fn cli_link_name(is_dev: bool) -> &'static str {
 /// for human Terminal use; agents find the CLI via PATH augmentation.
 #[cfg(unix)]
 pub fn ensure_cli_symlink(exe_parent: &Path, is_dev: bool) -> Result<(), String> {
-    let crew_bin = exe_parent.join("buzz");
+    let crew_bin = exe_parent.join("crew");
     if !crew_bin.exists() {
         return Ok(()); // CLI not bundled (e.g., dev builds without sidecars).
     }

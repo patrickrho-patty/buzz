@@ -3,7 +3,7 @@ schema_version = "1.3"
 [task]
 name = "crew-native/ambiguous-user-mention"
 description = "Resolve two identical display names by profile evidence and notify only the intended pubkey."
-authors = [{ name = "Buzz" }]
+authors = [{ name = "Crew" }]
 keywords = ["crew-native", "mentions", "identity", "ambiguity"]
 
 [metadata]

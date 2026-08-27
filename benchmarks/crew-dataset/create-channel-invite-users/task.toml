@@ -3,7 +3,7 @@ schema_version = "1.3"
 [task]
 name = "crew-native/create-channel-invite-users"
 description = "Create a temporary PR channel with an exact subset of users and bots."
-authors = [{ name = "Buzz" }]
+authors = [{ name = "Crew" }]
 keywords = ["crew-native", "channels", "membership", "cli"]
 
 [metadata]

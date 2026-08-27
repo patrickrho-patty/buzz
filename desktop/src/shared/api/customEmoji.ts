@@ -26,7 +26,9 @@ import type { CustomEmoji } from "@/shared/lib/remarkCustomEmoji";
 export const KIND_EMOJI_SET = 30030;
 
 /** d-tag for a member's own custom emoji set. */
-export const CUSTOM_EMOJI_SET_D_TAG = "buzz:custom-emoji";
+export const CUSTOM_EMOJI_SET_D_TAG = "crew:custom-emoji";
+/** Legacy pre-fork spelling; readers accept both. */
+export const LEGACY_CUSTOM_EMOJI_SET_D_TAG = "buzz:custom-emoji";
 
 /**
  * Resolve the image URL for a reaction whose content is a custom-emoji
@@ -140,7 +142,7 @@ export function unionCustomEmoji(
 export async function fetchCommunityEmojiEvents(): Promise<RelayEvent[]> {
   return relayClient.fetchEvents({
     kinds: [KIND_EMOJI_SET],
-    "#d": [CUSTOM_EMOJI_SET_D_TAG],
+    "#d": [CUSTOM_EMOJI_SET_D_TAG, LEGACY_CUSTOM_EMOJI_SET_D_TAG],
     // One 30030 per member; a community has far fewer than this. The relay
     // already keeps only the latest per (pubkey, d_tag), so this is the member
     // count, not history depth.
@@ -160,7 +162,7 @@ export async function fetchOwnEmoji(): Promise<CustomEmoji[]> {
   if (!me) return [];
   const events = await relayClient.fetchEvents({
     kinds: [KIND_EMOJI_SET],
-    "#d": [CUSTOM_EMOJI_SET_D_TAG],
+    "#d": [CUSTOM_EMOJI_SET_D_TAG, LEGACY_CUSTOM_EMOJI_SET_D_TAG],
     authors: [me],
     limit: 1,
   });

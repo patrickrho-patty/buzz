@@ -124,8 +124,8 @@ FROM debian:${DEBIAN_VERSION}-slim AS runtime-base
 # OCI annotations: required for GHCR to auto-link the image to this repo and
 # inherit its visibility. org.opencontainers.image.source is the load-bearing
 # one — without it GHCR keeps the image private even when the repo is public.
-LABEL org.opencontainers.image.title="Griddle" \
-      org.opencontainers.image.description="WebSocket relay server for the Griddle communications platform" \
+LABEL org.opencontainers.image.title="Crew" \
+      org.opencontainers.image.description="WebSocket relay server for the Crew communications platform" \
       org.opencontainers.image.source="https://github.com/block/buzz" \
       org.opencontainers.image.url="https://github.com/block/buzz" \
       org.opencontainers.image.documentation="https://github.com/block/buzz#readme" \
@@ -138,26 +138,26 @@ RUN apt-get update \
         git \
         openssl \
     && rm -rf /var/lib/apt/lists/* \
-    && groupadd --system --gid 1000 buzz \
-    && useradd  --system --uid 1000 --gid 1000 --home-dir /var/lib/buzz \
+    && groupadd --system --gid 1000 crew \
+    && useradd  --system --uid 1000 --gid 1000 --home-dir /var/lib/crew \
                 --create-home --shell /usr/sbin/nologin crew
 
-COPY --from=web-builder /build/web/dist                 /srv/buzz/web
-COPY --from=web-builder /build/admin-web/dist           /srv/buzz/admin-web
+COPY --from=web-builder /build/web/dist                 /srv/crew/web
+COPY --from=web-builder /build/admin-web/dist           /srv/crew/admin-web
 
 # The invite landing page is always served from the bundled web UI. Repository
 # browser routes require the separate CREW_SERVE_GIT_WEB_GUI=true opt-in. The
 # admin bundle is inert until CREW_ADMIN_HOST is configured.
-ENV CREW_WEB_DIR=/srv/buzz/web \
-    CREW_ADMIN_WEB_DIR=/srv/buzz/admin-web
+ENV CREW_WEB_DIR=/srv/crew/web \
+    CREW_ADMIN_WEB_DIR=/srv/crew/admin-web
 
 # 3000: app (WS + REST)  ·  8080: /_liveness, /_readiness  ·  9102: /metrics
 EXPOSE 3000 8080 9102
 
-# deploy/compose mounts a volume here; pre-created so it inherits buzz:buzz.
-RUN mkdir -p /data/git && chown buzz:buzz /data/git
+# deploy/compose mounts a volume here; pre-created so it inherits crew:crew.
+RUN mkdir -p /data/git && chown crew:crew /data/git
 
-USER buzz:crew
+USER crew:crew
 WORKDIR /var/lib/crew
 
 ENTRYPOINT ["/usr/local/bin/crew-relay"]

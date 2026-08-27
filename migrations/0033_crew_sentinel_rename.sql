@@ -1,8 +1,8 @@
--- Buzz → Crew sentinel rename (tier 2 of the product rename).
+-- Crew → Crew sentinel rename (tier 2 of the product rename).
 --
 -- Renames the session-GUC namespace and advisory-lock key literals shared
 -- between the relay binary and the database trigger layer:
---   * session GUCs   buzz.*                     -> crew.*
+--   * session GUCs   crew.*                     -> crew.*
 --   * lock-key salts 'buzz_channel_ttl:'        -> 'crew_channel_ttl:'
 --                    'buzz_push_gate:'          -> 'crew_push_gate:'
 --                    'buzz_channel_membership:' -> 'crew_channel_membership:'

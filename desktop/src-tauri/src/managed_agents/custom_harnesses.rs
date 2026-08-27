@@ -929,7 +929,7 @@ mod tests {
     fn validate_rejects_reserved_key_case_insensitive() {
         // CREW_PRIVATE_KEY in any casing must be blocked.
         let mut env = BTreeMap::new();
-        env.insert("buzz_private_key".to_string(), "secret".to_string());
+        env.insert("crew_private_key".to_string(), "secret".to_string());
         let def = HarnessDefinition {
             id: "ci-marker".to_string(),
             label: "CI".to_string(),

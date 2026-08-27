@@ -63,8 +63,8 @@ if [[ -z "${SLACK_TOKEN:-}" ]]; then
   exit 1
 fi
 
-if ! command -v buzz &>/dev/null; then
-  echo "ERROR: 'buzz' not found in PATH. Install the Buzz CLI and retry." >&2
+if ! command -v crew &>/dev/null; then
+  echo "ERROR: 'crew' not found in PATH. Install the Crew CLI and retry." >&2
   exit 1
 fi
 

@@ -54,10 +54,10 @@ test.beforeEach(() => {
 
 test("getStorageItem returns the stored value when storage is healthy", () => {
   const restore = patchLocalStorage(
-    createThrowingStorage({ "crew-theme": "buzz" }),
+    createThrowingStorage({ "crew-theme": "crew" }),
   );
   try {
-    assert.equal(getStorageItem("crew-theme"), "buzz");
+    assert.equal(getStorageItem("crew-theme"), "crew");
     assert.equal(getStorageItem("missing"), null);
   } finally {
     restore();

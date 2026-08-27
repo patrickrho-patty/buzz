@@ -18,7 +18,7 @@ struct NativeEmojiPickerView: View {
     count: 8
   )
 
-  private let sectionListSpace = "buzz.emoji.sectionList"
+  private let sectionListSpace = "crew.emoji.sectionList"
 
   init(
     data: NativeEmojiPickerData,

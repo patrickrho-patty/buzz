@@ -17,7 +17,7 @@ cat > "$bin/gh" <<'GH'
 set -euo pipefail
 case "${1:-}:${2:-}" in
   --version:*) printf 'gh version %s (test)\n' "${GH_VERSION:-2.94.0}" ;;
-  api:repos/block/buzz/rulesets/14378754)
+  api:repos/block/crew/rulesets/14378754)
     case "$*" in
       *'.enforcement'*) printf '%s\n' "${GH_TAG_RULESET_STATE:-active}" ;;
       *'.current_user_can_bypass'*) printf '%s\n' "${GH_CURRENT_USER_CAN_BYPASS-always}" ;;
@@ -33,7 +33,7 @@ case "${1:-}:${2:-}" in
       exit 1
     fi
     if [[ "${GH_WORKFLOW_WRONG_URL:-}" == "1" ]]; then
-      printf '%s\n' 'https://github.com/attacker/buzz/actions/runs/999'
+      printf '%s\n' 'https://github.com/attacker/crew/actions/runs/999'
       exit 0
     fi
     if [[ "${GH_WORKFLOW_EXTRA_URL:-}" == "1" ]]; then

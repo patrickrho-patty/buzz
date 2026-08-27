@@ -39,7 +39,7 @@ pub struct Engines {
     ///
     /// Serialized as `crew`; pre-rename packs carrying `buzz` still parse
     /// through the alias below. New packs always emit the new spelling.
-    #[serde(rename = "crew", alias = "buzz", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "crew", alias = "crew", skip_serializing_if = "Option::is_none")]
     pub crew: Option<String>,
 }
 

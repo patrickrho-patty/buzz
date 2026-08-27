@@ -31,7 +31,7 @@ for arg in "$@"; do
 done
 
 APP_ID="xyz.patty.crew.app"
-APP_PATH="/Applications/Griddle.app"
+APP_PATH="/Applications/Crew.app"
 
 echo "==> Quitting Crew…"
 pkill -x crew-desktop 2>/dev/null || true
@@ -46,8 +46,8 @@ rm -rf "$HOME/Library/Caches/$APP_ID" 2>/dev/null || true
 rm -rf "$HOME/Library/WebKit/$APP_ID" 2>/dev/null || true
 
 echo "==> Wiping legacy pre-rebrand data (xyz.block.buzz.app)…"
-rm -rf "$HOME/Library/WebKit/xyz.block.buzz.app" 2>/dev/null || true
-rm -rf "$HOME/Library/Application Support/xyz.block.buzz.app" 2>/dev/null || true
+rm -rf "$HOME/Library/WebKit/xyz.block.crew.app" 2>/dev/null || true
+rm -rf "$HOME/Library/Application Support/xyz.block.crew.app" 2>/dev/null || true
 
 echo "==> Reset complete."
 if [[ "$LAUNCH" -eq 1 ]]; then

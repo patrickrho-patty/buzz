@@ -148,8 +148,8 @@ fn parse_stdin() -> CredRequest {
 
 fn parse_method(wwwauth: &str) -> Option<HttpMethod> {
     // Strip the scheme prefix ("Nostr ") if present, then split on commas.
-    // Handles variations: `Nostr method="GET", realm="buzz"` and
-    // `Nostr method="GET",realm="buzz"` (with or without space after comma).
+    // Handles variations: `Nostr method="GET", realm="crew"` and
+    // `Nostr method="GET",realm="crew"` (with or without space after comma).
     let params = wwwauth.strip_prefix("Nostr ").unwrap_or(wwwauth);
     for param in params.split(',') {
         let param = param.trim();

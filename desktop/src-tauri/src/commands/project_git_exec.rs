@@ -404,7 +404,7 @@ mod tests {
             std::path::PathBuf::from(r"C:\Users\x\AppData\Local\Crew\git-credential-nostr.exe");
         assert_eq!(
             credential_helper_config_value(&path),
-            "C:/Users/x/AppData/Local/Buzz/git-credential-nostr.exe",
+            "C:/Users/x/AppData/Local/Crew/git-credential-nostr.exe",
         );
     }
 
@@ -516,7 +516,7 @@ mod tests {
         assert!(validate_local_clone_url("http://github.com/block/buzz").is_err());
         assert!(validate_local_clone_url("https://github.com/block/buzz/issues").is_err());
         assert!(validate_local_clone_url("https://user@github.com/block/buzz").is_err());
-        assert!(validate_local_clone_url("https://github.com.evil.test/block/buzz").is_err());
-        assert!(validate_local_clone_url("https://gitlab.com/block/buzz").is_err());
+        assert!(validate_local_clone_url("https://github.com.evil.test/block/crew").is_err());
+        assert!(validate_local_clone_url("https://gitlab.com/block/crew").is_err());
     }
 }

@@ -930,9 +930,9 @@ pub fn spawn_agent_child(
 
 fn child_rust_log_filter() -> String {
     match std::env::var("RUST_LOG") {
-        Ok(existing) if existing.contains("buzz_acp") => existing,
-        Ok(existing) if !existing.trim().is_empty() => format!("{existing},buzz_acp=info"),
-        _ => "buzz_acp=info".to_string(),
+        Ok(existing) if existing.contains("crew_acp") => existing,
+        Ok(existing) if !existing.trim().is_empty() => format!("{existing},crew_acp=info"),
+        _ => "crew_acp=info".to_string(),
     }
 }
 

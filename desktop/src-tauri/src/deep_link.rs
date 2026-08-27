@@ -601,8 +601,8 @@ pub(crate) fn handle_deep_link_url(app: &tauri::AppHandle, url_str: &str) {
     };
 
     let scheme = url.scheme();
-    if scheme != "buzz" && scheme != "griddle" {
-        eprintln!("griddle-desktop: ignoring unsupported deep link scheme: {url_str}");
+    if scheme != "crew" && scheme != "crew" {
+        eprintln!("crew-desktop: ignoring unsupported deep link scheme: {url_str}");
         return;
     }
 

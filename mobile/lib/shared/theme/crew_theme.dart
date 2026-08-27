@@ -21,7 +21,7 @@ bool isCrewTheme(String themeName) =>
     themeName == crewThemeName ||
     themeName == crewDarkThemeName ||
     themeName == 'crew-dark' ||
-    themeName == 'buzz';
+    themeName == 'crew';
 
 /// Whether the current widget tree is using the first-party Crew treatment.
 bool isCrewThemeContext(BuildContext context) =>

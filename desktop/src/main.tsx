@@ -82,7 +82,7 @@ function configureDevE2eBridgeFromUrl() {
 function renderApp() {
   ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <React.StrictMode>
-      {/* block/buzz#5078 — catch any uncaught render error so a WebKit
+      {/* block/crew#5078 — catch any uncaught render error so a WebKit
           SecurityError from localStorage can't blank the whole window. */}
       <RootErrorBoundary>
         <CommunitiesProvider>

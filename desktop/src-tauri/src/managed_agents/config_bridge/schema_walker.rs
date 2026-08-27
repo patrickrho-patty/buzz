@@ -188,7 +188,7 @@ mod tests {
         // Mirrors codex [projects."<path>"] { trust_level = "trusted" }
         let config = json!({
             "projects": {
-                "/Users/foo/dev/buzz": { "trust_level": "trusted" },
+                "/Users/foo/dev/crew": { "trust_level": "trusted" },
                 "/Users/foo/dev/other": { "trust_level": "untrusted" }
             }
         });

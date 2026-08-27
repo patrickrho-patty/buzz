@@ -127,7 +127,7 @@ export function TerminalSubstrate({
       (activeSessionId && frame ? [{ sessionId: activeSessionId, frame }] : []),
     [activeSessionId, frame, sessionFrames],
   );
-  const [owner, setOwner] = React.useState<"buzz" | "terminal">("buzz");
+  const [owner, setOwner] = React.useState<"crew" | "terminal">("crew");
   const [viewport, setViewport] = React.useState({ columns: 1, rows: 1 });
   const [selectionRows, setSelectionRows] = React.useState<
     readonly TerminalSelectionRow[]
@@ -163,7 +163,7 @@ export function TerminalSubstrate({
 
   const forceBuzzFallback = React.useEffectEvent(() => {
     handoffRef.current = { ...INITIAL_HANDOFF_STATE };
-    setOwner("buzz");
+    setOwner("crew");
   });
 
   const sendInput = React.useEffectEvent((text: string) => {
@@ -324,7 +324,7 @@ export function TerminalSubstrate({
       if (onToggle) onToggle();
       else {
         setOwner((current) => {
-          const next = current === "terminal" ? "buzz" : "terminal";
+          const next = current === "terminal" ? "crew" : "terminal";
           if (next === "terminal") {
             textareaRef.current?.focus({ preventScroll: true });
           }

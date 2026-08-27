@@ -95,7 +95,7 @@ function isValidThemeName(name: string): name is SyntaxThemeName {
 
 /** Read stored theme, migrating legacy "light"/"dark"/"system" values. */
 function readStoredTheme(fallback: SyntaxThemeName): SyntaxThemeName {
-  // block/buzz#5078 — WebKit throws SecurityError from getItem under a
+  // block/crew#5078 — WebKit throws SecurityError from getItem under a
   // denied-storage origin; the throw-safe helper lets the provider degrade to
   // the fallback instead of unmounting the root during first render.
   const stored = getStorageItem(THEME_STORAGE_KEY);
@@ -500,7 +500,7 @@ export function ThemeProvider({
   >(null);
   const loadingRef = useRef<string | null>(null);
   const [accentColor, setAccentColorState] = useState<string>(() => {
-    // block/buzz#5078 — use the throw-safe accessor for init-time reads; a
+    // block/crew#5078 — use the throw-safe accessor for init-time reads; a
     // denied-storage origin would otherwise kill the root on first mount.
     return getStorageItem(ACCENT_STORAGE_KEY) ?? DEFAULT_ACCENT;
   });

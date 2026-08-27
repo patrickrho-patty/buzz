@@ -3,7 +3,7 @@ schema_version = "1.3"
 [task]
 name = "crew-native/narrative-agent-names"
 description = "Name agents in narrative without waking them through event mentions."
-authors = [{ name = "Buzz" }]
+authors = [{ name = "Crew" }]
 keywords = ["crew-native", "mentions", "agents", "notifications"]
 
 [metadata]

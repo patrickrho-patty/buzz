@@ -746,7 +746,7 @@ fn default_agent_args(command: &str) -> Option<Vec<String>> {
 /// Hermes: ACP hosts supply session MCP servers explicitly through
 /// `session/new`, but Hermes otherwise starts every profile-configured MCP
 /// server before it responds to `initialize` — which can exhaust the host's
-/// startup budget (see block/buzz#3355). Skip that unrelated global startup
+/// startup budget (see block/crew#3355). Skip that unrelated global startup
 /// by default; an operator or persona can still opt back in by setting the
 /// variable explicitly.
 pub(crate) fn default_agent_env(command: &str) -> &'static [(&'static str, &'static str)] {

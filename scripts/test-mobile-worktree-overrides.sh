@@ -152,7 +152,7 @@ grep -q '<string>$(APP_DISPLAY_NAME)</string>' "$plist" \
 grep -q 'android:label="@string/app_name"' "$manifest" \
   && pass "Android manifest label resolves from resources" \
   || fail "Android manifest label must be @string/app_name"
-grep -q 'resValue("string", "app_name", "Buzz")' "$gradle" \
+grep -q 'resValue("string", "app_name", "Crew")' "$gradle" \
   && pass "Gradle default app_name stays Crew" \
   || fail "Gradle must declare the default app_name resValue"
 grep -q 'worktreeLabel.matches' "$gradle" \

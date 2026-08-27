@@ -1398,7 +1398,7 @@ mod tests {
         std::env::set_var("READ_DATABASE_URL", "   ");
         let blank = Config::from_env().expect("config").read_database_url;
 
-        std::env::set_var("READ_DATABASE_URL", "postgres://crew:pw@replica:5432/buzz"); // sadscan:disable np.postgres.1
+        std::env::set_var("READ_DATABASE_URL", "postgres://crew:pw@replica:5432/crew"); // sadscan:disable np.postgres.1
         let set = Config::from_env().expect("config").read_database_url;
 
         if let Some(value) = previous {
@@ -1411,7 +1411,7 @@ mod tests {
         assert_eq!(blank, None, "blank READ_DATABASE_URL must disable routing");
         assert_eq!(
             set.as_deref(),
-            Some("postgres://crew:pw@replica:5432/buzz") // sadscan:disable np.postgres.1
+            Some("postgres://crew:pw@replica:5432/crew") // sadscan:disable np.postgres.1
         );
     }
 

@@ -713,7 +713,7 @@ impl AcpClient {
             serde_json::json!({
                 "sessionId": session_id,
                 "mode": "set",
-                "key": "buzz",
+                "key": "crew",
                 "text": text,
             }),
         )
@@ -3509,7 +3509,7 @@ mod tests {
         );
         assert_eq!(received["params"]["sessionId"], "ses_goose");
         assert_eq!(received["params"]["mode"], "set");
-        assert_eq!(received["params"]["key"], "buzz");
+        assert_eq!(received["params"]["key"], "crew");
         assert_eq!(received["params"]["text"], "Be terse");
     }
 

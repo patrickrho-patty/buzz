@@ -64,8 +64,8 @@ export function registerCustomEmojiMarkdownIt(
   md: any,
   options: CustomEmojiNodeOptions,
 ): void {
-  const RULE_NAME = "buzz_custom_emoji";
-  const TOKEN_TYPE = "buzz_custom_emoji";
+  const RULE_NAME = "crew_custom_emoji";
+  const TOKEN_TYPE = "crew_custom_emoji";
 
   // `parse.setup` runs on every parse against the *same* markdown-it instance,
   // so only register the rule + renderer once — `ruler.before` throws on a

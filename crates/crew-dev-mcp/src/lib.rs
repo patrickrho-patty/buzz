@@ -165,8 +165,8 @@ async fn async_main(cmd: String) -> Result<(), Box<dyn std::error::Error>> {
     // repeated installation is harmless.
     let _ = rustls::crypto::ring::default_provider().install_default();
 
-    // buzz CLI needs tokio (async HTTP client).
-    if cmd == "buzz" {
+    // crew CLI needs tokio (async HTTP client).
+    if cmd == "crew" {
         std::process::exit(crew_cli::run_from_args(std::env::args()).await);
     }
 

@@ -579,7 +579,7 @@ mod tests {
                 "homepage": "https://example.com",
                 "repository": "https://github.com/example/pack",
                 "keywords": ["test"],
-                "engines": { "buzz": ">=0.9.0" }
+                "engines": { "crew": ">=0.9.0" }
             }"#,
         )
         .unwrap();

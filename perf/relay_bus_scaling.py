@@ -28,7 +28,7 @@ from typing import BinaryIO
 from urllib.parse import urlparse
 from uuid import UUID
 
-CREW_PREFIX = "buzz"
+CREW_PREFIX = "crew"
 OLD_GLOBAL_CHANNEL = f"{CREW_PREFIX}:global"
 
 
@@ -103,7 +103,7 @@ def community_id(index: int) -> str:
 
 def scoped_global_channel(community: str) -> str:
     # Mirrors crates/crew-pubsub/src/topic.rs EventTopic::Global:
-    # format!("buzz:{}:global", self.community_id)
+    # format!("crew:{}:global", self.community_id)
     return f"{CREW_PREFIX}:{community}:global"
 
 

@@ -27,7 +27,7 @@ pub const CONN_CONTROL_SUFFIX: &str = "conn-control";
 
 /// Pattern the subscriber uses to receive connection-control messages for every
 /// community this pod may hold connections for.
-pub const CONN_CONTROL_PATTERN: &str = "buzz:*:conn-control";
+pub const CONN_CONTROL_PATTERN: &str = "crew:*:conn-control";
 
 /// Redis pub/sub channel for connection-control messages under `ctx`.
 pub fn conn_control_channel(ctx: &TenantContext) -> String {
@@ -175,7 +175,7 @@ mod tests {
         let b = ctx(0xbbbb, "b.example");
         assert_eq!(
             conn_control_channel(&a),
-            format!("buzz:{}:conn-control", a.community())
+            format!("crew:{}:conn-control", a.community())
         );
         assert_ne!(conn_control_channel(&a), conn_control_channel(&b));
     }
@@ -193,7 +193,7 @@ mod tests {
             parse_conn_control_channel("buzz:not-a-uuid:conn-control"),
             None
         );
-        assert_eq!(parse_conn_control_channel("buzz:*:cache-invalidate"), None);
+        assert_eq!(parse_conn_control_channel("crew:*:cache-invalidate"), None);
         let a = ctx(0x1234, "a.example");
         let extended = format!("{}:extra", conn_control_channel(&a));
         assert_eq!(parse_conn_control_channel(&extended), None);

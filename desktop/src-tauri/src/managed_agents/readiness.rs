@@ -556,7 +556,7 @@ fn goose_requirements(
 ) -> Vec<Requirement> {
     let mut missing = Vec::new();
 
-    // Empty string treated as absent — same as buzz_agent_requirements.
+    // Empty string treated as absent — same as crew_agent_requirements.
     let provider = effective
         .env
         .get("GOOSE_PROVIDER")

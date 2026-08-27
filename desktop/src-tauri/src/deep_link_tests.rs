@@ -470,7 +470,7 @@ fn parse_nostr_bind_deep_link_accepts_browser_fragment_return() {
     assert_eq!(payload.return_mode, "browser_fragment_v1");
     assert_eq!(
         payload.callback_url.as_deref(),
-        Some("https://example.com/buzz")
+        Some("https://example.com/crew")
     );
 }
 

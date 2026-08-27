@@ -2,8 +2,8 @@ schema_version = "1.3"
 
 [task]
 name = "crew-native/read-named-path-outside-workspace"
-description = "Read an explicitly named file outside the Buzz workspace."
-authors = [{ name = "Buzz" }]
+description = "Read an explicitly named file outside the Crew workspace."
+authors = [{ name = "Crew" }]
 keywords = ["crew-native", "filesystem", "workspace", "named-path"]
 
 [metadata]

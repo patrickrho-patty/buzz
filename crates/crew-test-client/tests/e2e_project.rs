@@ -186,7 +186,7 @@ async fn test_project_replacement_keeps_only_newest_for_same_author_and_d() {
     let ok = client.send_event(first).await.expect("send old");
     assert!(ok.accepted, "relay rejected old project: {}", ok.message);
 
-    let members = vec![member_coord(&owner, "buzz")];
+    let members = vec![member_coord(&owner, "crew")];
     let second = project_event(&owner, &d_tag, "New", &members, Some(now));
     let ok = client.send_event(second).await.expect("send new");
     assert!(ok.accepted, "relay rejected new project: {}", ok.message);
@@ -434,7 +434,7 @@ async fn test_project_malformed_envelope_rejected_by_relay() {
         .await
         .expect("connect");
 
-    let duplicate = member_coord(&owner, "buzz");
+    let duplicate = member_coord(&owner, "crew");
     // Each case pairs a malformed event with the substring its rejection must
     // carry, so a refusal for an unrelated reason cannot satisfy the assertion.
     let cases: Vec<(&str, nostr::Event, &str)> = vec![

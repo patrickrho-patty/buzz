@@ -32,7 +32,7 @@ impl Shim {
         for name in [
             "rg",
             "tree",
-            "buzz",
+            "crew",
             "git-credential-nostr",
             "git-sign-nostr",
         ] {
@@ -167,7 +167,7 @@ fn derive_git_email(pubkey_hex: &str) -> String {
             Some(host_port.split(':').next().unwrap_or(host_port).to_owned())
         })
         .filter(|h| !h.is_empty() && !h.starts_with("localhost") && !h.starts_with("127."))
-        .unwrap_or_else(|| "buzz".to_owned());
+        .unwrap_or_else(|| "crew".to_owned());
     format!("{pubkey_hex}@{host}")
 }
 

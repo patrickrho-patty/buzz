@@ -12,7 +12,7 @@ name = "crew_cli"
 path = "src/lib.rs"
 
 [[bin]]
-name = "buzz"
+name = "crew"
 path = "src/main.rs"
 
 [dependencies]

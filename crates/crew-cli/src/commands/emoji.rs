@@ -333,7 +333,7 @@ mod tests {
             serde_json::json!({
                 "created_at": 100,
                 "tags": [
-                    ["d", "buzz:custom-emoji"],
+                    ["d", "crew:custom-emoji"],
                     ["emoji", "zort", "https://example.com/zort.png"],
                     ["emoji", "narf", "https://example.com/narf.png"]
                 ]
@@ -341,7 +341,7 @@ mod tests {
             serde_json::json!({
                 "created_at": 200,
                 "tags": [
-                    ["d", "buzz:custom-emoji"],
+                    ["d", "crew:custom-emoji"],
                     // newer set claims zort with a different url — newer wins
                     ["emoji", "zort", "https://example.com/zort2.png"]
                 ]

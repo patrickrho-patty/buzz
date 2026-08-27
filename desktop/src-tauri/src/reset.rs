@@ -26,7 +26,7 @@ pub(crate) fn sentinel_path(app_data_dir: &Path) -> PathBuf {
     let bundle_id = app_data_dir
         .file_name()
         .and_then(|n| n.to_str())
-        .unwrap_or("buzz");
+        .unwrap_or("crew");
     let name = format!(".{bundle_id}.reset-pending");
     match app_data_dir.parent() {
         Some(parent) => parent.join(name),
@@ -146,7 +146,7 @@ fn trash_path(original: &Path) -> PathBuf {
         original
             .file_name()
             .and_then(|n| n.to_str())
-            .unwrap_or("buzz")
+            .unwrap_or("crew")
     ))
 }
 
@@ -197,7 +197,7 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
         let bundle_id = app_data_dir
             .file_name()
             .and_then(|n| n.to_str())
-            .unwrap_or("buzz");
+            .unwrap_or("crew");
         let webkit_dir = home.join("Library").join("WebKit").join(bundle_id);
         let tw = trash_path(&webkit_dir);
         if webkit_dir.exists() {
@@ -241,7 +241,7 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
             let bundle_id = app_data_dir
                 .file_name()
                 .and_then(|n| n.to_str())
-                .unwrap_or("buzz");
+                .unwrap_or("crew");
             let webkit_dir = home.join("Library").join("WebKit").join(bundle_id);
             if let Some(ref tw) = trash_webkit {
                 if tw.exists() {

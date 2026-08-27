@@ -338,7 +338,7 @@ fn reconcile_databricks_v1_to_v2_strips_derived_keys_case_insensitively() {
             "name": "Brain",
             "provider": "databricks_v2",
             "env_vars": {
-                "buzz_agent_provider": "databricks",
+                "crew_agent_provider": "databricks",
                 "Buzz_Agent_Model": "goose-claude-4-6-sonnet",
                 "DATABRICKS_HOST": "https://dbc.example.com"
             }
@@ -353,7 +353,7 @@ fn reconcile_databricks_v1_to_v2_strips_derived_keys_case_insensitively() {
     let records = read_agents_json(dir.path());
     let env_vars = &records[0]["env_vars"];
     // Mixed-case derived keys must be stripped.
-    assert!(env_vars.get("buzz_agent_provider").is_none());
+    assert!(env_vars.get("crew_agent_provider").is_none());
     assert!(env_vars.get("Buzz_Agent_Model").is_none());
     // Non-derived key preserved.
     assert_eq!(env_vars["DATABRICKS_HOST"], "https://dbc.example.com");

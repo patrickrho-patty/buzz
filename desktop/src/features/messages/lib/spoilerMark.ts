@@ -1,9 +1,9 @@
 import { Mark, mergeAttributes } from "@tiptap/core";
 
 export const SPOILER_MARK_NAME = "spoiler";
-const SPOILER_MARKDOWN_RULE = "buzz_spoiler";
-const SPOILER_OPEN_TOKEN = "buzz_spoiler_open";
-const SPOILER_CLOSE_TOKEN = "buzz_spoiler_close";
+const SPOILER_MARKDOWN_RULE = "crew_spoiler";
+const SPOILER_OPEN_TOKEN = "crew_spoiler_open";
+const SPOILER_CLOSE_TOKEN = "crew_spoiler_close";
 const PIPE_CHAR = 0x7c;
 
 export function registerSpoilerMarkdownIt(

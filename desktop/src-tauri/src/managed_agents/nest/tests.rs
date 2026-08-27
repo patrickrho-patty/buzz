@@ -343,7 +343,7 @@ fn ensure_skill_symlinks_skip_dangling_symlink() {
 
 #[test]
 fn cli_link_name_prod_is_buzz() {
-    assert_eq!(cli_link_name(false), "buzz");
+    assert_eq!(cli_link_name(false), "crew");
 }
 
 #[test]
@@ -357,16 +357,16 @@ fn ensure_cli_symlink_creates_symlink_prod() {
     let tmp = tempfile::tempdir().unwrap();
     let exe_parent = tmp.path().join("MacOS");
     fs::create_dir(&exe_parent).unwrap();
-    fs::write(exe_parent.join("buzz"), "binary").unwrap();
+    fs::write(exe_parent.join("crew"), "binary").unwrap();
 
     let local_bin = tmp.path().join("local_bin");
     fs::create_dir_all(&local_bin).unwrap();
 
-    // Prod link name is "buzz"; simulate the symlink creation path.
+    // Prod link name is "crew"; simulate the symlink creation path.
     let link = local_bin.join(cli_link_name(false));
-    std::os::unix::fs::symlink(exe_parent.join("buzz"), &link).unwrap();
+    std::os::unix::fs::symlink(exe_parent.join("crew"), &link).unwrap();
     assert!(link.symlink_metadata().unwrap().file_type().is_symlink());
-    assert_eq!(fs::read_link(&link).unwrap(), exe_parent.join("buzz"));
+    assert_eq!(fs::read_link(&link).unwrap(), exe_parent.join("crew"));
 }
 
 #[cfg(unix)]
@@ -375,7 +375,7 @@ fn ensure_cli_symlink_creates_symlink_dev() {
     let tmp = tempfile::tempdir().unwrap();
     let exe_parent = tmp.path().join("MacOS");
     fs::create_dir(&exe_parent).unwrap();
-    fs::write(exe_parent.join("buzz"), "binary").unwrap();
+    fs::write(exe_parent.join("crew"), "binary").unwrap();
 
     let local_bin = tmp.path().join("local_bin");
     fs::create_dir_all(&local_bin).unwrap();
@@ -384,11 +384,11 @@ fn ensure_cli_symlink_creates_symlink_dev() {
     assert_eq!(cli_link_name(true), "buzz-dev");
 
     let link = local_bin.join(cli_link_name(true));
-    std::os::unix::fs::symlink(exe_parent.join("buzz"), &link).unwrap();
+    std::os::unix::fs::symlink(exe_parent.join("crew"), &link).unwrap();
     assert!(link.symlink_metadata().unwrap().file_type().is_symlink());
-    assert_eq!(fs::read_link(&link).unwrap(), exe_parent.join("buzz"));
+    assert_eq!(fs::read_link(&link).unwrap(), exe_parent.join("crew"));
     // Prod link must not exist — the two builds don't touch each other.
-    assert!(!local_bin.join("buzz").exists());
+    assert!(!local_bin.join("crew").exists());
 }
 
 #[cfg(unix)]

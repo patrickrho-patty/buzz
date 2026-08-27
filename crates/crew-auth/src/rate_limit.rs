@@ -200,7 +200,7 @@ pub trait RateLimiter: Send + Sync {
 /// keys, so quotas don't bleed across the tenancy fence.
 pub fn rate_limit_key(ctx: &TenantContext, pubkey: &PublicKey, limit_type: &LimitType) -> String {
     format!(
-        "buzz:{}:ratelimit:{}:{}",
+        "crew:{}:ratelimit:{}:{}",
         ctx.community(),
         pubkey.to_hex(),
         limit_type.key_suffix()
@@ -211,7 +211,7 @@ pub fn rate_limit_key(ctx: &TenantContext, pubkey: &PublicKey, limit_type: &Limi
 ///
 /// Operator-global by design — see [`RateLimiter`] docs.
 pub fn ip_rate_limit_key(ip: &IpAddr) -> String {
-    format!("buzz:ratelimit:ip:{}:conn", ip)
+    format!("crew:ratelimit:ip:{}:conn", ip)
 }
 
 /// Always-allow rate limiter for unit tests.
@@ -264,7 +264,7 @@ mod tests {
         let ctx = fixture_ctx("relay-a.example");
         let keys = Keys::generate();
         let key = rate_limit_key(&ctx, &keys.public_key(), &LimitType::Messages);
-        let expected_prefix = format!("buzz:{}:ratelimit:", ctx.community());
+        let expected_prefix = format!("crew:{}:ratelimit:", ctx.community());
         assert!(
             key.starts_with(&expected_prefix),
             "key {key} should start with {expected_prefix}"

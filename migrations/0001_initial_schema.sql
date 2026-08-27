@@ -1,4 +1,4 @@
--- Buzz initial Postgres schema — multi-tenant.
+-- Crew initial Postgres schema — multi-tenant.
 --
 -- Source of truth for fresh database setup. This is a clean, from-scratch
 -- schema in which `community_id` is a first-class, server-resolved key on

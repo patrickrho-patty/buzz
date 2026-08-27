@@ -3,9 +3,9 @@ use super::*;
 /// Binary names for the Crew desktop/Tauri process. Used by dead-instance
 /// detection to confirm the owning desktop is still alive.
 const DESKTOP_BINARY_NAMES: &[&str] = &[
-    "Buzz",
-    "griddle-desktop",
-    "buzz_desktop",
+    "Crew",
+    "crew-desktop",
+    "crew_desktop",
     // Linux limits /proc/<pid>/comm to 15 visible bytes, truncating the
     // AppImage shim's real executable name, `crew-desktop.bin`.
     "crew-desktop.bi",
@@ -106,7 +106,7 @@ fn extract_buzz_marker_value(_pid: u32) -> Option<String> {
 }
 
 /// Check if a Crew desktop process is still alive for the given instance ID.
-/// Scans all user-owned processes named "Buzz" or "griddle-desktop" and checks
+/// Scans all user-owned processes named "Crew" or "crew-desktop" and checks
 /// whether any has the identifier in its command-line args (KERN_PROCARGS2 buffer
 /// includes both argv and environ — the `--config` JSON from `tauri dev` contains
 /// the identifier string).

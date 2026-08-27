@@ -1,6 +1,6 @@
 //! Locked (encrypted) agent-card envelope — NIP-44 v2 over the snapshot manifest.
 //!
-//! A locked card carries the same `buzz_agent_snapshot` tEXt chunk as a plain
+//! A locked card carries the same `crew_agent_snapshot` tEXt chunk as a plain
 //! card, but the chunk JSON is a typed outer envelope whose ciphertext
 //! decrypts to the ordinary manifest. The NIP-44 v2 conversation key is
 //! symmetric over the (owner, agent) pair, so BOTH the owner's and the

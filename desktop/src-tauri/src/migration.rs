@@ -24,12 +24,9 @@ use crate::util::replace_with_symlink;
 const CANONICAL_DEV_IDENTIFIER: &str = "xyz.patty.crew.app.dev";
 const CANONICAL_RELEASE_IDENTIFIER: &str = "xyz.patty.crew.app";
 
+#[path = "migration_legacy.rs"]
 mod migration_legacy;
-use migration_legacy::{legacy_app_data_dir, legacy_sprout_app_data_dir, LEGACY_GRIDDLE_DEV_IDENTIFIER, LEGACY_GRIDDLE_RELEASE_IDENTIFIER, LEGACY_SPROUT_DEV_IDENTIFIER, LEGACY_SPROUT_RELEASE_IDENTIFIER};
-const LEGACY_GRIDDLE_DEV_IDENTIFIER: &str = "xyz.patty.griddle.app.dev";
-const LEGACY_GRIDDLE_RELEASE_IDENTIFIER: &str = "xyz.patty.griddle.app";
-const LEGACY_SPROUT_DEV_IDENTIFIER: &str = "xyz.block.sprout.app.dev";
-const LEGACY_SPROUT_RELEASE_IDENTIFIER: &str = "xyz.block.sprout.app";
+pub(crate) use migration_legacy::{legacy_app_data_dir, legacy_sprout_app_data_dir, LEGACY_GRIDDLE_DEV_IDENTIFIER, LEGACY_GRIDDLE_RELEASE_IDENTIFIER, LEGACY_SPROUT_DEV_IDENTIFIER, LEGACY_SPROUT_RELEASE_IDENTIFIER};
 
 /// JSON files symlinked from worktree data directories to the canonical
 /// dev data directory. Only data files — never `agent-pids/` or `logs/`.

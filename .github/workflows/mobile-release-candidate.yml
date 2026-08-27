@@ -47,8 +47,8 @@ jobs:
         env:
           REPOSITORY: ${{ github.repository }}
         run: |
-          if [ "$REPOSITORY" != "block/buzz" ]; then
-            echo "::error::Mobile candidate publication is restricted to block/buzz"
+          if [ "$REPOSITORY" != "block/crew" ]; then
+            echo "::error::Mobile candidate publication is restricted to block/crew"
             exit 1
           fi
 

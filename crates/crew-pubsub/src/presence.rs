@@ -120,7 +120,7 @@ mod tests {
         let pubkey = make_pubkey();
         let ctx = ctx(0xaaaa, "a.example");
         let key = presence_key(&ctx, &pubkey);
-        let prefix = format!("buzz:{}:presence:", ctx.community());
+        let prefix = format!("crew:{}:presence:", ctx.community());
         assert!(key.starts_with(&prefix));
         let hex_part = key.strip_prefix(&prefix).unwrap();
         assert_eq!(hex_part.len(), 64);

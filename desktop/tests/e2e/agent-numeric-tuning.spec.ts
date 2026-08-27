@@ -57,7 +57,7 @@ async function openEditAgentDialog(
 
 // ── Tests ──────────────────────────────────────────────────────────────────
 
-test("global_advanced_buzz_agent_shows_all_numeric_controls", async ({
+test("global_advanced_crew_agent_shows_all_numeric_controls", async ({
   page,
 }) => {
   // The mock bridge's withMockRuntimeConfigMetadata injects the numeric env var

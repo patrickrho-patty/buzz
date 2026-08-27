@@ -56,9 +56,9 @@ load_env() {
     warn "Migrating legacy default DATABASE_URL from sprout to crew for this setup run"
     DATABASE_URL="postgres://crew:crew_dev@localhost:5432/crew"
   fi
-  if [[ "${PGUSER:-}" == "sprout" ]]; then PGUSER="buzz"; fi
+  if [[ "${PGUSER:-}" == "sprout" ]]; then PGUSER="crew"; fi
   if [[ "${PGPASSWORD:-}" == "sprout_dev" ]]; then PGPASSWORD="crew_dev"; fi
-  if [[ "${PGDATABASE:-}" == "sprout" ]]; then PGDATABASE="buzz"; fi
+  if [[ "${PGDATABASE:-}" == "sprout" ]]; then PGDATABASE="crew"; fi
 
   export DATABASE_URL="${DATABASE_URL:-postgres://crew:crew_dev@localhost:5432/crew}"
   export PGHOST="${PGHOST:-localhost}"

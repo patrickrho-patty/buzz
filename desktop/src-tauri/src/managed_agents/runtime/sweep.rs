@@ -557,7 +557,7 @@ mod tests {
     // ── select_untracked_bundle_harnesses ────────────────────────────────
 
     const BUNDLE_HARNESS: &str = "/Applications/Crew.app/Contents/MacOS/crew-acp";
-    const DEV_HARNESS: &str = "/Users/dev/buzz/.worktrees/main/target/debug/crew-acp";
+    const DEV_HARNESS: &str = "/Users/dev/crew/.worktrees/main/target/debug/crew-acp";
 
     fn snap(pid: u32, path: &str) -> ProcessSnapshot {
         ProcessSnapshot {

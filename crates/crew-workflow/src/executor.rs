@@ -1917,8 +1917,8 @@ mod tests {
     fn trigger_context_get_field_webhook_field() {
         let mut ctx = make_trigger();
         ctx.webhook_fields
-            .insert("repo".to_owned(), "buzz".to_owned());
-        assert_eq!(ctx.get_field("repo"), Some("buzz"));
+            .insert("repo".to_owned(), "crew".to_owned());
+        assert_eq!(ctx.get_field("repo"), Some("crew"));
     }
 
     #[test]

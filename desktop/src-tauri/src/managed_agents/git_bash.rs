@@ -508,7 +508,7 @@ mod tests {
         std::fs::write(&shell, []).expect("shell");
 
         let mut overrides = std::collections::BTreeMap::new();
-        overrides.insert("buzz_shell".to_string(), shell.display().to_string());
+        overrides.insert("crew_shell".to_string(), shell.display().to_string());
         let env = GitBashEnv::from_process_with_overrides(&overrides);
         assert_eq!(env.shell_override, Some(shell.clone()));
         assert_eq!(

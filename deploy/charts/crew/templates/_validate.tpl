@@ -3,7 +3,7 @@ Hard fail guards. Included from every rendered template so misconfigs
 surface at template time regardless of which manifest helm renders first.
 */}}
 
-{{- define "buzz.validate" -}}
+{{- define "crew.validate" -}}
 
 {{/* relayUrl is required */}}
 {{- if not .Values.relayUrl -}}
@@ -11,7 +11,7 @@ surface at template time regardless of which manifest helm renders first.
 {{- end -}}
 
 {{/* Multiple replicas require Redis, whether fixed or autoscaled. */}}
-{{- $minimumReplicas := include "buzz.minimumReplicas" . | int -}}
+{{- $minimumReplicas := include "crew.minimumReplicas" . | int -}}
 {{- if gt $minimumReplicas 1 -}}
   {{- if and (not .Values.redis.enabled) (not .Values.externalRedis.url) (not .Values.secrets.existingSecret) -}}
     {{- fail (printf "minimum replica count %d requires Redis for crew-pubsub. Enable redis.enabled=true, set externalRedis.url, or provide secrets.existingSecret with key REDIS_URL." $minimumReplicas) -}}

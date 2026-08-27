@@ -6,7 +6,7 @@
 #   crew-acp       link to sprig (ACP harness)
 #   crew-agent     link to sprig (ACP-compliant agent)
 #   crew-dev-mcp   link to sprig (developer MCP server; also dispatches
-#                    rg/tree/buzz/git-credential-nostr/git-sign-nostr)
+#                    rg/tree/crew/git-credential-nostr/git-sign-nostr)
 #
 # Usage:
 #   ./scripts/build-sprig.sh [version] [target]

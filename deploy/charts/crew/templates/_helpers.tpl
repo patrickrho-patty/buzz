@@ -1,10 +1,10 @@
 {{/* Standard naming/labels helpers. */}}
 
-{{- define "buzz.name" -}}
+{{- define "crew.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "buzz.fullname" -}}
+{{- define "crew.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -17,42 +17,42 @@
 {{- end -}}
 {{- end -}}
 
-{{- define "buzz.chart" -}}
+{{- define "crew.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "buzz.labels" -}}
-helm.sh/chart: {{ include "buzz.chart" . }}
-{{ include "buzz.selectorLabels" . }}
+{{- define "crew.labels" -}}
+helm.sh/chart: {{ include "crew.chart" . }}
+{{ include "crew.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-app.kubernetes.io/part-of: buzz
+app.kubernetes.io/part-of: crew
 {{- end -}}
 
-{{- define "buzz.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "buzz.name" . }}
+{{- define "crew.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "crew.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/* Relay-specific selector: scopes the relay Deployment + Service so they do
      not also match the quickstart MinIO pods, which share the base
      selectorLabels but carry their own component label. */}}
-{{- define "buzz.relaySelectorLabels" -}}
-{{ include "buzz.selectorLabels" . }}
+{{- define "crew.relaySelectorLabels" -}}
+{{ include "crew.selectorLabels" . }}
 app.kubernetes.io/component: relay
 {{- end -}}
 
-{{- define "buzz.serviceAccountName" -}}
+{{- define "crew.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-{{- default (include "buzz.fullname" .) .Values.serviceAccount.name -}}
+{{- default (include "crew.fullname" .) .Values.serviceAccount.name -}}
 {{- else -}}
 {{- default "default" .Values.serviceAccount.name -}}
 {{- end -}}
 {{- end -}}
 
-{{- define "buzz.image" -}}
+{{- define "crew.image" -}}
 {{- $tag := default .Chart.AppVersion .Values.image.tag -}}
 {{- printf "%s:%s" .Values.image.repository $tag -}}
 {{- end -}}
@@ -61,50 +61,50 @@ app.kubernetes.io/component: relay
 Name of the chart-managed Secret holding relay-identity material and any
 chart-composed connection strings.
 */}}
-{{- define "buzz.chartSecretName" -}}
-{{- printf "%s-relay" (include "buzz.fullname" .) -}}
+{{- define "crew.chartSecretName" -}}
+{{- printf "%s-relay" (include "crew.fullname" .) -}}
 {{- end -}}
 
 {{/*
 The Secret name the relay should pull env from. If the operator supplied
 secrets.existingSecret, use that. Otherwise use the chart-managed one.
 */}}
-{{- define "buzz.envSecretName" -}}
+{{- define "crew.envSecretName" -}}
 {{- if .Values.secrets.existingSecret -}}
 {{- .Values.secrets.existingSecret -}}
 {{- else -}}
-{{- include "buzz.chartSecretName" . -}}
+{{- include "crew.chartSecretName" . -}}
 {{- end -}}
 {{- end -}}
 
 {{/* Host derived from relayUrl, used as ingress default + media domain. */}}
-{{- define "buzz.relayHost" -}}
+{{- define "crew.relayHost" -}}
 {{- $url := required "relayUrl is required: set --set relayUrl=wss://your.domain" .Values.relayUrl -}}
 {{- $stripped := $url | replace "wss://" "" | replace "ws://" "" | replace "https://" "" | replace "http://" "" -}}
 {{- first (splitList "/" $stripped) -}}
 {{- end -}}
 
 {{/* Default media base URL: https://<host>/media derived from relayUrl. */}}
-{{- define "buzz.mediaBaseUrl" -}}
+{{- define "crew.mediaBaseUrl" -}}
 {{- if .Values.mediaBaseUrl -}}
 {{- .Values.mediaBaseUrl -}}
 {{- else -}}
-{{- printf "https://%s/media" (include "buzz.relayHost" .) -}}
+{{- printf "https://%s/media" (include "crew.relayHost" .) -}}
 {{- end -}}
 {{- end -}}
 
 {{/* Quickstart-only in-cluster service hostnames (eval profile). */}}
-{{- define "buzz.minioFullname" -}}
-{{- printf "%s-minio" (include "buzz.fullname" .) -}}
+{{- define "crew.minioFullname" -}}
+{{- printf "%s-minio" (include "crew.fullname" .) -}}
 {{- end -}}
 
 {{/* In-cluster MinIO endpoint, used when minio.enabled and s3.endpoint unset. */}}
-{{- define "buzz.minioEndpoint" -}}
-{{- printf "http://%s.%s.svc.cluster.local:9000" (include "buzz.minioFullname" .) .Release.Namespace -}}
+{{- define "crew.minioEndpoint" -}}
+{{- printf "http://%s.%s.svc.cluster.local:9000" (include "crew.minioFullname" .) .Release.Namespace -}}
 {{- end -}}
 
 {{/* Minimum number of relay replicas the release can run. */}}
-{{- define "buzz.minimumReplicas" -}}
+{{- define "crew.minimumReplicas" -}}
 {{- if .Values.autoscaling.enabled -}}
 {{- .Values.autoscaling.minReplicas -}}
 {{- else -}}
@@ -114,24 +114,24 @@ secrets.existingSecret, use that. Otherwise use the chart-managed one.
 
 {{/* Effective huddle-audio availability. Nil means safe chart default: on for
      one replica, off for multi-pod until an SFU/shared-room story exists. */}}
-{{- define "buzz.huddleAudioAvailable" -}}
+{{- define "crew.huddleAudioAvailable" -}}
 {{- if kindIs "invalid" .Values.relay.huddleAudioAvailable -}}
-{{- if gt (include "buzz.minimumReplicas" . | int) 1 -}}false{{- else -}}true{{- end -}}
+{{- if gt (include "crew.minimumReplicas" . | int) 1 -}}false{{- else -}}true{{- end -}}
 {{- else -}}
 {{- .Values.relay.huddleAudioAvailable -}}
 {{- end -}}
 {{- end -}}
 
 {{/* Effective S3 endpoint: explicit s3.endpoint wins, else bundled MinIO. */}}
-{{- define "buzz.s3Endpoint" -}}
+{{- define "crew.s3Endpoint" -}}
 {{- if .Values.s3.endpoint -}}
 {{- .Values.s3.endpoint -}}
 {{- else if .Values.minio.enabled -}}
-{{- include "buzz.minioEndpoint" . -}}
+{{- include "crew.minioEndpoint" . -}}
 {{- end -}}
 {{- end -}}
 
-{{- define "buzz.pairingRelaySelectorLabels" -}}
-{{ include "buzz.selectorLabels" . }}
+{{- define "crew.pairingRelaySelectorLabels" -}}
+{{ include "crew.selectorLabels" . }}
 app.kubernetes.io/component: pairing-relay
 {{- end -}}

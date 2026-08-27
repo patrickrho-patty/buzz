@@ -1285,14 +1285,14 @@ mod tests {
     #[test]
     fn name_matches_substring_case_insensitive() {
         assert!(name_matches("Crew-Chat-Composer", "composer", false));
-        assert!(name_matches("Crew-Chat-Composer", "buzz", false));
+        assert!(name_matches("Crew-Chat-Composer", "crew", false));
         assert!(!name_matches("design", "composer", false));
     }
 
     #[test]
     fn name_matches_exact_case_insensitive() {
-        assert!(name_matches("Crew", "buzz", true));
-        assert!(!name_matches("Crew-Chat", "buzz", true));
+        assert!(name_matches("Crew", "crew", true));
+        assert!(!name_matches("Crew-Chat", "crew", true));
     }
 
     #[test]

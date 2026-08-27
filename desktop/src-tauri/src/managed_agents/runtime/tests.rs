@@ -74,7 +74,7 @@ fn identifier_empty_returns_false() {
 
 #[test]
 fn marker_entry_is_namespaced_by_instance_id() {
-    // The spawn stamp and sweep matcher both go through buzz_marker_entry, pinning the on-the-wire
+    // The spawn stamp and sweep matcher both go through crew_marker_entry, pinning the on-the-wire
     // format and guards against a dev build (`...app.dev`) matching a
     // release build's (`...app`) agents.
     assert_eq!(

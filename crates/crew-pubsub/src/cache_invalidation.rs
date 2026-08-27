@@ -24,7 +24,7 @@ pub const CACHE_INVALIDATION_SUFFIX: &str = "cache-invalidate";
 
 /// Pattern used by the subscriber to receive cache invalidations for all
 /// communities this pod may have cached locally.
-pub const CACHE_INVALIDATION_PATTERN: &str = "buzz:*:cache-invalidate";
+pub const CACHE_INVALIDATION_PATTERN: &str = "crew:*:cache-invalidate";
 
 /// Redis pub/sub channel for cache-invalidation messages under `ctx`.
 pub fn cache_invalidation_channel(ctx: &TenantContext) -> String {
@@ -190,7 +190,7 @@ mod tests {
 
         assert_eq!(
             cache_invalidation_channel(&community_a),
-            format!("buzz:{}:cache-invalidate", community_a.community())
+            format!("crew:{}:cache-invalidate", community_a.community())
         );
         assert_ne!(
             cache_invalidation_channel(&community_a),
@@ -201,7 +201,7 @@ mod tests {
     #[test]
     fn parses_cache_invalidation_channel() {
         let community_id = CommunityId::from_uuid(Uuid::from_u128(0xaaaa));
-        let raw = format!("buzz:{community_id}:cache-invalidate");
+        let raw = format!("crew:{community_id}:cache-invalidate");
 
         assert_eq!(parse_cache_invalidation_channel(&raw), Some(community_id));
     }
@@ -213,7 +213,7 @@ mod tests {
             "buzz:not-a-uuid:cache-invalidate",
             "not-buzz:00000000-0000-0000-0000-00000000aaaa:cache-invalidate",
             "buzz:00000000-0000-0000-0000-00000000aaaa:cache-invalidate:extra",
-            "buzz:00000000-0000-0000-0000-00000000aaaa:channel:00000000-0000-0000-0000-00000000bbbb",
+            "crew:00000000-0000-0000-0000-00000000aaaa:channel:00000000-0000-0000-0000-00000000bbbb",
         ] {
             assert_eq!(parse_cache_invalidation_channel(raw), None);
         }

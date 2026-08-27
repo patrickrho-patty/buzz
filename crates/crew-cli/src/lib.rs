@@ -2133,10 +2133,10 @@ mod tests {
         let link = format!("crew://message?channel={channel}&id={event}");
 
         assert!(
-            Cli::try_parse_from(["buzz", "messages", "thread", "--link", link.as_str(),]).is_ok()
+            Cli::try_parse_from(["crew", "messages", "thread", "--link", link.as_str(),]).is_ok()
         );
         assert!(Cli::try_parse_from([
-            "buzz",
+            "crew",
             "messages",
             "thread",
             "--channel",
@@ -2153,10 +2153,10 @@ mod tests {
         let event = "a".repeat(64);
         let link = format!("crew://message?channel={channel}&id={event}");
 
-        assert!(Cli::try_parse_from(["buzz", "messages", "thread"]).is_err());
-        assert!(Cli::try_parse_from(["buzz", "messages", "thread", "--channel", channel]).is_err());
+        assert!(Cli::try_parse_from(["crew", "messages", "thread"]).is_err());
+        assert!(Cli::try_parse_from(["crew", "messages", "thread", "--channel", channel]).is_err());
         assert!(Cli::try_parse_from([
-            "buzz",
+            "crew",
             "messages",
             "thread",
             "--link",
@@ -2170,7 +2170,7 @@ mod tests {
     #[test]
     fn set_status_clear_rejects_text_and_emoji() {
         for extra in [["--text", "busy"], ["--emoji", "🎶"]] {
-            let args = ["buzz", "users", "set-status", "--clear"]
+            let args = ["crew", "users", "set-status", "--clear"]
                 .into_iter()
                 .chain(extra);
             assert!(
@@ -2183,12 +2183,12 @@ mod tests {
 
     #[test]
     fn set_status_requires_text_or_clear() {
-        assert!(Cli::try_parse_from(["buzz", "users", "set-status"]).is_err());
+        assert!(Cli::try_parse_from(["crew", "users", "set-status"]).is_err());
         assert!(
-            Cli::try_parse_from(["buzz", "users", "set-status", "--emoji", "🎶"]).is_err(),
+            Cli::try_parse_from(["crew", "users", "set-status", "--emoji", "🎶"]).is_err(),
             "--emoji alone must not imply a status"
         );
-        assert!(Cli::try_parse_from(["buzz", "users", "set-status", "--clear"]).is_ok());
+        assert!(Cli::try_parse_from(["crew", "users", "set-status", "--clear"]).is_ok());
     }
 
     #[test]
@@ -2490,7 +2490,7 @@ mod tests {
     fn projects_update_multi_field_is_accepted() {
         assert!(
             Cli::try_parse_from([
-                "buzz",
+                "crew",
                 "projects",
                 "update",
                 "my-slug",
@@ -2509,7 +2509,7 @@ mod tests {
     fn projects_update_setter_with_other_clearer_is_accepted() {
         assert!(
             Cli::try_parse_from([
-                "buzz",
+                "crew",
                 "projects",
                 "update",
                 "my-slug",
@@ -2527,7 +2527,7 @@ mod tests {
     fn projects_update_setter_with_own_clearer_is_rejected() {
         assert!(
             Cli::try_parse_from([
-                "buzz",
+                "crew",
                 "projects",
                 "update",
                 "my-slug",
@@ -2549,7 +2549,7 @@ mod tests {
         // kind is not a runtime/auth failure — Cli::try_parse_from returns Err
         // immediately for argument violations.
         assert!(
-            Cli::try_parse_from(["buzz", "projects", "update", "my-slug"]).is_err(),
+            Cli::try_parse_from(["crew", "projects", "update", "my-slug"]).is_err(),
             "update with no setters or clearers must be rejected at parse time"
         );
     }
@@ -2559,12 +2559,12 @@ mod tests {
     fn projects_create_invalid_visibility_is_rejected_by_clap() {
         assert!(
             Cli::try_parse_from([
-                "buzz",
+                "crew",
                 "projects",
                 "create",
                 "my-slug",
                 "--repo",
-                "buzz",
+                "crew",
                 "--visibility",
                 "chartreuse",
             ])
@@ -2578,7 +2578,7 @@ mod tests {
     fn projects_update_invalid_visibility_is_rejected_by_clap() {
         assert!(
             Cli::try_parse_from([
-                "buzz",
+                "crew",
                 "projects",
                 "update",
                 "my-slug",

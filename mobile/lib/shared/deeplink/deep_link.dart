@@ -142,7 +142,7 @@ String buildMessageLink({
 /// become navigation targets.
 ChannelDeepLink? parseChannelDeepLink(Uri uri) {
   final schemeAccepted =
-      uri.scheme == 'crew' || uri.scheme == 'buzz';
+      uri.scheme == 'crew' || uri.scheme == 'crew';
   if (!schemeAccepted || uri.host != 'channel') {
     return null;
   }
@@ -172,7 +172,7 @@ ChannelDeepLink? parseChannelDeepLink(Uri uri) {
 /// UUID channel; and 64-character hexadecimal message/thread event IDs.
 MessageDeepLink? parseMessageDeepLink(Uri uri) {
   final schemeAccepted =
-      uri.scheme == 'crew' || uri.scheme == 'buzz';
+      uri.scheme == 'crew' || uri.scheme == 'crew';
   if (!schemeAccepted || uri.host != 'message') {
     return null;
   }
@@ -226,7 +226,7 @@ MessageDeepLink? parseMessageDeepLink(Uri uri) {
 InviteDeepLink? parseInviteDeepLink(Uri uri) {
   if (uri.hasFragment || uri.userInfo.isNotEmpty) return null;
 
-  if (uri.scheme == 'crew' || uri.scheme == 'buzz') {
+  if (uri.scheme == 'crew' || uri.scheme == 'crew') {
     if (uri.host != 'join') return null;
     final relay = uri.queryParameters['relay'];
     final code = uri.queryParameters['code'];
@@ -314,7 +314,7 @@ class EntityDeepLink extends CrewDeepLink {
 
 /// Parse canonical `crew://repo|pr|issue` permalinks for inline presentation.
 EntityDeepLink? parseEntityDeepLink(Uri uri) {
-  if (!(uri.scheme == 'crew' || uri.scheme == 'buzz') ||
+  if (!(uri.scheme == 'crew' || uri.scheme == 'crew') ||
       !{'repo', 'pr', 'issue'}.contains(uri.host)) {
     return null;
   }

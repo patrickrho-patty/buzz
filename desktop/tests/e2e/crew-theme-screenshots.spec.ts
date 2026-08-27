@@ -3,7 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { waitForAnimations } from "../helpers/animations";
 import { installMockBridge } from "../helpers/bridge";
 
-const SHOTS = "test-results/buzz-theme";
+const SHOTS = "test-results/crew-theme";
 const THEME_STORAGE_KEY = "crew-theme";
 const GLASS_BACKGROUND_STORAGE_KEY = "crew-glass-background";
 const GLASS_OPACITY_STORAGE_KEY = "crew-glass-opacity";
@@ -240,7 +240,7 @@ async function expectIconlessSectionTitleAligned(
   expect(Math.abs(titleBox.x - firstRowIconX)).toBeLessThanOrEqual(0.5);
 }
 
-async function expectBuzzContentShadow(page: Page, mode: "light" | "dark") {
+async function expectCrewContentShadow(page: Page, mode: "light" | "dark") {
   const effects = await page.evaluate(() => {
     const shell = document.querySelector(".crew-huddle-shell");
     const content = document.querySelector("[data-crew-content-surface]");
@@ -391,7 +391,7 @@ test("crew light sidebar gradient", async ({ page }) => {
   await openChannel(page);
   await expectBuzzGradientPaint(page, "light");
   await expectCrewSidebarPalette(page, "light");
-  await expectBuzzContentShadow(page, "light");
+  await expectCrewContentShadow(page, "light");
   await expectIconlessSectionTitleAligned(page, "stream-list");
   await expectIconlessSectionTitleAligned(page, "dm-list");
   await waitForAnimations(page);
@@ -406,7 +406,7 @@ test("crew dark sidebar gradient", async ({ page }) => {
   await openChannel(page);
   await expectBuzzGradientPaint(page, "dark");
   await expectCrewSidebarPalette(page, "dark");
-  await expectBuzzContentShadow(page, "dark");
+  await expectCrewContentShadow(page, "dark");
   await expectIconlessSectionTitleAligned(page, "stream-list");
   await expectIconlessSectionTitleAligned(page, "dm-list");
   await expect(page.locator("[data-crew-content-surface]")).toHaveCSS(

@@ -7,7 +7,7 @@ usage:
   scripts/mobile-release.sh candidate X.Y.Z
 
 candidate  Publish the next immutable mobile-vX.Y.Z-rc.N candidate tag at the
-           exact current commit of block/buzz's remote main branch.
+           exact current commit of block/crew's remote main branch.
 USAGE
   exit 2
 }

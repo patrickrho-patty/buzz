@@ -730,7 +730,7 @@ mod tests {
 
     #[test]
     fn bare_repo_id_accepts_valid() {
-        assert!(is_bare_repo_id("buzz"));
+        assert!(is_bare_repo_id("crew"));
         assert!(is_bare_repo_id("my-repo_1.0"));
     }
 
@@ -1106,7 +1106,7 @@ mod tests {
         let err = cmd_create(
             &client,
             "my-slug",
-            &["buzz".to_string()],
+            &["crew".to_string()],
             None,
             None,
             None,
@@ -1128,7 +1128,7 @@ mod tests {
         let err = cmd_create(
             &client,
             "my-slug",
-            &["buzz".to_string()],
+            &["crew".to_string()],
             Some(&long_name),
             None,
             None,
@@ -1214,7 +1214,7 @@ mod tests {
         );
         // Error message must name the duplicate coordinate.
         assert!(
-            format!("{err}").contains("buzz"),
+            format!("{err}").contains("crew"),
             "Usage message must name the duplicate coordinate, got {err:?}"
         );
     }

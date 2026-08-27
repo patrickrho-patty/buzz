@@ -511,12 +511,12 @@ pub fn build_remove_reaction(reaction_event_id: nostr::EventId) -> Result<EventB
 /// d-tag for a member's own custom emoji set. Each member publishes one
 /// user-signed kind:30030 under this d-tag; the workspace palette is the
 /// client-side union of every member's set.
-pub const CUSTOM_EMOJI_SET_D_TAG: &str = "buzz:custom-emoji";
+pub const CUSTOM_EMOJI_SET_D_TAG: &str = "crew:custom-emoji";
 
 /// Build a member's own custom emoji set event (kind:30030, NIP-30/NIP-51).
 ///
 /// User-signed and parameterized-replaceable, keyed by `(pubkey, 30030,
-/// "buzz:custom-emoji")`. Replaces the caller's prior set. The workspace
+/// "crew:custom-emoji")`. Replaces the caller's prior set. The workspace
 /// palette shown in clients is the union of every member's set, deduped by
 /// `(shortcode, url)` on read. Add/remove is read-own-set → mutate → rebuild.
 pub fn build_custom_emoji_set(emojis: &[CustomEmoji]) -> Result<EventBuilder, SdkError> {
@@ -4644,7 +4644,7 @@ mod tests {
     #[test]
     fn build_project_emitted_envelope_has_correct_shape() {
         // slug, name, description, channel, visibility, and one member.
-        let m = member_coord("buzz");
+        let m = member_coord("crew");
         let ev = sign(
             build_project(
                 "my-proj",

@@ -1274,7 +1274,7 @@ async fn publish_disconnect_community(
     community: crew_core::CommunityId,
 ) -> Result<()> {
     let mut connection = pool.get().await?;
-    let channel = format!("buzz:{community}:conn-control");
+    let channel = format!("crew:{community}:conn-control");
     let _: u64 = redis::cmd("PUBLISH")
         .arg(channel)
         .arg(r#"{"op":"DisconnectCommunity"}"#)
@@ -1288,7 +1288,7 @@ async fn purge_redis_namespace(
     community: crew_core::CommunityId,
 ) -> Result<u64> {
     let mut connection = pool.get().await?;
-    let pattern = format!("buzz:{community}:*");
+    let pattern = format!("crew:{community}:*");
     let mut cursor = 0u64;
     let mut deleted = 0u64;
     loop {
@@ -1348,7 +1348,7 @@ async fn verify_redis_absence(
     community: crew_core::CommunityId,
 ) -> Result<()> {
     let mut connection = pool.get().await?;
-    let pattern = format!("buzz:{community}:*");
+    let pattern = format!("crew:{community}:*");
     // SCAN is weakly consistent. Two complete empty passes ensure a cursor
     // rollover or concurrent expiry cannot make one sparse pass look absent.
     let first = scan_redis_namespace(&mut connection, &pattern).await?;

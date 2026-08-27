@@ -1,5 +1,5 @@
--- Rename mesh retention trigger/function from buzz- to crew- naming.
--- The dual-read body (crew-* or buzz-*) was introduced in 0033; this
+-- Rename mesh retention trigger/function from crew- to crew- naming.
+-- The dual-read body (crew-* or crew-*) was introduced in 0033; this
 -- migration renames the function and trigger to the crew- spelling while
 -- keeping the same dual-read logic. Old trigger/function are dropped after
 -- the new ones are created, so no event update is missed.

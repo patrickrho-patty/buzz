@@ -11,8 +11,8 @@
     <string>sh.crew.tidy</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/patrickrho/projects/griddle/scripts/crew-tidy.sh</string>
-        <string>/Users/patrickrho/projects/griddle</string>
+        <string>/Users/patrickrho/projects/crew/scripts/crew-tidy.sh</string>
+        <string>/Users/patrickrho/projects/crew</string>
         <string>21</string>
         <string>20</string>
     </array>

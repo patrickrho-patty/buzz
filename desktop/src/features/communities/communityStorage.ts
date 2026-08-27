@@ -53,7 +53,7 @@ export function migrateLegacyCommunityStorage(
     }
   } catch (error) {
     // WebKit throws SecurityError from getItem when storage access is denied
-    // for the origin (block/buzz#5078). Fencing here so the app can still
+    // for the origin (block/crew#5078). Fencing here so the app can still
     // boot with an empty/default community list instead of a blank window.
     console.warn(
       "[communityStorage] migrateLegacyCommunityStorage failed (storage denied?):",
@@ -117,7 +117,7 @@ export function loadCommunityDiscoveryAfterLeave(
   try {
     return storage.getItem(COMMUNITY_DISCOVERY_AFTER_LEAVE_KEY) === "1";
   } catch (error) {
-    // block/buzz#5078 — storage access can be denied for the origin; degrade
+    // block/crew#5078 — storage access can be denied for the origin; degrade
     // to the default ("didn't just leave") instead of crashing the boot path.
     console.warn(
       "[communityStorage] loadCommunityDiscoveryAfterLeave failed:",
@@ -226,7 +226,7 @@ export function initFirstCommunity(
     pubkey,
     addedAt: new Date().toISOString(),
   };
-  // block/buzz#5078 — read the prior active id through the throw-safe helper;
+  // block/crew#5078 — read the prior active id through the throw-safe helper;
   // a denied-storage origin would otherwise kill onboarding before a single
   // write is attempted.
   const previousActiveCommunityId = getStorageItem(ACTIVE_COMMUNITY_KEY);

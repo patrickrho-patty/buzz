@@ -392,7 +392,7 @@ fn strips_ansi_from_typical_tracing_line() {
     let input = "\x1b[2m2026-05-27T15:16:32\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbuzz_acp\x1b[0m\x1b[2m:\x1b[0m starting";
     assert_eq!(
         strip_ansi_escapes::strip_str(input),
-        "2026-05-27T15:16:32  INFO buzz_acp: starting"
+        "2026-05-27T15:16:32  INFO crew_acp: starting"
     );
 }
 
@@ -823,7 +823,7 @@ fn install_log_filename_rejects_ids_that_would_escape_the_logs_dir() {
 /// reject the ids it exists to serve.
 #[test]
 fn install_log_filename_accepts_ordinary_runtime_ids() {
-    for id in ["goose", "claude-code", "buzz_agent", "codex2"] {
+    for id in ["goose", "claude-code", "crew_agent", "codex2"] {
         assert_eq!(
             super::install_log_filename(id).expect("id must be usable in a log filename"),
             format!("install-{id}.log")

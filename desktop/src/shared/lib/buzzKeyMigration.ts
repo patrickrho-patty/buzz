@@ -1,5 +1,5 @@
 /**
- * One-time migration: copy every `buzz-*` localStorage entry to its `crew-*`
+ * One-time migration: copy every `crew-*` localStorage entry to its `crew-*`
  * twin when the new key is still absent.
  *
  * Large rename batches can't just rename the constant literals — users who
@@ -8,7 +8,7 @@
  * keys, mirroring the Sprout→Buzz `migrateLegacyCommunityStorage` pattern
  * but generically for the whole `buzz-*` namespace.
  *
- * Guard key prevents repeat scans. Old `buzz-*` entries are kept (cheap) so
+ * Guard key prevents repeat scans. Old `crew-*` entries are kept (cheap) so
  * a rollback build still sees its data. A future major can clean them.
  */
 

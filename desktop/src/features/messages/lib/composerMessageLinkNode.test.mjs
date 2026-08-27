@@ -27,7 +27,7 @@ const PR_HREF = `crew://pr?id=${PR_ID}&owner=${OWNER}&d=crew-world`;
 test("resolves a composer preview and canonicalizes the underlying href", () => {
   assert.deepEqual(
     resolveComposerMessageLinkAttributes(
-      HREF.replace("crew://", "BUZZ://"),
+      HREF.replace("crew://", "CREW://"),
       (channelId) => (channelId === CHANNEL_ID ? "general" : undefined),
     ),
     { channelName: "general", href: HREF },

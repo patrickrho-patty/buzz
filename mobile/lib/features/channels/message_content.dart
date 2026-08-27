@@ -355,7 +355,7 @@ class MessageContent extends HookConsumerWidget {
 
     final baseStyle = fallbackStyle ?? linkStyle;
     final uri = Uri.tryParse(url);
-    final crewLink = uri?.scheme == 'crew' || uri?.scheme == 'buzz'
+    final crewLink = uri?.scheme == 'crew' || uri?.scheme == 'crew'
         ? parseCrewDeepLink(uri!) ?? parseEntityDeepLink(uri)
         : null;
     final isBuzzLink =
@@ -442,7 +442,7 @@ class MessageContent extends HookConsumerWidget {
         // references so detail-page callers can suppress self-navigation.
         // Message and join links still need the top-level authenticated
         // dispatcher.
-        if (uri.scheme == 'crew' || uri.scheme == 'buzz') {
+        if (uri.scheme == 'crew' || uri.scheme == 'crew') {
           final deepLink = parseCrewDeepLink(uri);
           if (deepLink case ChannelDeepLink(:final channelId)) {
             resolvedChannelTap(channelId);

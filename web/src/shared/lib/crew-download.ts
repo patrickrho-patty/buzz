@@ -1,7 +1,7 @@
 export const CREW_RELEASES_URL = "https://github.com/block/buzz/releases";
 const CREW_RELEASES_API_URL =
-  "https://api.github.com/repos/block/buzz/releases?per_page=10";
-const CACHE_KEY = "buzz.latestDownload.v1";
+  "https://api.github.com/repos/block/crew/releases?per_page=10";
+const CACHE_KEY = "crew.latestDownload.v1";
 const CACHE_TTL_MS = 60 * 60 * 1000;
 
 export type CrewDownloadPlatform = {

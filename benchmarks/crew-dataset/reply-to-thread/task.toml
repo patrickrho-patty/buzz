@@ -3,7 +3,7 @@ schema_version = "1.3"
 [task]
 name = "crew-native/reply-to-thread"
 description = "Answer a financial projection in the thread started by the user."
-authors = [{ name = "Buzz" }]
+authors = [{ name = "Crew" }]
 keywords = ["crew-native", "messaging", "threading"]
 
 [metadata]

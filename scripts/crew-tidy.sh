@@ -3,14 +3,14 @@
 #
 # Invoked by the sh.crew.tidy launchd agent (see install command in
 # CREW_RENAME_PLAN or the plist footer) but safe to run by hand:
-#   scripts/crew-tidy.sh /Users/patrickrho/projects/griddle [days] [cap_gb]
+#   scripts/crew-tidy.sh /Users/patrickrho/projects/crew [days] [cap_gb]
 #
 # Prunes Rust build artifacts older than DAYS from the shared target cache,
 # then fails loudly if the cache still exceeds CAP_GB (surfaced via launchd
 # exit status + stderr in `launchctl` logs).
 set -euo pipefail
 
-REPO="${1:-/Users/patrickrho/projects/griddle}"
+REPO="${1:-/Users/patrickrho/projects/crew}"
 DAYS="${2:-21}"
 CAP_GB="${3:-20}"
 TARGET="$REPO/target"

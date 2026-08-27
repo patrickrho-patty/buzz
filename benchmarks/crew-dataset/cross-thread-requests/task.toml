@@ -3,7 +3,7 @@ schema_version = "1.3"
 [task]
 name = "crew-native/cross-thread-requests"
 description = "Keep two concurrent top-level requests in one channel isolated and reply to each exact thread."
-authors = [{ name = "Buzz" }]
+authors = [{ name = "Crew" }]
 keywords = ["crew-native", "threading", "batching", "concurrency"]
 
 [metadata]

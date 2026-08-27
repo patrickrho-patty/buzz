@@ -101,10 +101,10 @@ final class NativeEmojiPickerCoordinator: NSObject,
 
     if let sheet = controller.sheetPresentationController {
       let compactID = UISheetPresentationController.Detent.Identifier(
-        "buzz.emoji.compact"
+        "crew.emoji.compact"
       )
       let mediumID = UISheetPresentationController.Detent.Identifier(
-        "buzz.emoji.medium"
+        "crew.emoji.medium"
       )
       sheet.detents = [
         .custom(identifier: compactID) { context in

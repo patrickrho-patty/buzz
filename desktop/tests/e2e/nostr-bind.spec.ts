@@ -410,8 +410,8 @@ test("returns a signed response in the callback fragment after consent", async (
   expect(callbackUrl.origin).toBe("https://admin.example.com");
   expect(callbackUrl.pathname).toBe("/crew");
   expect(callbackUrl.search).toBe("?source=bind");
-  expect(callbackUrl.searchParams.has("buzz_bind")).toBe(false);
-  expect(callbackUrl.hash).toMatch(/^#buzz_bind=v1\.[A-Za-z0-9_-]+$/);
+  expect(callbackUrl.searchParams.has("crew_bind")).toBe(false);
+  expect(callbackUrl.hash).toMatch(/^#crew_bind=v1\.[A-Za-z0-9_-]+$/);
 });
 
 test("opens the manual fallback when returning to the browser fails", async ({

@@ -5,7 +5,7 @@
       "binaries/crew-agent",
       "binaries/crew-dev-mcp",
       "binaries/git-credential-nostr",
-      "binaries/buzz"
+      "binaries/crew"
     ]
   }
 }

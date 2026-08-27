@@ -129,7 +129,7 @@ fn fence_still_delivers_the_terminal_contract() {
     seed_secrets();
     let out = fenced_child_environment();
 
-    for (key, value) in [("TERM", "xterm-256color"), ("TERM_PROGRAM", "Buzz")] {
+    for (key, value) in [("TERM", "xterm-256color"), ("TERM_PROGRAM", "Crew")] {
         assert!(
             out.lines().any(|line| line == format!("{key}={value}")),
             "{key} missing from child environment:\n{out}"
@@ -165,7 +165,7 @@ fn fence_excludes_keys_it_has_never_heard_of() {
 /// legitimately contained the substring; `command -v` asks the question the
 /// user actually asks by typing a command name.
 #[test]
-fn child_path_is_free_of_buzz_toolchain() {
+fn child_path_is_free_of_crew_toolchain() {
     let dir = std::env::temp_dir().join("crew-terminal-path-canary");
     std::fs::create_dir_all(&dir).expect("canary dir");
     let canary = dir.join(CANARY_BIN);
@@ -195,7 +195,7 @@ fn child_path_is_free_of_buzz_toolchain() {
         .expect("child has a PATH");
     assert!(
         !path_line.contains("crew-terminal-path-canary"),
-        "Buzz's toolchain leaked into the child PATH: {path_line}"
+        "Crew's toolchain leaked into the child PATH: {path_line}"
     );
 
     // The reachability arm: run `command -v` for the canary inside the fence.

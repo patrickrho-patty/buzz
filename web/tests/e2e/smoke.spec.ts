@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 test("home page loads with Crew branding", async ({ page }) => {
   await page.goto("/");
   await expect(
-    page.getByRole("main").getByRole("img", { name: "Buzz" }),
+    page.getByRole("main").getByRole("img", { name: "Crew" }),
   ).toBeVisible();
 });
 

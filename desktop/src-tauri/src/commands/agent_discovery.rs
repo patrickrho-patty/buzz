@@ -1415,7 +1415,7 @@ mod tests {
     /// always fires. See `install_shell_args` for the full reasoning.
     #[test]
     fn test_install_shell_args_shape_per_platform() {
-        let composed = std::ffi::OsString::from("/buzz/node/bin:/usr/bin");
+        let composed = std::ffi::OsString::from("/crew/node/bin:/usr/bin");
         let windows_composed = std::ffi::OsString::from(r"C:\crew\node;C:\Windows\system32");
         let bare = ["-l", "-c", "set -o pipefail; echo hi"].map(std::ffi::OsString::from);
 
@@ -1454,7 +1454,7 @@ mod tests {
         let home = tempfile::tempdir().expect("temp HOME");
         std::fs::write(home.path().join(".bash_profile"), "export PATH=\n")
             .expect("plant a hostile login profile");
-        let composed = std::ffi::OsString::from("/buzz/sentinel/bin:/usr/bin:/bin");
+        let composed = std::ffi::OsString::from("/crew/sentinel/bin:/usr/bin:/bin");
 
         // `echo` is a shell builtin, so the child needs no PATH to report one.
         let out = std::process::Command::new("/bin/bash")
@@ -1471,7 +1471,7 @@ mod tests {
 
         let path = String::from_utf8_lossy(&out.stdout);
         assert!(
-            path.contains("/buzz/sentinel/bin"),
+            path.contains("/crew/sentinel/bin"),
             "the composed PATH must survive login init; got: {path:?}"
         );
     }

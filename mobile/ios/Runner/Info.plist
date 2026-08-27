@@ -32,7 +32,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>crew</string>
-				<string>buzz</string>
+				<string>crew</string>
 			</array>
 		</dict>
 	</array>

@@ -411,7 +411,7 @@ mod tests {
         let root = tmp.path().join(".crew");
         let repos = root.join("REPOS");
         fs::create_dir_all(&repos).unwrap();
-        let checkout = repos.join("buzz");
+        let checkout = repos.join("crew");
         fs::create_dir_all(&checkout).unwrap();
         fs::write(checkout.join("code.rs"), "fn main() {}").unwrap();
         let external = tmp.path().join("Development");

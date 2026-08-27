@@ -5,7 +5,7 @@
 --
 -- This migration expands the constraint to the union. Old rows stay valid;
 -- new rows may use either spelling. A future cleanup migration can narrow
--- back to crew- only after buzz- rows have naturally expired / been re-registered.
+-- back to crew- only after crew- rows have naturally expired / been re-registered.
 
 ALTER TABLE push_gateway_installations
     DROP CONSTRAINT IF EXISTS push_gateway_installations_app_profile_check;

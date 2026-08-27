@@ -1,5 +1,5 @@
 ══════════════════════════════════════════════════════════════════════════════
-  Buzz {{ .Chart.AppVersion }} — release "{{ .Release.Name }}" (namespace {{ .Release.Namespace }})
+  Crew {{ .Chart.AppVersion }} — release "{{ .Release.Name }}" (namespace {{ .Release.Namespace }})
 ══════════════════════════════════════════════════════════════════════════════
 
 ▶ Relay URL
@@ -12,7 +12,7 @@
   {{- end }}
 
 ▶ Health
-  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "buzz.fullname" . }} 8080:{{ .Values.service.healthPort }}
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "crew.fullname" . }} 8080:{{ .Values.service.healthPort }}
   curl http://localhost:8080/_readiness
 
 {{ if not .Values.ingress.enabled }}{{ if not .Values.httproute.enabled }}
@@ -48,7 +48,7 @@
      federation peers will treat the relay as a new identity.
   2. PostgreSQL database{{ if .Values.postgresql.enabled }} ({{ .Release.Name }}-postgresql PVC){{ end }}
   3. S3 bucket "{{ .Values.s3.bucket }}" — media blobs
-  4. Git PVC ({{ include "buzz.fullname" . }}-git) — repo on-disk state
+  4. Git PVC ({{ include "crew.fullname" . }}-git) — repo on-disk state
   5. Owner private key (held by the operator, NOT the chart) — restore by
      re-installing with the same ownerPubkey.
 
@@ -90,4 +90,4 @@
 ──────────────────────────────────────────────────────────────────────────────
   kubectl -n {{ .Release.Namespace }} get pods -l app.kubernetes.io/instance={{ .Release.Name }}
   kubectl -n {{ .Release.Namespace }} logs -l app.kubernetes.io/instance={{ .Release.Name }} --tail=200
-  kubectl -n {{ .Release.Namespace }} rollout status deployment/{{ include "buzz.fullname" . }}
+  kubectl -n {{ .Release.Namespace }} rollout status deployment/{{ include "crew.fullname" . }}

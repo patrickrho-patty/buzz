@@ -10,7 +10,7 @@ use uuid::Uuid;
 use crate::error::PubSubError;
 
 /// Redis key prefix for Crew-scoped pub/sub topics and keys.
-pub const CREW_PREFIX: &str = "buzz";
+pub const CREW_PREFIX: &str = "crew";
 
 /// A tenant-local event routing scope.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -124,7 +124,7 @@ mod tests {
 
         assert_eq!(
             channel_key(&ctx, channel_id),
-            format!("buzz:{}:channel:{channel_id}", ctx.community())
+            format!("crew:{}:channel:{channel_id}", ctx.community())
         );
     }
 
@@ -132,7 +132,7 @@ mod tests {
     fn global_key_includes_community() {
         let ctx = ctx(0xaaaa, "a.example");
 
-        assert_eq!(global_key(&ctx), format!("buzz:{}:global", ctx.community()));
+        assert_eq!(global_key(&ctx), format!("crew:{}:global", ctx.community()));
     }
 
     #[test]
@@ -151,7 +151,7 @@ mod tests {
     fn parses_channel_topic() {
         let community_id = CommunityId::from_uuid(Uuid::from_u128(0xaaaa));
         let channel_id = Uuid::from_u128(0xbbbb);
-        let raw = format!("buzz:{community_id}:channel:{channel_id}");
+        let raw = format!("crew:{community_id}:channel:{channel_id}");
 
         assert_eq!(
             EventTopicKey::parse_redis_channel(&raw).unwrap(),
@@ -165,7 +165,7 @@ mod tests {
     #[test]
     fn parses_global_topic() {
         let community_id = CommunityId::from_uuid(Uuid::from_u128(0xaaaa));
-        let raw = format!("buzz:{community_id}:global");
+        let raw = format!("crew:{community_id}:global");
 
         assert_eq!(
             EventTopicKey::parse_redis_channel(&raw).unwrap(),

@@ -8,7 +8,7 @@
 //!
 //! Two encodings are supported:
 //!   - `.agent.json` — canonical snapshot manifest
-//!   - `.agent.png` — avatar image with manifest in a `buzz_agent_snapshot`
+//!   - `.agent.png` — avatar image with manifest in a `crew_agent_snapshot`
 //!     tEXt chunk
 //!
 //! Both formats may carry memory at any level. Memory entries are plaintext,
@@ -50,7 +50,7 @@ use crate::managed_agents::types::ManagedAgentRecord;
 // ── Constants ────────────────────────────────────────────────────────────────
 
 /// tEXt chunk keyword used in `.agent.png` files.
-pub const PNG_CHUNK_KEYWORD: &str = "buzz_agent_snapshot";
+pub const PNG_CHUNK_KEYWORD: &str = "crew_agent_snapshot";
 
 /// Maximum avatar size (bytes) to inline as a data URL. Avatars larger than
 /// this are stored as a URL reference instead.
@@ -370,7 +370,7 @@ pub(crate) fn extract_chunk_payload_png(png_bytes: &[u8]) -> Result<Vec<u8>, Str
         .iter()
         .find(|c| c.keyword == PNG_CHUNK_KEYWORD)
         .map(|c| c.text.as_str())
-        .ok_or_else(|| "PNG does not contain a buzz_agent_snapshot tEXt chunk".to_string())?;
+        .ok_or_else(|| "PNG does not contain a crew_agent_snapshot tEXt chunk".to_string())?;
 
     STANDARD
         .decode(chunk_text.trim())

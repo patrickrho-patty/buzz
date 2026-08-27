@@ -62,7 +62,7 @@ import { CommunityApplyErrorScreen } from "@/features/communities/ui/CommunityAp
 import { CommunityChangeOverlay } from "@/features/communities/ui/CommunityChangeOverlay";
 import { setAvatarProfileSyncQueryClient } from "@/features/profile/avatarProfileSync";
 import { EncryptedBackupProvider } from "@/features/settings/EncryptedBackupProvider";
-import { createBuzzQueryClient } from "@/shared/api/queryClient";
+import { createCrewQueryClient } from "@/shared/api/queryClient";
 import { useIdentityQuery } from "@/shared/api/hooks";
 import { isSharedIdentity as isSharedIdentityCmd } from "@/shared/api/tauri";
 import { getProfile } from "@/shared/api/tauriProfiles";
@@ -214,7 +214,7 @@ function CommunitySwitchGate() {
 }
 
 function CommunityQueryProvider({ children }: { children: ReactNode }) {
-  const [queryClient] = useState(createBuzzQueryClient);
+  const [queryClient] = useState(createCrewQueryClient);
 
   useEffect(() => setAvatarProfileSyncQueryClient(queryClient), [queryClient]);
 
@@ -783,7 +783,7 @@ export function App() {
   useCloseWindowShortcut();
   useInitialRenderReady();
   const [sharedIdentity, setSharedIdentity] = useState<boolean | null>(null);
-  const [queryClient] = useState(createBuzzQueryClient);
+  const [queryClient] = useState(createCrewQueryClient);
 
   useEffect(() => {
     isSharedIdentityCmd()

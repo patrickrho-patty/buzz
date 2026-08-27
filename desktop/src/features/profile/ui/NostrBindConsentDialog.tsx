@@ -114,7 +114,7 @@ async function copyToClipboard(text: string): Promise<boolean> {
 
 function appendCallbackStatus(callbackUrl: string): string {
   const url = new URL(callbackUrl);
-  url.searchParams.set("buzz_bind", "signed");
+  url.searchParams.set("crew_bind", "signed");
   return url.toString();
 }
 

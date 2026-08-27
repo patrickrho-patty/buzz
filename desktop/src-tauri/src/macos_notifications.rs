@@ -373,8 +373,8 @@ mod tests {
             Path::new("/tmp/Fake.app/crew-desktop"),
         ));
         assert!(!is_application_bundle_layout(
-            Path::new("/Users/developer/buzz/desktop/src-tauri/target/debug"),
-            Path::new("/Users/developer/buzz/desktop/src-tauri/target/debug/griddle-desktop"),
+            Path::new("/Users/developer/crew/desktop/src-tauri/target/debug"),
+            Path::new("/Users/developer/crew/desktop/src-tauri/target/debug/crew-desktop"),
         ));
         assert!(!is_application_bundle_layout(
             Path::new("/Applications/Crew.app"),

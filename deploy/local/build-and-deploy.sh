@@ -103,7 +103,7 @@ if [ "$helm_rc" != 0 ]; then
 fi
 
 # ── 4. verify 3/3 Ready ───────────────────────────────────────────────────────
-# Find the relay Deployment: everything under this release named "buzz" except
+# Find the relay Deployment: everything under this release named "crew" except
 # the bundled "*-minio" Deployment. (The chart fullname collapses
 # "<release>-<chart>" to "<release>" when the release name already contains the
 # chart name, so the name isn't always "<release>-crew".)

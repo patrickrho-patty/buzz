@@ -335,7 +335,7 @@ function classifyDeveloperToolName(value: string | null | undefined) {
   if (!value) return null;
 
   const normalized = normalizeToolNameText(value);
-  const base = normalized.replace(/^buzz_dev_mcp_/, "");
+  const base = normalized.replace(/^crew_dev_mcp_/, "");
 
   if (base === "shell" || normalized.endsWith("_shell")) return "shell";
   if (base === "read_file" || normalized.endsWith("_read_file"))
@@ -347,7 +347,7 @@ function classifyDeveloperToolName(value: string | null | undefined) {
   if (base === "todo") return "todo";
   if (base === "stop") return "stop_hook";
   if (base === "postcompact") return "post_compact_hook";
-  if (DEVELOPER_TOOL_BASES.has(base) || normalized.includes("buzz_dev_mcp")) {
+  if (DEVELOPER_TOOL_BASES.has(base) || normalized.includes("crew_dev_mcp")) {
     return "dev_mcp";
   }
   return null;
@@ -562,7 +562,7 @@ export function tokenizeShellCommand(command: string): string[] {
 function isBuzzExecutable(token: string) {
   const base = token.split(/[\\/]/).pop();
   // `crew` is the canonical binary; `crew` accepted for older transcripts.
-  return base === "crew" || base === "buzz" || token === "buzz";
+  return base === "crew" || base === "crew" || token === "crew";
 }
 
 function isCommandSeparator(token: string) {

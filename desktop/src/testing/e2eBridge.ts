@@ -1083,7 +1083,7 @@ function createMockCustomEmojiSetEvents(): RelayEvent[] {
       "",
       [
         ["d", CUSTOM_EMOJI_SET_D_TAG],
-        ["emoji", "buzz", "https://example.com/e2e/buzz.png"],
+        ["emoji", "crew", "https://example.com/e2e/crew.png"],
         // A relay-hosted emoji whose URL matches rewriteRelayUrl()'s pattern,
         // used by the reaction guard to assert the proxy rewrite fires.
         ["emoji", REACTION_EMOJI_SHORTCODE, REACTION_EMOJI_URL],
@@ -1100,7 +1100,7 @@ function createMockCustomEmojiSetEvents(): RelayEvent[] {
         ["emoji", "narf", "https://example.com/e2e/narf.png"],
         // member B claims :crew: with a DIFFERENT url — unionCustomEmoji must
         // collapse it to one deterministic winner, never expose two URLs.
-        ["emoji", "buzz", "https://example.com/e2e/crew-b.png"],
+        ["emoji", "crew", "https://example.com/e2e/crew-b.png"],
         ["emoji", "bufo_joy", "https://example.com/e2e/bufo-joy.png"],
       ],
       "b".repeat(64),
@@ -5749,8 +5749,8 @@ function handleGetLikedNotes(): RawUserNotesResponse {
 
 const MOCK_PROJECT_SEEDS = [
   {
-    dtag: "buzz",
-    name: "buzz",
+    dtag: "crew",
+    name: "crew",
     description:
       "Relay, desktop, and mobile clients for the Crew community platform.",
     cloneUrl: `${DEFAULT_RELAY_HTTP_URL}/git/${MOCK_IDENTITY_PUBKEY}/crew`,
@@ -5960,8 +5960,8 @@ function buildMockProjectEvents(): RelayEvent[] {
       KIND_PROJECT_ANNOUNCEMENT,
       "",
       [
-        ["d", "buzz"],
-        ["name", "buzz"],
+        ["d", "crew"],
+        ["name", "crew"],
         ["description", "The complete Crew community platform."],
         ["a", `${KIND_REPO_ANNOUNCEMENT}:${projectOwner}:crew`],
         ["a", `${KIND_REPO_ANNOUNCEMENT}:${ALICE_PUBKEY}:relay-tools`],
@@ -8370,7 +8370,7 @@ async function handleDiscoverManagedAgentPrereqs(
         configuredPrereqs?.acp?.command ?? args.input?.acpCommand ?? "crew-acp",
       resolved_path:
         configuredPrereqs?.acp?.resolvedPath ??
-        "/Users/wesb/dev/buzz/target/debug/crew-acp",
+        "/Users/wesb/dev/crew/target/debug/crew-acp",
       available: configuredPrereqs?.acp?.available ?? true,
     },
     mcp: {
@@ -12213,7 +12213,7 @@ export function maybeInstallE2eTauriMocks() {
         };
       case "clone_project_repository": {
         // Clones land in reposDir/<repo-name>, matching the terminal mocks.
-        const path = "/tmp/buzz/REPOS/buzz";
+        const path = "/tmp/crew/REPOS/crew";
         const commit = "0123456789abcdef0123456789abcdef01234567";
         window.__CREW_E2E_PROJECT_REPO_SYNC_STATUS__ = {
           local_path: path,
@@ -12540,15 +12540,15 @@ export function maybeInstallE2eTauriMocks() {
           input: { expectedCommit: string };
         };
         return {
-          path: "/tmp/buzz/REPOS/buzz",
+          path: "/tmp/crew/REPOS/crew",
           cloned: false,
-          recoveryRef: `refs/buzz/merge-recovery/${input.expectedCommit}`,
-          targetRef: `refs/buzz/merge-recovery-target/${"f".repeat(40)}`,
+          recoveryRef: `refs/crew/merge-recovery/${input.expectedCommit}`,
+          targetRef: `refs/crew/merge-recovery-target/${"f".repeat(40)}`,
         };
       }
       case "open_project_terminal":
         return {
-          path: "/tmp/buzz/REPOS/buzz",
+          path: "/tmp/crew/REPOS/crew",
           cloned: false,
         };
       case "get_relay_ws_url":

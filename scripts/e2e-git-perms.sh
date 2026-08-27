@@ -347,7 +347,7 @@ RELAY_PID=$!
 
 # Wait for relay to be ready (poll, not sleep)
 for i in $(seq 1 "$RELAY_STARTUP_TIMEOUT"); do
-    if curl -sf --max-time 2 "${RELAY_HTTP}/" -H "Accept: application/nostr+json" | grep -q "Buzz"; then
+    if curl -sf --max-time 2 "${RELAY_HTTP}/" -H "Accept: application/nostr+json" | grep -q "Crew"; then
         break
     fi
     if [[ $i -eq "$RELAY_STARTUP_TIMEOUT" ]]; then

@@ -54,9 +54,9 @@ The human operator signs off for accountability.
 - **Signing:** if the agent has a registered signing key, sign commits. If not, commits will land unverified — this is acceptable until agent SSH keys are provisioned. Do NOT use the human's signing key.
 - **Verify before pushing:** `git log -1` should show the human's `Signed-off-by` trailer.
 
-<!-- BEGIN BUZZ MANAGED — regenerated automatically, do not edit below -->
+<!-- BEGIN CREW MANAGED — regenerated automatically, do not edit below -->
 ## Active Agents
 
 *(No agents deployed yet. Add agents in the Crew desktop app.)*
 
-<!-- END BUZZ MANAGED -->
+<!-- END CREW MANAGED -->

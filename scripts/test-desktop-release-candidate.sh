@@ -48,7 +48,7 @@ base=$(git -C "$tmp" rev-parse HEAD)
 mock_bin=$(mktemp -d)
 cat > "$mock_bin/gh" <<GH
 #!/usr/bin/env bash
-[[ "\$1" == api && "\$2" == "repos/block/buzz/commits/$prior_candidate/pulls" ]] || exit 90
+[[ "\$1" == api && "\$2" == "repos/block/crew/commits/$prior_candidate/pulls" ]] || exit 90
 cat <<JSON
 [{"merged_at":"2026-01-01T00:00:00Z","merge_commit_sha":"$prior_merge","head":{"sha":"$prior_candidate"}}]
 JSON
@@ -103,7 +103,7 @@ spec = importlib.util.spec_from_file_location("desktop_release", pathlib.Path("s
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 candidate = module.git("rev-parse", "HEAD")
-module.previous_release("1.0.1-beta", "block/buzz", allow_target_sha=candidate)
+module.previous_release("1.0.1-beta", "block/crew", allow_target_sha=candidate)
 PY
   git -c tag.gpgSign=false tag -f desktop-v1.0.1-beta "$base" >/dev/null
   if PATH="$mock_bin:$PATH" python3 - <<'PY'
@@ -114,7 +114,7 @@ spec = importlib.util.spec_from_file_location("desktop_release", pathlib.Path("s
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 candidate = module.git("rev-parse", "HEAD")
-module.previous_release("1.0.1-beta", "block/buzz", allow_target_sha=candidate)
+module.previous_release("1.0.1-beta", "block/crew", allow_target_sha=candidate)
 PY
   then
     echo "validator accepted a prerelease target tag at the wrong SHA" >&2; exit 1
@@ -132,7 +132,7 @@ spec = importlib.util.spec_from_file_location("desktop_release", pathlib.Path("s
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 candidate = module.git("rev-parse", "HEAD")
-module.previous_release("1.0.1-beta", "block/buzz", allow_target_sha=candidate)
+module.previous_release("1.0.1-beta", "block/crew", allow_target_sha=candidate)
 PY
   then
     echo "validator accepted a mismatched stable tag for a prerelease target" >&2; exit 1
@@ -163,7 +163,7 @@ git -C "$migration" commit -qm 'fix: migration change'
 migration_base=$(git -C "$migration" rev-parse HEAD)
 cat > "$mock_bin/gh" <<GH
 #!/usr/bin/env bash
-[[ "\$1" == api && "\$2" == "repos/block/buzz/commits/$production_tag/pulls" ]] || exit 90
+[[ "\$1" == api && "\$2" == "repos/block/crew/commits/$production_tag/pulls" ]] || exit 90
 printf '%s\n' '[{"merged_at":"2026-01-01T00:00:00Z","merge_commit_sha":"$production_tag","head":{"sha":"$prior_candidate"}}]'
 GH
 chmod +x "$mock_bin/gh"

@@ -25,7 +25,7 @@ if [[ "${CREW_RESET_WEBVIEW_STATE:-0}" == "1" ]]; then
     DEV_URL="${DEV_URL}?resetDevState=1"
 fi
 
-CREW_TAURI_CONFIG="{\"build\":{\"devUrl\":\"${DEV_URL}\",\"beforeDevCommand\":\"exec ./node_modules/.bin/vite --port ${CREW_VITE_PORT} --strictPort\"},\"identifier\":\"xyz.patty.griddle.app.dev\",\"productName\":\"Buzz Dev\"}"
+CREW_TAURI_CONFIG="{\"build\":{\"devUrl\":\"${DEV_URL}\",\"beforeDevCommand\":\"exec ./node_modules/.bin/vite --port ${CREW_VITE_PORT} --strictPort\"},\"identifier\":\"xyz.patty.crew.app.dev\",\"productName\":\"Crew Dev\"}"
 unset VITE_DEV_BRANCH
 
 # In worktrees, extract a label from the branch name and derive a unique app
@@ -63,7 +63,7 @@ if git rev-parse --is-inside-work-tree &>/dev/null; then
             esac
 
             KEYRING_IDENTITY="$(printf '%s' "$KEYRING_BLOB" | python3 -c 'import json, sys; value = json.load(sys.stdin).get("identity", ""); print(value if isinstance(value, str) else "")' 2>/dev/null || true)"
-            CANONICAL_KEY="$HOME/Library/Application Support/xyz.patty.griddle.app.dev/identity.key"
+            CANONICAL_KEY="$HOME/Library/Application Support/xyz.patty.crew.app.dev/identity.key"
             LEGACY_CANONICAL_KEY="$HOME/Library/Application Support/xyz.block.sprout.app.dev/identity.key"
 
             SHARED_IDENTITY="$KEYRING_IDENTITY"
@@ -89,7 +89,7 @@ if git rev-parse --is-inside-work-tree &>/dev/null; then
         if swift "$GENERATE_DEV_ICON" "$BASE_ICON" "$DEV_ICON" "$CREW_WORKTREE_LABEL"; then
             echo "🌳 Worktree: ${CREW_WORKTREE_LABEL}"
             export VITE_DEV_BRANCH="$CREW_WORKTREE_LABEL"
-            CREW_TAURI_CONFIG="{\"build\":{\"devUrl\":\"${DEV_URL}\",\"beforeDevCommand\":\"exec ./node_modules/.bin/vite --port ${CREW_VITE_PORT} --strictPort\"},\"identifier\":\"xyz.patty.griddle.app.dev.${CREW_INSTANCE_SLUG}\",\"productName\":\"Crew Dev (${CREW_WORKTREE_LABEL})\",\"bundle\":{\"icon\":[\"$DEV_ICON\"]}}"
+            CREW_TAURI_CONFIG="{\"build\":{\"devUrl\":\"${DEV_URL}\",\"beforeDevCommand\":\"exec ./node_modules/.bin/vite --port ${CREW_VITE_PORT} --strictPort\"},\"identifier\":\"xyz.patty.crew.app.dev.${CREW_INSTANCE_SLUG}\",\"productName\":\"Crew Dev (${CREW_WORKTREE_LABEL})\",\"bundle\":{\"icon\":[\"$DEV_ICON\"]}}"
         fi
     fi
 fi

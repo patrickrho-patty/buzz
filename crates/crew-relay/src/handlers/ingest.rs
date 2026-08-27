@@ -4876,8 +4876,8 @@ mod tests {
     fn project_envelope_accepts_same_repo_d_under_two_owners() {
         // The NIP-34 fork case. Identity is the whole coordinate, so these are
         // two distinct members, not a duplicate.
-        let a = member_coord(OWNER_A, "buzz");
-        let b = member_coord(OWNER_B, "buzz");
+        let a = member_coord(OWNER_A, "crew");
+        let b = member_coord(OWNER_B, "crew");
         let ev = make_project(&[&["d", "forks"], &["a", &a], &["a", &b]]);
         assert!(validate_project_envelope(&ev).is_ok());
     }
@@ -4953,7 +4953,7 @@ mod tests {
 
     #[test]
     fn project_envelope_rejects_duplicate_member_coordinate() {
-        let coord = member_coord(OWNER_A, "buzz");
+        let coord = member_coord(OWNER_A, "crew");
         let ev = make_project(&[&["d", "platform"], &["a", &coord], &["a", &coord]]);
         let err = validate_project_envelope(&ev).unwrap_err();
         assert!(
@@ -4979,7 +4979,7 @@ mod tests {
     fn project_envelope_rejects_duplicate_heavy_list_on_cap_not_duplicate() {
         // The cap counts raw `a` tags, so a duplicate-heavy list is refused on
         // count — parse volume is never bounded only by the frame limit.
-        let coord = member_coord(OWNER_A, "buzz");
+        let coord = member_coord(OWNER_A, "crew");
         let mut tags: Vec<Vec<&str>> = vec![vec!["d", "wide"]];
         for _ in 0..=PROJECT_MEMBER_CAP {
             tags.push(vec!["a", coord.as_str()]);
@@ -5007,7 +5007,7 @@ mod tests {
 
     #[test]
     fn project_envelope_rejects_member_owner_not_hex() {
-        let coord = member_coord(&"z".repeat(64), "buzz");
+        let coord = member_coord(&"z".repeat(64), "crew");
         let ev = make_project(&[&["d", "platform"], &["a", &coord]]);
         let err = validate_project_envelope(&ev).unwrap_err();
         assert!(
@@ -5020,7 +5020,7 @@ mod tests {
     fn project_envelope_rejects_member_owner_uppercase_hex() {
         // `#a` filter matching is byte-exact: an uppercase-owner head would be
         // invisible to the lowercase-coordinate queries every reader issues.
-        let coord = member_coord(&"A".repeat(64), "buzz");
+        let coord = member_coord(&"A".repeat(64), "crew");
         let ev = make_project(&[&["d", "platform"], &["a", &coord]]);
         let err = validate_project_envelope(&ev).unwrap_err();
         assert!(
@@ -5031,7 +5031,7 @@ mod tests {
 
     #[test]
     fn project_envelope_rejects_member_owner_wrong_length() {
-        let coord = member_coord(&"a".repeat(63), "buzz");
+        let coord = member_coord(&"a".repeat(63), "crew");
         let ev = make_project(&[&["d", "platform"], &["a", &coord]]);
         let err = validate_project_envelope(&ev).unwrap_err();
         assert!(

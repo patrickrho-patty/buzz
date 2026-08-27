@@ -4,7 +4,7 @@ use super::*;
 fn test_npm_eacces_hint_guidance_mentions_buzz_private_dir() {
     let hint = npm_eacces_hint("EACCES: permission denied", "npm install -g foo").unwrap();
     assert!(
-        hint.contains("Buzz's private Node tools directory"),
+        hint.contains("Crew's private Node tools directory"),
         "hint: {hint}"
     );
 }
@@ -23,23 +23,23 @@ fn test_rewrite_npm_install_uses_private_prefix() {
 #[test]
 fn test_rewrite_npm_i_uses_private_prefix() {
     assert_eq!(
-        rewrite_npm_global_install("npm i -g some-package", "'/tmp/buzz'"),
-        "npm i --global --prefix '/tmp/buzz' some-package"
+        rewrite_npm_global_install("npm i -g some-package", "'/tmp/crew'"),
+        "npm i --global --prefix '/tmp/crew' some-package"
     );
 }
 
 #[test]
 fn test_rewrite_npm_uninstall_uses_private_prefix() {
     assert_eq!(
-        rewrite_npm_global_install("npm uninstall -g @zed-industries/codex-acp", "'/tmp/buzz'"),
-        "npm uninstall --global --prefix '/tmp/buzz' @zed-industries/codex-acp"
+        rewrite_npm_global_install("npm uninstall -g @zed-industries/codex-acp", "'/tmp/crew'"),
+        "npm uninstall --global --prefix '/tmp/crew' @zed-industries/codex-acp"
     );
 }
 
 #[test]
 fn test_rewrite_ignores_non_global_command() {
     assert_eq!(
-        rewrite_npm_global_install("npm install foo", "'/tmp/buzz'"),
+        rewrite_npm_global_install("npm install foo", "'/tmp/crew'"),
         "npm install foo"
     );
 }
@@ -47,8 +47,8 @@ fn test_rewrite_ignores_non_global_command() {
 #[test]
 fn test_shell_quote_escapes_single_quotes() {
     assert_eq!(
-        shell_quote(std::path::Path::new("/tmp/Buzz's Node")),
-        "'/tmp/Buzz'\\''s Node'"
+        shell_quote(std::path::Path::new("/tmp/Crew's Node")),
+        "'/tmp/Crew'\\''s Node'"
     );
 }
 
