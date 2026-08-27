@@ -13,7 +13,7 @@ use super::*;
 #[test]
 fn numeric_context_limit_inherits_from_persona_env() {
     let record = test_record();
-    let runtime = buzz_agent_runtime();
+    let runtime = crew_agent_runtime();
     let tiers = persona_env_tiers("BUZZ_AGENT_MAX_CONTEXT_TOKENS", "200000");
 
     let surface = read_config_surface(&record, Some(runtime), None, &tiers, None);
@@ -30,7 +30,7 @@ fn record_max_tokens_overrides_global_env_with_secondary() {
         "BUZZ_AGENT_MAX_OUTPUT_TOKENS".to_string(),
         "8192".to_string(),
     );
-    let runtime = buzz_agent_runtime();
+    let runtime = crew_agent_runtime();
     let tiers = global_env_tiers("BUZZ_AGENT_MAX_OUTPUT_TOKENS", "16384");
 
     let surface = read_config_surface(&record, Some(runtime), None, &tiers, None);
@@ -126,7 +126,7 @@ fn structured_fallback_intact_when_no_env_representation() {
 #[test]
 fn post_sanitization_empty_global_env_falls_through_to_persona_tier() {
     let record = test_record();
-    let runtime = buzz_agent_rt();
+    let runtime = crew_agent_rt();
     // No global env (stripped); persona provides the valid fallback.
     let tiers = persona_env_tiers("BUZZ_AGENT_THINKING_EFFORT", "medium");
 
@@ -269,7 +269,7 @@ fn reserved_key_absent_from_definition_env_falls_through() {
 fn b4_canonical_effort_level_surfaces_as_buzz_explicit() {
     let mut record = test_record();
     record.effort_level = Some("high".to_string());
-    let runtime = buzz_agent_runtime();
+    let runtime = crew_agent_runtime();
     let surface = read_config_surface(&record, Some(runtime), None, &no_tiers(), None);
     let effort = surface
         .normalized
@@ -285,7 +285,7 @@ fn b4_canonical_effort_level_shadows_file_tier() {
     let mut record = test_record();
     record.effort_level = Some("medium".to_string());
     // No env var set — the config-file tier would win if canonical were absent.
-    let runtime = buzz_agent_runtime();
+    let runtime = crew_agent_runtime();
     let surface = read_config_surface(&record, Some(runtime), None, &no_tiers(), None);
     let effort = surface
         .normalized
@@ -304,7 +304,7 @@ fn b4_record_env_var_wins_over_canonical_effort_level() {
     record
         .env_vars
         .insert("BUZZ_AGENT_THINKING_EFFORT".to_string(), "high".to_string());
-    let runtime = buzz_agent_runtime();
+    let runtime = crew_agent_runtime();
     let surface = read_config_surface(&record, Some(runtime), None, &no_tiers(), None);
     let effort = surface
         .normalized
@@ -319,7 +319,7 @@ fn b4_record_env_var_wins_over_canonical_effort_level() {
 #[test]
 fn b4_none_canonical_effort_does_not_surface() {
     let record = test_record(); // effort_level defaults to None
-    let runtime = buzz_agent_runtime();
+    let runtime = crew_agent_runtime();
     let surface = read_config_surface(&record, Some(runtime), None, &no_tiers(), None);
     assert!(
         surface.normalized.thinking_effort.is_none(),
@@ -395,7 +395,7 @@ fn claude_config_dir_none_falls_back_to_home_claude_json() {
 fn effort_option_selected_by_category_drives_all_facts() {
     let mut record = test_record();
     record.effort_level = Some("high".to_string());
-    let runtime = buzz_agent_rt();
+    let runtime = crew_agent_rt();
     let cache = SessionConfigCache {
         config_options: vec![AcpConfigOptionEntry {
             config_id: "thinking-level".to_string(),

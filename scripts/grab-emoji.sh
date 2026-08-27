@@ -148,7 +148,7 @@ _resolve_url() {
 
 for emoji_name in "$@"; do
   # Use --name override if provided, otherwise use the Slack emoji name
-  buzz_shortcode="${BUZZ_NAME:-$emoji_name}"
+  crew_shortcode="${BUZZ_NAME:-$emoji_name}"
 
   # Resolve URL
   emoji_url=$(_resolve_url "$emoji_name") || {
@@ -157,10 +157,10 @@ for emoji_name in "$@"; do
   }
 
   # Register in Buzz
-  set_output=$(buzz emoji set --shortcode "$buzz_shortcode" --url "$emoji_url" 2>&1) || {
+  set_output=$(buzz emoji set --shortcode "$crew_shortcode" --url "$emoji_url" 2>&1) || {
     echo "${emoji_name} → ERROR: buzz emoji set failed — ${set_output}"
     continue
   }
 
-  echo "${emoji_name} → registered as :${buzz_shortcode}: in Buzz"
+  echo "${emoji_name} → registered as :${crew_shortcode}: in Buzz"
 done

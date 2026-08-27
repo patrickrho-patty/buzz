@@ -23,4 +23,4 @@ fi
 export BUZZ_HEALTH_PORT="${BUZZ_HEALTH_PORT:-8080}"
 export BUZZ_METRICS_PORT="${BUZZ_METRICS_PORT:-9102}"
 
-exec /code/buzz-relay
+exec /code/crew-relay

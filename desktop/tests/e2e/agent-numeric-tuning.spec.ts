@@ -4,7 +4,7 @@
  * per-agent Advanced section.
  *
  * Covers:
- *   1. Global defaults Advanced shows numeric inputs for buzz-agent.
+ *   1. Global defaults Advanced shows numeric inputs for crew-agent.
  *   2. Global defaults Advanced hides numeric inputs for non-capable runtimes.
  *   3. Per-agent Goose: saving a max-tokens value globally surfaces as
  *      Inherit (<value>) placeholder in the per-agent edit dialog.
@@ -61,17 +61,17 @@ test("global_advanced_buzz_agent_shows_all_numeric_controls", async ({
   page,
 }) => {
   // The mock bridge's withMockRuntimeConfigMetadata injects the numeric env var
-  // fields for buzz-agent. When buzz-agent is selected and Advanced is opened,
+  // fields for crew-agent. When crew-agent is selected and Advanced is opened,
   // all three numeric inputs must be visible.
   await installMockBridge(page, {
     acpRuntimesCatalog: [
       {
-        id: "buzz-agent",
+        id: "crew-agent",
         label: "Buzz Agent",
         avatar_url: "",
         availability: "available",
-        command: "buzz-agent",
-        binary_path: "/usr/local/bin/buzz-agent",
+        command: "crew-agent",
+        binary_path: "/usr/local/bin/crew-agent",
         default_args: [],
         mcp_command: null,
         install_hint: "Ships with the Buzz desktop app.",
@@ -85,7 +85,7 @@ test("global_advanced_buzz_agent_shows_all_numeric_controls", async ({
       env_vars: {},
       provider: "anthropic",
       model: null,
-      preferred_runtime: "buzz-agent",
+      preferred_runtime: "crew-agent",
     },
   });
 
@@ -95,7 +95,7 @@ test("global_advanced_buzz_agent_shows_all_numeric_controls", async ({
   // animation wrapper), so we click the toggle and wait for content directly.
   await page.getByTestId("global-agent-advanced-toggle").click();
 
-  // All three numeric inputs must be present for buzz-agent.
+  // All three numeric inputs must be present for crew-agent.
   await expect(page.getByTestId("numeric-max-output-tokens-input")).toBeVisible(
     { timeout: 5_000 },
   );
@@ -240,12 +240,12 @@ test("delayed_catalog_per_agent_saved_tuning_values_visible_then_structured_cont
   await installMockBridge(page, {
     acpRuntimesCatalog: [
       {
-        id: "buzz-agent",
+        id: "crew-agent",
         label: "Buzz Agent",
         avatar_url: "",
         availability: "available",
-        command: "buzz-agent",
-        binary_path: "/usr/local/bin/buzz-agent",
+        command: "crew-agent",
+        binary_path: "/usr/local/bin/crew-agent",
         default_args: [],
         mcp_command: null,
         install_hint: "Ships with the Buzz desktop app.",
@@ -263,13 +263,13 @@ test("delayed_catalog_per_agent_saved_tuning_values_visible_then_structured_cont
       env_vars: {},
       provider: "anthropic",
       model: null,
-      preferred_runtime: "buzz-agent",
+      preferred_runtime: "crew-agent",
     },
     managedAgents: [
       {
         pubkey: TEST_IDENTITIES.tyler.pubkey,
         name: "Tyler Agent",
-        runtime: "buzz-agent",
+        runtime: "crew-agent",
         status: "stopped",
         channelNames: ["agents"],
         envVars: {
@@ -329,13 +329,13 @@ test("failed_catalog_per_agent_saved_tuning_values_remain_visible_as_generic_row
       env_vars: {},
       provider: "anthropic",
       model: null,
-      preferred_runtime: "buzz-agent",
+      preferred_runtime: "crew-agent",
     },
     managedAgents: [
       {
         pubkey: TEST_IDENTITIES.tyler.pubkey,
         name: "Tyler Agent",
-        runtime: "buzz-agent",
+        runtime: "crew-agent",
         status: "stopped",
         channelNames: ["agents"],
         envVars: {

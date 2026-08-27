@@ -9,7 +9,7 @@ externalPostgresql:
 externalRedis:
   url: "redis://:pw@redis.example.com:6379"
 s3:
-  bucket: "buzz-media"
+  bucket: "crew-media"
 persistence:
   git:
     enabled: true

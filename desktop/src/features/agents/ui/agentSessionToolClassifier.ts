@@ -377,7 +377,7 @@ export function parseBuzzCliCommand(
     operation,
     object: preview,
     source: "shell",
-    groupKey: `buzz-cli:${operation}`,
+    groupKey: `crew-cli:${operation}`,
   };
 }
 

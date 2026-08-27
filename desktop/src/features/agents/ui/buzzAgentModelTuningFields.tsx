@@ -1,5 +1,5 @@
 /**
- * Tier-1 buzz-agent model-tuning UI fields.
+ * Tier-1 crew-agent model-tuning UI fields.
  *
  * Extracted from CreateAgentDialogSections.tsx (deleted in B5/#1667) to avoid
  * coupling tuning knobs to a legacy create-dialog.  Imported by
@@ -226,8 +226,8 @@ const NUMERIC_KIND_TEST_IDS: Record<NumericDescriptor["kind"], string> = {
 /**
  * Input `min` attribute per numeric kind.
  *
- * - `maxOutputTokens` / `contextLimit`: minimum 1 — the buzz-agent runtime
- *   rejects 0 for these fields (crates/buzz-agent/src/config.rs:921-928).
+ * - `maxOutputTokens` / `contextLimit`: minimum 1 — the crew-agent runtime
+ *   rejects 0 for these fields (crates/crew-agent/src/config.rs:921-928).
  * - `maxRounds`: 0 is valid (means unlimited).
  */
 export const NUMERIC_KIND_MIN: Record<NumericDescriptor["kind"], number> = {
@@ -321,7 +321,7 @@ export function BuzzAgentModelTuningFields({
   return (
     <div className="space-y-4">
       <p className="text-2xs font-semibold uppercase tracking-wide text-muted-foreground">
-        buzz-agent model tuning
+        crew-agent model tuning
       </p>
 
       <div className="grid gap-4 md:grid-cols-2">

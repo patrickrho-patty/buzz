@@ -251,8 +251,8 @@ pub(crate) fn shutdown_managed_agents(app: &tauri::AppHandle) -> Result<(), Stri
     // All tracked PIDs have already been killed above, so pass an empty skip list.
     managed_agents::sweep_orphaned_agent_processes(app, &[]);
 
-    // System-wide sweep: agent workers (goose, buzz-agent, etc.) are spawned
-    // in their own process groups by buzz-acp, so group-kills above only
+    // System-wide sweep: agent workers (goose, crew-agent, etc.) are spawned
+    // in their own process groups by crew-acp, so group-kills above only
     // reach the harness, not the workers. Scan all user processes and kill any
     // known agent binaries that are still running.
     managed_agents::sweep_system_agent_processes(&managed_agents::current_instance_id(app), &[]);

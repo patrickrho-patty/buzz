@@ -500,7 +500,7 @@ interface FeedbackAttachment {
   filename?: string;
 }
 
-const FEEDBACK_STATUS_KEY = "buzz-admin-feedback-status";
+const FEEDBACK_STATUS_KEY = "crew-admin-feedback-status";
 
 function loadFeedbackStatuses(): FeedbackStatuses {
   try {

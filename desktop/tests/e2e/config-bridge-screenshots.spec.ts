@@ -286,7 +286,7 @@ test.describe("config bridge screenshots", () => {
     await panel.screenshot({ path: `${SHOTS}/05-advanced-expanded.png` });
   });
 
-  test("06 — buzz-agent empty MCP servers", async ({ page }) => {
+  test("06 — crew-agent empty MCP servers", async ({ page }) => {
     await installMockBridge(page, {
       managedAgents: [
         {

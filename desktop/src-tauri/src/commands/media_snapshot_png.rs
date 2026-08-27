@@ -5,7 +5,7 @@
 //! (`buzz_agent_snapshot` / `buzz_team_snapshot`); the sanitizer's re-encode
 //! would destroy it and the relay would previously reject it. These helpers
 //! extract the chunk before the re-encode and re-inject it afterwards. The
-//! relay allowlists exactly these keywords in `buzz-media::validation` — the
+//! relay allowlists exactly these keywords in `crew-media::validation` — the
 //! two lists must stay in sync.
 
 /// tEXt keywords that carry Buzz snapshot manifests (`.agent.png` /
@@ -154,7 +154,7 @@ mod tests {
         };
 
         let snapshot = AgentSnapshot {
-            format: "buzz-agent-snapshot".to_string(),
+            format: "crew-agent-snapshot".to_string(),
             version: 1,
             definition: AgentSnapshotDefinition {
                 name: "Tree Trunks".to_string(),
@@ -198,13 +198,13 @@ mod tests {
         let sanitized = sanitize_image_for_upload(exported, "image/png").unwrap();
 
         // Relay ingest path.
-        let relay_config = buzz_media_pkg::MediaConfig {
+        let relay_config = crew_media_pkg::MediaConfig {
             s3_endpoint: String::new(),
             s3_access_key: String::new(),
             s3_secret_key: String::new(),
             s3_bucket: String::new(),
             s3_region: "us-east-1".to_string(),
-            s3_addressing_style: buzz_media_pkg::S3AddressingStyle::Path,
+            s3_addressing_style: crew_media_pkg::S3AddressingStyle::Path,
             max_image_bytes: 50 * 1024 * 1024,
             max_gif_bytes: 10 * 1024 * 1024,
             max_video_bytes: 524_288_000,
@@ -215,7 +215,7 @@ mod tests {
             upload_port_header: None,
         };
         assert_eq!(
-            buzz_media_pkg::validation::validate_content(&sanitized, &relay_config)
+            crew_media_pkg::validation::validate_content(&sanitized, &relay_config)
                 .expect("relay rejected a sanitized agent snapshot PNG"),
             "image/png"
         );

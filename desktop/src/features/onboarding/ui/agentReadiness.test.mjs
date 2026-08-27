@@ -127,11 +127,11 @@ test("resolveAgentReadiness_cli_skips_unavailable_runtimes", () => {
 });
 
 test("resolveAgentReadiness_cli_ignores_buzz_agent_runtime", () => {
-  // buzz-agent with availability=available and logged_in must NOT trigger the CLI path.
+  // crew-agent with availability=available and logged_in must NOT trigger the CLI path.
   const runtimes = [
     makeRuntime({
-      id: "buzz-agent",
-      label: "buzz-agent",
+      id: "crew-agent",
+      label: "crew-agent",
       authStatus: { status: "not_applicable" },
     }),
   ];
@@ -140,21 +140,21 @@ test("resolveAgentReadiness_cli_ignores_buzz_agent_runtime", () => {
 });
 
 // ---------------------------------------------------------------------------
-// buzz-agent path
+// crew-agent path
 // ---------------------------------------------------------------------------
 
 test("resolveAgentReadiness_buzz_agent_ready_when_provider_model_and_key_set", () => {
   // anthropic requires ANTHROPIC_API_KEY
   const result = resolveAgentReadiness(
-    [makeRuntime({ id: "buzz-agent", label: "Buzz Agent" })],
+    [makeRuntime({ id: "crew-agent", label: "Buzz Agent" })],
     makeConfig({
-      preferred_runtime: "buzz-agent",
+      preferred_runtime: "crew-agent",
       provider: "anthropic",
       model: "claude-3-5-sonnet-latest",
       env_vars: { ANTHROPIC_API_KEY: "sk-ant-test" },
     }),
   );
-  assert.deepEqual(result, { ready: true, reason: "buzz-agent" });
+  assert.deepEqual(result, { ready: true, reason: "crew-agent" });
 });
 
 test("resolveAgentReadiness_buzz_agent_not_ready_when_missing_required_credential_key", () => {
@@ -210,7 +210,7 @@ test("resolveAgentReadiness_welcome_readiness_uses_ready_cli_without_preference"
 });
 
 test("resolveAgentReadiness_legacy_config_without_preference_uses_buzz_agent_fields", () => {
-  const runtimes = [makeRuntime({ id: "buzz-agent", label: "Buzz Agent" })];
+  const runtimes = [makeRuntime({ id: "crew-agent", label: "Buzz Agent" })];
   const result = resolveAgentReadiness(
     runtimes,
     makeConfig({
@@ -220,7 +220,7 @@ test("resolveAgentReadiness_legacy_config_without_preference_uses_buzz_agent_fie
       env_vars: { ANTHROPIC_API_KEY: "sk-ant-test" },
     }),
   );
-  assert.deepEqual(result, { ready: true, reason: "buzz-agent" });
+  assert.deepEqual(result, { ready: true, reason: "crew-agent" });
 });
 
 test("resolveAgentReadiness_legacy_config_does_not_treat_goose_binary_as_ready", () => {
@@ -239,7 +239,7 @@ test("resolveAgentReadiness_legacy_config_does_not_treat_goose_binary_as_ready",
 test("resolveAgentReadiness_preferred_goose_does_not_borrow_ready_buzz_agent_config", () => {
   const runtimes = [
     makeRuntime({ id: "goose", label: "Goose" }),
-    makeRuntime({ id: "buzz-agent", label: "Buzz Agent" }),
+    makeRuntime({ id: "crew-agent", label: "Buzz Agent" }),
   ];
   const result = resolveAgentReadiness(
     runtimes,

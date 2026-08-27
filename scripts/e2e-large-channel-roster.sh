@@ -13,7 +13,7 @@ cd "$REPO_ROOT"
 export BUZZ_RELAY_URL RELAY_URL BUZZ_RELAY_PRIVATE_KEY
 unset BUZZ_AUTH_TAG
 
-for binary in buzz buzz-admin; do
+for binary in buzz crew-admin; do
   resolved="$(command -v "$binary" || true)"
   [[ "$resolved" == "$REPO_ROOT/target/release/$binary" ]] || {
     echo "error: $binary must resolve to $REPO_ROOT/target/release/$binary (got ${resolved:-not found})" >&2
@@ -27,14 +27,14 @@ key_field() {
   awk -v label="$1" '$1 == label && $2 == "key:" { print $3 }'
 }
 
-OWNER_GEN="$(buzz-admin generate-key)"
+OWNER_GEN="$(crew-admin generate-key)"
 OWNER_SK="$(printf '%s\n' "$OWNER_GEN" | key_field Secret)"
 export BUZZ_PRIVATE_KEY="$OWNER_SK"
 
 CHANNEL="$(buzz channels create \
   --name "roster-boundary-$$" --type stream --visibility open | jq -er '.channel_id')"
 
-LATE_GEN="$(buzz-admin generate-key)"
+LATE_GEN="$(crew-admin generate-key)"
 LATE_SK="$(printf '%s\n' "$LATE_GEN" | key_field Secret)"
 LATE_PUBKEY="$(printf '%s\n' "$LATE_GEN" | key_field Public)"
 
@@ -63,7 +63,7 @@ FROM channels
 WHERE id = :'channel'::uuid;
 SQL
 
-TRIGGER_GEN="$(buzz-admin generate-key)"
+TRIGGER_GEN="$(crew-admin generate-key)"
 TRIGGER_PUBKEY="$(printf '%s\n' "$TRIGGER_GEN" | key_field Public)"
 buzz channels add-member --channel "$CHANNEL" --pubkey "$TRIGGER_PUBKEY" --role member >/dev/null
 
@@ -101,7 +101,7 @@ SQL
 jq -e 'has("39000") and has("39001")' <<<"$DISCOVERY_BEFORE" >/dev/null
 
 DATABASE_URL="$DATABASE_URL" RELAY_URL="$RELAY_URL" \
-  buzz-admin reconcile-channels --channel "$CHANNEL" >/dev/null
+  crew-admin reconcile-channels --channel "$CHANNEL" >/dev/null
 
 DISCOVERY_AFTER="$(psql "$DATABASE_URL" -AtX -v ON_ERROR_STOP=1 \
   --set=channel="$CHANNEL" <<'SQL'

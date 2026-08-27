@@ -612,7 +612,7 @@ class MediaUploadService {
 
     return nostr.Event.from(
       kind: _uploadAuthKind,
-      content: 'Upload buzz-media',
+      content: 'Upload crew-media',
       tags: tags,
       secretKey: privkeyHex,
       verify: false,

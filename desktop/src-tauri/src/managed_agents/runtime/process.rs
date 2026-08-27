@@ -6,9 +6,9 @@ use super::*;
 /// variants are listed because macOS `proc_name()` and Linux `/proc/comm`
 /// may report either form depending on how the binary was built.
 pub(crate) const KNOWN_AGENT_BINARIES: &[&str] = &[
-    "buzz-acp",
+    "crew-acp",
     "buzz_acp",
-    "buzz-agent",
+    "crew-agent",
     "buzz_agent",
     "claude-agent-acp",
     "claude_agent_acp",
@@ -17,10 +17,10 @@ pub(crate) const KNOWN_AGENT_BINARIES: &[&str] = &[
     "codex-acp",
     "codex_acp",
     "goose",
-    // buzz-dev-mcp's multicall personalities (rg, tree, buzz,
+    // crew-dev-mcp's multicall personalities (rg, tree, buzz,
     // git-credential-nostr, git-sign-nostr) are short-lived per-tool-call
     // invocations — not listed here.
-    "buzz-dev-mcp",
+    "crew-dev-mcp",
     "buzz_dev_mcp",
 ];
 
@@ -138,7 +138,7 @@ pub(crate) fn current_instance_id(app: &AppHandle) -> String {
 /// Build the full `BUZZ_MANAGED_AGENT=<instance-id>` env entry we match
 /// against when scanning processes. Kept here so the spawn stamp and the sweep
 /// matcher can never drift apart.
-pub(super) fn buzz_marker_entry(instance_id: &str) -> Vec<u8> {
+pub(super) fn crew_marker_entry(instance_id: &str) -> Vec<u8> {
     format!("BUZZ_MANAGED_AGENT={instance_id}").into_bytes()
 }
 
@@ -148,7 +148,7 @@ pub(super) fn buzz_marker_entry(instance_id: &str) -> Vec<u8> {
 /// id belongs to another live Buzz app and must never be reaped here.
 #[cfg(target_os = "macos")]
 pub(crate) fn process_has_buzz_marker(pid: u32, instance_id: &str) -> bool {
-    let marker = buzz_marker_entry(instance_id);
+    let marker = crew_marker_entry(instance_id);
     let Some(buf) = sweep::procargs2_buffer(pid) else {
         return false;
     };
@@ -192,7 +192,7 @@ pub(crate) fn process_has_buzz_marker(pid: u32, instance_id: &str) -> bool {
 
 #[cfg(all(unix, not(target_os = "macos")))]
 pub(crate) fn process_has_buzz_marker(pid: u32, instance_id: &str) -> bool {
-    let marker = buzz_marker_entry(instance_id);
+    let marker = crew_marker_entry(instance_id);
     let Ok(data) = std::fs::read(format!("/proc/{pid}/environ")) else {
         return false;
     };
@@ -307,7 +307,7 @@ fn sigterm_then_sigkill(pids: &[i32]) {
 }
 
 /// Resolve orphan candidate PIDs to their actual process group IDs, dedupe,
-/// and signal the groups. An orphaned grandchild (e.g. `goose` or `buzz-dev-mcp`)
+/// and signal the groups. An orphaned grandchild (e.g. `goose` or `crew-dev-mcp`)
 /// whose harness has exited retains the harness's PGID — signaling that PGID
 /// kills the entire orphaned subtree. Falls back to the candidate PID itself
 /// when PGID resolution fails (process may have exited between detection and

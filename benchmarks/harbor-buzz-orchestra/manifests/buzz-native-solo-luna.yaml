@@ -1,7 +1,7 @@
 # Default condition for the local benchmarks/buzz-dataset suite: one production
 # Buzz agent on gpt-5.6-luna at reasoning effort `medium`.
 #
-# buzz-acp supplies crates/buzz-acp/src/base_prompt.md from the checked-out
+# crew-acp supplies crates/crew-acp/src/base_prompt.md from the checked-out
 # source build; the persona below only establishes that there is no team. The
 # suite scores Buzz product behavior (threading, mentions, exact membership),
 # and that behavior comes from the base prompt — so the cheap model at a

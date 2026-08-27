@@ -28,7 +28,7 @@ export const PRESET_LOGOS: Record<string, string> = {
 };
 
 function isBuzzRuntime(runtime: AcpRuntimeCatalogEntry): boolean {
-  return runtime.id.trim().toLowerCase() === "buzz-agent";
+  return runtime.id.trim().toLowerCase() === "crew-agent";
 }
 
 export function getRuntimeDisplayLabel(

@@ -91,17 +91,17 @@ wait_healthy "MinIO" "buzz-minio"
 log "Applying database schema..."
 export PGHOST=localhost
 export PGPORT=5432
-export PGUSER=buzz
-export PGPASSWORD=buzz_dev
-export PGDATABASE=buzz
+export PGUSER=crew
+export PGPASSWORD=crew_dev
+export PGDATABASE=crew
 
 # Use the already-running docker postgres for desired-state planning instead of
 # downloading an embedded Postgres from Maven Central (transient-fetch flake source).
 export PGSCHEMA_PLAN_HOST=localhost
 export PGSCHEMA_PLAN_PORT=5432
-export PGSCHEMA_PLAN_DB=buzz
-export PGSCHEMA_PLAN_USER=buzz
-export PGSCHEMA_PLAN_PASSWORD=buzz_dev
+export PGSCHEMA_PLAN_DB=crew
+export PGSCHEMA_PLAN_USER=crew
+export PGSCHEMA_PLAN_PASSWORD=crew_dev
 
 ./bin/pgschema apply --file schema/schema.sql --auto-approve
 docker exec -i -e PGPASSWORD="${PGPASSWORD}" buzz-postgres \
@@ -135,7 +135,7 @@ ok "Community seeded"
 # ── Build relay ──────────────────────────────────────────────────────────────
 
 if [[ "${SKIP_BUILD}" == "true" ]]; then
-  for bin in buzz-relay git-credential-nostr; do
+  for bin in crew-relay git-credential-nostr; do
     if [[ ! -x "./target/${CARGO_PROFILE}/${bin}" ]]; then
       err "--no-build: ./target/${CARGO_PROFILE}/${bin} missing or not executable"
       exit 1
@@ -144,7 +144,7 @@ if [[ "${SKIP_BUILD}" == "true" ]]; then
   log "Skipping relay build (--no-build); using existing target/${CARGO_PROFILE}/ binaries"
 else
   log "Building relay (profile: ${CARGO_PROFILE})..."
-  cargo build --profile "${CARGO_PROFILE}" -p buzz-relay -p git-credential-nostr
+  cargo build --profile "${CARGO_PROFILE}" -p crew-relay -p git-credential-nostr
   ok "Relay built"
 fi
 
@@ -166,7 +166,7 @@ if [[ "${BUZZ_REQUIRE_RELAY_MEMBERSHIP:-}" == "true" ]]; then
 fi
 
 nohup env \
-  DATABASE_URL=postgres://buzz:buzz_dev@localhost:5432/buzz \
+  DATABASE_URL=postgres://buzz:crew_dev@localhost:5432/buzz \
   REDIS_URL=redis://localhost:6379 \
   RELAY_URL=ws://localhost:3000 \
   BUZZ_BIND_ADDR=0.0.0.0:3000 \
@@ -174,16 +174,16 @@ nohup env \
   BUZZ_RECONCILE_CHANNELS=true \
   BUZZ_GIT_PROBE_WRITERS=8 \
   ${MEMBERSHIP_ENV[@]+"${MEMBERSHIP_ENV[@]}"} \
-  "./target/${CARGO_PROFILE}/buzz-relay" > /tmp/buzz-relay.log 2>&1 &
-echo $! > /tmp/buzz-relay.pid
+  "./target/${CARGO_PROFILE}/crew-relay" > /tmp/crew-relay.log 2>&1 &
+echo $! > /tmp/crew-relay.pid
 
 # ── Poll readiness ───────────────────────────────────────────────────────────
 
 log "Waiting for relay readiness..."
 for attempt in $(seq 1 60); do
-  if ! kill -0 "$(cat /tmp/buzz-relay.pid)" 2>/dev/null; then
+  if ! kill -0 "$(cat /tmp/crew-relay.pid)" 2>/dev/null; then
     err "Relay process died"
-    cat /tmp/buzz-relay.log
+    cat /tmp/crew-relay.log
     exit 1
   fi
   status_code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/_readiness || true)
@@ -196,5 +196,5 @@ for attempt in $(seq 1 60); do
 done
 
 err "Relay did not become ready within 60s"
-cat /tmp/buzz-relay.log
+cat /tmp/crew-relay.log
 exit 1

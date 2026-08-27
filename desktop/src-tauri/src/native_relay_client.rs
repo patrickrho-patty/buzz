@@ -6,10 +6,10 @@
 //! single socket — a second socket per feature would multiply relay connection
 //! slots and duplicate the NIP-42 handshake for no benefit.
 //!
-//! Built on `buzz-ws-client`, which owns the wire format and the NIP-42
+//! Built on `crew-ws-client`, which owns the wire format and the NIP-42
 //! handshake. That crate is request/response shaped (one caller, `next_event`
 //! off a buffer); the session lifecycle lives here instead of being pushed down
-//! into it, because `buzz-cli` and `buzz-test-client` consume that crate and do
+//! into it, because `crew-cli` and `crew-test-client` consume that crate and do
 //! not want subscription bookkeeping.
 //!
 //! # Caller contract
@@ -24,7 +24,7 @@ use std::{
     time::Duration,
 };
 
-use buzz_ws_client_pkg::{NostrWsConnection, RelayMessage};
+use crew_ws_client_pkg::{NostrWsConnection, RelayMessage};
 use nostr::{Event, Keys};
 use tokio::{
     sync::{mpsc, oneshot, Mutex},
@@ -856,8 +856,8 @@ fn parse_retry_in_seconds(message: &str) -> Option<u64> {
 /// A lapsed read is an idle relay, not a failure. Distinguished by variant
 /// rather than by message text so a reworded error cannot turn every idle
 /// period into a reconnect storm.
-fn is_read_timeout(error: &buzz_ws_client_pkg::WsClientError) -> bool {
-    matches!(error, buzz_ws_client_pkg::WsClientError::Timeout)
+fn is_read_timeout(error: &crew_ws_client_pkg::WsClientError) -> bool {
+    matches!(error, crew_ws_client_pkg::WsClientError::Timeout)
 }
 
 #[cfg(test)]

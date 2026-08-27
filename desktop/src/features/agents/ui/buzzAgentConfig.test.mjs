@@ -42,15 +42,15 @@ test("env var key constants match expected BUZZ_AGENT_* names", () => {
 // isBuzzAgentRuntime
 // ---------------------------------------------------------------------------
 
-test("isBuzzAgentRuntime returns true only for buzz-agent id", () => {
-  assert.equal(isBuzzAgentRuntime("buzz-agent"), true);
+test("isBuzzAgentRuntime returns true only for crew-agent id", () => {
+  assert.equal(isBuzzAgentRuntime("crew-agent"), true);
 });
 
 test("isBuzzAgentRuntime returns false for other runtimes", () => {
   assert.equal(isBuzzAgentRuntime("goose"), false);
   assert.equal(isBuzzAgentRuntime("custom"), false);
   assert.equal(isBuzzAgentRuntime(""), false);
-  assert.equal(isBuzzAgentRuntime("buzz-agent-v2"), false);
+  assert.equal(isBuzzAgentRuntime("crew-agent-v2"), false);
 });
 
 // ---------------------------------------------------------------------------
@@ -183,12 +183,12 @@ test("non-numeric string is stored as-is (validation is at the backend)", () => 
 // prospectiveRuntimeId (the real resolved runtime) while selectedRuntimeId
 // carries the "inherit"/"custom" sentinel — the two must not be conflated.
 
-test("isBuzzAgentRuntime(prospectiveRuntimeId) shows fields when Edit resolves buzz-agent even though selectedRuntimeId sentinel is 'inherit'", () => {
-  // Simulates Edit dialog state: inheritHarness=true, persona is buzz-agent.
+test("isBuzzAgentRuntime(prospectiveRuntimeId) shows fields when Edit resolves crew-agent even though selectedRuntimeId sentinel is 'inherit'", () => {
+  // Simulates Edit dialog state: inheritHarness=true, persona is crew-agent.
   // selectedRuntimeId would be "inherit" (sentinel for custom-command hiding),
-  // but prospectiveRuntimeId correctly resolves to "buzz-agent".
+  // but prospectiveRuntimeId correctly resolves to "crew-agent".
   const selectedRuntimeIdSentinel = "inherit"; // what Edit passes to selectedRuntimeId
-  const prospectiveRuntimeId = "buzz-agent"; // what Edit passes to modelTuningRuntimeId
+  const prospectiveRuntimeId = "crew-agent"; // what Edit passes to modelTuningRuntimeId
 
   assert.equal(
     isBuzzAgentRuntime(selectedRuntimeIdSentinel),
@@ -198,23 +198,23 @@ test("isBuzzAgentRuntime(prospectiveRuntimeId) shows fields when Edit resolves b
   assert.equal(
     isBuzzAgentRuntime(prospectiveRuntimeId),
     true,
-    "prospectiveRuntimeId 'buzz-agent' MUST trigger model-tuning fields",
+    "prospectiveRuntimeId 'crew-agent' MUST trigger model-tuning fields",
   );
 });
 
-test("isBuzzAgentRuntime(prospectiveRuntimeId) shows fields when Edit has a pinned buzz-agent (selectedRuntimeId sentinel is also 'inherit')", () => {
+test("isBuzzAgentRuntime(prospectiveRuntimeId) shows fields when Edit has a pinned crew-agent (selectedRuntimeId sentinel is also 'inherit')", () => {
   // Simulates Edit dialog with a pinned non-custom runtime:
   // selectedRuntimeId sentinel = "inherit" (non-custom known runtime),
-  // prospectiveRuntimeId = "buzz-agent" (selectedRuntime?.id).
+  // prospectiveRuntimeId = "crew-agent" (selectedRuntime?.id).
   const selectedRuntimeIdSentinel = "inherit";
-  const prospectiveRuntimeId = "buzz-agent";
+  const prospectiveRuntimeId = "crew-agent";
 
   assert.equal(isBuzzAgentRuntime(prospectiveRuntimeId), true);
   assert.equal(isBuzzAgentRuntime(selectedRuntimeIdSentinel), false);
 });
 
-test("isBuzzAgentRuntime(prospectiveRuntimeId) hides fields when Edit resolves to non-buzz-agent", () => {
-  // E.g. user switches from buzz-agent to goose in Edit — prospectiveRuntimeId = "goose"
+test("isBuzzAgentRuntime(prospectiveRuntimeId) hides fields when Edit resolves to non-crew-agent", () => {
+  // E.g. user switches from crew-agent to goose in Edit — prospectiveRuntimeId = "goose"
   const prospectiveRuntimeId = "goose";
   assert.equal(isBuzzAgentRuntime(prospectiveRuntimeId), false);
 });

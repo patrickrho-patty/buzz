@@ -39,7 +39,7 @@
 -- parent is cloned onto every existing partition and onto partitions
 -- created later (`CREATE TABLE .. PARTITION OF`), so partition rotation
 -- keeps the guard. Row-level triggers also fire for COPY. Coverage across
--- the partition topology is asserted by a buzz-db test.
+-- the partition topology is asserted by a crew-db test.
 
 CREATE FUNCTION events_created_at_floor_guard() RETURNS trigger
 LANGUAGE plpgsql AS $$

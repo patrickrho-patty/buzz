@@ -14,9 +14,9 @@ fn a1_buzz_acp_model_absent_anthropic_model_present_after_env_apply() {
 
     // BUZZ_ACP_MODEL must be removed. Command::get_envs returns None for
     // explicitly-removed keys.
-    let buzz_acp = env_map.get(std::ffi::OsStr::new("BUZZ_ACP_MODEL"));
+    let crew_acp = env_map.get(std::ffi::OsStr::new("BUZZ_ACP_MODEL"));
     assert!(
-        buzz_acp.is_none() || buzz_acp.unwrap().is_none(),
+        crew_acp.is_none() || crew_acp.unwrap().is_none(),
         "BUZZ_ACP_MODEL must be absent (or explicitly removed) after A1 policy"
     );
 
@@ -47,9 +47,9 @@ fn a1_anthropic_model_removed_when_no_effective_model() {
         anthropic.is_none() || anthropic.unwrap().is_none(),
         "ANTHROPIC_MODEL must be absent when no effective model"
     );
-    let buzz_acp = env_map.get(std::ffi::OsStr::new("BUZZ_ACP_MODEL"));
+    let crew_acp = env_map.get(std::ffi::OsStr::new("BUZZ_ACP_MODEL"));
     assert!(
-        buzz_acp.is_none() || buzz_acp.unwrap().is_none(),
+        crew_acp.is_none() || crew_acp.unwrap().is_none(),
         "BUZZ_ACP_MODEL must always be absent after A1 policy"
     );
 }

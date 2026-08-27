@@ -29,7 +29,7 @@ image:
   pullSecrets: []
 
 # ── Topology ────────────────────────────────────────────────────────────────
-# replicaCount > 1 hard-requires Redis for buzz-pubsub (in-cluster or external).
+# replicaCount > 1 hard-requires Redis for crew-pubsub (in-cluster or external).
 # It does NOT require ReadWriteMany git storage: git ref/object state is
 # object-store-backed (each request hydrates an ephemeral repo from S3; writer
 # serialization is the object-store pointer CAS), and repo-name uniqueness lives
@@ -295,7 +295,7 @@ postgresql:
   auth:
     database: buzz
     username: buzz
-    existingSecret: '{{ if contains "buzz" .Release.Name }}{{ .Release.Name }}-relay{{ else }}{{ .Release.Name }}-buzz-relay{{ end }}'
+    existingSecret: '{{ if contains "buzz" .Release.Name }}{{ .Release.Name }}-relay{{ else }}{{ .Release.Name }}-crew-relay{{ end }}'
     secretKeys:
       adminPasswordKey: postgres-password
   persistence:
@@ -311,7 +311,7 @@ externalPostgresql:
 redis:
   enabled: false
   auth:
-    existingSecret: '{{ if contains "buzz" .Release.Name }}{{ .Release.Name }}-relay{{ else }}{{ .Release.Name }}-buzz-relay{{ end }}'
+    existingSecret: '{{ if contains "buzz" .Release.Name }}{{ .Release.Name }}-relay{{ else }}{{ .Release.Name }}-crew-relay{{ end }}'
     existingSecretPasswordKey: redis-password
   persistence:
     enabled: true
@@ -341,8 +341,8 @@ externalRedis:
 # per tick until the permission is added.
 s3:
   endpoint: ""
-  bucket: "buzz-media"
-  # SigV4 signing region shared by the relay and `buzz-admin deletions`.
+  bucket: "crew-media"
+  # SigV4 signing region shared by the relay and `crew-admin deletions`.
   # Keep the MinIO/local default operable; production providers should set
   # their credential region explicitly when it differs.
   region: "us-east-1"

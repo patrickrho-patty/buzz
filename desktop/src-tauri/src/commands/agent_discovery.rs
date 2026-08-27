@@ -170,7 +170,7 @@ pub async fn save_custom_harness(
 /// Remove a user-defined harness definition from `<app-data>/custom_harnesses/`.
 ///
 /// Only `source: custom` harnesses may be deleted. Attempting to delete a
-/// built-in id (goose, claude, codex, buzz-agent) returns an error without
+/// built-in id (goose, claude, codex, crew-agent) returns an error without
 /// touching the filesystem.
 #[tauri::command]
 pub async fn delete_custom_harness(id: String, app: tauri::AppHandle) -> Result<(), String> {
@@ -751,8 +751,8 @@ fn install_shell_command(command: &str) -> Result<std::process::Command, String>
     let login_path = crate::managed_agents::login_shell_path();
     let had_login = login_path.is_some();
     let managed: Vec<std::path::PathBuf> = [
-        crate::managed_agents::buzz_managed_node_bin_dir(),
-        crate::managed_agents::buzz_managed_npm_bin_dir(),
+        crate::managed_agents::crew_managed_node_bin_dir(),
+        crate::managed_agents::crew_managed_npm_bin_dir(),
     ]
     .into_iter()
     .flatten()
@@ -857,7 +857,7 @@ fn apply_npm_env(cmd: &mut std::process::Command) {
     cmd.env_remove("NPM_CONFIG_CACHE");
     cmd.env_remove("COREPACK_HOME");
 
-    if let Some(prefix) = crate::managed_agents::buzz_managed_npm_prefix() {
+    if let Some(prefix) = crate::managed_agents::crew_managed_npm_prefix() {
         cmd.env("NPM_CONFIG_PREFIX", &prefix);
         cmd.env("npm_config_prefix", &prefix);
         cmd.env("COREPACK_HOME", prefix.join("corepack"));
@@ -944,8 +944,8 @@ fn install_powershell_command(command: &str) -> std::process::Command {
     // No login-shell path: login_shell_path() always returns None on Windows,
     // and we deliberately skip it here to avoid POSIX-shaped entries.
     let managed: Vec<std::path::PathBuf> = [
-        crate::managed_agents::buzz_managed_node_bin_dir(),
-        crate::managed_agents::buzz_managed_npm_bin_dir(),
+        crate::managed_agents::crew_managed_node_bin_dir(),
+        crate::managed_agents::crew_managed_npm_bin_dir(),
     ]
     .into_iter()
     .flatten()
@@ -1602,13 +1602,13 @@ mod tests {
         );
     }
 
-    /// buzz-agent has no install commands on any platform.
+    /// crew-agent has no install commands on any platform.
     #[test]
     fn test_buzz_agent_has_no_install_commands() {
-        let buzz = crate::managed_agents::known_acp_runtime_exact("buzz-agent").unwrap();
+        let buzz = crate::managed_agents::known_acp_runtime_exact("crew-agent").unwrap();
         assert!(
             buzz.cli_install_commands_for_os().is_empty(),
-            "buzz-agent ships with the app — must never have install commands"
+            "crew-agent ships with the app — must never have install commands"
         );
     }
 
@@ -1793,7 +1793,7 @@ mod tests {
     }
 }
 
-/// Returns the Windows-only Git Bash prerequisite used by buzz-agent's shell MCP.
+/// Returns the Windows-only Git Bash prerequisite used by crew-agent's shell MCP.
 /// `None` on other platforms keeps the shared Doctor surfaces platform-neutral.
 #[tauri::command]
 pub async fn discover_git_bash_prerequisite(

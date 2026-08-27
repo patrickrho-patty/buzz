@@ -21,7 +21,7 @@ case "$PULL_POLICY" in
     *) echo "error: invalid BUZZ_K8S_TEST_PULL_POLICY: $PULL_POLICY" >&2; exit 2 ;;
 esac
 
-MANAGED_BY="buzz-backend-kubernetes"
+MANAGED_BY="crew-backend-kubernetes"
 BINDING_VERSION="v1"
 NAMESPACE="buzz-k8s-sprig-$(date +%s)-$RANDOM"
 CREATED=0
@@ -38,7 +38,7 @@ cleanup() {
         return 1
     fi
     foreign="$(kubectl --context "$CONTEXT" --namespace "$NAMESPACE" get pods -o json \
-        | jq '[.items[] | select(.metadata.labels["app.kubernetes.io/managed-by"] != "buzz-backend-kubernetes" or .metadata.labels["buzz.block.xyz/binding-version"] != "v1")] | length')"
+        | jq '[.items[] | select(.metadata.labels["app.kubernetes.io/managed-by"] != "crew-backend-kubernetes" or .metadata.labels["buzz.block.xyz/binding-version"] != "v1")] | length')"
     if [[ "$foreign" != 0 ]]; then
         echo "REFUSING cleanup: namespace contains an unowned pod: $NAMESPACE" >&2
         return 1
@@ -77,7 +77,7 @@ spec:
       imagePullPolicy: $PULL_POLICY
       command: [/bin/bash, -ceu]
       args:
-        - 'test "\$(readlink /usr/local/bin/buzz-acp)" = sprig; echo DIGEST_ABI_OK'
+        - 'test "\$(readlink /usr/local/bin/crew-acp)" = sprig; echo DIGEST_ABI_OK'
 YAML
 
 if ! kubectl --context "$CONTEXT" --namespace "$NAMESPACE" wait \

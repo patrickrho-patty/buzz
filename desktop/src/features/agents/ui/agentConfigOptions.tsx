@@ -157,7 +157,7 @@ const PERSONA_MODEL_OPTIONS_BY_RUNTIME: Record<
   readonly PersonaModelOption[]
 > = {
   goose: [DEFAULT_MODEL_OPTION],
-  "buzz-agent": [DEFAULT_MODEL_OPTION],
+  "crew-agent": [DEFAULT_MODEL_OPTION],
   claude: [DEFAULT_MODEL_OPTION],
   codex: [DEFAULT_MODEL_OPTION],
 };
@@ -178,7 +178,7 @@ function isKnownLlmProvider(
  * Required credential env keys for the given runtime + provider combination.
  * Derived from PROVIDER_CREDENTIAL_CONFIG — single source of truth.
  *
- * buzz-agent and goose use provider-specific credentials; claude and codex
+ * crew-agent and goose use provider-specific credentials; claude and codex
  * handle auth via CLI login (surfaced separately via the CliLogin surface).
  */
 export function requiredCredentialEnvKeys(
@@ -186,7 +186,7 @@ export function requiredCredentialEnvKeys(
   provider: string,
 ): readonly string[] {
   const normalizedRuntime = runtimeId.trim();
-  if (normalizedRuntime !== "buzz-agent" && normalizedRuntime !== "goose") {
+  if (normalizedRuntime !== "crew-agent" && normalizedRuntime !== "goose") {
     return [];
   }
   const config = PROVIDER_CREDENTIAL_CONFIG[provider.trim().toLowerCase()];
@@ -201,7 +201,7 @@ export function isMissingRequiredDropdownField(
 }
 
 export function runtimeSupportsLlmProviderSelection(runtimeId: string) {
-  return runtimeId === "buzz-agent" || runtimeId === "goose";
+  return runtimeId === "crew-agent" || runtimeId === "goose";
 }
 
 /** Clears values whose meaning or support changes with the selected harness. */
@@ -552,7 +552,7 @@ function runtimeAvailabilitySortRank(
 
 function runtimePreferenceSortRank(runtimeId: string) {
   switch (runtimeId) {
-    case "buzz-agent":
+    case "crew-agent":
       return 0;
     case "goose":
       return 1;
@@ -642,7 +642,7 @@ export function getBakedSatisfiedEnvKeys(
  * the missing credential env keys so the caller can derive `canSubmit`,
  * field `isRequired`, and `EnvVarsEditor.requiredKeys` from the same source.
  *
- * Two classes of required field for provider-selection runtimes (buzz-agent,
+ * Two classes of required field for provider-selection runtimes (crew-agent,
  * goose) — both required unconditionally per readiness.rs:
  *   1. Normalized fields: provider + model (empty string = NotReady)
  *   2. Credential env keys: provider-specific (e.g. ANTHROPIC_API_KEY)

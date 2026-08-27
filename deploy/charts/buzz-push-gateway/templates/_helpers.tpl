@@ -1,6 +1,6 @@
-{{- define "push.name" -}}{{ .Release.Name }}-buzz-push-gateway{{- end }}
+{{- define "push.name" -}}{{ .Release.Name }}-crew-push-gateway{{- end }}
 {{- define "push.labels" -}}
-app.kubernetes.io/name: buzz-push-gateway
+app.kubernetes.io/name: crew-push-gateway
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 {{- define "push.runtimeLabels" -}}

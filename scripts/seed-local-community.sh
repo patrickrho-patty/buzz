@@ -20,7 +20,7 @@ fi
 export PGHOST="${PGHOST:-localhost}"
 export PGPORT="${PGPORT:-5432}"
 export PGUSER="${PGUSER:-buzz}"
-export PGPASSWORD="${PGPASSWORD:-buzz_dev}"
+export PGPASSWORD="${PGPASSWORD:-crew_dev}"
 export PGDATABASE="${PGDATABASE:-buzz}"
 export RELAY_URL="${RELAY_URL:-ws://localhost:3000}"
 

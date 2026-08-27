@@ -1,0 +1,39 @@
+[package]
+name = "crew-admin"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Operator CLI for Buzz relay administration"
+
+[[bin]]
+name = "crew-admin"
+path = "src/main.rs"
+
+[dependencies]
+crew-db = { workspace = true }
+crew-deletion = { workspace = true }
+crew-core = { workspace = true }
+crew-auth = { workspace = true }
+crew-pubsub = { workspace = true }
+crew-search = { workspace = true }
+crew-audit = { workspace = true }
+crew-workflow = { workspace = true }
+crew-media = { workspace = true }
+nostr = { workspace = true }
+tokio = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+hex = { workspace = true }
+deadpool-redis = { workspace = true }
+# Redis TLS (rediss://, e.g. ElastiCache) uses rustls, which needs a process
+# CryptoProvider installed at startup. The workspace redis TLS feature compiles
+# both aws-lc-rs and ring in transitively, so rustls can't auto-select one — we
+# install ring explicitly in main(). Mirrors crew-relay's setup.
+rustls = { version = "0.23", default-features = false, features = ["ring", "std"] }
+tracing = { workspace = true }
+sqlx = { workspace = true }
+url = { workspace = true }
+uuid = { workspace = true }
+clap = { version = "4", features = ["derive"] }

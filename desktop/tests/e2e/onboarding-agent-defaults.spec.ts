@@ -3,7 +3,7 @@ import { installMockBridge } from "../helpers/bridge";
 import { passThroughBackupStep } from "../helpers/onboarding";
 
 function runtime(
-  id: "buzz-agent" | "claude" | "codex" | "goose",
+  id: "crew-agent" | "claude" | "codex" | "goose",
   availability: string,
   authStatus: Record<string, unknown>,
   overrides: Record<string, unknown> = {},
@@ -11,7 +11,7 @@ function runtime(
   return {
     id,
     label:
-      id === "buzz-agent"
+      id === "crew-agent"
         ? "Buzz Agent"
         : id === "claude"
           ? "Claude Code"
@@ -80,7 +80,7 @@ test("setup shows all bundled harnesses as detected", async ({ page }) => {
     page,
     {
       acpRuntimesCatalog: [
-        runtime("buzz-agent", "available", { status: "not_applicable" }),
+        runtime("crew-agent", "available", { status: "not_applicable" }),
         runtime("goose", "available", { status: "not_applicable" }),
         runtime("codex", "available", { status: "logged_in" }),
         runtime("claude", "available", { status: "logged_in" }),
@@ -94,7 +94,7 @@ test("setup shows all bundled harnesses as detected", async ({ page }) => {
   await expect(page.getByTestId("onboarding-runtime-claude")).toBeVisible();
   await expect(page.getByTestId("onboarding-runtime-codex")).toBeVisible();
   await expect(page.getByTestId("onboarding-runtime-goose")).toBeVisible();
-  await expect(page.getByTestId("onboarding-runtime-buzz-agent")).toBeVisible();
+  await expect(page.getByTestId("onboarding-runtime-crew-agent")).toBeVisible();
   await expect(page.getByRole("checkbox")).toHaveCount(0);
   const setupSkip = page.getByTestId("onboarding-setup-skip");
   await expect(setupSkip).toBeVisible();
@@ -102,7 +102,7 @@ test("setup shows all bundled harnesses as detected", async ({ page }) => {
   const harnessNote = page.getByText(/More harnesses \(Cursor, Grok, Amp…\)/);
   await expect(harnessNote).toBeVisible();
   const [lastHarnessBox, harnessNoteBox] = await Promise.all([
-    page.getByTestId("onboarding-runtime-buzz-agent").boundingBox(),
+    page.getByTestId("onboarding-runtime-crew-agent").boundingBox(),
     harnessNote.boundingBox(),
   ]);
   if (!lastHarnessBox || !harnessNoteBox) {
@@ -641,7 +641,7 @@ test("Back preserves incomplete defaults draft without writing", async ({
     page,
     {
       acpRuntimesCatalog: [
-        runtime("buzz-agent", "available", { status: "not_applicable" }),
+        runtime("crew-agent", "available", { status: "not_applicable" }),
         runtime("claude", "available", { status: "logged_in" }),
       ],
       discoverAgentModels: {
@@ -669,7 +669,7 @@ test("Back preserves incomplete defaults draft without writing", async ({
   const harness = page.getByTestId("global-agent-default-harness");
   await harness.click();
   await page
-    .getByTestId("global-agent-default-harness-option-buzz-agent")
+    .getByTestId("global-agent-default-harness-option-crew-agent")
     .click();
   await page.getByTestId("global-agent-provider").click();
   await page.getByTestId("global-agent-provider-option-anthropic").click();
@@ -706,7 +706,7 @@ test("defaults auto-selects the only ready visible harness", async ({
     page,
     {
       acpRuntimesCatalog: [
-        runtime("buzz-agent", "not_installed", { status: "not_applicable" }),
+        runtime("crew-agent", "not_installed", { status: "not_applicable" }),
         runtime("goose", "not_installed", { status: "not_applicable" }),
         runtime("claude", "available", { status: "logged_in" }),
         runtime("codex", "available", { status: "logged_out" }),
@@ -855,7 +855,7 @@ test("defaults requires a choice when multiple visible harnesses are ready", asy
     page,
     {
       acpRuntimesCatalog: [
-        runtime("buzz-agent", "available", { status: "not_applicable" }),
+        runtime("crew-agent", "available", { status: "not_applicable" }),
         runtime("goose", "available", { status: "not_applicable" }),
         runtime("claude", "available", { status: "logged_in" }),
         runtime("codex", "available", { status: "logged_in" }),
@@ -888,7 +888,7 @@ test("defaults requires a choice when multiple visible harnesses are ready", asy
     page.getByTestId("global-agent-default-harness-option-goose"),
   ).toBeVisible();
   await expect(
-    page.getByTestId("global-agent-default-harness-option-buzz-agent"),
+    page.getByTestId("global-agent-default-harness-option-crew-agent"),
   ).toBeVisible();
   await page.getByTestId("global-agent-default-harness-option-codex").click();
   await expect(harness).toHaveText("Codex");
@@ -1078,7 +1078,7 @@ test("Finish stays disabled until a provider-required harness is fully configure
     page,
     {
       acpRuntimesCatalog: [
-        runtime("buzz-agent", "available", { status: "not_applicable" }),
+        runtime("crew-agent", "available", { status: "not_applicable" }),
       ],
       discoverAgentModels: {
         models: [{ id: "claude-sonnet-4", name: "Claude Sonnet 4" }],
@@ -1098,7 +1098,7 @@ test("Finish stays disabled until a provider-required harness is fully configure
   await page.getByTestId("onboarding-setup-next").click();
   await expect(page.getByTestId("onboarding-page-config")).toBeVisible();
 
-  // buzz-agent auto-selects as the only ready harness, but with no provider
+  // crew-agent auto-selects as the only ready harness, but with no provider
   // configured the default is not launchable — Finish must be gated.
   await expect(page.getByTestId("global-agent-default-harness")).toHaveText(
     "Buzz",
@@ -1114,7 +1114,7 @@ test("Finish stays disabled until a provider-required harness is fully configure
   await expect(finish).toBeEnabled();
   await finish.click();
   await expect(page.getByText("Join or create a community")).toBeVisible();
-  expect(await readSavedRuntime(page)).toBe("buzz-agent");
+  expect(await readSavedRuntime(page)).toBe("crew-agent");
 });
 
 test("baked build config keeps Finish enabled without manual provider setup", async ({
@@ -1124,7 +1124,7 @@ test("baked build config keeps Finish enabled without manual provider setup", as
     page,
     {
       acpRuntimesCatalog: [
-        runtime("buzz-agent", "available", { status: "not_applicable" }),
+        runtime("crew-agent", "available", { status: "not_applicable" }),
       ],
       bakedBuildEnv: [
         { key: "BUZZ_AGENT_PROVIDER", masked: false, value: "databricks_v2" },

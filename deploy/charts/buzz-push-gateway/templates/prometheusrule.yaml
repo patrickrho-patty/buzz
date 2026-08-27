@@ -9,7 +9,7 @@ metadata:
     {{- end }}
 spec:
   groups:
-    - name: buzz-push-gateway
+    - name: crew-push-gateway
       rules:
         # Sustained configuration faults mean the provider credential/topic is
         # unhealthy; no endpoint is being invalidated but nothing is delivering.

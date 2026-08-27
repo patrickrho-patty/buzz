@@ -17,8 +17,8 @@ RUN apt-get update \
 COPY --from=planner /build/recipe.json recipe.json
 RUN cargo chef cook --release --recipe-path recipe.json
 COPY . .
-RUN cargo build --release --locked -p buzz-push-gateway --bin buzz-push-gateway \
-    && strip target/release/buzz-push-gateway
+RUN cargo build --release --locked -p crew-push-gateway --bin crew-push-gateway \
+    && strip target/release/crew-push-gateway
 
 FROM debian:${DEBIAN_VERSION}-slim AS runtime
 LABEL org.opencontainers.image.title="Buzz Push Gateway" \
@@ -29,9 +29,9 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd --system --gid 1000 buzz \
-    && useradd --system --uid 1000 --gid 1000 --home-dir /var/lib/buzz --create-home --shell /usr/sbin/nologin buzz
-COPY --from=builder /build/target/release/buzz-push-gateway /usr/local/bin/buzz-push-gateway
+    && useradd --system --uid 1000 --gid 1000 --home-dir /var/lib/buzz --create-home --shell /usr/sbin/nologin crew
+COPY --from=builder /build/target/release/crew-push-gateway /usr/local/bin/crew-push-gateway
 EXPOSE 8080 8081
-USER buzz:buzz
-WORKDIR /var/lib/buzz
-ENTRYPOINT ["/usr/local/bin/buzz-push-gateway"]
+USER buzz:crew
+WORKDIR /var/lib/crew
+ENTRYPOINT ["/usr/local/bin/crew-push-gateway"]

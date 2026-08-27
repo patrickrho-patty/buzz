@@ -56,19 +56,19 @@ async function selectDropdownOption(
     .click({ timeout: 5_000 });
 }
 
-// A runtime catalog with both a provider-selection runtime (buzz-agent) and a
+// A runtime catalog with both a provider-selection runtime (crew-agent) and a
 // CLI-login runtime (Claude Code) marked available, so Claude Code appears and
 // is selectable in the harness dropdown. Same shape the readiness spec uses.
 const CATALOG_WITH_CLAUDE = [
   {
-    id: "buzz-agent",
+    id: "crew-agent",
     label: "Buzz Agent",
     avatar_url: "",
     availability: "available",
-    command: "buzz-agent",
-    binary_path: "/usr/local/bin/buzz-agent",
+    command: "crew-agent",
+    binary_path: "/usr/local/bin/crew-agent",
     default_args: [],
-    mcp_command: "buzz-dev-mcp",
+    mcp_command: "crew-dev-mcp",
     install_hint: "Ships with the Buzz desktop app.",
     install_instructions_url: "https://github.com/block/buzz",
     can_auto_install: false,
@@ -97,14 +97,14 @@ const CATALOG_WITH_CLAUDE = [
 // the Edit/Save-mode test to seed an editable Codex agent.
 const CATALOG_WITH_CODEX = [
   {
-    id: "buzz-agent",
+    id: "crew-agent",
     label: "Buzz Agent",
     avatar_url: "",
     availability: "available",
-    command: "buzz-agent",
-    binary_path: "/usr/local/bin/buzz-agent",
+    command: "crew-agent",
+    binary_path: "/usr/local/bin/crew-agent",
     default_args: [],
-    mcp_command: "buzz-dev-mcp",
+    mcp_command: "crew-dev-mcp",
     install_hint: "Ships with the Buzz desktop app.",
     install_instructions_url: "https://github.com/block/buzz",
     can_auto_install: false,
@@ -132,14 +132,14 @@ const CATALOG_WITH_CODEX = [
 // empty runtime — the precondition for blankRuntimeModelProviderEditable.
 const CATALOG_NONE_AVAILABLE = [
   {
-    id: "buzz-agent",
+    id: "crew-agent",
     label: "Buzz Agent",
     avatar_url: "",
     availability: "not_installed",
-    command: "buzz-agent",
+    command: "crew-agent",
     binary_path: null,
     default_args: [],
-    mcp_command: "buzz-dev-mcp",
+    mcp_command: "crew-dev-mcp",
     install_hint: "Ships with the Buzz desktop app.",
     install_instructions_url: "https://github.com/block/buzz",
     can_auto_install: false,
@@ -592,7 +592,7 @@ test.describe("global agent config screenshots", () => {
       ).__BUZZ_E2E_INVOKE_MOCK_COMMAND__?.("get_global_agent_config", null),
     );
     expect(saved).toMatchObject({
-      preferred_runtime: "buzz-agent",
+      preferred_runtime: "crew-agent",
       provider: "anthropic",
     });
   });
@@ -603,7 +603,7 @@ test.describe("global agent config screenshots", () => {
     await installMockBridge(page, {
       acpRuntimesCatalog: CATALOG_WITH_CLAUDE,
       globalAgentConfig: {
-        preferred_runtime: "buzz-agent",
+        preferred_runtime: "crew-agent",
         provider: "anthropic",
         model: "claude-opus-4-5",
         env_vars: { ANTHROPIC_API_KEY: "sk-ant-global-value" },
@@ -656,7 +656,7 @@ test.describe("global agent config screenshots", () => {
   }) => {
     await installMockBridge(page, {
       globalAgentConfig: {
-        preferred_runtime: "buzz-agent",
+        preferred_runtime: "crew-agent",
         provider: "anthropic",
         model: "claude-opus-4-5",
         env_vars: {},
@@ -985,7 +985,7 @@ test.describe("global agent config screenshots", () => {
       globalAgentConfig: {
         provider: "databricks_v2",
         model: null,
-        preferred_runtime: "buzz-agent",
+        preferred_runtime: "crew-agent",
         env_vars: { OPENAI_API_KEY: "sk-placeholder" },
       },
     });

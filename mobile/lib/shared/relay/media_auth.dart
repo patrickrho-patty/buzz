@@ -115,7 +115,7 @@ class MediaGetAuthService {
 
     return nostr.Event.from(
       kind: _mediaGetAuthKind,
-      content: 'Get buzz-media',
+      content: 'Get crew-media',
       tags: tags,
       secretKey: privkeyHex,
       verify: false,

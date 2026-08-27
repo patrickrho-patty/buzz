@@ -164,9 +164,9 @@ _ensure-sidecar-stubs:
     set -euo pipefail
     TARGET=$(rustc -vV | sed -n 's|host: ||p')
     mkdir -p desktop/src-tauri/binaries
-    SIDECARS=(buzz-acp buzz-agent buzz-dev-mcp git-credential-nostr buzz)
+    SIDECARS=(crew-acp crew-agent crew-dev-mcp git-credential-nostr buzz)
     if [[ "$TARGET" != *windows* ]]; then
-        SIDECARS+=(buzz-backend-kubernetes)
+        SIDECARS+=(crew-backend-kubernetes)
     fi
     for bin in "${SIDECARS[@]}"; do
         touch "desktop/src-tauri/binaries/${bin}-${TARGET}"
@@ -200,7 +200,7 @@ _ensure-services:
 
 # Apply database migrations and seed the local dev community if the dev database is running
 _ensure-migrations: _ensure-services
-    cargo run -p buzz-admin -- migrate
+    cargo run -p crew-admin -- migrate
     ./scripts/seed-local-community.sh
 
 # Run clippy on the desktop Tauri Rust crate
@@ -219,7 +219,7 @@ desktop-tauri-test: _ensure-sidecar-stubs
 # This is intentionally excluded from shared CI: scheduler contention makes a
 # wall-clock assertion flaky, and the release profile is the shipped shape.
 desktop-terminal-performance-test:
-    cargo test --manifest-path desktop/src-tauri/crates/buzz-terminal/Cargo.toml --release --test latency g3_renderer_acquire_stays_within_frame_budget -- --ignored --exact --nocapture
+    cargo test --manifest-path desktop/src-tauri/crates/crew-terminal/Cargo.toml --release --test latency g3_renderer_acquire_stays_within_frame_budget -- --ignored --exact --nocapture
 
 # Verify compiled-flag behavior under both compile states (clean + capability set).
 # Runs the auto-connect and owner-only access focused tests twice with
@@ -259,12 +259,12 @@ desktop-release-build target="aarch64-apple-darwin":
     set -euo pipefail
     TARGET={{target}}
     mkdir -p desktop/src-tauri/binaries
-    touch "desktop/src-tauri/binaries/buzz-acp-$TARGET"
-    touch "desktop/src-tauri/binaries/buzz-agent-$TARGET"
+    touch "desktop/src-tauri/binaries/crew-acp-$TARGET"
+    touch "desktop/src-tauri/binaries/crew-agent-$TARGET"
     if [[ "$TARGET" != *windows* ]]; then
-        touch "desktop/src-tauri/binaries/buzz-backend-kubernetes-$TARGET"
+        touch "desktop/src-tauri/binaries/crew-backend-kubernetes-$TARGET"
     fi
-    touch "desktop/src-tauri/binaries/buzz-dev-mcp-$TARGET"
+    touch "desktop/src-tauri/binaries/crew-dev-mcp-$TARGET"
     touch "desktop/src-tauri/binaries/git-credential-nostr-$TARGET"
     touch "desktop/src-tauri/binaries/buzz-$TARGET"
     pnpm install
@@ -308,38 +308,38 @@ test-unit:
     #!/usr/bin/env bash
     set -euo pipefail
     if command -v cargo-nextest &>/dev/null; then
-        cargo nextest run -p buzz-core -p buzz-auth --lib
-        cargo nextest run -p buzz-voice --lib
-        cargo nextest run -p buzz-cli
-        # buzz-db migrator/lint tests: pure SQL-parsing unit tests (no infra).
+        cargo nextest run -p crew-core -p crew-auth --lib
+        cargo nextest run -p crew-voice --lib
+        cargo nextest run -p crew-cli
+        # crew-db migrator/lint tests: pure SQL-parsing unit tests (no infra).
         # They guard the embedded-migrator invariant (exactly the consolidated
         # 0001; cutover/backfill stays an operator script, not startup state)
-        # and the tenant-scoping lints. The Postgres-backed buzz-db tests are
+        # and the tenant-scoping lints. The Postgres-backed crew-db tests are
         # #[ignore]d, so --lib runs only the infra-free set. Without this gate a
         # stray file in migrations/ or a broken lint ships green.
-        cargo nextest run -p buzz-db --lib
-        # Multi-tenant conformance gate (buzz-conformance): the independent
+        cargo nextest run -p crew-db --lib
+        # Multi-tenant conformance gate (crew-conformance): the independent
         # replay checker + golden fixtures. No infra — pure in-process trace
         # replay — so it belongs in the unit job. Run all targets (lib + the
         # tests/replay_fixtures.rs integration test), not just --lib.
-        cargo nextest run -p buzz-conformance
+        cargo nextest run -p crew-conformance
         # Gateway unit and black-box HTTP tests are infra-free. Postgres-backed
         # contract/race tests run in the dedicated CI job below.
-        cargo nextest run -p buzz-push-gateway
+        cargo nextest run -p crew-push-gateway
         # Kubernetes backend provider: the decision layers (state machine, GC
         # planner, env precedence, naming, wire) are pure functions with a fake
         # substrate, so they belong in the unit job. Enumerated explicitly
         # because nothing in CI runs `cargo test --workspace` — workspace
         # membership alone buys clippy/check, not a single executed test.
-        cargo nextest run -p buzz-backend-kubernetes
-        # buzz-agent model-capabilities corpus: the Rust half of the
+        cargo nextest run -p crew-backend-kubernetes
+        # crew-agent model-capabilities corpus: the Rust half of the
         # cross-language drift guard. `model_capabilities.rs` embeds
         # scripts/model-capabilities.json + scripts/normative-corpus.json via
         # include_str! and replays the full locked corpus as pure in-process tests (no
         # infra). Enumerated explicitly because nothing in CI runs
         # `cargo test --workspace`; without this step a manifest edit that
         # diverges Rust from the corpus ships green.
-        cargo nextest run -p buzz-agent --lib
+        cargo nextest run -p crew-agent --lib
     else
         ./scripts/run-tests.sh unit
     fi
@@ -350,12 +350,12 @@ test-integration:
 
 # Regenerate the model-capability normative corpus from the production Rust
 # resolver. The corpus is a golden snapshot, never hand-edited: this runs the
-# `#[ignore]`d writer test in buzz-agent, which serializes `resolve()` over the
+# `#[ignore]`d writer test in crew-agent, which serializes `resolve()` over the
 # inputs-only question table to scripts/normative-corpus.json. Run this after
 # any model-capabilities.json edit, then commit the regenerated file. The
 # `corpus_matches_generated_snapshot` gate fails CI if the committed file drifts.
 regen-model-corpus:
-    cargo test -p buzz-agent --lib model_capabilities::tests::regen_corpus_file -- --ignored --exact
+    cargo test -p crew-agent --lib model_capabilities::tests::regen_corpus_file -- --ignored --exact
 
 # Buzz shared compute e2e: current desktop discovery/admission logic and
 # Playwright UI coverage.
@@ -385,23 +385,23 @@ mesh-dev-fresh:
 mesh-e2e-hardware:
     #!/usr/bin/env bash
     set -euo pipefail
-    cargo run -p buzz-relay --example mesh_serve_client_smoke
+    cargo run -p crew-relay --example mesh_serve_client_smoke
 
 # Three isolated node processes: trusted member joins and infers; stranger is rejected.
 # Uses temp homes and explicit mesh owner keystores. Never reads the Buzz Keychain.
 mesh-e2e-admission:
     #!/usr/bin/env bash
     set -euo pipefail
-    cargo run -p buzz-relay --example mesh_admission_smoke
+    cargo run -p crew-relay --example mesh_admission_smoke
 
 # Full hardware confidence suite: routing, owner admission, and real agent inference.
 mesh-e2e-confidence:
     #!/usr/bin/env bash
     set -euo pipefail
-    cargo build --release -p buzz-agent -p buzz-dev-mcp
-    cargo run -p buzz-relay --example mesh_serve_client_smoke
-    cargo run -p buzz-relay --example mesh_admission_smoke
-    cargo run -p buzz-relay --example mesh_agent_e2e
+    cargo build --release -p crew-agent -p crew-dev-mcp
+    cargo run -p crew-relay --example mesh_serve_client_smoke
+    cargo run -p crew-relay --example mesh_admission_smoke
+    cargo run -p crew-relay --example mesh_agent_e2e
 
 # Take desktop screenshots using the mock bridge
 desktop-screenshot *ARGS:
@@ -423,7 +423,7 @@ relay: bootstrap _ensure-migrations
     #!/usr/bin/env bash
     set -euo pipefail
     export PATH="{{justfile_directory()}}/bin:$PATH"
-    cargo run -p buzz-relay
+    cargo run -p crew-relay
 
 # Start the relay with the built web UI served from it
 relay-web: bootstrap _ensure-migrations
@@ -432,7 +432,7 @@ relay-web: bootstrap _ensure-migrations
     export PATH="{{justfile_directory()}}/bin:$PATH"
     [[ -d node_modules ]] || pnpm install
     pnpm -C web build
-    BUZZ_WEB_DIR=./web/dist cargo run -p buzz-relay
+    BUZZ_WEB_DIR=./web/dist cargo run -p crew-relay
 
 # Build and run the private read-only admin dashboard
 admin: bootstrap _ensure-migrations
@@ -444,7 +444,7 @@ admin: bootstrap _ensure-migrations
     export BUZZ_ADMIN_HOST="${BUZZ_ADMIN_HOST:-admin.localhost:3000}"
     export BUZZ_ADMIN_WEB_DIR="${BUZZ_ADMIN_WEB_DIR:-{{justfile_directory()}}/admin-web/dist}"
     echo "Admin dashboard: http://${BUZZ_ADMIN_HOST}/reports"
-    cargo run -p buzz-relay
+    cargo run -p crew-relay
 
 # Seed deterministic reports and product feedback for local admin dashboard review
 admin-seed: _ensure-migrations
@@ -452,15 +452,15 @@ admin-seed: _ensure-migrations
 
 # Run focused relay and browser checks for the read-only admin dashboard
 admin-check: fmt-check
-    cargo check -p buzz-relay --all-targets
-    cargo test -p buzz-relay api::admin
-    cargo test -p buzz-relay router::tests
+    cargo check -p crew-relay --all-targets
+    cargo test -p crew-relay api::admin
+    cargo test -p crew-relay router::tests
     pnpm -C admin-web check
     pnpm -C admin-web exec playwright test
 
 # Start the relay server in release mode
 relay-release: _ensure-migrations
-    cargo run -p buzz-relay --release
+    cargo run -p crew-relay --release
 
 
 # Run the desktop Tauri app in dev mode with a local relay (ports and identity derived from worktree)
@@ -478,18 +478,18 @@ dev *ARGS: bootstrap _ensure-sidecar-stubs _ensure-migrations
             if lsof -nP -iTCP:"$port" -sTCP:LISTEN >/dev/null 2>&1; then
                 echo "Error: $name port $port is already in use; refusing to launch desktop against a stale relay." >&2
                 lsof -nP -iTCP:"$port" -sTCP:LISTEN >&2 || true
-                echo "Stop the process above (often a stale buzz-relay) and rerun: just dev" >&2
+                echo "Stop the process above (often a stale crew-relay) and rerun: just dev" >&2
                 exit 1
             fi
         done
     fi
-    cargo build -p buzz-acp -p buzz-agent -p buzz-backend-kubernetes -p buzz-dev-mcp -p buzz-cli -p git-credential-nostr -p buzz-relay
+    cargo build -p crew-acp -p crew-agent -p crew-backend-kubernetes -p crew-dev-mcp -p crew-cli -p git-credential-nostr -p crew-relay
     # Docker Desktop's forwarded MinIO port can stall under the deployment
     # probe's 32 concurrent writers. Keep the gate enabled in local dev, using
     # the bounded profile already used by the relay test launcher.
     export BUZZ_GIT_PROBE_WRITERS="${BUZZ_GIT_PROBE_WRITERS:-8}"
     export BUZZ_GIT_PROBE_ROUNDS="${BUZZ_GIT_PROBE_ROUNDS:-2}"
-    ./target/debug/buzz-relay &
+    ./target/debug/crew-relay &
     RELAY_PID=$!
     cleanup() {
         [[ -n "${INSTANCE_ID:-}" ]] && ../scripts/cleanup-instance-agents.sh "$INSTANCE_ID" || true
@@ -499,7 +499,7 @@ dev *ARGS: bootstrap _ensure-sidecar-stubs _ensure-migrations
     relay_ready=false
     for _ in $(seq 1 120); do
         if ! kill -0 "$RELAY_PID" 2>/dev/null; then
-            echo "Error: buzz-relay exited during startup; refusing to launch desktop." >&2
+            echo "Error: crew-relay exited during startup; refusing to launch desktop." >&2
             wait "$RELAY_PID" || true
             exit 1
         fi
@@ -510,7 +510,7 @@ dev *ARGS: bootstrap _ensure-sidecar-stubs _ensure-migrations
         sleep 0.5
     done
     if [[ "$relay_ready" != true ]]; then
-        echo "Error: buzz-relay did not become healthy within 60 seconds; refusing to launch desktop." >&2
+        echo "Error: crew-relay did not become healthy within 60 seconds; refusing to launch desktop." >&2
         exit 1
     fi
     cd {{desktop_dir}}
@@ -527,10 +527,10 @@ desktop-standalone *ARGS: _ensure-sidecar-stubs
     #!/usr/bin/env bash
     set -euo pipefail
     export PATH="{{justfile_directory()}}/bin:$PATH"
-    cargo build -p buzz-acp -p buzz-agent -p buzz-backend-kubernetes -p buzz-dev-mcp -p buzz-cli -p git-credential-nostr
+    cargo build -p crew-acp -p crew-agent -p crew-backend-kubernetes -p crew-dev-mcp -p crew-cli -p git-credential-nostr
     TARGET=$(rustc -vV | sed -n 's|host: ||p')
     TARGET_DIR=$(cargo metadata --format-version 1 --no-deps | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).target_directory")
-    for bin in buzz-acp buzz-agent buzz-backend-kubernetes buzz-dev-mcp git-credential-nostr buzz; do
+    for bin in crew-acp crew-agent crew-backend-kubernetes crew-dev-mcp git-credential-nostr buzz; do
         cp "${TARGET_DIR}/debug/${bin}" "desktop/src-tauri/binaries/${bin}-${TARGET}"
         chmod +x "desktop/src-tauri/binaries/${bin}-${TARGET}"
     done
@@ -556,20 +556,20 @@ staging *ARGS: bootstrap _ensure-sidecar-stubs
     set -euo pipefail
     export PATH="{{justfile_directory()}}/bin:$PATH"
     pnpm install  # unconditional: staging must always start with a clean dep tree
-    cargo build --release -p buzz-acp -p buzz-agent -p buzz-backend-kubernetes -p buzz-dev-mcp -p buzz-cli -p git-credential-nostr
+    cargo build --release -p crew-acp -p crew-agent -p crew-backend-kubernetes -p crew-dev-mcp -p crew-cli -p git-credential-nostr
     FEATURES=()
     if [[ -n "{{mesh}}" ]]; then
         FEATURES=(--features mesh-llm)
     fi
     # Replace 0-byte sidecar stubs with real binaries so tauri dev picks them up.
-    # buzz: the CLI sidecar. buzz-backend-kubernetes: provider discovery scans the
+    # buzz: the CLI sidecar. crew-backend-kubernetes: provider discovery scans the
     # exe dir for executable buzz-backend-* files, so the non-executable stub that
     # tauri dev copies next to the exe would hide the provider from "Run on".
     TARGET=$(rustc -vV | sed -n 's|host: ||p')
     TARGET_DIR=$(cargo metadata --format-version 1 --no-deps | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).target_directory")
     STAGING_SIDECARS=(buzz)
     if [[ "$TARGET" != *windows* ]]; then
-        STAGING_SIDECARS+=(buzz-backend-kubernetes)
+        STAGING_SIDECARS+=(crew-backend-kubernetes)
     fi
     for bin in "${STAGING_SIDECARS[@]}"; do
         cp "${TARGET_DIR}/release/${bin}" "desktop/src-tauri/binaries/${bin}-${TARGET}"
@@ -591,20 +591,20 @@ production *ARGS: bootstrap _ensure-sidecar-stubs
     set -euo pipefail
     export PATH="{{justfile_directory()}}/bin:$PATH"
     pnpm install  # unconditional: production must always start with a clean dep tree
-    cargo build --release -p buzz-acp -p buzz-agent -p buzz-backend-kubernetes -p buzz-dev-mcp -p buzz-cli -p git-credential-nostr
+    cargo build --release -p crew-acp -p crew-agent -p crew-backend-kubernetes -p crew-dev-mcp -p crew-cli -p git-credential-nostr
     FEATURES=()
     if [[ -n "{{mesh}}" ]]; then
         FEATURES=(--features mesh-llm)
     fi
     # Replace 0-byte sidecar stubs with real binaries so tauri dev picks them up.
-    # buzz: the CLI sidecar. buzz-backend-kubernetes: provider discovery scans the
+    # buzz: the CLI sidecar. crew-backend-kubernetes: provider discovery scans the
     # exe dir for executable buzz-backend-* files, so the non-executable stub that
     # tauri dev copies next to the exe would hide the provider from "Run on".
     TARGET=$(rustc -vV | sed -n 's|host: ||p')
     TARGET_DIR=$(cargo metadata --format-version 1 --no-deps | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).target_directory")
     PRODUCTION_SIDECARS=(buzz)
     if [[ "$TARGET" != *windows* ]]; then
-        PRODUCTION_SIDECARS+=(buzz-backend-kubernetes)
+        PRODUCTION_SIDECARS+=(crew-backend-kubernetes)
     fi
     for bin in "${PRODUCTION_SIDECARS[@]}"; do
         cp "${TARGET_DIR}/release/${bin}" "desktop/src-tauri/binaries/${bin}-${TARGET}"
@@ -739,7 +739,7 @@ get-current-version:
 
 # Read the current relay version from its crate manifest
 get-current-relay-version:
-    @grep -m1 '^version = ' crates/buzz-relay/Cargo.toml | sed -E 's/version = "(.*)"/\1/'
+    @grep -m1 '^version = ' crates/crew-relay/Cargo.toml | sed -E 's/version = "(.*)"/\1/'
 
 # Compute next minor version (e.g., 0.3.0 → 0.4.0)
 get-next-minor-version:
@@ -786,11 +786,11 @@ bump-desktop-version version:
 bump-relay-version version:
     #!/usr/bin/env bash
     set -euo pipefail
-    # buzz-relay carries its own `version =` (not version.workspace), so the
+    # crew-relay carries its own `version =` (not version.workspace), so the
     # replace targets the package version line only.
-    perl -i -pe 's/^version = ".*"/version = "{{ version }}"/' crates/buzz-relay/Cargo.toml
-    cargo update -p buzz-relay
-    echo "Bumped buzz-relay to {{ version }} and regenerated Cargo.lock"
+    perl -i -pe 's/^version = ".*"/version = "{{ version }}"/' crates/crew-relay/Cargo.toml
+    cargo update -p crew-relay
+    echo "Bumped crew-relay to {{ version }} and regenerated Cargo.lock"
 
 # Open or update the desktop release PR from an immutable origin/main snapshot
 release-desktop *ARGS:
@@ -836,7 +836,7 @@ _release-pr lane version:
             TAG_PREFIX="v"
             CHANGELOG="CHANGELOG.md"
             ADD_FILES=(desktop/package.json desktop/src-tauri/tauri.conf.json desktop/src-tauri/Cargo.toml desktop/src-tauri/Cargo.lock pnpm-lock.yaml CHANGELOG.md)
-            LOG_PATHS=(desktop/ crates/buzz-core/ crates/buzz-persona/ crates/buzz-sdk/ crates/buzz-agent/)
+            LOG_PATHS=(desktop/ crates/crew-core/ crates/crew-persona/ crates/crew-sdk/ crates/crew-agent/)
             ARTIFACT="Buzz Desktop" ;;
         relay)
             BRANCH_PREFIX="relay-release"
@@ -844,9 +844,9 @@ _release-pr lane version:
             TAG_MATCH='relay-v[0-9]*'
             TAG_EXCLUDE='relay-v*-*'
             TAG_PREFIX="relay-v"
-            CHANGELOG="crates/buzz-relay/CHANGELOG.md"
-            ADD_FILES=(crates/buzz-relay/Cargo.toml Cargo.lock crates/buzz-relay/CHANGELOG.md)
-            LOG_PATHS=(crates/buzz-relay/ crates/buzz-core/ crates/buzz-db/ crates/buzz-auth/ crates/buzz-pubsub/ crates/buzz-search/ crates/buzz-audit/ crates/buzz-media/ crates/buzz-sdk/ crates/buzz-workflow/ crates/buzz-conformance/ migrations/)
+            CHANGELOG="crates/crew-relay/CHANGELOG.md"
+            ADD_FILES=(crates/crew-relay/Cargo.toml Cargo.lock crates/crew-relay/CHANGELOG.md)
+            LOG_PATHS=(crates/crew-relay/ crates/crew-core/ crates/crew-db/ crates/crew-auth/ crates/crew-pubsub/ crates/crew-search/ crates/crew-audit/ crates/crew-media/ crates/crew-sdk/ crates/crew-workflow/ crates/crew-conformance/ migrations/)
             ARTIFACT="Buzz Relay" ;;
         *)
             echo "Error: unknown release lane '{{ lane }}'"
@@ -975,7 +975,7 @@ goose relay="ws://localhost:3000" agents="1" heartbeat="0" prompt="" key="$BUZZ_
     set -euo pipefail
     export PATH="{{justfile_directory()}}/bin:$PATH"
     source ./scripts/_goose-env.sh "{{relay}}" "{{key}}" "{{agents}}" "{{heartbeat}}" "{{prompt}}"
-    exec env "${env_args[@]}" ./target/release/buzz-acp
+    exec env "${env_args[@]}" ./target/release/crew-acp
 
 # Run a goose agent in the background (screen session named 'goose-agent-N')
 goose-bg relay="ws://localhost:3000" agents="1" heartbeat="0" prompt="" key="$BUZZ_PRIVATE_KEY":
@@ -983,7 +983,7 @@ goose-bg relay="ws://localhost:3000" agents="1" heartbeat="0" prompt="" key="$BU
     set -euo pipefail
     export PATH="{{justfile_directory()}}/bin:$PATH"
     source ./scripts/_goose-env.sh "{{relay}}" "{{key}}" "{{agents}}" "{{heartbeat}}" "{{prompt}}"
-    screen -dmS goose-agent-{{agents}} bash -c "$(printf '%q ' env "${env_args[@]}") ./target/release/buzz-acp"
+    screen -dmS goose-agent-{{agents}} bash -c "$(printf '%q ' env "${env_args[@]}") ./target/release/crew-acp"
     echo "Agent running in screen session 'goose-agent-{{agents}}'. Attach with: screen -r goose-agent-{{agents}}"
 
 # ─── Benchmarking ─────────────────────────────────────────────────────────────

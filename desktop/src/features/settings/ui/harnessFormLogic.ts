@@ -145,7 +145,7 @@ export function definitionFromFormValues(
  *
  * Args travel to the harness through the comma-delimited
  * `BUZZ_ACP_AGENT_ARGS` env transport (clap `value_delimiter = ','` on the
- * buzz-acp side), so a literal comma inside one argument would silently split
+ * crew-acp side), so a literal comma inside one argument would silently split
  * into two at spawn time. The backend validator rejects it; this mirror gives
  * the user an inline error naming the offending argument before the round-trip.
  *

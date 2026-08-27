@@ -70,7 +70,7 @@ pub async fn connect_acp_runtime(
 fn discover_acp_auth_methods_blocking(runtime_id: &str) -> Result<AcpAuthMethodsResult, String> {
     let output = run_buzz_acp_auth_command(runtime_id, ["auth-methods", "--json"])?;
     if !output.status.success() {
-        return Err(command_error("buzz-acp auth-methods", &output));
+        return Err(command_error("crew-acp auth-methods", &output));
     }
 
     serde_json::from_slice::<AcpAuthMethodsResult>(&output.stdout)
@@ -101,7 +101,7 @@ fn connect_acp_runtime_blocking(
         ["authenticate", "--method-id", request.method_id.as_str()],
     )?;
     if !output.status.success() {
-        return Err(command_error("buzz-acp authenticate", &output));
+        return Err(command_error("crew-acp authenticate", &output));
     }
 
     Ok(ConnectAcpRuntimeResult { launched: true })
@@ -120,11 +120,11 @@ fn run_buzz_acp_auth_command<const N: usize>(
         .ok_or_else(|| format!("{} ACP adapter is not installed", runtime.label))?;
 
     let acp_path = std::env::current_exe()
-        .map(|path| path.with_file_name(format!("buzz-acp{}", std::env::consts::EXE_SUFFIX)))
+        .map(|path| path.with_file_name(format!("crew-acp{}", std::env::consts::EXE_SUFFIX)))
         .ok()
         .filter(|path| path.exists())
-        .or_else(|| resolve_command("buzz-acp"))
-        .ok_or_else(|| "buzz-acp helper not found".to_string())?;
+        .or_else(|| resolve_command("crew-acp"))
+        .ok_or_else(|| "crew-acp helper not found".to_string())?;
 
     let augmented_path = auth_command_path();
     run_buzz_acp_auth_command_with_paths(
@@ -136,7 +136,7 @@ fn run_buzz_acp_auth_command<const N: usize>(
     )
 }
 
-/// PATH for the buzz-acp auth helper child process.
+/// PATH for the crew-acp auth helper child process.
 ///
 /// Uses the augmented agent PATH so `#!/usr/bin/env node` adapter shims
 /// resolve the Buzz-managed Node runtime — the same PATH normal agent
@@ -198,7 +198,7 @@ fn run_buzz_acp_auth_command_with_paths<const N: usize>(
 
     command
         .output()
-        .map_err(|error| format!("failed to run buzz-acp auth helper: {error}"))
+        .map_err(|error| format!("failed to run crew-acp auth helper: {error}"))
 }
 
 fn command_error(label: &str, output: &std::process::Output) -> String {
@@ -363,7 +363,7 @@ fn spawn_without_stdio(mut command: Command) -> Result<(), String> {
 #[cfg(target_os = "macos")]
 fn launch_visible_terminal(argv: &[String]) -> Result<(), String> {
     let mut script = tempfile::Builder::new()
-        .prefix("buzz-auth-")
+        .prefix("crew-auth-")
         .suffix(".command")
         .tempfile()
         .map_err(|error| format!("failed to create terminal login script: {error}"))?;
@@ -527,10 +527,10 @@ mod tests {
         fs::set_permissions(&adapter_path, fs::Permissions::from_mode(0o755))
             .expect("chmod adapter");
 
-        let acp_path = temp.path().join("buzz-acp");
+        let acp_path = temp.path().join("crew-acp");
         fs::write(&acp_path, "#!/bin/sh\nexec \"$BUZZ_ACP_AGENT_COMMAND\"\n")
-            .expect("write buzz-acp");
-        fs::set_permissions(&acp_path, fs::Permissions::from_mode(0o755)).expect("chmod buzz-acp");
+            .expect("write crew-acp");
+        fs::set_permissions(&acp_path, fs::Permissions::from_mode(0o755)).expect("chmod crew-acp");
 
         let augmented_path = std::env::join_paths([interpreter_dir.as_path()])
             .expect("join augmented PATH")

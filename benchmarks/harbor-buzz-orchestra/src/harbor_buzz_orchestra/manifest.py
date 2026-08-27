@@ -34,7 +34,7 @@ class GenerationConfig(StrictModel):
     temperature: float = Field(default=0.0, ge=0.0)
     max_output_tokens: int = Field(gt=0)
     context_window_tokens: int = Field(gt=0)
-    # Reasoning effort pinned per condition. buzz-agent clamps an unsupported
+    # Reasoning effort pinned per condition. crew-agent clamps an unsupported
     # level to the nearest one the model accepts and only warns, so a condition
     # asking for more than the endpoint supports runs silently at less.
     # Unset means the runtime's default, which is pinned rather than left to

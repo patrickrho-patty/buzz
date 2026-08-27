@@ -43,7 +43,7 @@ export function ContentSurface({
       <div className="buzz-content-primary flex min-h-0 flex-1 flex-col overflow-hidden">
         {children}
       </div>
-      <div className="buzz-terminal-dock-host" data-terminal-dock>
+      <div className="crew-terminal-dock-host" data-terminal-dock>
         {terminal}
       </div>
     </div>

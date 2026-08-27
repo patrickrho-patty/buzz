@@ -17,7 +17,7 @@ importable:
         --manifest benchmarks/harbor-buzz-orchestra/manifests/<TEAM>.yaml \
         --endpoint-config benchmarks/harbor-buzz-orchestra/testbed/endpoints/<ENDPOINTS>.json \
         --provisioner-config <PROVISIONER.json> \
-        --agent-bin-dir <DIR with Linux buzz-acp/buzz-agent/buzz-dev-mcp>
+        --agent-bin-dir <DIR with Linux crew-acp/crew-agent/crew-dev-mcp>
 """
 
 from __future__ import annotations
@@ -39,7 +39,7 @@ PROVISIONER_FACTORY = "harbor_buzz_testbed:provisioner_from_dict"
 BINARIES = ("buzz",)
 # Container-side: the production stack uploaded into each task container.
 # These must be Linux builds matching the task image architecture.
-AGENT_BINARIES = ("buzz-acp", "buzz-agent", "buzz-dev-mcp")
+AGENT_BINARIES = ("crew-acp", "crew-agent", "crew-dev-mcp")
 # Uploaded alongside the stack when --relay-gateway is set: bridges the
 # agents' canonical relay address to the host gateway (the relay is
 # host-header tenant-bound, so agents must present its canonical Host).
@@ -112,7 +112,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--agent-bin-dir",
         type=Path,
         required=True,
-        help="Directory with Linux builds of buzz-acp/buzz-agent/buzz-dev-mcp "
+        help="Directory with Linux builds of crew-acp/crew-agent/crew-dev-mcp "
         "to upload into each task container",
     )
     parser.add_argument(
@@ -214,9 +214,9 @@ def build_command(
         "provisioner_config": args.provisioner_config,
         "artifact_root": PACKAGE_ROOT,
         "endpoint_config": args.endpoint_config,
-        "buzz_acp_binary": agent_binaries["buzz-acp"],
-        "buzz_agent_binary": agent_binaries["buzz-agent"],
-        "buzz_dev_mcp_binary": agent_binaries["buzz-dev-mcp"],
+        "buzz_acp_binary": agent_binaries["crew-acp"],
+        "buzz_agent_binary": agent_binaries["crew-agent"],
+        "buzz_dev_mcp_binary": agent_binaries["crew-dev-mcp"],
         "buzz_cli_binary": binaries["buzz"],
         "run_id": args.job_name,
     }

@@ -8,7 +8,7 @@ import { TwoRelayHarness, type RelaySpec } from "./helpers/twoRelayHarness";
 
 const exec = promisify(execFile);
 
-// Live gate: boots a REAL buzz-relay process, points the app at it, SIGTERMs
+// Live gate: boots a REAL crew-relay process, points the app at it, SIGTERMs
 // the relay mid-session, restarts it on the same port, and asserts the client
 // converges back to "connected". This proves the full restart story end to
 // end: the relay's graceful-drain 1012 close broadcast (server side) and the

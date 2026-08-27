@@ -59,7 +59,7 @@ SCHEMA_SQL = PACKAGE_ROOT / "testbed" / "sql" / "benchmark_schema.sql"
 # Linux builds of the production agent stack, uploaded into each task
 # container per trial. Built once in a rust:alpine container (musl → fully
 # static, runs on any Linux task image of the same architecture) and cached.
-AGENT_BINARIES = ("buzz-acp", "buzz-agent", "buzz-dev-mcp")
+AGENT_BINARIES = ("crew-acp", "crew-agent", "crew-dev-mcp")
 # Std-only loopback forwarder (not a workspace crate): agents dial the
 # relay's canonical localhost address inside the task container and the
 # forwarder bridges to the Docker host gateway. Compiled with plain rustc
@@ -227,7 +227,7 @@ def write_env_file(state: dict[str, str]) -> Path:
         "REDIS_PASSWORD": state["redis_password"],
         "BUZZ_S3_ACCESS_KEY": state["s3_access_key"],
         "BUZZ_S3_SECRET_KEY": state["s3_secret_key"],
-        "BUZZ_S3_BUCKET": "buzz-media",
+        "BUZZ_S3_BUCKET": "crew-media",
         "BUZZ_HTTP_PORT": str(RELAY_HTTP_PORT),
         "BUZZ_PG_HOST_PORT": str(PG_HOST_PORT),
         "BUZZ_METRICS_HOST_PORT": str(METRICS_HOST_PORT),
@@ -372,7 +372,7 @@ def ensure_binaries() -> dict[str, Path]:
         print("host buzz CLI missing — building (cargo build, first run only)...")
     cargo = REPO_ROOT / "bin" / "cargo"
     subprocess.run(
-        [str(cargo), "build", "-p", "buzz-cli"],
+        [str(cargo), "build", "-p", "crew-cli"],
         cwd=REPO_ROOT,
         check=True,
     )
@@ -400,7 +400,7 @@ def ensure_agent_binaries() -> Path:
     """Cross-build the static Linux agent stack once, cached in .benchmark/.
 
     The agents run *inside* each Harbor task container as the real
-    buzz-acp → buzz-agent → buzz-dev-mcp stack, so the binaries must be
+    crew-acp → crew-agent → crew-dev-mcp stack, so the binaries must be
     Linux ELF for the task image architecture. musl-static means they run
     on any Linux base image (glibc or not). The relay loopback forwarder
     is compiled in the same step with plain rustc (std-only, no deps).
@@ -458,7 +458,7 @@ def launch_gui(state: dict[str, str]) -> subprocess.Popen:
     """Open the Buzz desktop app logged in as the benchmark user.
 
     The relay runs closed (membership required), so the user pubkey is first
-    added to the relay membership list via buzz-admin inside the container —
+    added to the relay membership list via crew-admin inside the container —
     NIP-OA auth tags cover the agents, but the GUI authenticates as a plain
     member, exactly like a human.
     """
@@ -467,7 +467,7 @@ def launch_gui(state: dict[str, str]) -> subprocess.Popen:
             "exec",
             "-T",
             "relay",
-            "buzz-admin",
+            "crew-admin",
             "add-member",
             "--pubkey",
             state["user_pubkey"],
@@ -493,9 +493,9 @@ def launch_gui(state: dict[str, str]) -> subprocess.Popen:
     sidecar_dir.mkdir(parents=True, exist_ok=True)
     binaries = ensure_binaries()
     for name in (
-        "buzz-acp",
-        "buzz-agent",
-        "buzz-dev-mcp",
+        "crew-acp",
+        "crew-agent",
+        "crew-dev-mcp",
         "git-credential-nostr",
         "buzz",
     ):

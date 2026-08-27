@@ -10,7 +10,7 @@ pub const RELAY_MESH_AUTO_MODEL_ID: &str = "auto";
 /// capacity decision, so a committee that forms and *then* loses a worker still
 /// surfaces as a failed turn — MoA repairs partial results internally
 /// (`repair_tool_result_answer`) before it gets that far. Buzz translates the
-/// stored `auto` here rather than teaching buzz-agent anything about meshes.
+/// stored `auto` here rather than teaching crew-agent anything about meshes.
 #[cfg(feature = "mesh-llm")]
 pub const RELAY_MESH_VIRTUAL_MODEL_ID: &str = "mesh";
 
@@ -30,7 +30,7 @@ pub fn relay_mesh_wire_model(stored: &str) -> &str {
 }
 
 /// Translate the native Buzz shared compute provider into the OpenAI-compatible
-/// transport understood by buzz-agent. These are derived runtime details, not
+/// transport understood by crew-agent. These are derived runtime details, not
 /// user-owned agent configuration.
 #[cfg(feature = "mesh-llm")]
 pub fn apply_relay_mesh_env(
@@ -142,7 +142,7 @@ mod tests {
         assert_eq!(env.get("BUZZ_AGENT_THINKING_EFFORT"), None);
     }
 
-    /// Stored `auto` is translated here, so buzz-agent receives a plain model
+    /// Stored `auto` is translated here, so crew-agent receives a plain model
     /// name and needs no knowledge of the mesh. MeshLLM decides per request
     /// whether `mesh` becomes a committee or a single served model.
     #[test]

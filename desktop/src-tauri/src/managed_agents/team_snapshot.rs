@@ -545,7 +545,7 @@ mod tests {
 
     #[test]
     fn decode_rejects_agent_snapshot_json_as_team_snapshot() {
-        // An agent snapshot JSON (format: "buzz-agent-snapshot") must NOT
+        // An agent snapshot JSON (format: "crew-agent-snapshot") must NOT
         // parse as a team snapshot — serde rejects missing `team`/`members`
         // fields, or the discriminator check catches it either way.
         use crate::managed_agents::agent_snapshot::{build_snapshot, encode_snapshot_json};

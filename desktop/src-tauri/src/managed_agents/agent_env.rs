@@ -145,7 +145,7 @@ mod tests {
     };
 
     #[test]
-    fn buzz_agent_provider_defaults_empty_in_oss_build() {
+    fn crew_agent_provider_defaults_empty_in_oss_build() {
         // OSS (and normal test) builds set neither BUZZ_BUILD_BUZZ_AGENT_*,
         // so nothing is baked in and no BUZZ_AGENT_* is injected on spawn.
         let mut cmd = std::process::Command::new("env");

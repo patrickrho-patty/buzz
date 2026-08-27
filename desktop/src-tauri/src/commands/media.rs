@@ -336,7 +336,7 @@ pub(crate) fn sign_blossom_get_auth_header(
             .map_err(|e| e.to_string())?,
         Tag::parse(vec!["server".to_string(), server]).map_err(|e| e.to_string())?,
     ];
-    let event = EventBuilder::new(Kind::from(24242), "Get buzz-media")
+    let event = EventBuilder::new(Kind::from(24242), "Get crew-media")
         .tags(tags)
         .sign_with_keys(keys)
         .map_err(|e| e.to_string())?;
@@ -389,7 +389,7 @@ fn sign_blossom_upload_auth(
     if let Some(domain) = extract_server_authority(base_url) {
         tags.push(Tag::parse(vec!["server".to_string(), domain]).map_err(|e| e.to_string())?);
     }
-    EventBuilder::new(Kind::from(24242), "Upload buzz-media")
+    EventBuilder::new(Kind::from(24242), "Upload crew-media")
         .tags(tags)
         .sign_with_keys(keys)
         .map_err(|e| e.to_string())

@@ -55,7 +55,7 @@ tests:
       externalPostgresql.url: postgres://u:p@h:5432/d
       externalRedis.url: redis://h:6379
       s3.endpoint: https://storage.railway.app
-      s3.bucket: buzz-media-example
+      s3.bucket: crew-media-example
       s3.region: auto
       s3.addressingStyle: virtual
       s3.accessKey: a
@@ -207,7 +207,7 @@ tests:
       relay.command:
         - /opt/wrapper/wrapper
       relay.args:
-        - /usr/local/bin/buzz-relay
+        - /usr/local/bin/crew-relay
       relay.extraVolumeMounts:
         - name: wrapper
           mountPath: /opt/wrapper
@@ -253,7 +253,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].args
           value:
-            - /usr/local/bin/buzz-relay
+            - /usr/local/bin/crew-relay
         template: templates/deployment.yaml
       - contains:
           path: spec.template.spec.containers[0].volumeMounts

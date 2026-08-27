@@ -6,7 +6,7 @@
 #
 # Prerequisites:
 #   - Docker services running (postgres, redis, minio)
-#   - Relay built: cargo build --release --bin buzz-relay
+#   - Relay built: cargo build --release --bin crew-relay
 #   - Credential helper built: cargo build --release --bin git-credential-nostr
 #   - Signing program built: cargo build --release --bin git-sign-nostr
 #   - Python 3 with websocket-client: pip install websocket-client
@@ -89,8 +89,8 @@ trap cleanup EXIT
 check_deps() {
     local missing=()
 
-    if [[ ! -x "${REPO_ROOT}/target/release/buzz-relay" ]]; then
-        missing+=("buzz-relay (cargo build --release --bin buzz-relay)")
+    if [[ ! -x "${REPO_ROOT}/target/release/crew-relay" ]]; then
+        missing+=("crew-relay (cargo build --release --bin crew-relay)")
     fi
     if [[ ! -x "${REPO_ROOT}/target/release/git-credential-nostr" ]]; then
         missing+=("git-credential-nostr (cargo build --release --bin git-credential-nostr)")
@@ -335,14 +335,14 @@ export BUZZ_GIT_REPO_PATH="${REPO_ROOT}/repos"
 export BUZZ_GIT_HOOK_HMAC_SECRET="${HMAC_SECRET}"
 export BUZZ_BIND_ADDR="${RELAY_HOST}:${RELAY_PORT}"
 export RELAY_URL="${RELAY_WS}"
-export RUST_LOG="buzz_relay=warn"
+export RUST_LOG="crew_relay=warn"
 export BUZZ_REQUIRE_AUTH_TOKEN=false
 
 # Clean repos dir (isolated test state)
 rm -rf "${REPO_ROOT}/repos"
 mkdir -p "${REPO_ROOT}/repos"
 
-./target/release/buzz-relay > /tmp/buzz-relay-e2e.log 2>&1 &
+./target/release/crew-relay > /tmp/crew-relay-e2e.log 2>&1 &
 RELAY_PID=$!
 
 # Wait for relay to be ready (poll, not sleep)
@@ -351,7 +351,7 @@ for i in $(seq 1 "$RELAY_STARTUP_TIMEOUT"); do
         break
     fi
     if [[ $i -eq "$RELAY_STARTUP_TIMEOUT" ]]; then
-        fail "Relay did not start within ${RELAY_STARTUP_TIMEOUT}s. Check /tmp/buzz-relay-e2e.log"
+        fail "Relay did not start within ${RELAY_STARTUP_TIMEOUT}s. Check /tmp/crew-relay-e2e.log"
     fi
     sleep 1
 done
@@ -473,7 +473,7 @@ log "Bot1: pushing..."
 if git_push "$BOT1_PRIVKEY" "$BOT1_DIR" -u origin main; then
     success "Bot1 push succeeded (member can push)"
 else
-    tail -20 /tmp/buzz-relay-e2e.log
+    tail -20 /tmp/crew-relay-e2e.log
     fail "Bot1 push failed (member should be able to push)"
 fi
 
@@ -503,7 +503,7 @@ log "Bot2: pushing..."
 if git_push "$BOT2_PRIVKEY" "$BOT2_DIR"; then
     success "Bot2 push succeeded (bot promoted to member)"
 else
-    tail -20 /tmp/buzz-relay-e2e.log
+    tail -20 /tmp/crew-relay-e2e.log
     fail "Bot2 push failed (bot should be promoted to member)"
 fi
 

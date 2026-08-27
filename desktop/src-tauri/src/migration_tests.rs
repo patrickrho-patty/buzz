@@ -649,13 +649,13 @@ fn reconcile_mcp_commands_sets_canonical_for_buzz_agent() {
         dir.path(),
         &serde_json::json!([{
             "name": "Stilgar",
-            "agent_command": "buzz-agent",
+            "agent_command": "crew-agent",
             "mcp_command": "buzz-mcp-server"
         }]),
     );
     reconcile_mcp_commands_in_file(&dir.path().join("agents/managed-agents.json"));
     let records = read_agents_json(dir.path());
-    assert_eq!(records[0]["mcp_command"], "buzz-dev-mcp");
+    assert_eq!(records[0]["mcp_command"], "crew-dev-mcp");
 }
 
 #[test]
@@ -715,7 +715,7 @@ fn reconcile_mcp_commands_handles_mixed_agents() {
             {"name": "Stale Goose", "agent_command": "goose", "mcp_command": "buzz-mcp-server"},
             {"name": "Clean Goose", "agent_command": "goose", "mcp_command": ""},
             {"name": "Custom Agent", "agent_command": "goose", "mcp_command": "my-custom-mcp"},
-            {"name": "Stale Buzz", "agent_command": "buzz-agent", "mcp_command": "buzz-mcp-server"}
+            {"name": "Stale Buzz", "agent_command": "crew-agent", "mcp_command": "buzz-mcp-server"}
         ]),
     );
     reconcile_mcp_commands_in_file(&dir.path().join("agents/managed-agents.json"));
@@ -723,12 +723,12 @@ fn reconcile_mcp_commands_handles_mixed_agents() {
     assert_eq!(records[0]["mcp_command"], "");
     assert_eq!(records[1]["mcp_command"], "");
     assert_eq!(records[2]["mcp_command"], "my-custom-mcp");
-    assert_eq!(records[3]["mcp_command"], "buzz-dev-mcp");
+    assert_eq!(records[3]["mcp_command"], "crew-dev-mcp");
 }
 
 #[test]
 fn reconcile_mcp_commands_resolves_persona_runtime_over_stale_snapshot() {
-    // The frozen snapshot is buzz-agent (wants buzz-dev-mcp), but the linked
+    // The frozen snapshot is crew-agent (wants crew-dev-mcp), but the linked
     // persona's runtime is goose (wants no mcp). The reconcile must follow the
     // EFFECTIVE harness (persona-wins) and clear the stale buzz-mcp-server.
     let dir = tempfile::tempdir().unwrap();
@@ -737,7 +737,7 @@ fn reconcile_mcp_commands_resolves_persona_runtime_over_stale_snapshot() {
         &serde_json::json!([{
             "name": "Fizz",
             "persona_id": "p1",
-            "agent_command": "buzz-agent",
+            "agent_command": "crew-agent",
             "mcp_command": "buzz-mcp-server"
         }]),
     );
@@ -765,7 +765,7 @@ fn reconcile_mcp_commands_sees_team_dir_runtime_edit_same_launch() {
         &serde_json::json!([{
             "name": "Fizz",
             "persona_id": "p1",
-            "agent_command": "buzz-agent",
+            "agent_command": "crew-agent",
             "mcp_command": ""
         }]),
     );
@@ -783,16 +783,16 @@ fn reconcile_mcp_commands_sees_team_dir_runtime_edit_same_launch() {
     );
 
     // Same launch: sync_team_personas propagates a team-dir harness edit
-    // (goose → buzz-agent) into personas.json. The reader runs AFTER, so it
-    // must derive the NEW buzz-agent mcp_command without a second launch.
+    // (goose → crew-agent) into personas.json. The reader runs AFTER, so it
+    // must derive the NEW crew-agent mcp_command without a second launch.
     write_personas_json(
         dir.path(),
-        &serde_json::json!([{"id": "p1", "runtime": "buzz-agent"}]),
+        &serde_json::json!([{"id": "p1", "runtime": "crew-agent"}]),
     );
     reconcile_mcp_commands_in_file(&dir.path().join("agents/managed-agents.json"));
     assert_eq!(
         read_agents_json(dir.path())[0]["mcp_command"],
-        "buzz-dev-mcp",
+        "crew-dev-mcp",
         "writer-before-reader must surface the new runtime's mcp_command same launch"
     );
 }
@@ -800,8 +800,8 @@ fn reconcile_mcp_commands_sees_team_dir_runtime_edit_same_launch() {
 #[test]
 fn reconcile_mcp_commands_honors_explicit_override_over_persona() {
     // An explicit per-instance pin (agent_command_override) beats the persona
-    // runtime: persona is goose (no mcp) but the pin is buzz-agent, so the
-    // reconcile sets the buzz-agent mcp_command.
+    // runtime: persona is goose (no mcp) but the pin is crew-agent, so the
+    // reconcile sets the crew-agent mcp_command.
     let dir = tempfile::tempdir().unwrap();
     write_agents_json(
         dir.path(),
@@ -809,7 +809,7 @@ fn reconcile_mcp_commands_honors_explicit_override_over_persona() {
             "name": "Fizz",
             "persona_id": "p1",
             "agent_command": "goose",
-            "agent_command_override": "buzz-agent",
+            "agent_command_override": "crew-agent",
             "mcp_command": ""
         }]),
     );
@@ -819,7 +819,7 @@ fn reconcile_mcp_commands_honors_explicit_override_over_persona() {
     );
     reconcile_mcp_commands_in_file(&dir.path().join("agents/managed-agents.json"));
     let records = read_agents_json(dir.path());
-    assert_eq!(records[0]["mcp_command"], "buzz-dev-mcp");
+    assert_eq!(records[0]["mcp_command"], "crew-dev-mcp");
 }
 
 #[test]

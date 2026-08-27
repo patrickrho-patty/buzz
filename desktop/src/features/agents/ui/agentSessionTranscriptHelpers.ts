@@ -78,7 +78,7 @@ export function parsePromptText(text: string): {
  *    Same two cases, same last-occurrence guard.
  *
  * 3. **Team Instructions** (`[Team Instructions]`): appended before core by
- *    `with_team()` in `buzz-acp/src/pool.rs`. Same two cases (start-of-string
+ *    `with_team()` in `crew-acp/src/pool.rs`. Same two cases (start-of-string
  *    or `\n\n[Team Instructions]\n` inline), same last-occurrence guard. Output
  *    position: after System, before Core Memory.
  *
@@ -88,7 +88,7 @@ export function parsePromptText(text: string): {
  *
  * 5. **Legacy Team Instructions** (backward compat): if the `System` body
  *    contains the exact canonical delimiter `\n\n---\n# Team Instructions\n`
- *    (produced by the now-removed `compose_prompt()` in buzz-persona), the body
+ *    (produced by the now-removed `compose_prompt()` in crew-persona), the body
  *    is split at the **last** occurrence of that boundary. The text before
  *    becomes the `System` body; the text after becomes a `Team Instructions`
  *    section inserted immediately after `System`. Non-canonical lookalikes
@@ -136,7 +136,7 @@ export function parseSystemPromptSections(
   }
 
   // ── 3. Extract [Team Instructions] (modern runtime framing) ─────────────
-  // with_team() in buzz-acp/src/pool.rs appends "\n\n[Team Instructions]\n{instructions}"
+  // with_team() in crew-acp/src/pool.rs appends "\n\n[Team Instructions]\n{instructions}"
   // after [System] and before core/canvas. Same two cases as canvas/core:
   // start-of-string (team-only input) or the inline double-newline marker
   // (last occurrence guards against embedded lookalikes preceded by a single \n).
@@ -159,7 +159,7 @@ export function parseSystemPromptSections(
 
   // ── 4. Parse Base/System from the remaining prefix ────────────────────────
   // The canonical team-instructions delimiter produced by compose_prompt() in
-  // buzz-persona/src/resolve.rs:
+  // crew-persona/src/resolve.rs:
   //   format!("{persona_prompt}\n\n---\n# Team Instructions\n{instructions}")
   const TEAM_DELIMITER = "\n\n---\n# Team Instructions\n";
 

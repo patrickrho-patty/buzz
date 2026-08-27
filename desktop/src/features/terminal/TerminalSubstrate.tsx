@@ -140,7 +140,7 @@ export function TerminalSubstrate({
   );
   const [dockHeight, setDockHeight] = React.useState(() => {
     const stored = Number.parseInt(
-      window.localStorage.getItem("buzz-terminal-dock-height") ?? "",
+      window.localStorage.getItem("crew-terminal-dock-height") ?? "",
       10,
     );
     return Number.isFinite(stored) ? stored : 320;
@@ -156,8 +156,8 @@ export function TerminalSubstrate({
   );
   const terminalStyle = terminalPalette
     ? ({
-        "--buzz-terminal-background": terminalPalette.background,
-        "--buzz-terminal-foreground": terminalPalette.foreground,
+        "--crew-terminal-background": terminalPalette.background,
+        "--crew-terminal-foreground": terminalPalette.foreground,
       } as React.CSSProperties)
     : undefined;
 
@@ -476,7 +476,7 @@ export function TerminalSubstrate({
   return (
     <section
       aria-label="Buzz Term"
-      className="buzz-terminal-substrate"
+      className="crew-terminal-substrate"
       data-terminal-mode={mode}
       data-terminal-owner={owner}
       data-terminal-visible={visible ? "true" : "false"}
@@ -510,7 +510,7 @@ export function TerminalSubstrate({
           aria-valuemax={Math.round(window.innerHeight * 0.7)}
           aria-valuemin={180}
           aria-valuenow={Math.round(dockHeight)}
-          className="buzz-terminal-resize-handle"
+          className="crew-terminal-resize-handle"
           onKeyDown={(event) => {
             if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
             event.preventDefault();
@@ -521,7 +521,7 @@ export function TerminalSubstrate({
             );
             setDockHeight(next);
             window.localStorage.setItem(
-              "buzz-terminal-dock-height",
+              "crew-terminal-dock-height",
               String(Math.round(next)),
             );
           }}
@@ -531,7 +531,7 @@ export function TerminalSubstrate({
             window.cancelAnimationFrame(resizeReportFrameRef.current);
             const handle = event.currentTarget;
             const substrate = handle.closest<HTMLElement>(
-              ".buzz-terminal-substrate",
+              ".crew-terminal-substrate",
             );
             if (!substrate) return;
             const pointerId = event.pointerId;
@@ -582,7 +582,7 @@ export function TerminalSubstrate({
               delete substrate.dataset.terminalResizing;
               setDockHeight(nextHeight);
               window.localStorage.setItem(
-                "buzz-terminal-dock-height",
+                "crew-terminal-dock-height",
                 String(Math.round(nextHeight)),
               );
               resizeReportFrameRef.current = window.requestAnimationFrame(
@@ -600,20 +600,20 @@ export function TerminalSubstrate({
           tabIndex={0}
         />
       ) : null}
-      <div className="buzz-terminal-contract-bar">
-        <div className="buzz-terminal-tabs" role="tablist">
+      <div className="crew-terminal-contract-bar">
+        <div className="crew-terminal-tabs" role="tablist">
           {sessions.map((session, index) => (
             <div
               className={cn(
-                "buzz-terminal-tab",
-                session.active && "buzz-terminal-tab-active",
+                "crew-terminal-tab",
+                session.active && "crew-terminal-tab-active",
               )}
               key={session.id}
               role="presentation"
             >
               <button
                 aria-label={`Close ${session.title}`}
-                className="buzz-terminal-close"
+                className="crew-terminal-close"
                 disabled={session.closing}
                 onClick={() => runTabAction(() => onCloseSession(session.id))}
                 type="button"
@@ -623,13 +623,13 @@ export function TerminalSubstrate({
               <button
                 aria-label={`Terminal ${index + 1}${session.closing ? ", closing" : session.title !== "SHELL" ? `, ${session.title}` : ""}`}
                 aria-selected={session.active}
-                className="buzz-terminal-tab-select"
+                className="crew-terminal-tab-select"
                 disabled={session.closing}
                 onClick={() => runTabAction(() => onSelectSession(session.id))}
                 role="tab"
                 type="button"
               >
-                <span className="buzz-terminal-designator buzz-terminal-tab-title">
+                <span className="crew-terminal-designator crew-terminal-tab-title">
                   {session.title === "SHELL" ? (
                     <>
                       <ChevronRight />
@@ -640,26 +640,26 @@ export function TerminalSubstrate({
                   )}
                 </span>
                 {session.closing ? (
-                  <span className="buzz-terminal-tab-title">Closing…</span>
+                  <span className="crew-terminal-tab-title">Closing…</span>
                 ) : null}
               </button>
             </div>
           ))}
           <button
             aria-label="New Buzz Term tab"
-            className="buzz-terminal-new-tab"
+            className="crew-terminal-new-tab"
             onClick={() => runTabAction(onNewSession)}
             type="button"
           >
             <Plus />
           </button>
         </div>
-        <div className="buzz-terminal-readout">
+        <div className="crew-terminal-readout">
           <button
             aria-label={
               mode === "maximized" ? "Restore Buzz Term" : "Maximize Buzz Term"
             }
-            className="buzz-terminal-window-action"
+            className="crew-terminal-window-action"
             onClick={() =>
               onModeChange(mode === "maximized" ? "docked" : "maximized")
             }
@@ -669,7 +669,7 @@ export function TerminalSubstrate({
           </button>
           <button
             aria-label="Hide Buzz Term"
-            className="buzz-terminal-window-action"
+            className="crew-terminal-window-action"
             onClick={onHide}
             type="button"
           >
@@ -677,11 +677,11 @@ export function TerminalSubstrate({
           </button>
         </div>
       </div>
-      <div className="buzz-terminal-viewport px-5 pt-2">
+      <div className="crew-terminal-viewport px-5 pt-2">
         <canvas ref={canvasRef} />
         <div
           aria-hidden="true"
-          className="buzz-terminal-selection-layer"
+          className="crew-terminal-selection-layer"
           onCopy={(event) => {
             const selection = window.getSelection();
             const grid = gridRef.current;
@@ -756,13 +756,13 @@ export function TerminalSubstrate({
           ))}
         </div>
         {welcomeVisible && banner ? (
-          <canvas className="buzz-terminal-welcome" ref={bannerCanvasRef} />
+          <canvas className="crew-terminal-welcome" ref={bannerCanvasRef} />
         ) : null}
         <textarea
           aria-label="Terminal input"
           autoCapitalize="off"
           autoComplete="off"
-          className="buzz-terminal-input"
+          className="crew-terminal-input"
           onCompositionEnd={() => {
             handoffRef.current = reduceHandoff(handoffRef.current, {
               type: "composition-end",

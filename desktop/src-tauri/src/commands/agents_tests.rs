@@ -16,7 +16,7 @@ fn bare_agent_record(
         auth_tag: None,
         relay_url: "ws://localhost:3000".to_string(),
         avatar_url: None,
-        acp_command: "buzz-acp".to_string(),
+        acp_command: "crew-acp".to_string(),
         agent_command: "goose".to_string(),
         agent_command_override: None,
         agent_args: vec![],
@@ -469,7 +469,7 @@ fn deploy_payload_for_policy(
 #[test]
 fn deploy_payload_matches_the_shared_full_launch_fixture() {
     let fixture_path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join(
-        "../../crates/buzz-backend-kubernetes/tests/fixtures/provider-wire/deploy-full-launch.request.json",
+        "../../crates/crew-backend-kubernetes/tests/fixtures/provider-wire/deploy-full-launch.request.json",
     );
     let fixture: serde_json::Value = serde_json::from_str(
         &std::fs::read_to_string(&fixture_path)
@@ -482,7 +482,7 @@ fn deploy_payload_matches_the_shared_full_launch_fixture() {
         "private_key_nsec": "nsec1vl029mgpspedva04g90vltkh6fvh240zqtv9k0t9af8935ke9laqsnlfe5",
         "relay_url": "wss://localhost:3000",
         "auth_tag": "tag-1",
-        "acp_command": "buzz-acp",
+        "acp_command": "crew-acp",
         "agent_command": "goose",
         "runtime": "goose",
         "model": "gpt-5",
@@ -555,7 +555,7 @@ fn tauri_platform_configs_bundle_kubernetes_only_on_supported_hosts() {
             .expect("bundle.externalBin array");
         let has_kubernetes = external_bins
             .iter()
-            .any(|value| value == "binaries/buzz-backend-kubernetes");
+            .any(|value| value == "binaries/crew-backend-kubernetes");
         assert_eq!(
             has_kubernetes, expected,
             "unexpected Kubernetes externalBin for {target}; merged {paths:?}"

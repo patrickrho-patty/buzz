@@ -54,17 +54,17 @@ load_env() {
   # untouched.
   if [[ "${DATABASE_URL:-}" == "postgres://sprout:sprout_dev@localhost:5432/sprout" ]]; then
     warn "Migrating legacy default DATABASE_URL from sprout to buzz for this setup run"
-    DATABASE_URL="postgres://buzz:buzz_dev@localhost:5432/buzz"
+    DATABASE_URL="postgres://buzz:crew_dev@localhost:5432/buzz"
   fi
   if [[ "${PGUSER:-}" == "sprout" ]]; then PGUSER="buzz"; fi
-  if [[ "${PGPASSWORD:-}" == "sprout_dev" ]]; then PGPASSWORD="buzz_dev"; fi
+  if [[ "${PGPASSWORD:-}" == "sprout_dev" ]]; then PGPASSWORD="crew_dev"; fi
   if [[ "${PGDATABASE:-}" == "sprout" ]]; then PGDATABASE="buzz"; fi
 
-  export DATABASE_URL="${DATABASE_URL:-postgres://buzz:buzz_dev@localhost:5432/buzz}"
+  export DATABASE_URL="${DATABASE_URL:-postgres://buzz:crew_dev@localhost:5432/buzz}"
   export PGHOST="${PGHOST:-localhost}"
   export PGPORT="${PGPORT:-5432}"
   export PGUSER="${PGUSER:-buzz}"
-  export PGPASSWORD="${PGPASSWORD:-buzz_dev}"
+  export PGPASSWORD="${PGPASSWORD:-crew_dev}"
   export PGDATABASE="${PGDATABASE:-buzz}"
   export REDIS_URL="${REDIS_URL:-redis://localhost:6379}"
 }
@@ -128,7 +128,7 @@ until postgres_accepting_connections; do
   sleep 2
 done
 
-"${REPO_ROOT}/bin/cargo" run -p buzz-admin -- migrate
+"${REPO_ROOT}/bin/cargo" run -p crew-admin -- migrate
 "${REPO_ROOT}/scripts/seed-local-community.sh"
 success "Database migrations complete"
 

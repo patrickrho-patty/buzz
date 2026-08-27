@@ -30,7 +30,7 @@ spec:
         - name: pairing-relay
           image: {{ include "buzz.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["/usr/local/bin/buzz-pair-relay"]
+          command: ["/usr/local/bin/crew-pair-relay"]
           securityContext:
             {{- toYaml .Values.relay.containerSecurityContext | nindent 12 }}
           env:

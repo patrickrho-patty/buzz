@@ -46,7 +46,7 @@ fn record(
         auth_tag: None,
         relay_url: "ws://localhost:3000".to_string(),
         avatar_url: None,
-        acp_command: "buzz-acp".to_string(),
+        acp_command: "crew-acp".to_string(),
         agent_command: "goose".to_string(),
         agent_command_override: None,
         agent_args: vec![],

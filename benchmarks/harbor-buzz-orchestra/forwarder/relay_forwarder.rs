@@ -9,7 +9,7 @@
 //! So the container runtime uploads this forwarder next to the agent stack:
 //! agents dial `ws://localhost:<port>` — presenting the exact `Host` the
 //! community row expects — and the forwarder bridges the byte stream to the
-//! host gateway. Transparent to everything above TCP (WebSocket, the buzz
+//! host gateway. Transparent to everything above TCP (WebSocket, the crew
 //! CLI, git-over-HTTP). std-only; compiled with plain `rustc` against the
 //! musl target, so it runs on any Linux task image.
 //!

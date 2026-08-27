@@ -6,7 +6,7 @@ import type {
 
 export type AgentReadinessResult =
   | { ready: true; reason: "cli"; runtimeLabel: string }
-  | { ready: true; reason: "buzz-agent" }
+  | { ready: true; reason: "crew-agent" }
   | { ready: false };
 
 /**
@@ -25,7 +25,7 @@ export function resolveAgentReadiness(
 ): AgentReadinessResult {
   if (scope === "any") {
     for (const runtime of runtimes) {
-      if (runtime.id === "buzz-agent") continue;
+      if (runtime.id === "crew-agent") continue;
       if (
         runtime.availability === "available" &&
         (runtime.authStatus.status === "logged_in" ||
@@ -41,7 +41,7 @@ export function resolveAgentReadiness(
       ? runtimes.find(
           (runtime) => runtime.id === globalConfig.preferred_runtime,
         )
-      : runtimes.find((runtime) => runtime.id === "buzz-agent");
+      : runtimes.find((runtime) => runtime.id === "crew-agent");
   if (preferredRuntime?.availability !== "available") {
     return { ready: false };
   }
@@ -58,7 +58,7 @@ export function resolveAgentReadiness(
     };
   }
 
-  if (preferredRuntime.id !== "buzz-agent" && preferredRuntime.id !== "goose") {
+  if (preferredRuntime.id !== "crew-agent" && preferredRuntime.id !== "goose") {
     return { ready: false };
   }
 
@@ -70,7 +70,7 @@ export function resolveAgentReadiness(
       (key) => (globalConfig.env_vars[key] ?? "").trim().length > 0,
     );
     if (allKeysPresent) {
-      return { ready: true, reason: "buzz-agent" };
+      return { ready: true, reason: "crew-agent" };
     }
   }
 

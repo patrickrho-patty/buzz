@@ -63,7 +63,7 @@ export function PersonaAdvancedFields({
   inheritedEnvVars?: EnvVarsValue;
   /** Active LLM model — forwarded to BuzzAgentModelTuningFields for effort filtering. */
   model?: string;
-  /** Runtime id for the buzz-agent effort-tuning knob visibility gate. */
+  /** Runtime id for the crew-agent effort-tuning knob visibility gate. */
   modelTuningRuntimeId?: string;
   namePoolText: string;
   onBehaviorDraftChange: (value: PersonaBehaviorDraft) => void;
@@ -265,7 +265,7 @@ export function PersonaAdvancedFields({
         />
       ) : null}
 
-      {/* Effort-tuning knob — only shown for buzz-agent. */}
+      {/* Effort-tuning knob — only shown for crew-agent. */}
       {isBuzzAgentRuntime(modelTuningRuntimeId) ? (
         <BuzzAgentModelTuningFields
           envVars={envVars}

@@ -87,13 +87,13 @@ case "${1:-help}" in
     backup_hint
     ;;
   add-member)
-    docker compose exec relay /usr/local/bin/buzz-admin add-member --pubkey "${2:?Usage: ./run.sh add-member <npub-or-hex> [--role member|admin]}" "${@:3}"
+    docker compose exec relay /usr/local/bin/crew-admin add-member --pubkey "${2:?Usage: ./run.sh add-member <npub-or-hex> [--role member|admin]}" "${@:3}"
     ;;
   remove-member)
-    docker compose exec relay /usr/local/bin/buzz-admin remove-member --pubkey "${2:?Usage: ./run.sh remove-member <npub-or-hex> [--role member|admin]}" "${@:3}"
+    docker compose exec relay /usr/local/bin/crew-admin remove-member --pubkey "${2:?Usage: ./run.sh remove-member <npub-or-hex> [--role member|admin]}" "${@:3}"
     ;;
   list-members)
-    docker compose exec relay /usr/local/bin/buzz-admin list-members
+    docker compose exec relay /usr/local/bin/crew-admin list-members
     ;;
   help|-h|--help)
     cat <<'MSG'

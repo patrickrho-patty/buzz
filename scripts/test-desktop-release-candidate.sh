@@ -8,7 +8,7 @@ cp "$repo_root/scripts/desktop_release.py" "$tmp/desktop_release.py"
 git -C "$tmp" init -q
 git -C "$tmp" config user.name test
 git -C "$tmp" config user.email test@example.com
-mkdir -p "$tmp/scripts" "$tmp/desktop/src-tauri" "$tmp/crates/buzz-core" "$tmp/.release"
+mkdir -p "$tmp/scripts" "$tmp/desktop/src-tauri" "$tmp/crates/crew-core" "$tmp/.release"
 mv "$tmp/desktop_release.py" "$tmp/scripts/desktop_release.py"
 printf '{"version":"1.0.0"}\n' > "$tmp/desktop/package.json"
 printf '{"version":"1.0.0"}\n' > "$tmp/desktop/src-tauri/tauri.conf.json"
@@ -56,7 +56,7 @@ GH
 chmod +x "$mock_bin/gh"
 (
   cd "$tmp"
-  PATH="$mock_bin:$PATH" scripts/desktop_release.py generate 1.0.1 --base "$base" --repo block/buzz
+  PATH="$mock_bin:$PATH" scripts/desktop_release.py generate 1.0.1 --base "$base" --repo block/crew
   python3 - <<'PY'
 import json
 for path in ('desktop/package.json', 'desktop/src-tauri/tauri.conf.json'):
@@ -65,7 +65,7 @@ open('desktop/src-tauri/Cargo.toml','w').write('[package]\nversion = "1.0.1"\n')
 PY
   git add .
   git -c user.name=Wes -c user.email=wesbillman@users.noreply.github.com commit -q -s -m 'chore(release): release Buzz Desktop version 1.0.1' -m 'Co-authored-by: Test Automation <test@example.com>'
-  PATH="$mock_bin:$PATH" scripts/desktop_release.py validate --version 1.0.1 --repo block/buzz
+  PATH="$mock_bin:$PATH" scripts/desktop_release.py validate --version 1.0.1 --repo block/crew
   grep -Fq "$unrelated_before" CHANGELOG.md
   grep -Fq "$unrelated_after" CHANGELOG.md
   ! grep -Fq "$prior_merge" CHANGELOG.md
@@ -85,7 +85,7 @@ PY
   # anywhere else remains a collision.
   candidate=$(git rev-parse HEAD)
   git -c tag.gpgSign=false tag desktop-v1.0.1 "$candidate"
-  PATH="$mock_bin:$PATH" scripts/desktop_release.py validate --version 1.0.1 --repo block/buzz
+  PATH="$mock_bin:$PATH" scripts/desktop_release.py validate --version 1.0.1 --repo block/crew
   git -c tag.gpgSign=false tag -f desktop-v1.0.1 "$base" >/dev/null
   if PATH="$mock_bin:$PATH" scripts/desktop_release.py validate --version 1.0.1 --repo block/buzz >/dev/null 2>&1; then
     echo "validator accepted an equal-version tag at the wrong SHA" >&2; exit 1

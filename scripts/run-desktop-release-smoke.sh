@@ -4,7 +4,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ARTIFACT_DIR="${BUZZ_RELEASE_SMOKE_ARTIFACT_DIR:-${ROOT}/desktop/test-results/release-smoke}"
-DB_NAME="${BUZZ_RELEASE_SMOKE_DB:-buzz_release_smoke_${$}}"
+DB_NAME="${BUZZ_RELEASE_SMOKE_DB:-crew_release_smoke_${$}}"
 REDIS_DB="${BUZZ_RELEASE_SMOKE_REDIS_DB:-}"
 LOCK_DIR="${TMPDIR:-/tmp}/buzz-desktop-release-smoke.lock"
 RELAY_PID=""
@@ -84,11 +84,11 @@ phase services "${phase_start}"
 phase_start="$(date +%s)"
 log "creating isolated database ${DB_NAME}"
 docker exec buzz-postgres createdb -U buzz "${DB_NAME}"
-export PGHOST=localhost PGPORT=5432 PGUSER=buzz PGPASSWORD=buzz_dev PGDATABASE="${DB_NAME}"
+export PGHOST=localhost PGPORT=5432 PGUSER=buzz PGPASSWORD=crew_dev PGDATABASE="${DB_NAME}"
 export PGSCHEMA_PLAN_HOST=localhost PGSCHEMA_PLAN_PORT=5432 PGSCHEMA_PLAN_DB="${DB_NAME}"
-export PGSCHEMA_PLAN_USER=buzz PGSCHEMA_PLAN_PASSWORD=buzz_dev
+export PGSCHEMA_PLAN_USER=buzz PGSCHEMA_PLAN_PASSWORD=crew_dev
 ./bin/pgschema apply --file schema/schema.sql --auto-approve
-docker exec -i -e PGPASSWORD=buzz_dev buzz-postgres \
+docker exec -i -e PGPASSWORD=crew_dev buzz-postgres \
   psql -U buzz -d "${DB_NAME}" -v ON_ERROR_STOP=1 < scripts/attach-schema-partitions.sql
 BUZZ_DB_NAME="${DB_NAME}" BUZZ_COMMUNITY_HOST="${COMMUNITY_HOST}" ./scripts/setup-desktop-test-data.sh
 docker exec buzz-redis redis-cli -n "${REDIS_DB}" FLUSHDB >/dev/null
@@ -99,12 +99,12 @@ if [[ -n "${BUZZ_E2E_RELAY_BIN:-}" ]]; then
   RELAY_BIN="${BUZZ_E2E_RELAY_BIN}"
 else
   log "building relay"
-  cargo build --profile ci -p buzz-relay
-  RELAY_BIN="${ROOT}/target/ci/buzz-relay"
+  cargo build --profile ci -p crew-relay
+  RELAY_BIN="${ROOT}/target/ci/crew-relay"
 fi
 log "starting relay at ${RELAY_HTTP_URL}"
 env \
-  DATABASE_URL="postgres://buzz:buzz_dev@localhost:5432/${DB_NAME}" \
+  DATABASE_URL="postgres://buzz:crew_dev@localhost:5432/${DB_NAME}" \
   REDIS_URL="redis://localhost:6379/${REDIS_DB}" \
   RELAY_URL="ws://${COMMUNITY_HOST}" \
   BUZZ_BIND_ADDR="127.0.0.1:${RELAY_PORT}" \

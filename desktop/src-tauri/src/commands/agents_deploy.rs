@@ -277,7 +277,7 @@ mod tests {
             "display_name": "Agent\u{0000} Name",
             "private_key_nsec": "nsec1fake",
             "relay_url": "wss://relay.example",
-            "acp_command": "buzz-acp",
+            "acp_command": "crew-acp",
             "agent_command": "goose",
             "agent_args": [],
             "mcp_command": "",

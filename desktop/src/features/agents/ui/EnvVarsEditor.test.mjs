@@ -670,11 +670,11 @@ test("buildRecord_hidden_tuning_key_unchanged_when_generic_row_edited", () => {
 test("buildRecord_runtime_switch_new_hiddenKeys_then_generic_edit", () => {
   // Scenario 2: runtime switch then generic edit.
   //
-  // Before switch: agent is buzz-agent with BUZZ_AGENT_MAX_ROUNDS = "50" stored
+  // Before switch: agent is crew-agent with BUZZ_AGENT_MAX_ROUNDS = "50" stored
   // in value (set via the numeric tuning control). After switching to Goose,
-  // the buzz-agent key is no longer hidden — it becomes a visible generic row.
+  // the crew-agent key is no longer hidden — it becomes a visible generic row.
   // The test verifies:
-  //   (a) After the switch, the old buzz-agent key appears as a generic row
+  //   (a) After the switch, the old crew-agent key appears as a generic row
   //       (toRows with the new Goose hidden set projects it).
   //   (b) After a generic-row edit, buildRecord preserves BOTH the old-runtime
   //       key (now a generic row) and the new-runtime hidden key.
@@ -682,12 +682,12 @@ test("buildRecord_runtime_switch_new_hiddenKeys_then_generic_edit", () => {
 
   // Derive both descriptor sets from real runtime objects.
   const buzzAgentRuntime = {
-    id: "buzz-agent",
+    id: "crew-agent",
     label: "Buzz Agent",
     avatarUrl: "",
     availability: "available",
-    command: "buzz-agent",
-    binaryPath: "buzz-agent",
+    command: "crew-agent",
+    binaryPath: "crew-agent",
     defaultArgs: [],
     mcpCommand: null,
     modelEnvVar: "BUZZ_AGENT_MODEL",
@@ -733,11 +733,11 @@ test("buildRecord_runtime_switch_new_hiddenKeys_then_generic_edit", () => {
   const buzzHiddenKeys = structuredEnvKeys(buzzDescriptors);
   const gooseHiddenKeys = structuredEnvKeys(gooseDescriptors);
 
-  // Sanity-check that BUZZ_AGENT_MAX_ROUNDS is hidden under buzz-agent but not
+  // Sanity-check that BUZZ_AGENT_MAX_ROUNDS is hidden under crew-agent but not
   // under Goose — that contrast is what makes it become a generic row.
   assert.ok(
     buzzHiddenKeys.includes("BUZZ_AGENT_MAX_ROUNDS"),
-    "BUZZ_AGENT_MAX_ROUNDS must be hidden under buzz-agent descriptors",
+    "BUZZ_AGENT_MAX_ROUNDS must be hidden under crew-agent descriptors",
   );
   assert.equal(
     gooseHiddenKeys.includes("BUZZ_AGENT_MAX_ROUNDS"),
@@ -745,7 +745,7 @@ test("buildRecord_runtime_switch_new_hiddenKeys_then_generic_edit", () => {
     "BUZZ_AGENT_MAX_ROUNDS must not be hidden under Goose descriptors",
   );
 
-  // Pre-switch value: buzz-agent max-rounds was set, GOOSE_MAX_TOKENS was
+  // Pre-switch value: crew-agent max-rounds was set, GOOSE_MAX_TOKENS was
   // already set (e.g. user configured it before switching back), plus a
   // generic user var. GOOSE_MAX_TOKENS is a hidden key under the Goose
   // descriptor set, so it must survive buildRecord() via hiddenKeys.
@@ -811,12 +811,12 @@ test("filterBakedGenericRows_numeric_baked_key_excluded_and_placeholder_shown", 
   // baked-row display so it isn't editable twice, while the structured
   // numeric input shows the inherited placeholder via numericTuningPlaceholder.
   const buzzAgentRuntime = {
-    id: "buzz-agent",
+    id: "crew-agent",
     label: "Buzz Agent",
     avatarUrl: "",
     availability: "available",
-    command: "buzz-agent",
-    binaryPath: "buzz-agent",
+    command: "crew-agent",
+    binaryPath: "crew-agent",
     defaultArgs: [],
     mcpCommand: null,
     modelEnvVar: "BUZZ_AGENT_MODEL",

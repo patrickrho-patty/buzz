@@ -7,7 +7,7 @@ export const KIND_STREAM_MESSAGE = 9;
 export const KIND_NIP29_DELETE_EVENT = 9005;
 // NIP-56 report + community-moderation command kinds. Reports (1984) persist to
 // the mod queue only; commands (9040–9044) are relay-validated and never stored.
-// Tag shapes are pinned by buzz-sdk builders + relay moderation_commands.rs.
+// Tag shapes are pinned by crew-sdk builders + relay moderation_commands.rs.
 export const KIND_REPORT = 1984;
 export const KIND_PRODUCT_FEEDBACK = 42000;
 export const KIND_IA_ARCHIVE_REQUEST = 9035;
@@ -53,7 +53,7 @@ export const KIND_PROJECT_SIDEBAR_MEMBERSHIP = 30078;
 export const KIND_COMMUNITY_THEME = 30078;
 // NIP-33 persona/team/managed-agent projection events (d-tag keyed). Published
 // backend-side as secrets-stripped snapshots; the inbound sync hook subscribes
-// to all three to patch local records. Mirror of buzz-core's KIND_PERSONA etc.
+// to all three to patch local records. Mirror of crew-core's KIND_PERSONA etc.
 export const KIND_PERSONA = 30175;
 export const KIND_TEAM = 30176;
 export const KIND_MANAGED_AGENT = 30177;
@@ -89,7 +89,7 @@ export const CHANNEL_MESSAGE_EVENT_KINDS = [
   KIND_FORUM_COMMENT,
 ] as const;
 
-// Keep this in sync with the Home-feed mention query in buzz-db.
+// Keep this in sync with the Home-feed mention query in crew-db.
 export const HOME_MENTION_EVENT_KINDS = [...CHANNEL_MESSAGE_EVENT_KINDS];
 
 export const CHANNEL_EVENT_KINDS = [

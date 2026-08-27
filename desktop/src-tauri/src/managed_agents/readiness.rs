@@ -63,7 +63,7 @@ pub(crate) mod cli_probe;
 ///
 /// `config_file_path` is the harness config file path (if any) — not part of
 /// the process env but relevant for display and future write-back dispatch.
-/// `effective_command` is the resolved harness binary name (e.g. `"buzz-agent"`,
+/// `effective_command` is the resolved harness binary name (e.g. `"crew-agent"`,
 /// `"goose"`) after persona and override resolution.
 #[derive(Debug, Clone)]
 pub(crate) struct EffectiveAgentEnv {
@@ -74,7 +74,7 @@ pub(crate) struct EffectiveAgentEnv {
     // replaces this resolution path wholesale.
     #[allow(dead_code)]
     pub config_file_path: Option<&'static str>,
-    /// The resolved harness binary name (e.g. `"buzz-agent"`, `"goose"`).
+    /// The resolved harness binary name (e.g. `"crew-agent"`, `"goose"`).
     pub effective_command: String,
 }
 
@@ -92,7 +92,7 @@ pub(crate) struct EffectiveAgentEnv {
 /// the effective values.
 #[derive(Debug, Clone)]
 pub(crate) struct EffectiveHarnessDescriptor {
-    /// The raw effective command string (e.g. `"buzz-agent"`, `"my-acp-agent"`).
+    /// The raw effective command string (e.g. `"crew-agent"`, `"my-acp-agent"`).
     /// Used for `known_acp_runtime` lookup and hashing.
     pub command: String,
     /// Normalized effective args.  Instance args win when non-empty; otherwise
@@ -269,7 +269,7 @@ fn resolve_effective_agent_env_with_def(
     );
     env.extend(user_env);
 
-    // Buzz shared compute is a native Buzz provider. Translate it to buzz-agent's
+    // Buzz shared compute is a native Buzz provider. Translate it to crew-agent's
     // OpenAI-compatible transport only in the effective runtime environment.
     #[cfg(feature = "mesh-llm")]
     super::apply_relay_mesh_env(
@@ -331,7 +331,7 @@ pub enum Requirement {
         /// Shown verbatim in the nudge so the user can identify the problem.
         diagnostic: String,
     },
-    /// Git for Windows is missing, so buzz-agent cannot launch buzz-dev-mcp's
+    /// Git for Windows is missing, so crew-agent cannot launch crew-dev-mcp's
     /// Bash-based shell tool. Doctor owns installation and re-checking.
     GitBash,
     /// A custom harness command that cannot be resolved in the current PATH.
@@ -383,7 +383,7 @@ impl AgentReadiness {
 /// Checks the `effective` env surface against the requirements for the
 /// resolved runtime:
 ///
-/// * **buzz-agent / goose**: provider + model are required (both must be
+/// * **crew-agent / goose**: provider + model are required (both must be
 ///   present in the effective env or as structured fields). Additionally,
 ///   provider-specific credentials are required:
 ///   - `anthropic` → `ANTHROPIC_API_KEY`
@@ -396,7 +396,7 @@ impl AgentReadiness {
 /// * **unknown / custom command**: always `Ready` (no requirements known).
 ///
 /// Databricks note: `DATABRICKS_TOKEN` is `.unwrap_or_default()` in
-/// `buzz-agent/src/config.rs:143` — it is an escape hatch for static tokens
+/// `crew-agent/src/config.rs:143` — it is an escape hatch for static tokens
 /// but the normal path is OAuth PKCE.  We intentionally do NOT mark the
 /// token as required to avoid a false NotReady for users on OAuth.
 pub(crate) fn agent_readiness(effective: &EffectiveAgentEnv) -> AgentReadiness {
@@ -428,7 +428,7 @@ fn collect_missing_requirements(
     };
 
     match rt.id {
-        "buzz-agent" => buzz_agent_requirements(effective),
+        "crew-agent" => crew_agent_requirements(effective),
         "goose" => {
             // Read the file config once at the call site so the inner fn is
             // pure and unit-testable by injection.
@@ -445,8 +445,8 @@ fn collect_missing_requirements(
     }
 }
 
-/// Requirements for buzz-agent (provider + model + provider-specific creds).
-fn buzz_agent_requirements(effective: &EffectiveAgentEnv) -> Vec<Requirement> {
+/// Requirements for crew-agent (provider + model + provider-specific creds).
+fn crew_agent_requirements(effective: &EffectiveAgentEnv) -> Vec<Requirement> {
     let mut missing = Vec::new();
 
     #[cfg(windows)]
@@ -470,7 +470,7 @@ fn buzz_agent_requirements(effective: &EffectiveAgentEnv) -> Vec<Requirement> {
 
     // Model is required — maps to BUZZ_AGENT_MODEL in the effective env.
     // Same empty-string treatment as provider.
-    // Also accept provider-specific model fallback keys, matching buzz-agent's
+    // Also accept provider-specific model fallback keys, matching crew-agent's
     // own config.rs `from_env()` resolution order (e.g. DATABRICKS_MODEL for
     // databricks/databricks_v2, ANTHROPIC_MODEL for anthropic, etc.). The
     // baked buzz-releases env sets DATABRICKS_MODEL but not BUZZ_AGENT_MODEL,
@@ -518,7 +518,7 @@ fn buzz_agent_requirements(effective: &EffectiveAgentEnv) -> Vec<Requirement> {
             }
         Some("databricks") | Some("databricks_v2") | Some("databricks-v2")
             // DATABRICKS_HOST is hard-required; DATABRICKS_TOKEN is optional
-            // (OAuth PKCE is the normal path — see buzz-agent/src/config.rs:143).
+            // (OAuth PKCE is the normal path — see crew-agent/src/config.rs:143).
             if env_key_missing("DATABRICKS_HOST") => {
                 missing.push(Requirement::EnvKey {
                     key: "DATABRICKS_HOST".to_string(),
@@ -541,7 +541,7 @@ fn buzz_agent_requirements(effective: &EffectiveAgentEnv) -> Vec<Requirement> {
 
 /// Requirements for goose (provider + model + provider-specific creds).
 ///
-/// Mirrors buzz-agent requirements but uses GOOSE_PROVIDER / GOOSE_MODEL.
+/// Mirrors crew-agent requirements but uses GOOSE_PROVIDER / GOOSE_MODEL.
 ///
 /// File-config tier: goose reads `~/.config/goose/config.yaml` at startup.
 /// Requirements already satisfied there are silenced — we don't need to
@@ -604,7 +604,7 @@ fn goose_requirements(
         }
     }
 
-    // Provider-specific credentials — same empty-string semantics as buzz-agent.
+    // Provider-specific credentials — same empty-string semantics as crew-agent.
     let env_key_missing = |key: &str| effective.env.get(key).is_none_or(|v| v.is_empty());
     // A credential key is also satisfied when the file config's `extra` map
     // contains it (e.g. DATABRICKS_HOST set in the goose config file).
@@ -676,12 +676,12 @@ mod tests {
             .collect()
     }
 
-    // ── buzz-agent tests ──────────────────────────────────────────────────
+    // ── crew-agent tests ──────────────────────────────────────────────────
 
     #[test]
-    fn buzz_agent_missing_provider_returns_not_ready_with_normalized_field() {
+    fn crew_agent_missing_provider_returns_not_ready_with_normalized_field() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[("BUZZ_AGENT_MODEL", "claude-opus-4-5")]),
         );
         let result = agent_readiness(&env);
@@ -699,9 +699,9 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_missing_model_returns_not_ready_with_normalized_field() {
+    fn crew_agent_missing_model_returns_not_ready_with_normalized_field() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "anthropic"),
                 ("ANTHROPIC_API_KEY", "sk-test"),
@@ -717,9 +717,9 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_missing_anthropic_key_returns_not_ready_with_env_key() {
+    fn crew_agent_missing_anthropic_key_returns_not_ready_with_env_key() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "anthropic"),
                 ("BUZZ_AGENT_MODEL", "claude-opus-4-5"),
@@ -733,9 +733,9 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_missing_openai_key_returns_not_ready() {
+    fn crew_agent_missing_openai_key_returns_not_ready() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "openai"),
                 ("BUZZ_AGENT_MODEL", "gpt-4o"),
@@ -749,9 +749,9 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_anthropic_with_all_fields_is_ready() {
+    fn crew_agent_anthropic_with_all_fields_is_ready() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "anthropic"),
                 ("BUZZ_AGENT_MODEL", "claude-opus-4-5"),
@@ -762,12 +762,12 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_databricks_with_host_and_model_is_ready_without_token() {
+    fn crew_agent_databricks_with_host_and_model_is_ready_without_token() {
         // DATABRICKS_TOKEN is NOT required — OAuth PKCE is the normal path.
         // No token present, no OAuth cache present → still Ready because we
         // cannot evaluate OAuth state from the env map alone.
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "databricks"),
                 ("BUZZ_AGENT_MODEL", "dbrx-instruct"),
@@ -782,9 +782,9 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_databricks_missing_host_returns_not_ready() {
+    fn crew_agent_databricks_missing_host_returns_not_ready() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "databricks"),
                 ("BUZZ_AGENT_MODEL", "dbrx-instruct"),
@@ -799,9 +799,9 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_databricks_v2_missing_host_returns_not_ready() {
+    fn crew_agent_databricks_v2_missing_host_returns_not_ready() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "databricks_v2"),
                 (
@@ -858,9 +858,9 @@ mod tests {
     // match the dialog's (envVars[key] ?? "").length === 0 emptiness check.
 
     #[test]
-    fn buzz_agent_empty_string_provider_is_not_ready() {
+    fn crew_agent_empty_string_provider_is_not_ready() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", ""),
                 ("BUZZ_AGENT_MODEL", "claude-opus-4-5"),
@@ -879,9 +879,9 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_empty_string_model_is_not_ready() {
+    fn crew_agent_empty_string_model_is_not_ready() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "anthropic"),
                 ("BUZZ_AGENT_MODEL", ""),
@@ -901,9 +901,9 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_empty_string_anthropic_key_is_not_ready() {
+    fn crew_agent_empty_string_anthropic_key_is_not_ready() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "anthropic"),
                 ("BUZZ_AGENT_MODEL", "claude-opus-4-5"),
@@ -921,9 +921,9 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_empty_string_databricks_host_is_not_ready() {
+    fn crew_agent_empty_string_databricks_host_is_not_ready() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "databricks"),
                 ("BUZZ_AGENT_MODEL", "dbrx-instruct"),
@@ -1483,8 +1483,8 @@ mod tests {
             auth_tag: None,
             relay_url: String::new(),
             avatar_url: None,
-            acp_command: "buzz-acp".to_string(),
-            agent_command: "buzz-agent".to_string(),
+            acp_command: "crew-acp".to_string(),
+            agent_command: "crew-agent".to_string(),
             agent_command_override: None,
             agent_args: vec![],
             mcp_command: String::new(),
@@ -1533,7 +1533,7 @@ mod tests {
             effort_level: None,
         };
 
-        let runtime = known_acp_runtime_exact("buzz-agent");
+        let runtime = known_acp_runtime_exact("crew-agent");
         let effective = resolve_effective_agent_env(&record, &[], runtime, &Default::default());
 
         // User env_vars must be present in the output (last-write-wins).
@@ -1548,11 +1548,11 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_databricks_v2_with_databricks_model_but_no_buzz_agent_model_is_ready() {
+    fn crew_agent_databricks_v2_with_databricks_model_but_no_crew_agent_model_is_ready() {
         // The baked buzz-releases env sets DATABRICKS_MODEL but not BUZZ_AGENT_MODEL.
         // An agent with only DATABRICKS_MODEL must pass the readiness gate.
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "databricks_v2"),
                 ("DATABRICKS_MODEL", "goose-claude-4-6-sonnet"),
@@ -1566,11 +1566,11 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_databricks_v2_hyphen_alias_with_databricks_model_is_ready() {
-        // buzz-agent accepts both "databricks_v2" and "databricks-v2". The
+    fn crew_agent_databricks_v2_hyphen_alias_with_databricks_model_is_ready() {
+        // crew-agent accepts both "databricks_v2" and "databricks-v2". The
         // readiness gate must recognize the hyphen alias and accept DATABRICKS_MODEL.
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "databricks-v2"),
                 ("DATABRICKS_MODEL", "goose-claude-4-6-sonnet"),
@@ -1584,11 +1584,11 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_databricks_hyphen_alias_missing_host_returns_not_ready() {
+    fn crew_agent_databricks_hyphen_alias_missing_host_returns_not_ready() {
         // The hyphen alias "databricks-v2" requires DATABRICKS_HOST just like
         // the underscore variants. Without it the agent cannot reach the endpoint.
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "databricks-v2"),
                 ("DATABRICKS_MODEL", "goose-claude-4-6-sonnet"),
@@ -1609,10 +1609,10 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_databricks_v1_with_databricks_model_but_no_buzz_agent_model_is_ready() {
+    fn crew_agent_databricks_v1_with_databricks_model_but_no_crew_agent_model_is_ready() {
         // V1 (Model Serving) also resolves DATABRICKS_MODEL — same fallback applies.
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "databricks"),
                 ("DATABRICKS_MODEL", "dbrx-instruct"),
@@ -1626,9 +1626,9 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_anthropic_with_anthropic_model_but_no_buzz_agent_model_is_ready() {
+    fn crew_agent_anthropic_with_anthropic_model_but_no_crew_agent_model_is_ready() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "anthropic"),
                 ("ANTHROPIC_MODEL", "claude-opus-4-5"),
@@ -1642,9 +1642,9 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_openai_with_openai_compat_model_but_no_buzz_agent_model_is_ready() {
+    fn crew_agent_openai_with_openai_compat_model_but_no_crew_agent_model_is_ready() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "openai"),
                 ("OPENAI_COMPAT_MODEL", "gpt-4o"),
@@ -1658,10 +1658,10 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_empty_provider_model_fallback_key_is_not_ready() {
+    fn crew_agent_empty_provider_model_fallback_key_is_not_ready() {
         // An empty DATABRICKS_MODEL with no BUZZ_AGENT_MODEL must still be NotReady.
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "databricks_v2"),
                 ("DATABRICKS_MODEL", ""),
@@ -1683,9 +1683,9 @@ mod tests {
     // ── OpenRouter readiness ─────────────────────────────────────────────
 
     #[test]
-    fn buzz_agent_openrouter_with_all_fields_is_ready() {
+    fn crew_agent_openrouter_with_all_fields_is_ready() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "openrouter"),
                 ("BUZZ_AGENT_MODEL", "anthropic/claude-sonnet-4"),
@@ -1700,9 +1700,9 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_openrouter_missing_key_returns_not_ready() {
+    fn crew_agent_openrouter_missing_key_returns_not_ready() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "openrouter"),
                 ("BUZZ_AGENT_MODEL", "anthropic/claude-sonnet-4"),
@@ -1716,9 +1716,9 @@ mod tests {
     }
 
     #[test]
-    fn buzz_agent_openrouter_with_provider_model_fallback_is_ready() {
+    fn crew_agent_openrouter_with_provider_model_fallback_is_ready() {
         let env = make_env(
-            "buzz-agent",
+            "crew-agent",
             env_with(&[
                 ("BUZZ_AGENT_PROVIDER", "openrouter"),
                 ("OPENROUTER_MODEL", "google/gemini-2.5-flash"),

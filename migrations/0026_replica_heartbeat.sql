@@ -1,5 +1,5 @@
 -- Replica heartbeat: a portable read-side freshness observation for the
--- replica fence (see crates/buzz-db/src/replica_fence.rs).
+-- replica fence (see crates/crew-db/src/replica_fence.rs).
 --
 -- Why: the fence's ordered writer-side proof previously ended in a WAL-LSN
 -- comparison (`pg_last_wal_replay_lsn() >= L`), which Aurora's reader

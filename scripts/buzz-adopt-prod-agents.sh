@@ -175,7 +175,7 @@ say "[1/4] Preflight"
 #     `buzz-desktop` for both the installed DMG
 #     (/Applications/Buzz.app/Contents/MacOS/buzz-desktop) and dev builds
 #     (target/<profile>/buzz-desktop via `tauri dev`). Match that path component
-#     exactly so sidecars/helpers (buzz, buzz-dev-mcp, buzz-agent) don't
+#     exactly so sidecars/helpers (buzz, crew-dev-mcp, crew-agent) don't
 #     false-positive.
 #
 #     WHY dev blocks but the DMG doesn't: step 2 atomically swaps the entire dev

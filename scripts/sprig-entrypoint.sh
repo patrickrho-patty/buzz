@@ -13,4 +13,4 @@ if [[ -n "${BUZZ_RELAY_URL:-}" ]]; then
 fi
 
 # The harness must receive Kubernetes' termination signal directly.
-exec buzz-acp "$@"
+exec crew-acp "$@"

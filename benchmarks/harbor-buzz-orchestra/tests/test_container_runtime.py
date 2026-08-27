@@ -232,22 +232,22 @@ async def test_collects_task_declared_channel_membership(tmp_path, monkeypatch):
 
 async def test_install_stack_uploads_the_pinned_stack(tmp_path):
     binaries = {}
-    for name in ("buzz-acp", "buzz-agent", "buzz-dev-mcp"):
+    for name in ("crew-acp", "crew-agent", "crew-dev-mcp"):
         path = tmp_path / name
         path.write_text("#!binary")
         binaries[name] = str(path)
     rt = runtime(
         tmp_path,
-        buzz_acp_binary=binaries["buzz-acp"],
-        buzz_agent_binary=binaries["buzz-agent"],
-        buzz_dev_mcp_binary=binaries["buzz-dev-mcp"],
+        buzz_acp_binary=binaries["crew-acp"],
+        buzz_agent_binary=binaries["crew-agent"],
+        buzz_dev_mcp_binary=binaries["crew-dev-mcp"],
     )
     environment = Environment()
     await rt._install_stack(environment)
     assert {target for _, target in environment.uploads} == {
-        f"{REMOTE_BIN}/buzz-acp",
-        f"{REMOTE_BIN}/buzz-agent",
-        f"{REMOTE_BIN}/buzz-dev-mcp",
+        f"{REMOTE_BIN}/crew-acp",
+        f"{REMOTE_BIN}/crew-agent",
+        f"{REMOTE_BIN}/crew-dev-mcp",
     }
     assert any("chmod 0755" in cmd for cmd, _ in environment.commands)
 
@@ -315,7 +315,7 @@ async def test_launch_wires_the_desktop_environment(tmp_path, configured, expect
     orch = credential("orch-1", "orchestrator", "orch-model")
     trial = trial_handle((orch,))
     environment = Environment(
-        responses={"buzz-acp": ExecResult(stdout="4242\n", stderr="", return_code=0)}
+        responses={"crew-acp": ExecResult(stdout="4242\n", stderr="", return_code=0)}
     )
     agent = await runtime(tmp_path)._launch_agent(
         environment=environment,
@@ -326,10 +326,10 @@ async def test_launch_wires_the_desktop_environment(tmp_path, configured, expect
     )
     assert agent.pid == 4242
     command, env = environment.commands[-1]
-    assert f"{REMOTE_BIN}/buzz-acp" in command
-    # The real product wiring: acp spawns buzz-agent, which gets buzz-dev-mcp.
-    assert env["BUZZ_ACP_AGENT_COMMAND"] == f"{REMOTE_BIN}/buzz-agent"
-    assert env["BUZZ_ACP_MCP_COMMAND"] == f"{REMOTE_BIN}/buzz-dev-mcp"
+    assert f"{REMOTE_BIN}/crew-acp" in command
+    # The real product wiring: acp spawns crew-agent, which gets crew-dev-mcp.
+    assert env["BUZZ_ACP_AGENT_COMMAND"] == f"{REMOTE_BIN}/crew-agent"
+    assert env["BUZZ_ACP_MCP_COMMAND"] == f"{REMOTE_BIN}/crew-dev-mcp"
     assert env["BUZZ_RELAY_URL"] == trial.relay_ws_url
     assert env["BUZZ_PRIVATE_KEY"] == orch.nostr_secret_key
     assert env["NOSTR_PRIVATE_KEY"] == orch.nostr_secret_key
@@ -734,7 +734,7 @@ async def test_thinking_effort_reaches_the_agent(tmp_path, pinned, expected):
         )
     orch = credential("orch-1", "orchestrator", "orch-model")
     environment = Environment(
-        responses={"buzz-acp": ExecResult(stdout="4242\n", stderr="", return_code=0)}
+        responses={"crew-acp": ExecResult(stdout="4242\n", stderr="", return_code=0)}
     )
     await runtime(tmp_path)._launch_agent(
         environment=environment,

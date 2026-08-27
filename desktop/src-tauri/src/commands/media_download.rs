@@ -752,7 +752,7 @@ mod tests {
         // Construct JSON bytes directly: level=none but entries non-empty.
         // encode_snapshot_json does not guard against this, so we can produce it.
         let raw = serde_json::json!({
-            "format": "buzz-agent-snapshot",
+            "format": "crew-agent-snapshot",
             "version": 1,
             "definition": { "name": "test" },
             "profile": { "displayName": "Test" },

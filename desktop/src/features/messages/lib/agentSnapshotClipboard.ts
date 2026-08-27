@@ -3,7 +3,7 @@ import type { ImetaMedia } from "./imetaMediaMarkdown";
 
 // Keep the original attribute name for clipboard compatibility. The payload
 // now accepts both agent and team snapshot filenames.
-const CLIPBOARD_ATTRIBUTE = "data-buzz-agent-snapshot";
+const CLIPBOARD_ATTRIBUTE = "data-crew-agent-snapshot";
 const MAX_AGENT_SNAPSHOT_BYTES = 10 * 1024 * 1024;
 const MAX_TEAM_SNAPSHOT_BYTES = 50 * 1024 * 1024;
 const MAX_DISPLAY_NAME_LENGTH = 200;

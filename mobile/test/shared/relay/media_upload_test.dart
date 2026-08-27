@@ -289,7 +289,7 @@ void main() {
       final authEvent = jsonDecode(decoded) as Map<String, dynamic>;
       expect(authEvent['kind'], 24242);
       expect(authEvent['pubkey'], keychain.public);
-      expect(authEvent['content'], 'Get buzz-media');
+      expect(authEvent['content'], 'Get crew-media');
       expect(authEvent['tags'], contains(equals(['t', 'get'])));
       expect(authEvent['tags'], contains(equals(['server', 'relay.example'])));
       expect(authEvent['tags'], contains(equals(['expiration', '1700000600'])));

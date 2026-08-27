@@ -12,14 +12,14 @@ const SHOTS = "test-results/byoh-after";
  */
 const CATALOG = [
   {
-    id: "buzz-agent",
+    id: "crew-agent",
     label: "Buzz Agent",
     avatar_url: "",
     availability: "available",
-    command: "buzz-agent",
-    binary_path: "/usr/local/bin/buzz-agent",
+    command: "crew-agent",
+    binary_path: "/usr/local/bin/crew-agent",
     default_args: [],
-    mcp_command: "buzz-dev-mcp",
+    mcp_command: "crew-dev-mcp",
     install_hint: "",
     install_instructions_url: "https://github.com/block/buzz",
     can_auto_install: false,

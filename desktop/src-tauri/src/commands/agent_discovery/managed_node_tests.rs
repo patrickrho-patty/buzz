@@ -464,7 +464,7 @@ fn test_probe_node_windows_returns_false_on_wrong_version_output() {
 /// Returns false when the node binary path does not exist (fast path, no spawn).
 #[test]
 fn test_managed_node_runtime_ready_returns_false_when_binary_absent() {
-    let Some(node) = crate::managed_agents::buzz_managed_node_bin_path() else {
+    let Some(node) = crate::managed_agents::crew_managed_node_bin_path() else {
         assert!(
             !managed_node_runtime_ready(),
             "managed_node_runtime_ready must return false when no path resolves"

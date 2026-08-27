@@ -30,7 +30,7 @@ type Page = import("@playwright/test").Page;
 
 const PROVIDER = {
   id: "kubernetes",
-  binaryPath: "/mock/buzz-backend-kubernetes",
+  binaryPath: "/mock/crew-backend-kubernetes",
 };
 
 const PROBE_RESULT = {

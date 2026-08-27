@@ -36,7 +36,7 @@ let cachedRelayOrigin: string | null = null;
  * Canonicalize a URL to its origin with a lowercased scheme/host.
  *
  * The relay always emits media URLs with a lowercased tenant host
- * (`normalize_host` in buzz-core), but the saved community relay URL keeps
+ * (`normalize_host` in crew-core), but the saved community relay URL keeps
  * whatever casing the user typed (DNS is case-insensitive, so an uppercase
  * host connects fine). A raw string comparison between the two misclassifies
  * the relay's own media URLs as external and skips the authenticated proxy.
@@ -307,7 +307,7 @@ export function mediaProxyUrl(port: number, mediaPath: string): string {
  * to go through the local streaming proxy. External Blossom URLs and
  * non-Blossom URLs are returned unchanged.
  *
- * Falls back to buzz-media:// if the proxy port isn't available yet.
+ * Falls back to crew-media:// if the proxy port isn't available yet.
  */
 export function rewriteRelayUrl(url: string): string {
   const m = RELAY_MEDIA_RE.exec(url);
@@ -335,5 +335,5 @@ export function rewriteRelayUrl(url: string): string {
     ensureRelayOriginFetch();
   }
 
-  return `buzz-media://localhost/media/${m[1]}`;
+  return `crew-media://localhost/media/${m[1]}`;
 }

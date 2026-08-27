@@ -278,7 +278,7 @@ test("env vars editor renders in PersonaDialog new-persona form", async ({
 
   await dialog.getByRole("button", { name: "Advanced", exact: true }).click();
   await expect(dialog.getByTestId("env-vars-editor")).toBeVisible();
-  // Initially empty (no rows — buzz-agent with no provider has no required keys).
+  // Initially empty (no rows — crew-agent with no provider has no required keys).
   await expect(dialog.getByTestId("env-vars-key")).toHaveCount(0);
 
   // Add a row.

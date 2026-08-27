@@ -8,16 +8,16 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
 TARGET_DIR="${CARGO_TARGET_DIR:-$ROOT/target}"
-PROVIDER_BINARY="$TARGET_DIR/release/buzz-backend-kubernetes"
+PROVIDER_BINARY="$TARGET_DIR/release/crew-backend-kubernetes"
 
 CARGO="${CARGO:-cargo}"
 "$CARGO" build --release \
-  -p buzz-acp \
-  -p buzz-agent \
-  -p buzz-dev-mcp \
+  -p crew-acp \
+  -p crew-agent \
+  -p crew-dev-mcp \
   -p git-credential-nostr \
-  -p buzz-cli \
-  -p buzz-backend-kubernetes
+  -p crew-cli \
+  -p crew-backend-kubernetes
 
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT

@@ -24,7 +24,7 @@ const GOLDEN = JSON.parse(
 const OWNER = GOLDEN.owner;
 const EVENT_ID = GOLDEN.eventId;
 
-// This fixture is also consumed by buzz-cli and the Tauri deep-link validator.
+// This fixture is also consumed by crew-cli and the Tauri deep-link validator.
 test("builders emit the canonical cross-language link format", () => {
   assert.equal(
     buildPullRequestLink({ id: EVENT_ID, owner: OWNER, dtag: GOLDEN.dtag }),

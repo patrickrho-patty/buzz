@@ -124,7 +124,7 @@ test("getActivityHeadline uses semantic tool descriptors", () => {
           label: "Send Message",
           preview: "hi",
           source: "shell",
-          groupKey: "buzz-cli:messages.send",
+          groupKey: "crew-cli:messages.send",
         },
       }),
     ),

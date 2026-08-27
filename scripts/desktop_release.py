@@ -18,11 +18,11 @@ SEMVER = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$")
 STABLE_TAG = re.compile(r"desktop-v([0-9]+)\.([0-9]+)\.([0-9]+)$")
 DESKTOP_PATHS = (
     "desktop/",
-    "crates/buzz-core/",
-    "crates/buzz-persona/",
-    "crates/buzz-sdk/",
-    "crates/buzz-agent/",
-    "crates/buzz-media/",
+    "crates/crew-core/",
+    "crates/crew-persona/",
+    "crates/crew-sdk/",
+    "crates/crew-agent/",
+    "crates/crew-media/",
 )
 CANDIDATE_FILES = {
     ".release/desktop-candidate.json",

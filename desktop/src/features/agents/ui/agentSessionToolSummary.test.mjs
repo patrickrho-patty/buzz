@@ -62,7 +62,7 @@ test("buildCompactToolSummary returns null preview for piped stdin sends", () =>
       toolName: "shell",
       args: {
         command:
-          'echo "hello from stdin" | ./target/release/buzz messages send --channel channel-1 --content -',
+          'echo "hello from stdin" | ./target/release/crew messages send --channel channel-1 --content -',
       },
     }),
   );

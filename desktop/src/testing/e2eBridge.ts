@@ -1460,7 +1460,7 @@ const CHANNEL_WINDOW_AUX_DELETION_KINDS = new Set([
 
 // Fake media-proxy port the mock answers for `get_media_proxy_port`, so
 // `rewriteRelayUrl()` produces a real `http://127.0.0.1:<port>/media/...` src
-// in e2e (instead of the `buzz-media://` fallback). The reaction guard
+// in e2e (instead of the `crew-media://` fallback). The reaction guard
 // asserts against this exact port.
 const MOCK_MEDIA_PROXY_PORT = 54321;
 let mockMediaProxyPort = MOCK_MEDIA_PROXY_PORT;
@@ -2239,7 +2239,7 @@ function buildMockConfigSurface(pubkey: string): {
 
   const buzzAgentSurface = {
     ...gooseSurface,
-    runtimeId: "buzz-agent",
+    runtimeId: "crew-agent",
     runtimeLabel: "Buzz Agent",
     advanced: [],
     extensions: [],
@@ -2281,13 +2281,13 @@ function buildSeededManagedAgent(seed: MockManagedAgentSeed): MockManagedAgent {
 
   // Resolve agent_command and agent_args from the well-known default catalog
   // so the fixture mirrors real wire shape. Hardcoding ["acp"] for all runtimes
-  // is incorrect: buzz-agent ships with no default args.
+  // is incorrect: crew-agent ships with no default args.
   const DEFAULT_RUNTIME_COMMAND: Record<
     string,
     { command: string; args: string[] }
   > = {
     goose: { command: "goose", args: ["acp"] },
-    "buzz-agent": { command: "buzz-agent", args: [] },
+    "crew-agent": { command: "crew-agent", args: [] },
     claude: { command: "claude", args: [] },
     codex: { command: "codex", args: [] },
   };
@@ -2305,7 +2305,7 @@ function buildSeededManagedAgent(seed: MockManagedAgentSeed): MockManagedAgent {
     // must mirror the wire shape, not omit the key.
     runtime: seed.runtime ?? null,
     relay_url: DEFAULT_RELAY_WS_URL,
-    acp_command: "buzz-acp",
+    acp_command: "crew-acp",
     agent_command: agentCommand,
     agent_args: agentArgs,
     mcp_command: "",
@@ -2337,7 +2337,7 @@ function buildSeededManagedAgent(seed: MockManagedAgentSeed): MockManagedAgent {
     respond_to_allowlist: seed.respondToAllowlist ?? [],
     private_key_nsec: `nsec1mock${seed.pubkey.slice(0, 20)}`,
     log_lines: [
-      `buzz-acp starting: relay=${DEFAULT_RELAY_WS_URL} agent_pubkey=${seed.pubkey} parallelism=1`,
+      `crew-acp starting: relay=${DEFAULT_RELAY_WS_URL} agent_pubkey=${seed.pubkey} parallelism=1`,
       "profile created; harness not started",
     ],
   };
@@ -4265,7 +4265,7 @@ function isMockBroadcastReply(tags: string[][]): boolean {
 }
 
 /**
- * Mirror the relay's channel-window row set (buzz-db `thread.rs`, NIP-CW
+ * Mirror the relay's channel-window row set (crew-db `thread.rs`, NIP-CW
  * §Top-level Classification): an event is a timeline row iff its depth is 0
  * (no reply marker → `rootEventId === null`) OR its depth is 1 (its parent is
  * the thread root) AND it is broadcast. Depth ≥ 2 replies never surface on the
@@ -7979,7 +7979,7 @@ function withMockRuntimeConfigMetadata(
     model_env_var:
       "model_env_var" in runtime
         ? runtime.model_env_var
-        : runtime.id === "buzz-agent"
+        : runtime.id === "crew-agent"
           ? "BUZZ_AGENT_MODEL"
           : runtime.id === "goose"
             ? "GOOSE_MODEL"
@@ -7987,7 +7987,7 @@ function withMockRuntimeConfigMetadata(
     provider_env_var:
       "provider_env_var" in runtime
         ? runtime.provider_env_var
-        : runtime.id === "buzz-agent"
+        : runtime.id === "crew-agent"
           ? "BUZZ_AGENT_PROVIDER"
           : runtime.id === "goose"
             ? "GOOSE_PROVIDER"
@@ -7995,7 +7995,7 @@ function withMockRuntimeConfigMetadata(
     thinking_env_var:
       "thinking_env_var" in runtime
         ? runtime.thinking_env_var
-        : runtime.id === "buzz-agent"
+        : runtime.id === "crew-agent"
           ? "BUZZ_AGENT_THINKING_EFFORT"
           : runtime.id === "goose"
             ? "GOOSE_THINKING_EFFORT"
@@ -8003,7 +8003,7 @@ function withMockRuntimeConfigMetadata(
     max_tokens_env_var:
       "max_tokens_env_var" in runtime
         ? runtime.max_tokens_env_var
-        : runtime.id === "buzz-agent"
+        : runtime.id === "crew-agent"
           ? "BUZZ_AGENT_MAX_OUTPUT_TOKENS"
           : runtime.id === "goose"
             ? "GOOSE_MAX_TOKENS"
@@ -8011,7 +8011,7 @@ function withMockRuntimeConfigMetadata(
     context_limit_env_var:
       "context_limit_env_var" in runtime
         ? runtime.context_limit_env_var
-        : runtime.id === "buzz-agent"
+        : runtime.id === "crew-agent"
           ? "BUZZ_AGENT_MAX_CONTEXT_TOKENS"
           : runtime.id === "goose"
             ? "GOOSE_CONTEXT_LIMIT"
@@ -8019,7 +8019,7 @@ function withMockRuntimeConfigMetadata(
     max_rounds_env_var:
       "max_rounds_env_var" in runtime
         ? runtime.max_rounds_env_var
-        : runtime.id === "buzz-agent"
+        : runtime.id === "crew-agent"
           ? "BUZZ_AGENT_MAX_ROUNDS"
           : null,
   };
@@ -8134,14 +8134,14 @@ async function handleDiscoverAcpRuntimes(
       login_hint: undefined,
     },
     {
-      id: "buzz-agent",
+      id: "crew-agent",
       label: "Buzz Agent",
       avatar_url: "",
       availability: "available",
-      command: "buzz-agent",
-      binary_path: "/usr/local/bin/buzz-agent",
+      command: "crew-agent",
+      binary_path: "/usr/local/bin/crew-agent",
       default_args: [],
-      mcp_command: "buzz-dev-mcp",
+      mcp_command: "crew-dev-mcp",
       install_hint: "Ships with the Buzz desktop app.",
       install_instructions_url: "https://github.com/block/buzz",
       can_auto_install: false,
@@ -8367,10 +8367,10 @@ async function handleDiscoverManagedAgentPrereqs(
   return {
     acp: {
       command:
-        configuredPrereqs?.acp?.command ?? args.input?.acpCommand ?? "buzz-acp",
+        configuredPrereqs?.acp?.command ?? args.input?.acpCommand ?? "crew-acp",
       resolved_path:
         configuredPrereqs?.acp?.resolvedPath ??
-        "/Users/wesb/dev/buzz/target/debug/buzz-acp",
+        "/Users/wesb/dev/buzz/target/debug/crew-acp",
       available: configuredPrereqs?.acp?.available ?? true,
     },
     mcp: {
@@ -8965,7 +8965,7 @@ async function handleCreateManagedAgent(
     .replace(/-/g, "")
     .padEnd(64, "0")
     .slice(0, 64);
-  const agentCommand = args.input.agentCommand ?? "buzz-agent";
+  const agentCommand = args.input.agentCommand ?? "crew-agent";
   const agentArgs =
     args.input.agentArgs && args.input.agentArgs.length > 0
       ? [...args.input.agentArgs]
@@ -8979,7 +8979,7 @@ async function handleCreateManagedAgent(
     // Create never pins a harness id — the record inherits from the persona.
     runtime: null,
     relay_url: args.input.relayUrl ?? DEFAULT_RELAY_WS_URL,
-    acp_command: args.input.acpCommand ?? "buzz-acp",
+    acp_command: args.input.acpCommand ?? "crew-acp",
     agent_command: agentCommand,
     agent_args: agentArgs,
     mcp_command: args.input.mcpCommand ?? "",
@@ -9010,7 +9010,7 @@ async function handleCreateManagedAgent(
     respond_to_allowlist: [...mintRespondToAllowlist],
     private_key_nsec: `nsec1mock${pubkey.slice(0, 20)}`,
     log_lines: [
-      `buzz-acp starting: relay=${args.input.relayUrl ?? DEFAULT_RELAY_WS_URL} agent_pubkey=${pubkey} parallelism=${mintParallelism}`,
+      `crew-acp starting: relay=${args.input.relayUrl ?? DEFAULT_RELAY_WS_URL} agent_pubkey=${pubkey} parallelism=${mintParallelism}`,
       args.input.systemPrompt?.trim()
         ? `system prompt override configured (${args.input.systemPrompt.trim().length} chars)`
         : "system prompt override not set",
@@ -9295,7 +9295,7 @@ async function handleUpdateManagedAgent(args: {
  * Mock-mode `search_messages` predicate, mirroring the relay's filter contract.
  *
  * `since`/`until` are NIP-01 bounds and both inclusive — the relay keeps events
- * where `since <= created_at <= until` (`crates/buzz-core/src/filter.rs`). The
+ * where `since <= created_at <= until` (`crates/crew-core/src/filter.rs`). The
  * `before:` operator's exclusivity is encoded upstream in
  * `parseSearchOperators`, which subtracts a second; the mock must not subtract
  * it a second time.
@@ -12090,7 +12090,7 @@ export function maybeInstallE2eTauriMocks() {
                 "export function useProjectRepoSnapshotQuery(project) {\n  return useQuery({ queryKey: [project.id, 'repo-snapshot'] });\n}\n",
             },
             {
-              path: "crates/buzz-relay/src/api/git/transport.rs",
+              path: "crates/crew-relay/src/api/git/transport.rs",
               kind: "blob",
               size: 33120,
               preview_content:
@@ -12904,7 +12904,7 @@ export function maybeInstallE2eTauriMocks() {
             (candidate) => candidate.id === input.id,
           );
           const snapshot = {
-            format: "buzz-agent-snapshot",
+            format: "crew-agent-snapshot",
             version: 1,
             definition: {
               name: persona?.display_name ?? "E2E Agent",
@@ -13534,7 +13534,7 @@ export function maybeInstallE2eTauriMocks() {
         const jsonBytes = Array.from(
           new TextEncoder().encode(
             JSON.stringify({
-              format: "buzz-agent-snapshot",
+              format: "crew-agent-snapshot",
               version: 1,
               definition: { system_prompt: "E2E imported agent prompt." },
               profile: { display_name: "Imported Agent" },

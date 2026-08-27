@@ -59,7 +59,7 @@ pub(super) async fn run_agent_models_command(
         cmd.stdout(std::process::Stdio::piped())
             .stderr(std::process::Stdio::piped())
             .output()
-            .map_err(|e| format!("failed to spawn buzz-acp models: {e}"))
+            .map_err(|e| format!("failed to spawn crew-acp models: {e}"))
     })
     .await
     .map_err(|e| format!("model discovery task failed: {e}"))?
@@ -72,7 +72,7 @@ pub(super) async fn run_agent_models_command(
         // a failing child process echoed back.
         let stderr_redacted = redact_env_values_in(stderr.as_ref(), &env_for_redaction);
         return Err(format!(
-            "buzz-acp models failed (exit {}): {stderr_redacted}",
+            "crew-acp models failed (exit {}): {stderr_redacted}",
             output.status.code().unwrap_or(-1)
         ));
     }

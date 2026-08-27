@@ -1224,7 +1224,7 @@ test("custom personas share with people and keep export separate", async ({
     )?.payload;
   });
   expect(copiedAgent?.text).toBe(sharedAgentUrl);
-  expect(copiedAgent?.html).toContain("data-buzz-agent-snapshot");
+  expect(copiedAgent?.html).toContain("data-crew-agent-snapshot");
 
   await page.keyboard.press("Escape");
   await expect(shareDialog).toHaveCount(0);

@@ -73,7 +73,7 @@ export function EditAgentAdvancedFields({
   model?: string;
   /**
    * The actual/prospective runtime id used to decide whether to show the
-   * buzz-agent effort-tuning field. Uses `prospectiveRuntimeId` from
+   * crew-agent effort-tuning field. Uses `prospectiveRuntimeId` from
    * EditAgentDialog — the resolved runtime, not the "inherit"/"custom" sentinel.
    */
   modelTuningRuntimeId: string;
@@ -358,7 +358,7 @@ export function EditAgentAdvancedFields({
         />
       ) : null}
 
-      {/* Effort-tuning knob — only shown for buzz-agent. */}
+      {/* Effort-tuning knob — only shown for crew-agent. */}
       {isBuzzAgentRuntime(modelTuningRuntimeId) ? (
         <BuzzAgentModelTuningFields
           envVars={envVars}

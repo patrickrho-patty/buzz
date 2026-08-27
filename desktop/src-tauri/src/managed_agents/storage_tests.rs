@@ -131,7 +131,7 @@ fn record_with_pubkey_and_key(pubkey: &str, nsec: &str) -> ManagedAgentRecord {
             "name": "test-agent",
             "private_key_nsec": "{nsec}",
             "relay_url": "wss://localhost:3000",
-            "acp_command": "buzz-acp",
+            "acp_command": "crew-acp",
             "agent_command": "goose",
             "agent_args": [],
             "mcp_command": "",

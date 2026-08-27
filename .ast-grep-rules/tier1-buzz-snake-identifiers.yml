@@ -1,0 +1,16 @@
+id: tier1-buzz-snake-identifiers
+language: Rust
+severity: warning
+rule:
+  kind: identifier
+  pattern: $NAME
+constraints:
+  NAME:
+    regex: ^buzz_[a-z0-9_]+$
+transform:
+  CREW:
+    replace:
+      source: $NAME
+      replace: buzz_
+      by: crew_
+fix: $CREW

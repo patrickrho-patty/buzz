@@ -5,7 +5,7 @@ use std::sync::OnceLock;
 use std::time::{Duration, Instant};
 
 use crate::managed_agents::{
-    buzz_managed_command_path, buzz_managed_node_bin_dir, buzz_managed_npm_bin_dir,
+    crew_managed_command_path, crew_managed_node_bin_dir, crew_managed_npm_bin_dir,
     AcpAvailabilityStatus, AcpRuntimeCatalogEntry, AuthStatus, CommandAvailabilityInfo,
     HarnessSource,
 };
@@ -32,7 +32,7 @@ const GOOSE_AVATAR_URL: &str = "https://goose-docs.ai/img/logo_dark.png";
 const CLAUDE_CODE_AVATAR_URL: &str = "https://anthropic.gallerycdn.vsassets.io/extensions/anthropic/claude-code/2.1.77/1773707456892/Microsoft.VisualStudio.Services.Icons.Default";
 const CODEX_AVATAR_URL: &str = "https://openai.gallerycdn.vsassets.io/extensions/openai/chatgpt/26.5313.41514/1773706730621/Microsoft.VisualStudio.Services.Icons.Default";
 const BUZZ_AGENT_AVATAR_URL: &str =
-    "https://raw.githubusercontent.com/block/buzz/refs/heads/main/crates/buzz-agent/buzz-agent.png";
+    "https://raw.githubusercontent.com/block/buzz/refs/heads/main/crates/crew-agent/crew-agent.png";
 fn common_binary_paths() -> &'static [PathBuf] {
     static PATHS: OnceLock<Vec<PathBuf>> = OnceLock::new();
     PATHS.get_or_init(|| {
@@ -42,10 +42,10 @@ fn common_binary_paths() -> &'static [PathBuf] {
             PathBuf::from("/usr/bin"),
             PathBuf::from("/home/linuxbrew/.linuxbrew/bin"),
         ];
-        if let Some(managed_node_bin) = buzz_managed_node_bin_dir() {
+        if let Some(managed_node_bin) = crew_managed_node_bin_dir() {
             paths.insert(0, managed_node_bin);
         }
-        if let Some(managed_bin) = buzz_managed_npm_bin_dir() {
+        if let Some(managed_bin) = crew_managed_npm_bin_dir() {
             paths.insert(0, managed_bin);
         }
         if let Some(home) = dirs::home_dir() {
@@ -158,7 +158,7 @@ const KNOWN_ACP_RUNTIMES: &[KnownAcpRuntime] = &[
         commands: &["codex-acp"],
         aliases: &[],
         avatar_url: CODEX_AVATAR_URL,
-        mcp_command: Some("buzz-dev-mcp"),
+        mcp_command: Some("crew-dev-mcp"),
         mcp_hooks: false,
         underlying_cli: Some("codex"),
         cli_install_commands: &["curl -fsSL https://chatgpt.com/codex/install.sh | sh"],
@@ -187,12 +187,12 @@ const KNOWN_ACP_RUNTIMES: &[KnownAcpRuntime] = &[
         auth_probe_args: Some(&["codex", "login", "status"]),
     },
     KnownAcpRuntime {
-        id: "buzz-agent",
+        id: "crew-agent",
         label: "Buzz Agent",
-        commands: &["buzz-agent"],
+        commands: &["crew-agent"],
         aliases: &[],
         avatar_url: BUZZ_AGENT_AVATAR_URL,
-        mcp_command: Some("buzz-dev-mcp"),
+        mcp_command: Some("crew-dev-mcp"),
         mcp_hooks: true,
         underlying_cli: None,
         cli_install_commands: &[],
@@ -291,14 +291,14 @@ pub(crate) fn known_acp_runtime_exact(id: &str) -> Option<&'static KnownAcpRunti
 }
 
 /// The agent command a freshly-created agent defaults to when the create
-/// request supplies none. Resolves the bundled `buzz-agent` from the catalog so
+/// request supplies none. Resolves the bundled `crew-agent` from the catalog so
 /// the default cannot drift from the provider definition. Falls back to the id
 /// if the catalog entry is missing. (Previous default was bare `goose`, which
-/// is not on PATH on a stock Windows install; buzz-agent ships with the app.)
+/// is not on PATH on a stock Windows install; crew-agent ships with the app.)
 pub fn default_agent_command() -> String {
-    known_acp_runtime_exact("buzz-agent")
+    known_acp_runtime_exact("crew-agent")
         .and_then(|p| p.commands.first().copied())
-        .unwrap_or("buzz-agent")
+        .unwrap_or("crew-agent")
         .to_string()
 }
 
@@ -452,7 +452,7 @@ fn default_agent_args(command: &str) -> Option<Vec<String>> {
     match normalize_command_identity(command).as_str() {
         "goose" => Some(vec!["acp".to_string()]),
         "codex" | "codex-acp" | "claude-agent-acp" | "claude-code-acp" | "claude-code"
-        | "claudecode" | "buzz-agent" => Some(Vec::new()),
+        | "claudecode" | "crew-agent" => Some(Vec::new()),
         _ => None,
     }
 }
@@ -700,7 +700,7 @@ fn resolve_buzz_managed_command(command: &str) -> Option<PathBuf> {
     let basenames = command_basenames(command);
     basenames
         .iter()
-        .find_map(|basename| buzz_managed_command_path(command, basename))
+        .find_map(|basename| crew_managed_command_path(command, basename))
 }
 
 fn resolve_command_uncached(command: &str) -> Option<PathBuf> {
@@ -1205,7 +1205,7 @@ fn discover_acp_runtime_phase1(runtime: &'static KnownAcpRuntime, force: bool) -
         availability,
         AcpAvailabilityStatus::AdapterMissing | AcpAvailabilityStatus::NotInstalled
     ) && runtime_needs_npm(runtime)
-        && buzz_managed_node_bin_dir().is_none()
+        && crew_managed_node_bin_dir().is_none()
         && resolve("npm").is_none()
         && resolve("node").is_none();
 

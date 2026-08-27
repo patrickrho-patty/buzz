@@ -8,9 +8,9 @@
 --   idx_channels_community_visibility (community_id, visibility)
 --   idx_channels_created_by        (community_id, created_by)
 --
--- The tenant-independent lookups in buzz-db resolve a channel's owning
+-- The tenant-independent lookups in crew-db resolve a channel's owning
 -- community *without* a community_id predicate — that independence is the
--- point (buzz-db/src/lib.rs: the read-seam projects a row's true label
+-- point (crew-db/src/lib.rs: the read-seam projects a row's true label
 -- regardless of the fetch query's WHERE clause, which is what makes
 -- Inv_NonInterference non-vacuous):
 --

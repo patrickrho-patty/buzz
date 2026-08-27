@@ -1,7 +1,7 @@
 """Run the production Buzz agent stack inside the Harbor task container.
 
-Each provisioned identity is a full ``buzz-acp`` → ``buzz-agent`` →
-``buzz-dev-mcp`` process tree launched *inside* the task container — the same
+Each provisioned identity is a full ``crew-acp`` → ``crew-agent`` →
+``crew-dev-mcp`` process tree launched *inside* the task container — the same
 binaries and the same MCP toolset (shell, file tools, the ``buzz`` CLI on
 PATH) that the desktop app gives a Buzz agent. The harness stays outside:
 it provisions, uploads the pinned binaries, posts the task as the trial
@@ -90,9 +90,9 @@ class BuzzContainerRuntime:
         logs_dir: Path,
         artifact_root: Path,
         endpoints: dict[str, EndpointLaunchConfig],
-        buzz_acp_binary: str = "buzz-acp",
-        buzz_agent_binary: str = "buzz-agent",
-        buzz_dev_mcp_binary: str = "buzz-dev-mcp",
+        buzz_acp_binary: str = "crew-acp",
+        buzz_agent_binary: str = "crew-agent",
+        buzz_dev_mcp_binary: str = "crew-dev-mcp",
         buzz_cli_binary: str = "buzz",
         relay_gateway: str = "",
         forwarder_binary: str = "relay-forwarder",
@@ -265,9 +265,9 @@ class BuzzContainerRuntime:
     async def _install_stack(self, environment: BaseEnvironment) -> None:
         """Upload the pinned Linux binaries into the task container."""
         uploads = {
-            f"{REMOTE_BIN}/buzz-acp": self.buzz_acp_binary,
-            f"{REMOTE_BIN}/buzz-agent": self.buzz_agent_binary,
-            f"{REMOTE_BIN}/buzz-dev-mcp": self.buzz_dev_mcp_binary,
+            f"{REMOTE_BIN}/crew-acp": self.buzz_acp_binary,
+            f"{REMOTE_BIN}/crew-agent": self.buzz_agent_binary,
+            f"{REMOTE_BIN}/crew-dev-mcp": self.buzz_dev_mcp_binary,
         }
         if self.relay_gateway:
             uploads[FORWARDER] = self.forwarder_binary
@@ -399,7 +399,7 @@ class BuzzContainerRuntime:
             remote_prompt=remote_prompt,
         )
         command = (
-            f"{shlex.quote(f'{REMOTE_BIN}/buzz-acp')} </dev/null "
+            f"{shlex.quote(f'{REMOTE_BIN}/crew-acp')} </dev/null "
             f">{shlex.quote(stdout_log)} 2>{shlex.quote(stderr_log)} & echo $!"
         )
         result = await environment.exec(command, env=env)
@@ -427,13 +427,13 @@ class BuzzContainerRuntime:
             "RUST_LOG": self._rust_log(endpoint.env.get("RUST_LOG")),
             "BUZZ_RELAY_URL": trial.relay_ws_url,
             "BUZZ_PRIVATE_KEY": credential.nostr_secret_key,
-            # Desktop parity: the GUI also sets NOSTR_PRIVATE_KEY on buzz-acp
-            # so buzz-dev-mcp's shim can wire git auth/signing for the agent.
+            # Desktop parity: the GUI also sets NOSTR_PRIVATE_KEY on crew-acp
+            # so crew-dev-mcp's shim can wire git auth/signing for the agent.
             "NOSTR_PRIVATE_KEY": credential.nostr_secret_key,
             "BUZZ_AUTH_TAG": credential.nostr_auth_tag,
-            "BUZZ_ACP_AGENT_COMMAND": f"{REMOTE_BIN}/buzz-agent",
+            "BUZZ_ACP_AGENT_COMMAND": f"{REMOTE_BIN}/crew-agent",
             "BUZZ_ACP_AGENT_ARGS": "",
-            "BUZZ_ACP_MCP_COMMAND": f"{REMOTE_BIN}/buzz-dev-mcp",
+            "BUZZ_ACP_MCP_COMMAND": f"{REMOTE_BIN}/crew-dev-mcp",
             "BUZZ_ACP_CHANNELS": trial.channel_id,
             "BUZZ_ACP_SUBSCRIBE": "mentions",
             "BUZZ_ACP_RESPOND_TO": "anyone",

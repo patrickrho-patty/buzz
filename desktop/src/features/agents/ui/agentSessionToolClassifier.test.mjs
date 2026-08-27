@@ -163,15 +163,15 @@ test("classifyTool promotes buzz CLI shell commands to relay operations", () => 
     title: "Shell",
     toolName: "dev__shell",
     buzzToolName: null,
-    args: { command: "buzz channels get --channel buzz-agent-observability" },
+    args: { command: "buzz channels get --channel crew-agent-observability" },
     result: "{}",
     isError: false,
   });
 
   assert.equal(descriptor.renderClass, "relay-op");
   assert.equal(descriptor.label, "Channels Get");
-  assert.equal(descriptor.preview, "buzz-agent-observability");
-  assert.equal(descriptor.groupKey, "buzz-cli:channels.get");
+  assert.equal(descriptor.preview, "crew-agent-observability");
+  assert.equal(descriptor.groupKey, "crew-cli:channels.get");
 });
 
 test("classifyTool falls back once to a generic descriptor", () => {

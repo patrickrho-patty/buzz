@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SIDECARS=(buzz-acp buzz-agent buzz-dev-mcp git-credential-nostr buzz)
+SIDECARS=(crew-acp crew-agent crew-dev-mcp git-credential-nostr buzz)
 HOST=$(rustc -vV | sed -n 's|host: ||p')
 TARGET=${1:-$HOST}
 if [[ "$TARGET" != *windows* ]]; then
-    SIDECARS+=(buzz-backend-kubernetes)
-    BUILD_HINT="cargo build --release -p buzz-acp -p buzz-agent -p buzz-backend-kubernetes -p buzz-dev-mcp -p git-credential-nostr -p buzz-cli"
+    SIDECARS+=(crew-backend-kubernetes)
+    BUILD_HINT="cargo build --release -p crew-acp -p crew-agent -p crew-backend-kubernetes -p crew-dev-mcp -p git-credential-nostr -p crew-cli"
 else
-    BUILD_HINT="cargo build --release -p buzz-acp -p buzz-agent -p buzz-dev-mcp -p git-credential-nostr -p buzz-cli"
+    BUILD_HINT="cargo build --release -p crew-acp -p crew-agent -p crew-dev-mcp -p git-credential-nostr -p crew-cli"
 fi
 BINARIES_DIR="desktop/src-tauri/binaries"
 

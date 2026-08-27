@@ -49,7 +49,7 @@ function field(model, kind) {
 test("Buzz Agent exposes provider, model, and Buzz-owned effort", () => {
   const model = deriveAgentConfigFieldModel({
     config,
-    runtime: runtime("buzz-agent", {
+    runtime: runtime("crew-agent", {
       modelEnvVar: "BUZZ_AGENT_MODEL",
       providerEnvVar: "BUZZ_AGENT_PROVIDER",
       thinkingEnvVar: "BUZZ_AGENT_THINKING_EFFORT",
@@ -135,7 +135,7 @@ test("Codex omits separate effort because model IDs own it", () => {
 });
 
 test("catalog mismatch cleanup is named and restricted to onboarding", () => {
-  const selectedRuntime = runtime("buzz-agent", {
+  const selectedRuntime = runtime("crew-agent", {
     modelEnvVar: "BUZZ_AGENT_MODEL",
     providerEnvVar: "BUZZ_AGENT_PROVIDER",
     thinkingEnvVar: "BUZZ_AGENT_THINKING_EFFORT",
@@ -168,10 +168,10 @@ test("catalog mismatch cleanup is named and restricted to onboarding", () => {
 // model. Capability facts flow catalog → descriptor → UI; no runtime-ID
 // comparison decides numeric-field visibility.
 
-test("buzz-agent derives three numeric descriptors from catalog fields", () => {
+test("crew-agent derives three numeric descriptors from catalog fields", () => {
   const model = deriveAgentConfigFieldModel({
     config,
-    runtime: runtime("buzz-agent", {
+    runtime: runtime("crew-agent", {
       modelEnvVar: "BUZZ_AGENT_MODEL",
       providerEnvVar: "BUZZ_AGENT_PROVIDER",
       thinkingEnvVar: "BUZZ_AGENT_THINKING_EFFORT",
@@ -292,7 +292,7 @@ test("numeric descriptor value is read from env_vars when set", () => {
   };
   const model = deriveAgentConfigFieldModel({
     config: cfgWithTuning,
-    runtime: runtime("buzz-agent", {
+    runtime: runtime("crew-agent", {
       maxTokensEnvVar: "BUZZ_AGENT_MAX_OUTPUT_TOKENS",
       contextLimitEnvVar: "BUZZ_AGENT_MAX_CONTEXT_TOKENS",
       maxRoundsEnvVar: "BUZZ_AGENT_MAX_ROUNDS",
@@ -314,7 +314,7 @@ test("numeric descriptor value is null when env var is absent", () => {
   };
   const model = deriveAgentConfigFieldModel({
     config: cfgEmpty,
-    runtime: runtime("buzz-agent", {
+    runtime: runtime("crew-agent", {
       maxTokensEnvVar: "BUZZ_AGENT_MAX_OUTPUT_TOKENS",
       contextLimitEnvVar: "BUZZ_AGENT_MAX_CONTEXT_TOKENS",
       maxRoundsEnvVar: "BUZZ_AGENT_MAX_ROUNDS",
@@ -343,7 +343,7 @@ test("structuredEnvKeys_global_includes_effort_key_and_numeric_keys", () => {
   // Global surface renders effort + all numeric descriptors.
   const buzzAgentModel = deriveAgentConfigFieldModel({
     config,
-    runtime: runtime("buzz-agent", {
+    runtime: runtime("crew-agent", {
       modelEnvVar: "BUZZ_AGENT_MODEL",
       providerEnvVar: "BUZZ_AGENT_PROVIDER",
       thinkingEnvVar: "BUZZ_AGENT_THINKING_EFFORT",
@@ -379,10 +379,10 @@ test("structuredEnvKeys_global_includes_effort_key_and_numeric_keys", () => {
 });
 
 test("structuredEnvKeys_per_agent_buzz_agent_includes_effort_and_numeric_keys", () => {
-  // Per-agent buzz-agent renders effort + all 3 numeric descriptors.
+  // Per-agent crew-agent renders effort + all 3 numeric descriptors.
   const buzzAgentModel = deriveAgentConfigFieldModel({
     config,
-    runtime: runtime("buzz-agent", {
+    runtime: runtime("crew-agent", {
       thinkingEnvVar: "BUZZ_AGENT_THINKING_EFFORT",
       maxTokensEnvVar: "BUZZ_AGENT_MAX_OUTPUT_TOKENS",
       contextLimitEnvVar: "BUZZ_AGENT_MAX_CONTEXT_TOKENS",
@@ -478,7 +478,7 @@ test("deriveNumericDescriptors_undefined_runtime_returns_empty", () => {
 
 test("deriveNumericDescriptors_runtime_with_all_three_fields", () => {
   const ds = deriveNumericDescriptors(
-    runtime("buzz-agent", {
+    runtime("crew-agent", {
       maxTokensEnvVar: "BUZZ_AGENT_MAX_OUTPUT_TOKENS",
       contextLimitEnvVar: "BUZZ_AGENT_MAX_CONTEXT_TOKENS",
       maxRoundsEnvVar: "BUZZ_AGENT_MAX_ROUNDS",
@@ -514,7 +514,7 @@ test("deriveNumericDescriptors_matches_deriveAgentConfigFieldModel_numeric_subse
   // The standalone helper must produce the same descriptor set (without values)
   // that deriveAgentConfigFieldModel embeds, so surfaces that call the helper
   // directly get a consistent policy with the full field model.
-  const runtimeEntry = runtime("buzz-agent", {
+  const runtimeEntry = runtime("crew-agent", {
     maxTokensEnvVar: "BUZZ_AGENT_MAX_OUTPUT_TOKENS",
     contextLimitEnvVar: "BUZZ_AGENT_MAX_CONTEXT_TOKENS",
     maxRoundsEnvVar: "BUZZ_AGENT_MAX_ROUNDS",
@@ -547,7 +547,7 @@ test("deriveNumericDescriptors_matches_deriveAgentConfigFieldModel_numeric_subse
 
 // ── NUMERIC_KIND_MIN: kind-specific input minima ──────────────────────────
 //
-// max output tokens and context limit must have min=1 (buzz-agent rejects 0).
+// max output tokens and context limit must have min=1 (crew-agent rejects 0).
 // max rounds allows 0 (meaning unlimited).
 
 test("NUMERIC_KIND_MIN_maxOutputTokens_is_1", () => {

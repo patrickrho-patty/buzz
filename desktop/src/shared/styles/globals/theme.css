@@ -232,7 +232,7 @@
   --buzz-gradient-top: var(--buzz-gradient-light-top);
   --buzz-gradient-bottom: var(--buzz-gradient-light-bottom);
   --buzz-muted-foreground: rgb(0 0 0 / 40%);
-  --buzz-search-surface: rgb(0 0 0 / 4%);
+  --crew-search-surface: rgb(0 0 0 / 4%);
   --buzz-chrome-foreground: rgb(0 0 0 / 50%);
   --buzz-channel-fg: inherit;
   --buzz-dm-fg: inherit;
@@ -253,7 +253,7 @@
   --buzz-gradient-top: var(--buzz-gradient-dark-top);
   --buzz-gradient-bottom: var(--buzz-gradient-dark-bottom);
   --buzz-muted-foreground: rgb(255 255 255 / 40%);
-  --buzz-search-surface: rgb(255 255 255 / 4%);
+  --crew-search-surface: rgb(255 255 255 / 4%);
   --buzz-chrome-foreground: rgb(255 255 255 / 50%);
   --buzz-hover-surface: rgb(255 255 255 / 4%);
   --buzz-active-fill: 0 0% 100%;
@@ -519,7 +519,7 @@
 :root[data-buzz-sidebar]
   [data-testid="app-sidebar"]
   [data-testid="open-search"]:focus-visible {
-  background-color: var(--buzz-search-surface);
+  background-color: var(--crew-search-surface);
   color: var(--buzz-muted-foreground);
 }
 

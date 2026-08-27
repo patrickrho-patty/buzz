@@ -208,14 +208,14 @@ pub fn run() {
     let builder = ptt_shortcut::install(builder);
 
     // Register the updater only in configured release builds; omit it locally.
-    #[cfg(buzz_updater_enabled)]
+    #[cfg(crew_updater_enabled)]
     let builder = if cfg!(debug_assertions) {
         builder
     } else {
         builder.plugin(tauri_plugin_updater::Builder::new().build())
     };
     let app = app_menu::install(builder)
-        .register_asynchronous_uri_scheme_protocol("buzz-media", |ctx, request, responder| {
+        .register_asynchronous_uri_scheme_protocol("crew-media", |ctx, request, responder| {
             let app = ctx.app_handle().clone();
             tauri::async_runtime::spawn(async move {
                 let response = media_proxy::handle_buzz_media(&app, &request).await;

@@ -37,7 +37,7 @@ pub(crate) use sweep::sweep_untracked_bundle_harnesses;
 mod process;
 #[cfg(test)]
 use process::{
-    buzz_marker_entry, name_matches_interpreter, name_matches_known_binary,
+    crew_marker_entry, name_matches_interpreter, name_matches_known_binary,
     terminate_runtime_receipt_with, valid_agent_runtime_receipt_with,
 };
 pub(crate) use process::{
@@ -505,7 +505,7 @@ pub fn spawn_agent_child(
     // Augment PATH for DMG launches so child processes can find:
     //   - bundled CLI via ~/.local/bin symlink
     //   - nvm-managed node/npm (nvm initializes only in interactive shells)
-    //   - bundled sidecars (buzz, buzz-acp, etc.) via exe parent (Contents/MacOS/)
+    //   - bundled sidecars (buzz, crew-acp, etc.) via exe parent (Contents/MacOS/)
     //   - runtimes (node, python, etc.) via login shell PATH
     let nvm_bin = dirs::home_dir()
         .as_deref()
@@ -555,16 +555,16 @@ pub fn spawn_agent_child(
     //
     // Build the effective env the agent would have at start-time, run the
     // readiness predicate, and if anything is missing, serialize the payload
-    // into BUZZ_ACP_SETUP_PAYLOAD.  buzz-acp detects this env var on startup
+    // into BUZZ_ACP_SETUP_PAYLOAD.  crew-acp detects this env var on startup
     // and enters the minimal setup-listener mode instead of the agent pool.
     //
     // SECURITY: BUZZ_ACP_SETUP_PAYLOAD is in RESERVED_ENV_KEYS so user env
     // cannot set it, but we also explicitly remove it after writing user env
     // to guard against the parent-process environment. We then set it only
     // when desktop has computed NotReady — the desktop is the sole readiness
-    // source and buzz-acp only transports the payload.
+    // source and crew-acp only transports the payload.
     //
-    // The JSON format mirrors `setup_mode::SetupPayload` in buzz-acp:
+    // The JSON format mirrors `setup_mode::SetupPayload` in crew-acp:
     //   { "agent_name": "...", "agent_pubkey": "...", "requirements": [{ "surface": "...", ... }] }
     //
     // `spawned_setup_mode` is captured outside the block so it can be stamped
@@ -719,7 +719,7 @@ pub fn spawn_agent_child(
     // Shared compute stores `auto`, but the wire name is MeshLLM's virtual
     // `mesh` model. Translate here too, so the harness and the LLM client are
     // told the same thing: `BUZZ_ACP_MODEL=auto` would name a model the mesh
-    // never advertises, leaving buzz-acp to warn and fall back on every new
+    // never advertises, leaving crew-acp to warn and fall back on every new
     // session while `BUZZ_AGENT_MODEL` said `mesh`.
     #[cfg(feature = "mesh-llm")]
     let acp_model = match (&mesh_model_id, effective_model.as_deref()) {
@@ -872,7 +872,7 @@ pub fn spawn_agent_child(
         command.process_group(0);
     }
     // Windows: suppress the harness console window. Without this a bare
-    // terminal pops for buzz-acp.exe and lingers (the app itself sets
+    // terminal pops for crew-acp.exe and lingers (the app itself sets
     // windows_subsystem="windows", but the spawned child does not inherit it).
     #[cfg(windows)]
     {

@@ -19,7 +19,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 NS="${NS:-buzz-mesh}"
 RELEASE="${RELEASE:-buzz}"
-IMAGE_REPO="${IMAGE_REPO:-buzz-relay}"
+IMAGE_REPO="${IMAGE_REPO:-crew-relay}"
 IMAGE_TAG="${IMAGE_TAG:-mesh-local}"
 CHART="${REPO_ROOT}/deploy/charts/buzz"
 VALUES="${REPO_ROOT}/deploy/local/quickstart-ha-values.yaml"

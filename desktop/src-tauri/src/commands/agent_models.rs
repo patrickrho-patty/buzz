@@ -29,7 +29,7 @@ use crate::{
     util::now_iso,
 };
 
-/// Query available models from an agent via `buzz-acp models --json`.
+/// Query available models from an agent via `crew-acp models --json`.
 ///
 /// Spawns a short-lived subprocess (no relay connection needed). The subprocess
 /// starts the agent, queries its model catalog, and exits. ~2-5s total.
@@ -704,7 +704,7 @@ pub(super) use update::{flush_managed_agent_policy, managed_agent_access_policy_
 
 // ── Model normalization ───────────────────────────────────────────────────────
 
-/// Normalize raw `buzz-acp models --json` output into a typed DTO for the frontend.
+/// Normalize raw `crew-acp models --json` output into a typed DTO for the frontend.
 ///
 /// Merges models from both ACP paths (stable configOptions + unstable SessionModelState),
 /// deduplicates by ID (stable takes precedence), and returns a unified list.

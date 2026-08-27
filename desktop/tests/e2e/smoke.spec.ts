@@ -196,7 +196,7 @@ test("create agent persists Buzz shared compute with auto model", async ({
   }, agentName);
 
   expect(createPayload).toMatchObject({
-    agentCommand: "buzz-agent",
+    agentCommand: "crew-agent",
     model: "auto",
     provider: "relay-mesh",
     spawnAfterCreate: true,
@@ -218,7 +218,7 @@ test("create agent supports parallelism and system prompt overrides", async ({
     .locator("#persona-system-prompt")
     .fill("You are concise and parallelize independent work.");
 
-  // The buzz-agent runtime auto-selects once the ACP runtime catalog loads;
+  // The crew-agent runtime auto-selects once the ACP runtime catalog loads;
   // Customize reveals the per-agent LLM provider and model fields.
   await page.getByRole("tab", { name: "Customize for this agent" }).click();
   const llmProvider = page.locator("#persona-llm-provider");

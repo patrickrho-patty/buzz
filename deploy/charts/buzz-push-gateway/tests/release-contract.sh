@@ -24,7 +24,7 @@ for needle in (
     'tags: ["push-chart-v[0-9]*"]',
     'version="${INPUT_VERSION:-${REF_NAME#push-chart-v}}"',
     'refs/tags/push-chart-v${version}^{commit}',
-    'deploy/charts/buzz-push-gateway',
+    'deploy/charts/crew-push-gateway',
 ):
     assert needle in publish_text, f'missing gateway chart publisher contract: {needle}'
 PY

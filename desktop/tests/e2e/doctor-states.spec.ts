@@ -30,16 +30,16 @@ const GOOSE_AVAILABLE = {
   auth_status: { status: "not_applicable" },
 };
 
-/** buzz-agent is always available and has no auth step. */
+/** crew-agent is always available and has no auth step. */
 const BUZZ_AGENT_AVAILABLE = {
-  id: "buzz-agent",
+  id: "crew-agent",
   label: "Buzz Agent",
   avatar_url: "",
   availability: "available",
-  command: "buzz-agent",
-  binary_path: "/usr/local/bin/buzz-agent",
+  command: "crew-agent",
+  binary_path: "/usr/local/bin/crew-agent",
   default_args: [],
-  mcp_command: "buzz-dev-mcp",
+  mcp_command: "crew-dev-mcp",
   install_hint: "",
   install_instructions_url: "https://github.com/block/buzz",
   can_auto_install: false,
@@ -142,18 +142,18 @@ test.describe("Doctor panel state screenshots", () => {
           rows.map((row) => row.getAttribute("data-testid")),
         ),
     ).toEqual([
-      "doctor-runtime-buzz-agent",
+      "doctor-runtime-crew-agent",
       "doctor-runtime-goose",
       "doctor-runtime-claude",
       "doctor-runtime-codex",
     ]);
-    for (const runtimeId of ["goose", "claude", "codex", "buzz-agent"]) {
+    for (const runtimeId of ["goose", "claude", "codex", "crew-agent"]) {
       await expect(
         page.getByTestId(`doctor-runtime-logo-${runtimeId}`),
       ).toBeVisible();
     }
     const rowHeights = await Promise.all(
-      ["goose", "claude", "codex", "buzz-agent"].map((runtimeId) =>
+      ["goose", "claude", "codex", "crew-agent"].map((runtimeId) =>
         page
           .getByTestId(`doctor-runtime-${runtimeId}`)
           .evaluate((element) =>
@@ -186,7 +186,7 @@ test.describe("Doctor panel state screenshots", () => {
         .locator("..")
         .locator(".."),
     ).toHaveCSS("align-items", "flex-end");
-    for (const runtimeId of ["goose", "claude", "buzz-agent"]) {
+    for (const runtimeId of ["goose", "claude", "crew-agent"]) {
       await expect(
         page.getByTestId(`doctor-runtime-menu-${runtimeId}`),
       ).toHaveCount(0);

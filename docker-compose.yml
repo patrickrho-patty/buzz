@@ -140,8 +140,8 @@ services:
     entrypoint: >
       /bin/sh -c "
         mc alias set local http://minio:9000 buzz_dev buzz_dev_secret &&
-        mc mb --ignore-existing local/buzz-media &&
-        mc anonymous set none local/buzz-media
+        mc mb --ignore-existing local/crew-media &&
+        mc anonymous set none local/crew-media
       "
     labels:
       com.buzz.service: "minio-init"

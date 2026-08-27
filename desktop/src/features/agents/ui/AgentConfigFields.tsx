@@ -331,7 +331,7 @@ export function AgentConfigFields({
     selectedRuntimeId,
   )
     ? selectedRuntimeId
-    : "buzz-agent";
+    : "crew-agent";
   const bakedEnvKeys = React.useMemo(
     () => bakedEnv.map((entry) => entry.key),
     [bakedEnv],
@@ -595,7 +595,7 @@ export function AgentConfigFields({
         hidden.add(providerId);
       }
     }
-    if (selectedRuntimeId !== "buzz-agent") {
+    if (selectedRuntimeId !== "crew-agent") {
       hidden.add("relay-mesh");
     }
     return hidden;

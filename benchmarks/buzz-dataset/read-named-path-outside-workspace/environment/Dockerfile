@@ -1,6 +1,6 @@
 FROM python:3.12-slim-bookworm
 
-ENV HOME=/home/buzz
+ENV HOME=/home/crew
 WORKDIR /app
 
 RUN mkdir -p /home/buzz/.claude/skills/context-health-check && \

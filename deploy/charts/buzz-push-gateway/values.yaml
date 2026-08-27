@@ -1,16 +1,16 @@
 replicaCount: 2
 image:
-  repository: ghcr.io/block/buzz-push-gateway
+  repository: ghcr.io/block/crew-push-gateway
   # `main` is published by the push-gateway lane on every main push.
   tag: main
   digest: ""
   pullPolicy: IfNotPresent
   pullSecrets: []
-existingSecret: buzz-push-gateway
+existingSecret: crew-push-gateway
 # DDL-capable credentials are used only by the pre-install/pre-upgrade migration
 # Job. Runtime DATABASE_URL in existingSecret should have DML-only privileges.
 migration:
-  existingSecret: buzz-push-gateway-migrations
+  existingSecret: crew-push-gateway-migrations
   databaseUrlKey: DATABASE_URL
   # Existing LOGIN role used by runtime DATABASE_URL. Migrations grant it only
   # CONNECT plus DML on the six gateway tables in this dedicated database.
@@ -25,10 +25,10 @@ enabledProfiles: buzz-ios-production
 # Apple TEAMID.bundle-id value (see values-production.yaml).
 appAttestAppId: TEAMID.xyz.buzz
 appAttestRoot:
-  secretName: buzz-push-gateway
+  secretName: crew-push-gateway
   secretKey: app-attest-root.pem
 apnsKey:
-  secretName: buzz-push-gateway
+  secretName: crew-push-gateway
   secretKey: apns-provider.p8
 service:
   port: 8080
@@ -89,4 +89,4 @@ topologySpreadConstraints:
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
-        app.kubernetes.io/name: buzz-push-gateway
+        app.kubernetes.io/name: crew-push-gateway

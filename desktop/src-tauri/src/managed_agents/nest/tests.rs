@@ -126,7 +126,7 @@ fn ensure_nest_creates_skill_file() {
     ensure_nest_at(&root).unwrap();
 
     // Canonical location under .agents.
-    let skill = root.join(".agents/skills/buzz-cli/SKILL.md");
+    let skill = root.join(".agents/skills/crew-cli/SKILL.md");
     assert!(skill.exists(), "SKILL.md should exist at .agents path");
     let content = fs::read_to_string(&skill).unwrap();
     assert_eq!(content, BUZZ_CLI_SKILL_MD);
@@ -135,14 +135,14 @@ fn ensure_nest_creates_skill_file() {
     #[cfg(unix)]
     {
         for dir in [".goose/skills", ".claude/skills", ".codex/skills"] {
-            let link = root.join(dir).join("buzz-cli");
+            let link = root.join(dir).join("crew-cli");
             assert!(
                 link.symlink_metadata().unwrap().file_type().is_symlink(),
-                "{dir}/buzz-cli should be a symlink"
+                "{dir}/crew-cli should be a symlink"
             );
             assert!(
                 link.join("SKILL.md").exists(),
-                "symlink at {dir}/buzz-cli should resolve to dir with SKILL.md"
+                "symlink at {dir}/crew-cli should resolve to dir with SKILL.md"
             );
         }
     }
@@ -154,7 +154,7 @@ fn ensure_nest_does_not_overwrite_skill_file() {
     let root = tmp.path().join(".buzz");
     ensure_nest_at(&root).unwrap();
 
-    let skill = root.join(".agents/skills/buzz-cli/SKILL.md");
+    let skill = root.join(".agents/skills/crew-cli/SKILL.md");
     fs::write(&skill, "custom skill content").unwrap();
 
     ensure_nest_at(&root).unwrap();
@@ -169,11 +169,11 @@ fn ensure_nest_skill_dir_has_700_permissions() {
     let root = tmp.path().join(".buzz");
     ensure_nest_at(&root).unwrap();
     // Canonical path and all provider parent dirs should be locked down.
-    // Symlinks (e.g. .goose/skills/buzz-cli) are skipped by the chmod loop.
+    // Symlinks (e.g. .goose/skills/crew-cli) are skipped by the chmod loop.
     for dir in [
         ".agents",
         ".agents/skills",
-        ".agents/skills/buzz-cli",
+        ".agents/skills/crew-cli",
         ".goose",
         ".goose/skills",
         ".claude",
@@ -227,25 +227,25 @@ fn ensure_nest_migrates_old_skill_dir() {
     ensure_nest_at(&root).unwrap();
 
     // Remove the symlink and new skill dir, recreate old real dir.
-    let _ = fs::remove_file(root.join(".claude/skills/buzz-cli"));
-    let _ = fs::remove_dir_all(root.join(".agents/skills/buzz-cli"));
-    let old_skill_dir = root.join(".claude/skills/buzz-cli");
+    let _ = fs::remove_file(root.join(".claude/skills/crew-cli"));
+    let _ = fs::remove_dir_all(root.join(".agents/skills/crew-cli"));
+    let old_skill_dir = root.join(".claude/skills/crew-cli");
     fs::create_dir_all(&old_skill_dir).unwrap();
     fs::write(old_skill_dir.join("SKILL.md"), "user edited skill").unwrap();
 
     // Delete version file to force refresh.
-    let _ = fs::remove_file(root.join(".agents/skills/buzz-cli/.skill-version"));
+    let _ = fs::remove_file(root.join(".agents/skills/crew-cli/.skill-version"));
 
     // Re-run ensure_nest_at — should trigger migration in refresh_skill_md_if_stale.
     ensure_nest_at(&root).unwrap();
 
     // New canonical location exists with user's content preserved.
-    let new_skill = root.join(".agents/skills/buzz-cli/SKILL.md");
+    let new_skill = root.join(".agents/skills/crew-cli/SKILL.md");
     assert!(new_skill.exists(), "SKILL.md should exist at new path");
     assert_eq!(fs::read_to_string(&new_skill).unwrap(), "user edited skill");
 
     // Old path is now a symlink, not a real directory.
-    let old_path = root.join(".claude/skills/buzz-cli");
+    let old_path = root.join(".claude/skills/crew-cli");
     assert!(
         old_path
             .symlink_metadata()
@@ -266,17 +266,17 @@ fn ensure_skill_symlinks_are_idempotent() {
     ensure_nest_at(&root).unwrap();
     // All symlinks still valid and point to relative targets.
     for dir in [".goose/skills", ".claude/skills", ".codex/skills"] {
-        let link = root.join(dir).join("buzz-cli");
+        let link = root.join(dir).join("crew-cli");
         assert!(link.symlink_metadata().unwrap().file_type().is_symlink());
         assert!(
             link.join("SKILL.md").exists(),
-            "symlink at {dir}/buzz-cli should resolve to dir with SKILL.md"
+            "symlink at {dir}/crew-cli should resolve to dir with SKILL.md"
         );
         let target = fs::read_link(&link).unwrap();
         assert_eq!(
             target.to_str().unwrap(),
             format!("../../{CANONICAL_SKILL_DIR}"),
-            "symlink at {dir}/buzz-cli should use relative target"
+            "symlink at {dir}/crew-cli should use relative target"
         );
     }
 }
@@ -286,13 +286,13 @@ fn ensure_skill_symlinks_are_idempotent() {
 fn ensure_skill_symlinks_skips_existing_path_during_initial_pass() {
     // ensure_skill_symlinks skips any path where symlink_metadata succeeds.
     // However, refresh_skill_md_if_stale (called after ensure_skill_symlinks)
-    // migrates pre-existing real directories at .claude/skills/buzz-cli to
+    // migrates pre-existing real directories at .claude/skills/crew-cli to
     // symlinks. This test verifies the end-to-end behavior: a pre-existing real
     // dir at the claude path is migrated to a symlink.
     let tmp = tempfile::tempdir().unwrap();
     let root = tmp.path().join(".buzz");
     // Pre-create a real directory where a symlink would go.
-    let real_dir = root.join(".claude/skills/buzz-cli");
+    let real_dir = root.join(".claude/skills/crew-cli");
     fs::create_dir_all(&real_dir).unwrap();
     // Place SKILL.md so migration preserves it.
     fs::write(real_dir.join("SKILL.md"), "custom skill content").unwrap();
@@ -306,10 +306,10 @@ fn ensure_skill_symlinks_skips_existing_path_during_initial_pass() {
             .unwrap()
             .file_type()
             .is_symlink(),
-        ".claude/skills/buzz-cli should be migrated to a symlink"
+        ".claude/skills/crew-cli should be migrated to a symlink"
     );
     // The canonical path now holds the migrated content.
-    let canonical = root.join(".agents/skills/buzz-cli/SKILL.md");
+    let canonical = root.join(".agents/skills/crew-cli/SKILL.md");
     assert_eq!(
         fs::read_to_string(&canonical).unwrap(),
         "custom skill content"
@@ -324,7 +324,7 @@ fn ensure_skill_symlinks_skip_dangling_symlink() {
     // Pre-create a dangling symlink where the .codex link would go.
     let codex_skills = root.join(".codex/skills");
     fs::create_dir_all(&codex_skills).unwrap();
-    let dangling = codex_skills.join("buzz-cli");
+    let dangling = codex_skills.join("crew-cli");
     std::os::unix::fs::symlink("/nonexistent/target", &dangling).unwrap();
 
     ensure_nest_at(&root).unwrap();
@@ -436,7 +436,7 @@ fn refresh_skill_md_writes_version_file() {
     let tmp = tempfile::tempdir().unwrap();
     let root = tmp.path().join(".buzz");
     ensure_nest_at(&root).unwrap();
-    let version = fs::read_to_string(root.join(".agents/skills/buzz-cli/.skill-version")).unwrap();
+    let version = fs::read_to_string(root.join(".agents/skills/crew-cli/.skill-version")).unwrap();
     assert_eq!(version.trim(), NEST_SKILL_VERSION.to_string());
 }
 
@@ -501,11 +501,11 @@ fn refresh_skill_overwrites_on_version_bump() {
     let root = tmp.path().join(".buzz");
     ensure_nest_at(&root).unwrap();
 
-    let skill_md = root.join(".agents/skills/buzz-cli/SKILL.md");
+    let skill_md = root.join(".agents/skills/crew-cli/SKILL.md");
     fs::write(&skill_md, "stale skill content").unwrap();
 
     // Remove version file to simulate upgrade.
-    let _ = fs::remove_file(root.join(".agents/skills/buzz-cli/.skill-version"));
+    let _ = fs::remove_file(root.join(".agents/skills/crew-cli/.skill-version"));
 
     ensure_nest_at(&root).unwrap();
 

@@ -14,6 +14,6 @@ name = "sprig"
 path = "src/main.rs"
 
 [dependencies]
-buzz-acp = { path = "../buzz-acp" }
-buzz-agent = { path = "../buzz-agent" }
-buzz-dev-mcp = { path = "../buzz-dev-mcp" }
+crew-acp = { path = "../crew-acp" }
+crew-agent = { path = "../crew-agent" }
+crew-dev-mcp = { path = "../crew-dev-mcp" }

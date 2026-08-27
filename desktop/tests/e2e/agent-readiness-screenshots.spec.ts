@@ -7,7 +7,7 @@ const SHOTS = "test-results/agent-readiness";
 // An existing goose-runtime managed agent for the Edit-dialog shot.
 // Tyler's pubkey maps to gooseSurface in the mock bridge (runtimeId: "goose"),
 // which supports LLM provider selection — the edit dialog's provider/model
-// pickers render for it just as they do for buzz-agent.
+// pickers render for it just as they do for crew-agent.
 const EDIT_AGENT_PUBKEY = TEST_IDENTITIES.tyler.pubkey;
 
 /**
@@ -38,7 +38,7 @@ async function selectDropdownOption(
 }
 
 /**
- * Wait for the LLM provider field to become visible (buzz-agent
+ * Wait for the LLM provider field to become visible (crew-agent
  * auto-selected) then select the given provider option.
  */
 async function selectProvider(
@@ -231,14 +231,14 @@ test.describe("agent readiness gate screenshots", () => {
     await installMockBridge(page, {
       acpRuntimesCatalog: [
         {
-          id: "buzz-agent",
+          id: "crew-agent",
           label: "Buzz Agent",
           avatar_url: "",
           availability: "available",
-          command: "buzz-agent",
-          binary_path: "/usr/local/bin/buzz-agent",
+          command: "crew-agent",
+          binary_path: "/usr/local/bin/crew-agent",
           default_args: [],
-          mcp_command: "buzz-dev-mcp",
+          mcp_command: "crew-dev-mcp",
           install_hint: "Ships with the Buzz desktop app.",
           install_instructions_url: "https://github.com/block/buzz",
           can_auto_install: false,
@@ -265,7 +265,7 @@ test.describe("agent readiness gate screenshots", () => {
     await openCreateDialog(page);
     await page.getByRole("tab", { name: "Customize for this agent" }).click();
 
-    // Switch the auto-selected buzz-agent runtime to Claude Code.
+    // Switch the auto-selected crew-agent runtime to Claude Code.
     await selectDropdownOption(
       page,
       page.locator("#persona-runtime"),
@@ -310,7 +310,7 @@ test.describe("agent readiness gate screenshots", () => {
     });
   });
 
-  // Shot 08: goose runtime, provider empty + no global → save BLOCKED (same rule as buzz-agent).
+  // Shot 08: goose runtime, provider empty + no global → save BLOCKED (same rule as crew-agent).
   test("08-create-goose-empty-provider-marker", async ({ page }) => {
     await installMockBridge(page);
     await openCreateDialog(page);

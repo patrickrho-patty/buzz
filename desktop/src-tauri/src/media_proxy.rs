@@ -153,7 +153,7 @@ pub async fn spawn_media_proxy(http_client: reqwest::Client, app_handle: tauri::
 /// Proxy media requests through the Rust backend so they traverse the VPN tunnel.
 ///
 /// WKWebView's networking stack bypasses the VPN tunnel, causing 403s from Cloudflare Access.
-/// This handler routes `buzz-media://localhost/{path}` through reqwest, which
+/// This handler routes `crew-media://localhost/{path}` through reqwest, which
 /// runs in the Tauri process and goes through the VPN.
 pub async fn handle_buzz_media(
     app: &tauri::AppHandle,

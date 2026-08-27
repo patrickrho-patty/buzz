@@ -17,7 +17,7 @@
 -- Constants kept in `buzz_core::kind`; inlined here because a sqlx migration
 -- is frozen SQL and cannot import the Rust constant. If a new privacy-sensitive
 -- kind is added there, add a new additive migration following this pattern and
--- add a regression test in `buzz-search/tests/fts_integration.rs`.
+-- add a regression test in `crew-search/tests/fts_integration.rs`.
 --
 -- NULL tsvector never matches `@@`, so excluded rows are storage-level
 -- unsearchable.

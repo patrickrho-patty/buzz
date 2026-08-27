@@ -47,7 +47,7 @@ CREATE TYPE channel_add_policy AS ENUM ('anyone', 'owner_only', 'nobody');
 -- ASCII-lowercased, trailing dot stripped, default port omitted. The UNIQUE is
 -- on `lower(host)` belt-and-suspenders so `Relay.Example` and `relay.example`
 -- can never become two tenants even if a writer forgets to normalize.
--- `resolve_host()` (buzz-core) applies the identical normalization before
+-- `resolve_host()` (crew-core) applies the identical normalization before
 -- lookup, so resolution and storage agree by construction.
 
 CREATE TABLE communities (
@@ -218,7 +218,7 @@ CREATE TABLE events (
     -- here because a sqlx
     -- migration is frozen SQL and cannot import the Rust constant. If a new
     -- privacy-sensitive kind is added there, update this list and add a
-    -- regression test in `buzz-search/tests/fts_integration.rs`.
+    -- regression test in `crew-search/tests/fts_integration.rs`.
     search_tsv  TSVECTOR GENERATED ALWAYS AS (
         CASE WHEN kind IN (1059, 30300, 30622, 44100, 44101) THEN NULL::tsvector
              ELSE to_tsvector('simple', content)

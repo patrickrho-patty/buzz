@@ -701,11 +701,11 @@ export function AgentDefinitionDialog({
     setHasUserChanges(true);
     const nextProvider =
       nextValue === AUTO_PROVIDER_DROPDOWN_VALUE ? "" : nextValue;
-    if (nextProvider === "relay-mesh" && runtime !== "buzz-agent") {
-      handleRuntimeDropdownChange("buzz-agent");
+    if (nextProvider === "relay-mesh" && runtime !== "crew-agent") {
+      handleRuntimeDropdownChange("crew-agent");
     }
     const nextSelection = selectionOnProviderDropdownChange(selection, {
-      runtime: nextProvider === "relay-mesh" ? "buzz-agent" : runtime,
+      runtime: nextProvider === "relay-mesh" ? "crew-agent" : runtime,
       nextValue,
       clearModelWhenApiKeyMissing: true,
     });

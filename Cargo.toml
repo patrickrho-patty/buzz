@@ -1,35 +1,35 @@
 [workspace]
 members = [
-    "crates/buzz-relay",
-    "crates/buzz-core",
-    "crates/buzz-conformance",
-    "crates/buzz-push-gateway",
-    "crates/buzz-db",
-    "crates/buzz-pubsub",
-    "crates/buzz-auth",
-    "crates/buzz-search",
-    "crates/buzz-audit",
-    "crates/buzz-acp",
-    "crates/buzz-agent",
+    "crates/crew-relay",
+    "crates/crew-core",
+    "crates/crew-conformance",
+    "crates/crew-push-gateway",
+    "crates/crew-db",
+    "crates/crew-pubsub",
+    "crates/crew-auth",
+    "crates/crew-search",
+    "crates/crew-audit",
+    "crates/crew-acp",
+    "crates/crew-agent",
     "crates/sprig",
-    "crates/buzz-test-client",
-    "crates/buzz-ws-client",
-    "crates/buzz-admin",
-    "crates/buzz-deletion",
-    "crates/buzz-workflow",
-    "crates/buzz-media",
-    "crates/buzz-cli",
-    "crates/buzz-pairing-cli",
-    "crates/buzz-sdk",
-    "crates/buzz-persona",
+    "crates/crew-test-client",
+    "crates/crew-ws-client",
+    "crates/crew-admin",
+    "crates/crew-deletion",
+    "crates/crew-workflow",
+    "crates/crew-media",
+    "crates/crew-cli",
+    "crates/crew-pairing-cli",
+    "crates/crew-sdk",
+    "crates/crew-persona",
     "crates/git-credential-nostr",
     "crates/git-sign-nostr",
-    "crates/buzz-pair-relay",
-    "crates/buzz-relay-mesh",
-    "crates/buzz-dev-mcp",
-    "crates/buzz-voice",
-    "crates/buzz-backend-kubernetes",
-    "crates/buzz-datastore-tracing",
+    "crates/crew-pair-relay",
+    "crates/crew-relay-mesh",
+    "crates/crew-dev-mcp",
+    "crates/crew-voice",
+    "crates/crew-backend-kubernetes",
+    "crates/crew-datastore-tracing",
     "examples/countdown-bot",
 ]
 exclude = ["desktop/src-tauri"]
@@ -67,9 +67,9 @@ sqlx = { version = "0.9", features = [
 redis        = { version = "1.0", features = ["tokio-comp", "connection-manager", "tokio-rustls-comp"] }
 deadpool-redis = { version = "0.23", features = ["rt_tokio_1"] }
 
-# Kubernetes (buzz-backend-kubernetes provider). No `ring` feature here: the
+# Kubernetes (crew-backend-kubernetes provider). No `ring` feature here: the
 # process-level CryptoProvider is installed explicitly at startup, matching
-# buzz-cli/buzz-acp/buzz-admin/buzz-relay/buzz-dev-mcp — see the comment on the
+# crew-cli/crew-acp/crew-admin/crew-relay/crew-dev-mcp — see the comment on the
 # crate's own rustls dependency.
 kube = { version = "2.0", default-features = false, features = ["client", "rustls-tls"] }
 k8s-openapi = { version = "0.26", features = ["v1_31"] }
@@ -81,7 +81,7 @@ nostr = { version = "0.44", features = ["nip44", "nip98"] }
 serde       = { version = "1", features = ["derive"] }
 postcard    = { version = "1", default-features = false, features = ["use-std"] }
 
-# Inter-relay mesh transport (buzz-relay-mesh)
+# Inter-relay mesh transport (crew-relay-mesh)
 iroh = { version = "1.0.0-rc.0", default-features = false, features = ["tls-ring"] }
 serde_json  = "1"
 serde_yaml  = "0.9"
@@ -134,25 +134,25 @@ url = "2"
 # Property-based testing (dev-only)
 proptest = "1"
 
-# MCP SDK (used by buzz-dev-mcp and buzz-agent)
+# MCP SDK (used by crew-dev-mcp and crew-agent)
 rmcp = { version = "1.1.0", features = ["server", "transport-io", "macros"] }
 schemars = { version = "1", default-features = false }
 
 # Internal crates
-buzz-core = { path = "crates/buzz-core" }
-buzz-conformance = { path = "crates/buzz-conformance" }
-buzz-db = { path = "crates/buzz-db" }
-buzz-deletion = { path = "crates/buzz-deletion" }
-buzz-auth = { path = "crates/buzz-auth" }
-buzz-pubsub = { path = "crates/buzz-pubsub" }
-buzz-search = { path = "crates/buzz-search" }
-buzz-audit = { path = "crates/buzz-audit" }
-buzz-workflow = { path = "crates/buzz-workflow" }
-buzz-media = { path = "crates/buzz-media" }
-buzz-sdk = { path = "crates/buzz-sdk" }
-buzz-ws-client = { path = "crates/buzz-ws-client" }
-buzz-relay-mesh = { path = "crates/buzz-relay-mesh" }
-buzz-datastore-tracing = { path = "crates/buzz-datastore-tracing" }
+crew-core = { path = "crates/crew-core" }
+crew-conformance = { path = "crates/crew-conformance" }
+crew-db = { path = "crates/crew-db" }
+crew-deletion = { path = "crates/crew-deletion" }
+crew-auth = { path = "crates/crew-auth" }
+crew-pubsub = { path = "crates/crew-pubsub" }
+crew-search = { path = "crates/crew-search" }
+crew-audit = { path = "crates/crew-audit" }
+crew-workflow = { path = "crates/crew-workflow" }
+crew-media = { path = "crates/crew-media" }
+crew-sdk = { path = "crates/crew-sdk" }
+crew-ws-client = { path = "crates/crew-ws-client" }
+crew-relay-mesh = { path = "crates/crew-relay-mesh" }
+crew-datastore-tracing = { path = "crates/crew-datastore-tracing" }
 
 # CI profile — builds the relay for desktop e2e. Dependencies keep full
 # release optimization (warm from main's cache; they carry the runtime hot

@@ -211,13 +211,13 @@ pub(crate) fn run_boot_reset_with_keychain(ctx: ResetContext<'_>) -> ResetOutcom
         None
     };
 
-    // ── Step 3: remove nest, ~/.sprout, ~/.config/buzz-agent, CLI symlink ────
+    // ── Step 3: remove nest, ~/.sprout, ~/.config/crew-agent, CLI symlink ────
     if let Some(ref nest) = ctx.nest_dir {
         let _ = std::fs::remove_dir_all(nest);
     }
     if let Some(ref home) = ctx.home_dir {
         let _ = std::fs::remove_dir_all(home.join(".sprout"));
-        let _ = std::fs::remove_dir_all(home.join(".config").join("buzz-agent"));
+        let _ = std::fs::remove_dir_all(home.join(".config").join("crew-agent"));
         let link_name = crate::managed_agents::cli_link_name(ctx.is_dev);
         let _ = std::fs::remove_file(home.join(".local").join("bin").join(link_name));
     }

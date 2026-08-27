@@ -14,10 +14,10 @@ export function shouldRenderMcpServers(
   runtimeId: string | null,
   extensions: ExtensionEntry[],
 ): boolean {
-  // buzz-agent always surfaces its built-in MCP servers even with no
+  // crew-agent always surfaces its built-in MCP servers even with no
   // user-configured extensions; every other runtime shows the section only
   // once it has extensions parsed from its config file.
-  return runtimeId === "buzz-agent" || extensions.length > 0;
+  return runtimeId === "crew-agent" || extensions.length > 0;
 }
 
 // #3493: the servers are read from the isolated `.claude.json` under a custom
@@ -36,7 +36,7 @@ export function McpServersSection({
   runtimeId,
   variant = "compact",
 }: McpServersSectionProps) {
-  const isBuzzAgent = runtimeId === "buzz-agent";
+  const isBuzzAgent = runtimeId === "crew-agent";
 
   if (!shouldRenderMcpServers(runtimeId, extensions)) {
     return null;

@@ -596,7 +596,7 @@ pub enum AuthStatus {
         /// Trimmed excerpt of the stderr message.
         diagnostic: String,
     },
-    /// This runtime does not have a login step (e.g. goose, buzz-agent).
+    /// This runtime does not have a login step (e.g. goose, crew-agent).
     NotApplicable,
     /// Probe was not attempted (runtime unavailable or probe timed out).
     Unknown,
@@ -794,7 +794,7 @@ pub struct UpdateTeamRequest {
     pub persona_ids: Vec<String>,
 }
 
-pub const DEFAULT_ACP_COMMAND: &str = "buzz-acp";
+pub const DEFAULT_ACP_COMMAND: &str = "crew-acp";
 /// ~5 min (320s) — matches the CLI harness default (BUZZ_ACP_IDLE_TIMEOUT).
 pub const DEFAULT_AGENT_TURN_TIMEOUT_SECONDS: u64 = 320;
 pub const DEFAULT_AGENT_PARALLELISM: u32 = 10;
@@ -817,7 +817,7 @@ fn default_record_active() -> bool {
 
 // ── Inbound author gate ──────────────────────────────────────────────────────
 //
-// Mirrors `buzz-acp`'s `--respond-to` CLI flag and the related
+// Mirrors `crew-acp`'s `--respond-to` CLI flag and the related
 // `--respond-to-allowlist` option. Persisted per agent so the desktop can
 // translate the user's choice into `BUZZ_ACP_RESPOND_TO` /
 // `BUZZ_ACP_RESPOND_TO_ALLOWLIST` env vars at spawn time.
@@ -840,7 +840,7 @@ pub enum RespondTo {
 }
 
 impl RespondTo {
-    /// CLI/env wire string (matches `buzz-acp`'s `--respond-to`).
+    /// CLI/env wire string (matches `crew-acp`'s `--respond-to`).
     pub fn as_str(self) -> &'static str {
         match self {
             Self::OwnerOnly => "owner-only",
@@ -868,7 +868,7 @@ impl RespondTo {
 
 /// Validate and normalize a respond-to allowlist.
 ///
-/// Rules mirror `buzz-acp/src/config.rs::validate_allowlist`:
+/// Rules mirror `crew-acp/src/config.rs::validate_allowlist`:
 /// - Each entry is exactly 64 hex chars (any case in, lowercase out).
 /// - Duplicates removed, insertion order preserved.
 ///

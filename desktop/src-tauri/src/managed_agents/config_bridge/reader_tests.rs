@@ -72,7 +72,7 @@ fn test_record() -> ManagedAgentRecord {
         auth_tag: None,
         relay_url: "ws://localhost:3000".to_string(),
         avatar_url: None,
-        acp_command: "buzz-acp".to_string(),
+        acp_command: "crew-acp".to_string(),
         agent_command: "goose".to_string(),
         agent_args: vec![],
         mcp_command: "".to_string(),
@@ -611,18 +611,18 @@ fn extra_env_var_skipped_when_already_in_file_config_extra() {
     );
 }
 
-// ── buzz-agent normalized env-var field tests ─────────────────────────────────
+// ── crew-agent normalized env-var field tests ─────────────────────────────────
 //
-// buzz-agent uses env vars (not a config file) for max_output_tokens and
+// crew-agent uses env vars (not a config file) for max_output_tokens and
 // context_limit. build_numeric_env_field must surface these as BuzzExplicit
 // when the env var is present in record.env_vars, and must not double-surface
 // them in the advanced tier.
 
-fn buzz_agent_runtime() -> &'static KnownAcpRuntime {
+fn crew_agent_runtime() -> &'static KnownAcpRuntime {
     &KnownAcpRuntime {
-        id: "buzz-agent",
+        id: "crew-agent",
         label: "Buzz Agent",
-        commands: &["buzz-agent"],
+        commands: &["crew-agent"],
         aliases: &[],
         avatar_url: "",
         mcp_command: None,
@@ -655,13 +655,13 @@ fn buzz_agent_runtime() -> &'static KnownAcpRuntime {
 }
 
 #[test]
-fn buzz_agent_max_output_tokens_from_env_is_buzz_explicit() {
+fn crew_agent_max_output_tokens_from_env_is_crew_explicit() {
     let mut record = test_record();
     record.env_vars.insert(
         "BUZZ_AGENT_MAX_OUTPUT_TOKENS".to_string(),
         "8192".to_string(),
     );
-    let runtime = buzz_agent_runtime();
+    let runtime = crew_agent_runtime();
 
     let surface = read_config_surface(&record, Some(runtime), None, &no_tiers(), None);
 
@@ -676,13 +676,13 @@ fn buzz_agent_max_output_tokens_from_env_is_buzz_explicit() {
 }
 
 #[test]
-fn buzz_agent_context_limit_from_env_is_buzz_explicit() {
+fn crew_agent_context_limit_from_env_is_crew_explicit() {
     let mut record = test_record();
     record.env_vars.insert(
         "BUZZ_AGENT_MAX_CONTEXT_TOKENS".to_string(),
         "100000".to_string(),
     );
-    let runtime = buzz_agent_runtime();
+    let runtime = crew_agent_runtime();
 
     let surface = read_config_surface(&record, Some(runtime), None, &no_tiers(), None);
 
@@ -697,10 +697,10 @@ fn buzz_agent_context_limit_from_env_is_buzz_explicit() {
 }
 
 #[test]
-fn buzz_agent_max_tokens_absent_when_no_env_var_or_file() {
-    // buzz-agent has no config file, and env var is not set.
+fn crew_agent_max_tokens_absent_when_no_env_var_or_file() {
+    // crew-agent has no config file, and env var is not set.
     let record = test_record();
-    let runtime = buzz_agent_runtime();
+    let runtime = crew_agent_runtime();
 
     let surface = read_config_surface(&record, Some(runtime), None, &no_tiers(), None);
 
@@ -715,7 +715,7 @@ fn buzz_agent_max_tokens_absent_when_no_env_var_or_file() {
 }
 
 #[test]
-fn buzz_agent_max_tokens_env_var_not_double_surfaced_in_advanced() {
+fn crew_agent_max_tokens_env_var_not_double_surfaced_in_advanced() {
     let mut record = test_record();
     record.env_vars.insert(
         "BUZZ_AGENT_MAX_OUTPUT_TOKENS".to_string(),
@@ -725,7 +725,7 @@ fn buzz_agent_max_tokens_env_var_not_double_surfaced_in_advanced() {
         "BUZZ_AGENT_MAX_CONTEXT_TOKENS".to_string(),
         "50000".to_string(),
     );
-    let runtime = buzz_agent_runtime();
+    let runtime = crew_agent_runtime();
 
     let surface = read_config_surface(&record, Some(runtime), None, &no_tiers(), None);
 
@@ -741,12 +741,12 @@ fn buzz_agent_max_tokens_env_var_not_double_surfaced_in_advanced() {
 }
 
 #[test]
-fn buzz_agent_thinking_effort_from_env_is_buzz_explicit() {
+fn crew_agent_thinking_effort_from_env_is_crew_explicit() {
     let mut record = test_record();
     record
         .env_vars
         .insert("BUZZ_AGENT_THINKING_EFFORT".to_string(), "high".to_string());
-    let runtime = buzz_agent_runtime();
+    let runtime = crew_agent_runtime();
 
     let surface = read_config_surface(&record, Some(runtime), None, &no_tiers(), None);
 
@@ -761,13 +761,13 @@ fn buzz_agent_thinking_effort_from_env_is_buzz_explicit() {
 }
 
 #[test]
-fn buzz_agent_thinking_effort_env_var_not_double_surfaced_in_advanced() {
+fn crew_agent_thinking_effort_env_var_not_double_surfaced_in_advanced() {
     let mut record = test_record();
     record.env_vars.insert(
         "BUZZ_AGENT_THINKING_EFFORT".to_string(),
         "medium".to_string(),
     );
-    let runtime = buzz_agent_runtime();
+    let runtime = crew_agent_runtime();
 
     let surface = read_config_surface(&record, Some(runtime), None, &no_tiers(), None);
 
@@ -817,9 +817,9 @@ fn missing_optional_provider_stays_hidden() {
 // The plan's acceptance criteria for effort tier resolution.
 // Tier ordering: record env > ACP > persona env > global env > config file.
 
-fn buzz_agent_rt() -> &'static KnownAcpRuntime {
-    crate::managed_agents::discovery::known_acp_runtime_exact("buzz-agent")
-        .expect("buzz-agent must be in catalog")
+fn crew_agent_rt() -> &'static KnownAcpRuntime {
+    crate::managed_agents::discovery::known_acp_runtime_exact("crew-agent")
+        .expect("crew-agent must be in catalog")
 }
 
 /// AC-1: no record effort, global env has effort → GlobalDefault.
@@ -828,7 +828,7 @@ fn buzz_agent_rt() -> &'static KnownAcpRuntime {
 #[test]
 fn global_effort_surfaces_as_global_default_when_record_has_none() {
     let record = test_record();
-    let runtime = buzz_agent_rt();
+    let runtime = crew_agent_rt();
     let tiers = global_env_tiers("BUZZ_AGENT_THINKING_EFFORT", "high");
 
     let surface = read_config_surface(&record, Some(runtime), None, &tiers, None);
@@ -845,7 +845,7 @@ fn global_effort_surfaces_as_global_default_when_record_has_none() {
 #[test]
 fn persona_effort_shadows_global_and_tags_persona_default() {
     let record = test_record();
-    let runtime = buzz_agent_rt();
+    let runtime = crew_agent_rt();
     let tiers = persona_and_global_env_tiers("BUZZ_AGENT_THINKING_EFFORT", "medium", "high");
 
     let surface = read_config_surface(&record, Some(runtime), None, &tiers, None);
@@ -869,7 +869,7 @@ fn record_effort_outranks_persona_and_global_keeps_buzz_explicit() {
         "BUZZ_AGENT_THINKING_EFFORT".to_string(),
         "xhigh".to_string(),
     );
-    let runtime = buzz_agent_rt();
+    let runtime = crew_agent_rt();
     let tiers = persona_and_global_env_tiers("BUZZ_AGENT_THINKING_EFFORT", "medium", "high");
 
     let surface = read_config_surface(&record, Some(runtime), None, &tiers, None);
@@ -886,7 +886,7 @@ fn record_effort_outranks_persona_and_global_keeps_buzz_explicit() {
 #[test]
 fn no_effort_anywhere_yields_no_thinking_effort_field() {
     let record = test_record();
-    let runtime = buzz_agent_rt();
+    let runtime = crew_agent_rt();
 
     let surface = read_config_surface(&record, Some(runtime), None, &no_tiers(), None);
 
@@ -904,7 +904,7 @@ fn no_effort_anywhere_yields_no_thinking_effort_field() {
 #[test]
 fn acp_effort_wins_over_inherited_global_effort_as_secondary() {
     let record = test_record();
-    let runtime = buzz_agent_rt();
+    let runtime = crew_agent_rt();
     let cache = SessionConfigCache {
         config_options: vec![AcpConfigOptionEntry {
             config_id: "effort".to_string(),
@@ -943,7 +943,7 @@ fn acp_effort_wins_over_inherited_global_effort_as_secondary() {
 #[test]
 fn numeric_max_tokens_inherits_from_global_env() {
     let record = test_record();
-    let runtime = buzz_agent_runtime();
+    let runtime = crew_agent_runtime();
     let tiers = global_env_tiers("BUZZ_AGENT_MAX_OUTPUT_TOKENS", "16384");
 
     let surface = read_config_surface(&record, Some(runtime), None, &tiers, None);
