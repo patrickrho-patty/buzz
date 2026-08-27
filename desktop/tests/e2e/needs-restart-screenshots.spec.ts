@@ -311,7 +311,7 @@ test.describe("restart-diff screenshots", () => {
     page,
   }) => {
     await page.addInitScript(() => {
-      window.localStorage.setItem("buzz-theme", "catppuccin-mocha");
+      window.localStorage.setItem("crew-theme", "catppuccin-mocha");
     });
     await installMockBridge(page, {
       managedAgents: [RESTART_AGENT],

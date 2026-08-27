@@ -4,7 +4,7 @@ import { waitForAnimations } from "../helpers/animations";
 import { installMockBridge } from "../helpers/bridge";
 
 const SHOTS = "test-results/appearance-previews";
-const THEME_STORAGE_KEY = "buzz-theme";
+const THEME_STORAGE_KEY = "crew-theme";
 const LINK_PREVIEW_STYLE_STORAGE_KEY = "crew.appearance.linkPreviewStyle";
 const THREAD_VIEW_MODE_STORAGE_KEY = "crew.channels.threadViewMode";
 

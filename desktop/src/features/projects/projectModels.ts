@@ -118,7 +118,7 @@ const SINGLETON_METADATA_TAGS = [
 
 /**
  * Pre-rename spellings still arrive from older signers; cardinality counts
- * both so mixing `crew-channel` + legacy `buzz-channel` stays reader-hostile.
+ * both so mixing `crew-channel` + legacy `crew-channel` stays reader-hostile.
  */
 const LEGACY_TAG_ALIASES: Partial<
   Record<(typeof SINGLETON_METADATA_TAGS)[number], string>

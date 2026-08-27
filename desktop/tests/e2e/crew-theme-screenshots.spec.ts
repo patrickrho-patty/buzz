@@ -4,10 +4,10 @@ import { waitForAnimations } from "../helpers/animations";
 import { installMockBridge } from "../helpers/bridge";
 
 const SHOTS = "test-results/buzz-theme";
-const THEME_STORAGE_KEY = "buzz-theme";
-const GLASS_BACKGROUND_STORAGE_KEY = "buzz-glass-background";
-const GLASS_OPACITY_STORAGE_KEY = "buzz-glass-opacity";
-const PROMINENT_ACTIVE_TAB_STORAGE_KEY = "buzz-prominent-active-tab";
+const THEME_STORAGE_KEY = "crew-theme";
+const GLASS_BACKGROUND_STORAGE_KEY = "crew-glass-background";
+const GLASS_OPACITY_STORAGE_KEY = "crew-glass-opacity";
+const PROMINENT_ACTIVE_TAB_STORAGE_KEY = "crew-prominent-active-tab";
 const CONVERSATION_DENSITY_STORAGE_KEY = "crew.appearance.conversationDensity";
 const FONT_SIZE_STORAGE_KEY = "crew.appearance.fontSize";
 const MOCK_PUBKEY = "deadbeef".repeat(8);

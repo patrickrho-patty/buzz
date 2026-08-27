@@ -108,7 +108,7 @@ async function installFakeHuddleMicrophone(
 
 test("keeps the drawer open until the huddle is expanded", async ({ page }) => {
   await page.addInitScript(() => {
-    window.localStorage.setItem("buzz-theme", "crew-dark");
+    window.localStorage.setItem("crew-theme", "crew-dark");
   });
   await installMockBridge(page, {
     huddle: {
@@ -268,8 +268,8 @@ test("floats the in-app huddle tray over the glass background", async ({
   page,
 }) => {
   await page.addInitScript(() => {
-    window.localStorage.setItem("buzz-theme", "crew-dark");
-    window.localStorage.setItem("buzz-glass-background", "true");
+    window.localStorage.setItem("crew-theme", "crew-dark");
+    window.localStorage.setItem("crew-glass-background", "true");
     (window as typeof window & { isTauri?: boolean }).isTauri = true;
     Object.defineProperty(navigator, "platform", {
       configurable: true,
@@ -339,8 +339,8 @@ test("keeps the popped-out huddle dock full-width over glass", async ({
   page,
 }) => {
   await page.addInitScript(() => {
-    window.localStorage.setItem("buzz-theme", "crew-dark");
-    window.localStorage.setItem("buzz-glass-background", "true");
+    window.localStorage.setItem("crew-theme", "crew-dark");
+    window.localStorage.setItem("crew-glass-background", "true");
     (window as typeof window & { isTauri?: boolean }).isTauri = true;
     Object.defineProperty(navigator, "platform", {
       configurable: true,
@@ -468,7 +468,7 @@ test("ignores persisted community onboarding in the huddle room", async ({
   };
   await page.addInitScript((transaction) => {
     window.localStorage.setItem(
-      "buzz-community-onboarding-transaction.v1",
+      "crew-community-onboarding-transaction.v1",
       JSON.stringify(transaction),
     );
   }, persistedTransaction);
@@ -497,7 +497,7 @@ test("ignores persisted community onboarding in the huddle room", async ({
       .poll(() =>
         page.evaluate(() => {
           const raw = window.localStorage.getItem(
-            "buzz-community-onboarding-transaction.v1",
+            "crew-community-onboarding-transaction.v1",
           );
           return raw ? JSON.parse(raw) : null;
         }),
@@ -506,7 +506,7 @@ test("ignores persisted community onboarding in the huddle room", async ({
     await expect
       .poll(() =>
         page.evaluate(() =>
-          JSON.parse(window.localStorage.getItem("buzz-communities") ?? "[]"),
+          JSON.parse(window.localStorage.getItem("crew-communities") ?? "[]"),
         ),
       )
       .not.toContainEqual(

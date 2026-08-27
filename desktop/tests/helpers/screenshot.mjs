@@ -115,8 +115,8 @@ await page.addInitScript(() => {
     relayUrl: "ws://localhost:3000",
     addedAt: new Date().toISOString(),
   };
-  window.localStorage.setItem("buzz-communities", JSON.stringify([community]));
-  window.localStorage.setItem("buzz-active-community-id", communityId);
+  window.localStorage.setItem("crew-communities", JSON.stringify([community]));
+  window.localStorage.setItem("crew-active-community-id", communityId);
 });
 
 // Seed onboarding completion for all known identities

@@ -66,14 +66,14 @@ test("applyLegacyCommunityStorage seeds missing communities and active community
     storage,
   );
 
-  assert.equal(storage.getItem("buzz-communities"), legacyCommunities);
-  assert.equal(storage.getItem("buzz-active-community-id"), "legacy-community");
+  assert.equal(storage.getItem("crew-communities"), legacyCommunities);
+  assert.equal(storage.getItem("crew-active-community-id"), "legacy-community");
 });
 
 test("applyLegacyCommunityStorage preserves existing non-local Crew communities", () => {
   const storage = createMemoryStorage({
     "crew-communities": currentCommunities,
-    "buzz-active-community-id": "current-community",
+    "crew-active-community-id": "current-community",
   });
 
   applyLegacyCommunityStorage(
@@ -87,7 +87,7 @@ test("applyLegacyCommunityStorage preserves existing non-local Crew communities"
 
   assert.equal(storage.getItem("crew-communities"), currentCommunities);
   assert.equal(
-    storage.getItem("buzz-active-community-id"),
+    storage.getItem("crew-active-community-id"),
     "current-community",
   );
 });
@@ -95,7 +95,7 @@ test("applyLegacyCommunityStorage preserves existing non-local Crew communities"
 test("applyLegacyCommunityStorage replaces broken localhost first-run community", () => {
   const storage = createMemoryStorage({
     "crew-communities": localhostCommunities,
-    "buzz-active-community-id": "local-community",
+    "crew-active-community-id": "local-community",
   });
 
   applyLegacyCommunityStorage(
@@ -107,8 +107,8 @@ test("applyLegacyCommunityStorage replaces broken localhost first-run community"
     storage,
   );
 
-  assert.equal(storage.getItem("buzz-communities"), legacyCommunities);
-  assert.equal(storage.getItem("buzz-active-community-id"), "legacy-community");
+  assert.equal(storage.getItem("crew-communities"), legacyCommunities);
+  assert.equal(storage.getItem("crew-active-community-id"), "legacy-community");
 });
 
 test("applyLegacyCommunityStorage treats trailing-slash localhost as broken", () => {
@@ -121,7 +121,7 @@ test("applyLegacyCommunityStorage treats trailing-slash localhost as broken", ()
         addedAt: "2026-06-12T00:00:00.000Z",
       },
     ]),
-    "buzz-active-community-id": "local-community",
+    "crew-active-community-id": "local-community",
   });
 
   applyLegacyCommunityStorage(
@@ -133,8 +133,8 @@ test("applyLegacyCommunityStorage treats trailing-slash localhost as broken", ()
     storage,
   );
 
-  assert.equal(storage.getItem("buzz-communities"), legacyCommunities);
-  assert.equal(storage.getItem("buzz-active-community-id"), "legacy-community");
+  assert.equal(storage.getItem("crew-communities"), legacyCommunities);
+  assert.equal(storage.getItem("crew-active-community-id"), "legacy-community");
 });
 
 test("applyLegacyCommunityStorage migrates onboarding completion keys", () => {

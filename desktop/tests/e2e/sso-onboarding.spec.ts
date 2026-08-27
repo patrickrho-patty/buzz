@@ -31,7 +31,7 @@ test.beforeEach(async ({ page }) => {
   // transaction (the SSO join class — no deep-link acknowledge machinery).
   await page.addInitScript(() => {
     window.localStorage.setItem(
-      "buzz-community-onboarding-transaction.v1",
+      "crew-community-onboarding-transaction.v1",
       JSON.stringify({
         id: crypto.randomUUID(),
         source: "first-community",

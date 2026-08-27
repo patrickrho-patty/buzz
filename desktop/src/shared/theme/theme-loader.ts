@@ -131,7 +131,7 @@ export type SyntaxThemeName = (typeof SYNTAX_THEMES)[number];
 // Known light themes — used by the theme picker to show sun/moon icons
 // for themes that haven't been loaded yet.
 export const LIGHT_THEMES: ReadonlySet<SyntaxThemeName> = new Set([
-  "buzz",
+  "crew",
   "catppuccin-latte",
   "everforest-light",
   "github-light",
@@ -240,7 +240,7 @@ export const THEME_PAIRS: ReadonlyMap<SyntaxThemeName, SyntaxThemeName> =
   new Map([
     // Light → Dark
     // Crew is the first-party pair; keep it first so it leads every category.
-    ["buzz", "crew-dark"],
+    ["crew", "crew-dark"],
     ["catppuccin-latte", "catppuccin-mocha"],
     ["everforest-light", "everforest-dark"],
     ["github-light", "github-dark"],
@@ -259,7 +259,7 @@ export const THEME_PAIRS: ReadonlyMap<SyntaxThemeName, SyntaxThemeName> =
     ["solarized-light", "solarized-dark"],
     ["vitesse-light", "vitesse-dark"],
     // Dark → Light (reverse mappings)
-    ["crew-dark", "buzz"],
+    ["crew-dark", "crew"],
     ["catppuccin-mocha", "catppuccin-latte"],
     ["everforest-dark", "everforest-light"],
     ["github-dark", "github-light"],

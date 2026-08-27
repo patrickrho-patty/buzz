@@ -27,7 +27,7 @@ async function expectSinglePrimaryTextColumn(row: Locator) {
 async function enableProjectsFeature(page: import("@playwright/test").Page) {
   await page.addInitScript(() => {
     window.localStorage.setItem(
-      "buzz-feature-overrides-v1",
+      "crew-feature-overrides-v1",
       JSON.stringify({ projects: true }),
     );
   });

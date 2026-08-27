@@ -65,7 +65,7 @@ async function openBuzzProject(page: import("@playwright/test").Page) {
 
 test("projects activity overview screenshot", async ({ page }) => {
   await page.addInitScript(() => {
-    window.localStorage.setItem("buzz-theme", "light");
+    window.localStorage.setItem("crew-theme", "light");
   });
   await installMockBridge(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });

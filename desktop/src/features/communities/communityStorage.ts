@@ -4,7 +4,7 @@ import { setLocalStorageItemWithRecovery } from "@/shared/lib/localStorageQuota"
 import { getStorageItem, removeStorageItem } from "@/shared/lib/safeStorage";
 
 const COMMUNITIES_KEY = "crew-communities";
-const ACTIVE_COMMUNITY_KEY = "buzz-active-community-id";
+const ACTIVE_COMMUNITY_KEY = "crew-active-community-id";
 // Sprout→Buzz era spellings; still the oldest on-disk generation.
 const LEGACY_WORKSPACES_KEY = "buzz-workspaces";
 const LEGACY_ACTIVE_WORKSPACE_KEY = "buzz-active-workspace-id";

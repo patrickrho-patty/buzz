@@ -9,7 +9,7 @@ import { seedActiveIdentity } from "../helpers/onboarding";
 
 const DEFAULT_MOCK_PUBKEY = "deadbeef".repeat(8);
 const COMMUNITY_ONBOARDING_PUBKEY = TEST_IDENTITIES.tyler.pubkey;
-const TRANSACTION_STORAGE_KEY = "buzz-community-onboarding-transaction.v1";
+const TRANSACTION_STORAGE_KEY = "crew-community-onboarding-transaction.v1";
 const COMMUNITY_RELAY_URL = "wss://hive.example.com";
 
 const PENDING_JOIN_LINK = {

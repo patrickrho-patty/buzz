@@ -243,9 +243,12 @@ function applyAccentColor(value: string) {
  * appearance panel hides the accent picker. The user's chosen accent is left
  * untouched in storage so it returns when they switch back to another theme.
  */
-export function isBuzzTheme(themeName: string): boolean {
-  return themeName === "buzz" || themeName === "crew-dark";
+export function isCrewTheme(themeName: string): boolean {
+  return themeName === "crew" || themeName === "crew-dark";
 }
+/** @deprecated use isCrewTheme */
+export const isBuzzTheme = isCrewTheme;
+
 
 /**
  * Resolve the accent to actually apply for a theme: Crew themes are pinned to
@@ -479,7 +482,7 @@ async function applyTheme(name: SyntaxThemeName): Promise<{
 
 export function ThemeProvider({
   children,
-  defaultTheme = "buzz",
+  defaultTheme = "crew",
 }: ThemeProviderProps) {
   const glassBackgroundSupported = isTauri() && isMacPlatform();
 

@@ -526,7 +526,7 @@ for (const theme of ["crew", "crew-dark", "github-light", "github-dark"]) {
   }) => {
     await page.goto("/");
     await page.evaluate((selectedTheme) => {
-      window.localStorage.setItem("buzz-theme", selectedTheme);
+      window.localStorage.setItem("crew-theme", selectedTheme);
     }, theme);
     await page.reload();
     await page.getByTestId("channel-general").click();

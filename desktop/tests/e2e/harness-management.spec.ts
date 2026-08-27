@@ -654,7 +654,7 @@ test("onboarding setup More-harnesses click navigates to Settings → Agents", a
   await page.addInitScript(() => {
     const communityId = "e2e-default-community";
     window.localStorage.setItem(
-      "buzz-communities",
+      "crew-communities",
       JSON.stringify([
         {
           id: communityId,
@@ -665,7 +665,7 @@ test("onboarding setup More-harnesses click navigates to Settings → Agents", a
         },
       ]),
     );
-    window.localStorage.setItem("buzz-active-community-id", communityId);
+    window.localStorage.setItem("crew-active-community-id", communityId);
   });
   await page.goto("/");
 

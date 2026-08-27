@@ -434,8 +434,8 @@ test("keeps the saved profile description after a community round trip", async (
     },
   ];
   await page.addInitScript((seed) => {
-    window.localStorage.setItem("buzz-communities", JSON.stringify(seed));
-    window.localStorage.setItem("buzz-active-community-id", seed[0].id);
+    window.localStorage.setItem("crew-communities", JSON.stringify(seed));
+    window.localStorage.setItem("crew-active-community-id", seed[0].id);
   }, communities);
   await page.goto("/");
 
@@ -599,7 +599,7 @@ test("nests the avatar edit button in a clipped notch", async ({ page }) => {
   // keeps the root accent-driven token, so the shared-token comparison below
   // only holds outside the Crew theme.
   await page.addInitScript(() => {
-    window.localStorage.setItem("buzz-theme", "github-light");
+    window.localStorage.setItem("crew-theme", "github-light");
   });
   await page.goto("/");
 
@@ -2456,7 +2456,7 @@ test("opens settings with the keyboard shortcut and updates theme", async ({
 
   // Theme name persists in localStorage
   await expect
-    .poll(() => page.evaluate(() => localStorage.getItem("buzz-theme")))
+    .poll(() => page.evaluate(() => localStorage.getItem("crew-theme")))
     .toBe("github-light");
 
   // Switch to Dark mode tab to reveal dark themes
@@ -2472,7 +2472,7 @@ test("opens settings with the keyboard shortcut and updates theme", async ({
     .toBe(true);
 
   await expect
-    .poll(() => page.evaluate(() => localStorage.getItem("buzz-theme")))
+    .poll(() => page.evaluate(() => localStorage.getItem("crew-theme")))
     .toBe("dracula");
 
   // Close settings with keyboard shortcut

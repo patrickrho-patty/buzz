@@ -48,8 +48,8 @@ await page.addInitScript(() => {
     relayUrl: "ws://localhost:3000",
     addedAt: new Date().toISOString(),
   };
-  window.localStorage.setItem("buzz-communities", JSON.stringify([ws]));
-  window.localStorage.setItem("buzz-active-community-id", id);
+  window.localStorage.setItem("crew-communities", JSON.stringify([ws]));
+  window.localStorage.setItem("crew-active-community-id", id);
 });
 await page.addInitScript(
   ({ prefix, pubkeys }) => {

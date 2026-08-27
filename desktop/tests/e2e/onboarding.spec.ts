@@ -62,7 +62,7 @@ async function setRelayConnectionState(
 
 const HOME_SEEN_STORAGE_KEY_PREFIX = "crew-home-feed-seen.v1:";
 const COMMUNITY_ONBOARDING_TRANSACTION_STORAGE_KEY =
-  "buzz-community-onboarding-transaction.v1";
+  "crew-community-onboarding-transaction.v1";
 const ONE_PIXEL_PNG_BASE64 =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
 const DEFAULT_MOCK_PUBKEY = "deadbeef".repeat(8);
@@ -1052,7 +1052,7 @@ test("non-local runtime override keeps community selection without release flag"
     page.getByRole("button", { name: /Join a community/ }),
   ).toBeVisible();
   await expect
-    .poll(() => page.evaluate(() => localStorage.getItem("buzz-communities")))
+    .poll(() => page.evaluate(() => localStorage.getItem("crew-communities")))
     .toBeNull();
 });
 
@@ -1078,14 +1078,14 @@ test("non-local default auto-connects when the release flag is enabled", async (
   await expect
     .poll(() =>
       page.evaluate(() => {
-        const raw = window.localStorage.getItem("buzz-communities");
+        const raw = window.localStorage.getItem("crew-communities");
         const communities = raw
           ? (JSON.parse(raw) as Array<{ id: string; relayUrl: string }>)
           : [];
         return {
           activeMatchesCommunity:
             communities.length === 1 &&
-            window.localStorage.getItem("buzz-active-community-id") ===
+            window.localStorage.getItem("crew-active-community-id") ===
               communities[0]?.id,
           relayUrl: communities[0]?.relayUrl ?? null,
         };
@@ -1210,14 +1210,14 @@ test("first-community owner can connect an existing hosted community", async ({
   await expect
     .poll(() =>
       page.evaluate(() =>
-        window.localStorage.getItem("buzz-community-onboarding-transaction.v1"),
+        window.localStorage.getItem("crew-community-onboarding-transaction.v1"),
       ),
     )
     .toContain('"source":"first-community"');
   await expect
     .poll(() =>
       page.evaluate(() =>
-        window.localStorage.getItem("buzz-community-onboarding-transaction.v1"),
+        window.localStorage.getItem("crew-community-onboarding-transaction.v1"),
       ),
     )
     .toContain("wss://north-star.communities.crew.xyz");
@@ -1232,7 +1232,7 @@ test("first-community owner can connect an existing hosted community", async ({
   await expect
     .poll(() =>
       page.evaluate(() =>
-        window.localStorage.getItem("buzz-community-onboarding-transaction.v1"),
+        window.localStorage.getItem("crew-community-onboarding-transaction.v1"),
       ),
     )
     .toBeNull();
@@ -1306,7 +1306,7 @@ test("first-community owner can create and connect a hosted community", async ({
   await expect
     .poll(() =>
       page.evaluate(() =>
-        window.localStorage.getItem("buzz-community-onboarding-transaction.v1"),
+        window.localStorage.getItem("crew-community-onboarding-transaction.v1"),
       ),
     )
     .toContain("wss://bee-lab.communities.crew.xyz");
@@ -1689,7 +1689,7 @@ test("first-community direct join reaches profile", async ({ page }) => {
   await expect
     .poll(() =>
       page.evaluate((transactionStorageKey) => {
-        const communitiesRaw = window.localStorage.getItem("buzz-communities");
+        const communitiesRaw = window.localStorage.getItem("crew-communities");
         const transactionRaw = window.localStorage.getItem(
           transactionStorageKey,
         );
@@ -1822,7 +1822,7 @@ test("first-community direct join cancel returns to request access", async ({
     .poll(() =>
       page.evaluate(
         (storageKey) => ({
-          communities: window.localStorage.getItem("buzz-communities"),
+          communities: window.localStorage.getItem("crew-communities"),
           transaction: window.localStorage.getItem(storageKey),
         }),
         COMMUNITY_ONBOARDING_TRANSACTION_STORAGE_KEY,
@@ -1843,7 +1843,7 @@ test("canceling a join to an existing inactive community preserves it", async ({
       );
       const timestamp = new Date().toISOString();
       window.localStorage.setItem(
-        "buzz-communities",
+        "crew-communities",
         JSON.stringify([
           {
             id: "active-community",
@@ -1860,7 +1860,7 @@ test("canceling a join to an existing inactive community preserves it", async ({
         ]),
       );
       window.localStorage.setItem(
-        "buzz-active-community-id",
+        "crew-active-community-id",
         "active-community",
       );
     },
@@ -1903,7 +1903,7 @@ test("canceling a join to an existing inactive community preserves it", async ({
   await expect
     .poll(() =>
       page.evaluate(() => {
-        const raw = window.localStorage.getItem("buzz-communities");
+        const raw = window.localStorage.getItem("crew-communities");
         return raw
           ? (JSON.parse(raw) as Array<{ id: string }>).map(({ id }) => id)
           : [];
@@ -3955,7 +3955,7 @@ test("membership denied shows all four affordances and change-community edits no
   await expect
     .poll(() =>
       page.evaluate(() => {
-        const raw = window.localStorage.getItem("buzz-communities");
+        const raw = window.localStorage.getItem("crew-communities");
         const communities = raw
           ? (JSON.parse(raw) as Array<{ relayUrl?: string }>)
           : [];
@@ -4034,7 +4034,7 @@ test("denied on relay A then paste relay B invite URL switches community to B", 
 
   // Record the initial relay URL (relay A).
   const initialRelayUrl = await page.evaluate(() => {
-    const raw = window.localStorage.getItem("buzz-communities");
+    const raw = window.localStorage.getItem("crew-communities");
     const communities = raw
       ? (JSON.parse(raw) as Array<{ relayUrl?: string }>)
       : [];
@@ -4115,9 +4115,9 @@ test("denied on relay A then paste relay B invite URL switches community to B", 
   await expect
     .poll(() =>
       page.evaluate(() => {
-        const raw = window.localStorage.getItem("buzz-communities");
+        const raw = window.localStorage.getItem("crew-communities");
         const activeCommunityId = window.localStorage.getItem(
-          "buzz-active-community-id",
+          "crew-active-community-id",
         );
         const communities = raw
           ? (JSON.parse(raw) as Array<{ id?: string; relayUrl?: string }>)

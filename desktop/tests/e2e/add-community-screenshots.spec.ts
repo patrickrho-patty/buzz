@@ -23,10 +23,10 @@ const COMMUNITIES = [
 test.beforeEach(async ({ page }) => {
   await page.addInitScript((communities) => {
     window.localStorage.setItem(
-      "buzz-communities",
+      "crew-communities",
       JSON.stringify(communities),
     );
-    window.localStorage.setItem("buzz-active-community-id", communities[0].id);
+    window.localStorage.setItem("crew-active-community-id", communities[0].id);
   }, COMMUNITIES);
   await installMockBridge(
     page,

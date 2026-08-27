@@ -144,11 +144,11 @@ async function seedCommunities(page: Page, communityPubkey = OWNER_PUBKEY) {
         },
       ];
       window.localStorage.setItem(
-        "buzz-communities",
+        "crew-communities",
         JSON.stringify(communities),
       );
       window.localStorage.setItem(
-        "buzz-active-community-id",
+        "crew-active-community-id",
         communities[0].id,
       );
     },

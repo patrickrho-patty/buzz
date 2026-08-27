@@ -122,14 +122,14 @@ type MockFeedWindow = Window & {
 async function patchCommunityPubkey(page: import("@playwright/test").Page) {
   await page.addInitScript(
     ({ pubkey }) => {
-      const raw = window.localStorage.getItem("buzz-communities");
+      const raw = window.localStorage.getItem("crew-communities");
       const communities = raw
         ? (JSON.parse(raw) as Array<Record<string, unknown>>)
         : [];
       if (communities[0]) {
         communities[0].pubkey = pubkey;
         window.localStorage.setItem(
-          "buzz-communities",
+          "crew-communities",
           JSON.stringify(communities),
         );
       }

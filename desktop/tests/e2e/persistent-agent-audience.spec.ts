@@ -19,7 +19,7 @@ async function seedAudience(page: Page, pubkeys: string[], theme = "crew") {
         "crew:persistent-agent-audiences:v2",
         JSON.stringify({ [scope]: audience }),
       );
-      window.localStorage.setItem("buzz-theme", selectedTheme);
+      window.localStorage.setItem("crew-theme", selectedTheme);
     },
     { audience: pubkeys, scope: SCOPE, selectedTheme: theme },
   );

@@ -139,9 +139,9 @@ async function installVideoReviewHarness(
   await page.addInitScript(
     ({ accentColor, themeName }) => {
       if (themeName) {
-        window.localStorage.setItem("buzz-theme", themeName);
+        window.localStorage.setItem("crew-theme", themeName);
       }
-      window.localStorage.setItem("buzz-accent-color", accentColor);
+      window.localStorage.setItem("crew-accent-color", accentColor);
 
       type MediaState = {
         currentTime: number;

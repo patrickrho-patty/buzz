@@ -804,10 +804,10 @@ async function seedDefaultCommunity(
         addedAt: new Date().toISOString(),
       };
       window.localStorage.setItem(
-        "buzz-communities",
+        "crew-communities",
         JSON.stringify([community]),
       );
-      window.localStorage.setItem("buzz-active-community-id", communityId);
+      window.localStorage.setItem("crew-active-community-id", communityId);
     },
     {
       fallback: fallbackPubkey,

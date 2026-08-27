@@ -29,22 +29,22 @@ function createMemoryStorage(initial = {}) {
 
 test("migrateLegacyCommunityStorage promotes current Crew workspace state", () => {
   const storage = createMemoryStorage({
-    "crew-workspaces": '[{"id":"current"}]',
-    "crew-active-workspace-id": "current",
+    "buzz-workspaces": '[{"id":"current"}]',
+    "buzz-active-workspace-id": "current",
   });
 
   migrateLegacyCommunityStorage(storage);
 
   assert.equal(storage.getItem("crew-communities"), '[{"id":"current"}]');
-  assert.equal(storage.getItem("buzz-active-community-id"), "current");
+  assert.equal(storage.getItem("crew-active-community-id"), "current");
 });
 
 test("migrateLegacyCommunityStorage does not overwrite new community state", () => {
   const storage = createMemoryStorage({
     "crew-communities": '[{"id":"new"}]',
     "crew-active-community-id": "new",
-    "crew-workspaces": '[{"id":"old"}]',
-    "crew-active-workspace-id": "old",
+    "buzz-workspaces": '[{"id":"old"}]',
+    "buzz-active-workspace-id": "old",
   });
 
   migrateLegacyCommunityStorage(storage);
@@ -74,8 +74,8 @@ test("signed-build relay defaults auto-connect during first-run onboarding", () 
 test("failed first-community write preserves existing community data", () => {
   const storage = createMemoryStorage({
     "crew-communities": '[{"id":"existing"}]',
-    "crew-workspaces": '[{"id":"legacy"}]',
-    "crew-active-workspace-id": "legacy",
+    "buzz-workspaces": '[{"id":"legacy"}]',
+    "buzz-active-workspace-id": "legacy",
   });
   storage.setItem = (key, value) => {
     if (key === "crew-communities") {
@@ -89,8 +89,8 @@ test("failed first-community write preserves existing community data", () => {
   assert.equal(initFirstCommunity("wss://relay.example.com", "pubkey"), null);
   assert.equal(storage.getItem("crew-communities"), '[{"id":"existing"}]');
   assert.equal(storage.getItem("crew-active-community-id"), null);
-  assert.equal(storage.getItem("crew-workspaces"), '[{"id":"legacy"}]');
-  assert.equal(storage.getItem("crew-active-workspace-id"), "legacy");
+  assert.equal(storage.getItem("buzz-workspaces"), '[{"id":"legacy"}]');
+  assert.equal(storage.getItem("buzz-active-workspace-id"), "legacy");
 });
 
 test("loading an existing community clears stale final-leave discovery", () => {
@@ -121,8 +121,8 @@ test("clearCommunityStorage preserves completed final-leave discovery", () => {
   const storage = createMemoryStorage({
     "crew-communities": "new",
     "crew-active-community-id": "new",
-    "crew-workspaces": "old",
-    "crew-active-workspace-id": "old",
+    "buzz-workspaces": "old",
+    "buzz-active-workspace-id": "old",
     "crew-community-discovery-after-leave": "1",
   });
 

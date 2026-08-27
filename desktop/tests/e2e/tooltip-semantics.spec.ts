@@ -7,7 +7,7 @@ const THEMES = ["crew", "catppuccin-mocha"] as const;
 
 async function seedTheme(page: Page, theme: (typeof THEMES)[number]) {
   await page.addInitScript((value) => {
-    window.localStorage.setItem("buzz-theme", value);
+    window.localStorage.setItem("crew-theme", value);
   }, theme);
 }
 

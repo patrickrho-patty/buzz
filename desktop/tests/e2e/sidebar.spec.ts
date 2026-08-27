@@ -3,9 +3,9 @@ import { expect, test, type Page } from "@playwright/test";
 import { installMockBridge } from "../helpers/bridge";
 import { openSettings } from "../helpers/settings";
 
-const SIDEBAR_WIDTH_STORAGE_KEY = "buzz-sidebar-width";
+const SIDEBAR_WIDTH_STORAGE_KEY = "crew-sidebar-width";
 const COMMUNITY_ONBOARDING_STORAGE_KEY =
-  "buzz-community-onboarding-transaction.v1";
+  "crew-community-onboarding-transaction.v1";
 const DEFAULT_SIDEBAR_WIDTH = 300;
 
 test.beforeEach(async ({ page }) => {
@@ -27,7 +27,7 @@ async function storedSidebarWidth(page: Page) {
 
 async function loadTheme(page: Page, theme: string) {
   await page.addInitScript((selectedTheme) => {
-    window.localStorage.setItem("buzz-theme", selectedTheme);
+    window.localStorage.setItem("crew-theme", selectedTheme);
   }, theme);
   await installMockBridge(page);
   await page.goto("/");
