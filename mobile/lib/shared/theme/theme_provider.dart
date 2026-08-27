@@ -16,7 +16,7 @@ const _schemeKey = 'crew_color_scheme';
 /// Crew ships as the default: the first-party pair, so a fresh install gets the
 /// branded top-section gradient without picking a theme first.
 const defaultSchemeName = crewThemeName;
-const defaultSchemeDisplayName = 'Buzz';
+const defaultSchemeDisplayName = 'Crew';
 
 /// Pre-loaded SharedPreferences instance, overridden in main().
 final savedPrefsProvider = Provider<SharedPreferences>(

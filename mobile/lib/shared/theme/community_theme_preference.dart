@@ -38,7 +38,7 @@ class CommunityThemePreference {
       throw const FormatException('Invalid community theme preference');
     }
     return CommunityThemePreference(
-      // Wire events written by pre-rename apps may carry 'buzz'/'buzz-dark';
+      // Wire events written by pre-rename apps may carry 'buzz'/'crew-dark';
       // normalize to the crew spellings on read.
       theme: _normalizeLegacyTheme(json['theme'] as String),
       accent: json['accent'] as String,
@@ -48,7 +48,7 @@ class CommunityThemePreference {
 
   static String _normalizeLegacyTheme(String theme) {
     if (theme == 'buzz') return crewThemeName;
-    if (theme == 'buzz-dark') return crewDarkThemeName;
+    if (theme == 'crew-dark') return crewDarkThemeName;
     return theme;
   }
 
@@ -76,9 +76,9 @@ class CommunityThemePreference {
 }
 
 class CommunityThemeStorage {
-  static const _prefix = 'buzz-community-theme.v1';
-  static const _outboxPrefix = 'buzz-community-theme-outbox.v1';
-  static const _migrationPrefix = 'buzz-community-theme-migrated.v1';
+  static const _prefix = 'crew-community-theme.v1';
+  static const _outboxPrefix = 'crew-community-theme-outbox.v1';
+  static const _migrationPrefix = 'crew-community-theme-migrated.v1';
   static const _legacyModeKey = 'crew_theme_mode';
   static const _legacyAccentKey = 'crew_accent_color';
   static const _legacySchemeKey = 'crew_color_scheme';

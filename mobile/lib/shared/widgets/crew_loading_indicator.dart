@@ -51,7 +51,7 @@ class CrewLoadingIndicator extends HookConsumerWidget {
       label: semanticLabel,
       child: ExcludeSemantics(
         child: RotationTransition(
-          key: const ValueKey('buzz-loading-indicator-spinner'),
+          key: const ValueKey('crew-loading-indicator-spinner'),
           turns: animation,
           child: CustomPaint(
             size: Size.square(size),

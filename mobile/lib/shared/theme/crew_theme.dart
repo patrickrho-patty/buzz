@@ -12,7 +12,7 @@ const crewThemeName = 'crew';
 
 /// Name of the dark counterpart, which reuses the GitHub Dark palette and the
 /// dark-tuned gradient stops. Paired with [crewThemeName] in `themePairs`, so
-/// the two behave as a single "Buzz" choice under System mode.
+/// the two behave as a single "Crew" choice under System mode.
 const crewDarkThemeName = 'crew-dark';
 
 /// Whether [themeName] is either half of the Crew pair. Both halves enable the
@@ -20,7 +20,7 @@ const crewDarkThemeName = 'crew-dark';
 bool isCrewTheme(String themeName) =>
     themeName == crewThemeName ||
     themeName == crewDarkThemeName ||
-    themeName == 'buzz-dark' ||
+    themeName == 'crew-dark' ||
     themeName == 'buzz';
 
 /// Whether the current widget tree is using the first-party Crew treatment.

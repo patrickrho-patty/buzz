@@ -28,7 +28,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 70));
 
     final spinner = tester.widget<RotationTransition>(
-      find.byKey(const ValueKey('buzz-loading-indicator-spinner')),
+      find.byKey(const ValueKey('crew-loading-indicator-spinner')),
     );
     expect(spinner.turns.value, greaterThan(0));
     expect(find.bySemanticsLabel('Loading photos'), findsOneWidget);
@@ -42,7 +42,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 70));
 
     final spinner = tester.widget<RotationTransition>(
-      find.byKey(const ValueKey('buzz-loading-indicator-spinner')),
+      find.byKey(const ValueKey('crew-loading-indicator-spinner')),
     );
     expect(spinner.turns.value, 0);
     expect(tester.binding.hasScheduledFrame, isFalse);

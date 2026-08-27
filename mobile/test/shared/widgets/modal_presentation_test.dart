@@ -124,11 +124,11 @@ void main() {
       );
       expect(nativeSurface.creationParams, isNot(contains('headerGradient')));
       expect(
-        find.byKey(const ValueKey('buzz-sheet-header-gradient')),
+        find.byKey(const ValueKey('crew-sheet-header-gradient')),
         findsNothing,
       );
       expect(
-        find.byKey(const ValueKey('buzz-sheet-surface-clip')),
+        find.byKey(const ValueKey('crew-sheet-surface-clip')),
         findsNothing,
       );
       final contentClip = tester.widget<ClipRSuperellipse>(
@@ -181,23 +181,23 @@ void main() {
         await tester.pumpAndSettle();
 
         final closeButton = find.byTooltip('Close sheet');
-        final title = find.byKey(const ValueKey('buzz-sheet-title'));
+        final title = find.byKey(const ValueKey('crew-sheet-title'));
         expect(closeButton, findsOneWidget);
         expect(title, findsOneWidget);
         expect(
-          find.byKey(const ValueKey('buzz-sheet-surface-clip')),
+          find.byKey(const ValueKey('crew-sheet-surface-clip')),
           findsOneWidget,
         );
         expect(tester.getSize(closeButton), const Size.square(44));
         expect(tester.widget<Text>(title).style?.fontSize, 16);
         expect(
-          find.byKey(const ValueKey('buzz-sheet-header-gradient')),
+          find.byKey(const ValueKey('crew-sheet-header-gradient')),
           findsNothing,
         );
         expect(
           tester
               .widget<ColoredBox>(
-                find.byKey(const ValueKey('buzz-sheet-surface')),
+                find.byKey(const ValueKey('crew-sheet-surface')),
               )
               .color,
           lightColorScheme.surface,
@@ -205,7 +205,7 @@ void main() {
         expect(
           tester.getTopLeft(find.text('Sheet body')).dy -
               tester
-                  .getTopLeft(find.byKey(const ValueKey('buzz-sheet-surface')))
+                  .getTopLeft(find.byKey(const ValueKey('crew-sheet-surface')))
                   .dy,
           80,
         );
@@ -250,7 +250,7 @@ void main() {
           isFalse,
         );
         expect(
-          find.byKey(const ValueKey('buzz-sheet-drag-handle')),
+          find.byKey(const ValueKey('crew-sheet-drag-handle')),
           findsOneWidget,
         );
         expect(
@@ -312,7 +312,7 @@ void main() {
         isFalse,
       );
       final internalHandle = find.byKey(
-        const ValueKey('buzz-sheet-drag-handle'),
+        const ValueKey('crew-sheet-drag-handle'),
       );
       expect(internalHandle, findsOneWidget);
       expect(tester.getSize(internalHandle), const Size(32, 4));
@@ -359,7 +359,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.byKey(const ValueKey('buzz-sheet-drag-handle')),
+        find.byKey(const ValueKey('crew-sheet-drag-handle')),
         findsOneWidget,
       );
       expect(find.byTooltip('Close sheet'), findsNothing);

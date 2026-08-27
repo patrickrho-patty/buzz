@@ -33,7 +33,7 @@ class CrewTitledSheetLayout extends StatelessWidget {
     final sheet = SizedBox(
       width: double.infinity,
       child: ColoredBox(
-        key: const ValueKey('buzz-sheet-surface'),
+        key: const ValueKey('crew-sheet-surface'),
         color: paintsSurface ? color : Colors.transparent,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -56,7 +56,7 @@ class CrewTitledSheetLayout extends StatelessWidget {
     if (!paintsSurface) return sheet;
 
     return ClipRRect(
-      key: const ValueKey('buzz-sheet-surface-clip'),
+      key: const ValueKey('crew-sheet-surface-clip'),
       borderRadius: const BorderRadius.vertical(
         top: Radius.circular(Radii.dialog),
       ),

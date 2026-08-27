@@ -151,7 +151,7 @@ class _StandaloneSheetDragHandle extends StatelessWidget {
       button: true,
       onTap: () => Navigator.of(context).pop(),
       child: Container(
-        key: const ValueKey('buzz-sheet-drag-handle'),
+        key: const ValueKey('crew-sheet-drag-handle'),
         width: 32,
         height: 4,
         decoration: BoxDecoration(

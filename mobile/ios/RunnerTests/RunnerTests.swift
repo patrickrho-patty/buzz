@@ -3,7 +3,7 @@ import Flutter
 import UIKit
 import XCTest
 
-@testable import Buzz
+@testable import Crew
 
 private extension UIColor {
   convenience init(hex: UInt32) {

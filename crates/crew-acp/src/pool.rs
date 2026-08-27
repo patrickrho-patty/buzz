@@ -101,7 +101,7 @@ pub struct AgentModelCapabilities {
 pub struct ChannelDeliveryState {
     /// Whether a legacy user message has successfully carried standing context.
     pub standing_context_sent: bool,
-    /// Buzz event IDs already delivered to this ACP session, either as trigger
+    /// Crew event IDs already delivered to this ACP session, either as trigger
     /// events or conversation context.
     pub delivered_event_ids: HashSet<String>,
 }

@@ -10,7 +10,7 @@ void main() {
 
   setUp(() async {
     tempDirectory = await Directory.systemTemp.createTemp(
-      'buzz-faststart-test-',
+      'crew-faststart-test-',
     );
   });
 

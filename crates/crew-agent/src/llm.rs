@@ -2253,7 +2253,7 @@ async fn openrouter_post(
             .post(url)
             .header("content-type", "application/json")
             .header("HTTP-Referer", "https://github.com/block/buzz")
-            .header("X-OpenRouter-Title", "Buzz")
+            .header("X-OpenRouter-Title", "Crew")
             .bearer_auth(bearer)
             .body(body_bytes.clone())
             .timeout(per_request_timeout)

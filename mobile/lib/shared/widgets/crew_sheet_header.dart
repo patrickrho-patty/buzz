@@ -48,7 +48,7 @@ class CrewSheetHeader extends StatelessWidget {
                 child: Center(
                   child: Text(
                     title,
-                    key: titleKey ?? const ValueKey('buzz-sheet-title'),
+                    key: titleKey ?? const ValueKey('crew-sheet-title'),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
@@ -83,7 +83,7 @@ class _SheetCloseButton extends StatelessWidget {
 
     if (Theme.of(context).platform == TargetPlatform.iOS) {
       return IosGlassNavigationButton(
-        key: const ValueKey('buzz-sheet-ios-glass-close'),
+        key: const ValueKey('crew-sheet-ios-glass-close'),
         icon: IosGlassNavigationIcon.close,
         semanticLabel: 'Close sheet',
         onPressed: closeSheet,
@@ -122,7 +122,7 @@ class _SheetDragHandle extends StatelessWidget {
       button: true,
       onTap: () => Navigator.of(context).pop(),
       child: Container(
-        key: const ValueKey('buzz-sheet-drag-handle'),
+        key: const ValueKey('crew-sheet-drag-handle'),
         width: 32,
         height: 4,
         decoration: BoxDecoration(
